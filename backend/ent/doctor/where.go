@@ -91,28 +91,28 @@ func IDLTE(id int) predicate.Doctor {
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
-func Name(v string) predicate.Doctor {
+func Name(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
-func NameEQ(v string) predicate.Doctor {
+func NameEQ(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
 // NameNEQ applies the NEQ predicate on the "name" field.
-func NameNEQ(v string) predicate.Doctor {
+func NameNEQ(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldName), v))
 	})
 }
 
 // NameIn applies the In predicate on the "name" field.
-func NameIn(vs ...string) predicate.Doctor {
+func NameIn(vs ...int) predicate.Doctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -129,7 +129,7 @@ func NameIn(vs ...string) predicate.Doctor {
 }
 
 // NameNotIn applies the NotIn predicate on the "name" field.
-func NameNotIn(vs ...string) predicate.Doctor {
+func NameNotIn(vs ...int) predicate.Doctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -146,65 +146,30 @@ func NameNotIn(vs ...string) predicate.Doctor {
 }
 
 // NameGT applies the GT predicate on the "name" field.
-func NameGT(v string) predicate.Doctor {
+func NameGT(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldName), v))
 	})
 }
 
 // NameGTE applies the GTE predicate on the "name" field.
-func NameGTE(v string) predicate.Doctor {
+func NameGTE(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldName), v))
 	})
 }
 
 // NameLT applies the LT predicate on the "name" field.
-func NameLT(v string) predicate.Doctor {
+func NameLT(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldName), v))
 	})
 }
 
 // NameLTE applies the LTE predicate on the "name" field.
-func NameLTE(v string) predicate.Doctor {
+func NameLTE(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldName), v))
-	})
-}
-
-// NameContains applies the Contains predicate on the "name" field.
-func NameContains(v string) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldName), v))
-	})
-}
-
-// NameHasPrefix applies the HasPrefix predicate on the "name" field.
-func NameHasPrefix(v string) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldName), v))
-	})
-}
-
-// NameHasSuffix applies the HasSuffix predicate on the "name" field.
-func NameHasSuffix(v string) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldName), v))
-	})
-}
-
-// NameEqualFold applies the EqualFold predicate on the "name" field.
-func NameEqualFold(v string) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldName), v))
-	})
-}
-
-// NameContainsFold applies the ContainsFold predicate on the "name" field.
-func NameContainsFold(v string) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldName), v))
 	})
 }
 

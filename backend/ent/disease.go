@@ -6,31 +6,31 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/disease"
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
-// Doctor is the model entity for the Doctor schema.
-type Doctor struct {
+// Disease is the model entity for the Disease schema.
+type Disease struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name int `json:"name,omitempty"`
+	// Disease holds the value of the "disease" field.
+	Disease string `json:"disease,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Doctor) scanValues() []interface{} {
+func (*Disease) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
-		&sql.NullInt64{}, // name
+		&sql.NullInt64{},  // id
+		&sql.NullString{}, // disease
 	}
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Doctor fields.
-func (d *Doctor) assignValues(values ...interface{}) error {
-	if m, n := len(values), len(doctor.Columns); m < n {
+// to the Disease fields.
+func (d *Disease) assignValues(values ...interface{}) error {
+	if m, n := len(values), len(disease.Columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	value, ok := values[0].(*sql.NullInt64)
@@ -39,47 +39,47 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	}
 	d.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field name", values[0])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field disease", values[0])
 	} else if value.Valid {
-		d.Name = int(value.Int64)
+		d.Disease = value.String
 	}
 	return nil
 }
 
-// Update returns a builder for updating this Doctor.
-// Note that, you need to call Doctor.Unwrap() before calling this method, if this Doctor
+// Update returns a builder for updating this Disease.
+// Note that, you need to call Disease.Unwrap() before calling this method, if this Disease
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (d *Doctor) Update() *DoctorUpdateOne {
-	return (&DoctorClient{config: d.config}).UpdateOne(d)
+func (d *Disease) Update() *DiseaseUpdateOne {
+	return (&DiseaseClient{config: d.config}).UpdateOne(d)
 }
 
 // Unwrap unwraps the entity that was returned from a transaction after it was closed,
 // so that all next queries will be executed through the driver which created the transaction.
-func (d *Doctor) Unwrap() *Doctor {
+func (d *Disease) Unwrap() *Disease {
 	tx, ok := d.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Doctor is not a transactional entity")
+		panic("ent: Disease is not a transactional entity")
 	}
 	d.config.driver = tx.drv
 	return d
 }
 
 // String implements the fmt.Stringer.
-func (d *Doctor) String() string {
+func (d *Disease) String() string {
 	var builder strings.Builder
-	builder.WriteString("Doctor(")
+	builder.WriteString("Disease(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
-	builder.WriteString(", name=")
-	builder.WriteString(fmt.Sprintf("%v", d.Name))
+	builder.WriteString(", disease=")
+	builder.WriteString(d.Disease)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// Doctors is a parsable slice of Doctor.
-type Doctors []*Doctor
+// Diseases is a parsable slice of Disease.
+type Diseases []*Disease
 
-func (d Doctors) config(cfg config) {
+func (d Diseases) config(cfg config) {
 	for _i := range d {
 		d[_i].config = cfg
 	}

@@ -210,6 +210,30 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The DiseaseQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type DiseaseQueryRuleFunc func(context.Context, *ent.DiseaseQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f DiseaseQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DiseaseQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DiseaseQuery", q)
+}
+
+// The DiseaseMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type DiseaseMutationRuleFunc func(context.Context, *ent.DiseaseMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f DiseaseMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DiseaseMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DiseaseMutation", m)
+}
+
 // The DoctorQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type DoctorQueryRuleFunc func(context.Context, *ent.DoctorQuery) error
@@ -232,4 +256,76 @@ func (f DoctorMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DoctorMutation", m)
+}
+
+// The GenderQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GenderQueryRuleFunc func(context.Context, *ent.GenderQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GenderQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GenderQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GenderQuery", q)
+}
+
+// The GenderMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GenderMutationRuleFunc func(context.Context, *ent.GenderMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GenderMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GenderMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GenderMutation", m)
+}
+
+// The PositionQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PositionQueryRuleFunc func(context.Context, *ent.PositionQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PositionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PositionQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PositionQuery", q)
+}
+
+// The PositionMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PositionMutationRuleFunc func(context.Context, *ent.PositionMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PositionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PositionMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PositionMutation", m)
+}
+
+// The TitleQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TitleQueryRuleFunc func(context.Context, *ent.TitleQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TitleQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TitleQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TitleQuery", q)
+}
+
+// The TitleMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TitleMutationRuleFunc func(context.Context, *ent.TitleMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TitleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TitleMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TitleMutation", m)
 }

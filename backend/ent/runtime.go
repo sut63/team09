@@ -3,18 +3,46 @@
 package ent
 
 import (
+	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/gender"
+	"github.com/Piichet/app/ent/position"
 	"github.com/Piichet/app/ent/schema"
+	"github.com/Piichet/app/ent/title"
 )
 
 // The init function reads all schema descriptors with runtime
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	diseaseFields := schema.Disease{}.Fields()
+	_ = diseaseFields
+	// diseaseDescDisease is the schema descriptor for disease field.
+	diseaseDescDisease := diseaseFields[0].Descriptor()
+	// disease.DiseaseValidator is a validator for the "disease" field. It is called by the builders before save.
+	disease.DiseaseValidator = diseaseDescDisease.Validators[0].(func(string) error)
 	doctorFields := schema.Doctor{}.Fields()
 	_ = doctorFields
 	// doctorDescName is the schema descriptor for name field.
 	doctorDescName := doctorFields[0].Descriptor()
 	// doctor.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	doctor.NameValidator = doctorDescName.Validators[0].(func(string) error)
+	doctor.NameValidator = doctorDescName.Validators[0].(func(int) error)
+	genderFields := schema.Gender{}.Fields()
+	_ = genderFields
+	// genderDescGender is the schema descriptor for gender field.
+	genderDescGender := genderFields[0].Descriptor()
+	// gender.GenderValidator is a validator for the "gender" field. It is called by the builders before save.
+	gender.GenderValidator = genderDescGender.Validators[0].(func(string) error)
+	positionFields := schema.Position{}.Fields()
+	_ = positionFields
+	// positionDescPosition is the schema descriptor for position field.
+	positionDescPosition := positionFields[0].Descriptor()
+	// position.PositionValidator is a validator for the "position" field. It is called by the builders before save.
+	position.PositionValidator = positionDescPosition.Validators[0].(func(string) error)
+	titleFields := schema.Title{}.Fields()
+	_ = titleFields
+	// titleDescTitle is the schema descriptor for title field.
+	titleDescTitle := titleFields[0].Descriptor()
+	// title.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	title.TitleValidator = titleDescTitle.Validators[0].(func(string) error)
 }

@@ -8,64 +8,64 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
-// DoctorQuery is the builder for querying Doctor entities.
-type DoctorQuery struct {
+// DiseaseQuery is the builder for querying Disease entities.
+type DiseaseQuery struct {
 	config
 	limit      *int
 	offset     *int
 	order      []OrderFunc
 	unique     []string
-	predicates []predicate.Doctor
+	predicates []predicate.Disease
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
 // Where adds a new predicate for the builder.
-func (dq *DoctorQuery) Where(ps ...predicate.Doctor) *DoctorQuery {
+func (dq *DiseaseQuery) Where(ps ...predicate.Disease) *DiseaseQuery {
 	dq.predicates = append(dq.predicates, ps...)
 	return dq
 }
 
 // Limit adds a limit step to the query.
-func (dq *DoctorQuery) Limit(limit int) *DoctorQuery {
+func (dq *DiseaseQuery) Limit(limit int) *DiseaseQuery {
 	dq.limit = &limit
 	return dq
 }
 
 // Offset adds an offset step to the query.
-func (dq *DoctorQuery) Offset(offset int) *DoctorQuery {
+func (dq *DiseaseQuery) Offset(offset int) *DiseaseQuery {
 	dq.offset = &offset
 	return dq
 }
 
 // Order adds an order step to the query.
-func (dq *DoctorQuery) Order(o ...OrderFunc) *DoctorQuery {
+func (dq *DiseaseQuery) Order(o ...OrderFunc) *DiseaseQuery {
 	dq.order = append(dq.order, o...)
 	return dq
 }
 
-// First returns the first Doctor entity in the query. Returns *NotFoundError when no doctor was found.
-func (dq *DoctorQuery) First(ctx context.Context) (*Doctor, error) {
+// First returns the first Disease entity in the query. Returns *NotFoundError when no disease was found.
+func (dq *DiseaseQuery) First(ctx context.Context) (*Disease, error) {
 	ds, err := dq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if len(ds) == 0 {
-		return nil, &NotFoundError{doctor.Label}
+		return nil, &NotFoundError{disease.Label}
 	}
 	return ds[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (dq *DoctorQuery) FirstX(ctx context.Context) *Doctor {
+func (dq *DiseaseQuery) FirstX(ctx context.Context) *Disease {
 	d, err := dq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -73,21 +73,21 @@ func (dq *DoctorQuery) FirstX(ctx context.Context) *Doctor {
 	return d
 }
 
-// FirstID returns the first Doctor id in the query. Returns *NotFoundError when no id was found.
-func (dq *DoctorQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Disease id in the query. Returns *NotFoundError when no id was found.
+func (dq *DiseaseQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = dq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (dq *DoctorQuery) FirstXID(ctx context.Context) int {
+func (dq *DiseaseQuery) FirstXID(ctx context.Context) int {
 	id, err := dq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -95,8 +95,8 @@ func (dq *DoctorQuery) FirstXID(ctx context.Context) int {
 	return id
 }
 
-// Only returns the only Doctor entity in the query, returns an error if not exactly one entity was returned.
-func (dq *DoctorQuery) Only(ctx context.Context) (*Doctor, error) {
+// Only returns the only Disease entity in the query, returns an error if not exactly one entity was returned.
+func (dq *DiseaseQuery) Only(ctx context.Context) (*Disease, error) {
 	ds, err := dq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
@@ -105,14 +105,14 @@ func (dq *DoctorQuery) Only(ctx context.Context) (*Doctor, error) {
 	case 1:
 		return ds[0], nil
 	case 0:
-		return nil, &NotFoundError{doctor.Label}
+		return nil, &NotFoundError{disease.Label}
 	default:
-		return nil, &NotSingularError{doctor.Label}
+		return nil, &NotSingularError{disease.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (dq *DoctorQuery) OnlyX(ctx context.Context) *Doctor {
+func (dq *DiseaseQuery) OnlyX(ctx context.Context) *Disease {
 	d, err := dq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -120,8 +120,8 @@ func (dq *DoctorQuery) OnlyX(ctx context.Context) *Doctor {
 	return d
 }
 
-// OnlyID returns the only Doctor id in the query, returns an error if not exactly one id was returned.
-func (dq *DoctorQuery) OnlyID(ctx context.Context) (id int, err error) {
+// OnlyID returns the only Disease id in the query, returns an error if not exactly one id was returned.
+func (dq *DiseaseQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = dq.Limit(2).IDs(ctx); err != nil {
 		return
@@ -130,15 +130,15 @@ func (dq *DoctorQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = &NotSingularError{doctor.Label}
+		err = &NotSingularError{disease.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (dq *DoctorQuery) OnlyIDX(ctx context.Context) int {
+func (dq *DiseaseQuery) OnlyIDX(ctx context.Context) int {
 	id, err := dq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -146,8 +146,8 @@ func (dq *DoctorQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Doctors.
-func (dq *DoctorQuery) All(ctx context.Context) ([]*Doctor, error) {
+// All executes the query and returns a list of Diseases.
+func (dq *DiseaseQuery) All(ctx context.Context) ([]*Disease, error) {
 	if err := dq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (dq *DoctorQuery) All(ctx context.Context) ([]*Doctor, error) {
 }
 
 // AllX is like All, but panics if an error occurs.
-func (dq *DoctorQuery) AllX(ctx context.Context) []*Doctor {
+func (dq *DiseaseQuery) AllX(ctx context.Context) []*Disease {
 	ds, err := dq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -163,17 +163,17 @@ func (dq *DoctorQuery) AllX(ctx context.Context) []*Doctor {
 	return ds
 }
 
-// IDs executes the query and returns a list of Doctor ids.
-func (dq *DoctorQuery) IDs(ctx context.Context) ([]int, error) {
+// IDs executes the query and returns a list of Disease ids.
+func (dq *DiseaseQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := dq.Select(doctor.FieldID).Scan(ctx, &ids); err != nil {
+	if err := dq.Select(disease.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (dq *DoctorQuery) IDsX(ctx context.Context) []int {
+func (dq *DiseaseQuery) IDsX(ctx context.Context) []int {
 	ids, err := dq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -182,7 +182,7 @@ func (dq *DoctorQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (dq *DoctorQuery) Count(ctx context.Context) (int, error) {
+func (dq *DiseaseQuery) Count(ctx context.Context) (int, error) {
 	if err := dq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -190,7 +190,7 @@ func (dq *DoctorQuery) Count(ctx context.Context) (int, error) {
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (dq *DoctorQuery) CountX(ctx context.Context) int {
+func (dq *DiseaseQuery) CountX(ctx context.Context) int {
 	count, err := dq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -199,7 +199,7 @@ func (dq *DoctorQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (dq *DoctorQuery) Exist(ctx context.Context) (bool, error) {
+func (dq *DiseaseQuery) Exist(ctx context.Context) (bool, error) {
 	if err := dq.prepareQuery(ctx); err != nil {
 		return false, err
 	}
@@ -207,7 +207,7 @@ func (dq *DoctorQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (dq *DoctorQuery) ExistX(ctx context.Context) bool {
+func (dq *DiseaseQuery) ExistX(ctx context.Context) bool {
 	exist, err := dq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -217,14 +217,14 @@ func (dq *DoctorQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the query builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (dq *DoctorQuery) Clone() *DoctorQuery {
-	return &DoctorQuery{
+func (dq *DiseaseQuery) Clone() *DiseaseQuery {
+	return &DiseaseQuery{
 		config:     dq.config,
 		limit:      dq.limit,
 		offset:     dq.offset,
 		order:      append([]OrderFunc{}, dq.order...),
 		unique:     append([]string{}, dq.unique...),
-		predicates: append([]predicate.Doctor{}, dq.predicates...),
+		predicates: append([]predicate.Disease{}, dq.predicates...),
 		// clone intermediate query.
 		sql:  dq.sql.Clone(),
 		path: dq.path,
@@ -237,17 +237,17 @@ func (dq *DoctorQuery) Clone() *DoctorQuery {
 // Example:
 //
 //	var v []struct {
-//		Name int `json:"name,omitempty"`
+//		Disease string `json:"disease,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Doctor.Query().
-//		GroupBy(doctor.FieldName).
+//	client.Disease.Query().
+//		GroupBy(disease.FieldDisease).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
-func (dq *DoctorQuery) GroupBy(field string, fields ...string) *DoctorGroupBy {
-	group := &DoctorGroupBy{config: dq.config}
+func (dq *DiseaseQuery) GroupBy(field string, fields ...string) *DiseaseGroupBy {
+	group := &DiseaseGroupBy{config: dq.config}
 	group.fields = append([]string{field}, fields...)
 	group.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
@@ -263,15 +263,15 @@ func (dq *DoctorQuery) GroupBy(field string, fields ...string) *DoctorGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Name int `json:"name,omitempty"`
+//		Disease string `json:"disease,omitempty"`
 //	}
 //
-//	client.Doctor.Query().
-//		Select(doctor.FieldName).
+//	client.Disease.Query().
+//		Select(disease.FieldDisease).
 //		Scan(ctx, &v)
 //
-func (dq *DoctorQuery) Select(field string, fields ...string) *DoctorSelect {
-	selector := &DoctorSelect{config: dq.config}
+func (dq *DiseaseQuery) Select(field string, fields ...string) *DiseaseSelect {
+	selector := &DiseaseSelect{config: dq.config}
 	selector.fields = append([]string{field}, fields...)
 	selector.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
@@ -282,7 +282,7 @@ func (dq *DoctorQuery) Select(field string, fields ...string) *DoctorSelect {
 	return selector
 }
 
-func (dq *DoctorQuery) prepareQuery(ctx context.Context) error {
+func (dq *DiseaseQuery) prepareQuery(ctx context.Context) error {
 	if dq.path != nil {
 		prev, err := dq.path(ctx)
 		if err != nil {
@@ -293,13 +293,13 @@ func (dq *DoctorQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
+func (dq *DiseaseQuery) sqlAll(ctx context.Context) ([]*Disease, error) {
 	var (
-		nodes = []*Doctor{}
+		nodes = []*Disease{}
 		_spec = dq.querySpec()
 	)
 	_spec.ScanValues = func() []interface{} {
-		node := &Doctor{config: dq.config}
+		node := &Disease{config: dq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
 		return values
@@ -320,12 +320,12 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 	return nodes, nil
 }
 
-func (dq *DoctorQuery) sqlCount(ctx context.Context) (int, error) {
+func (dq *DiseaseQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := dq.querySpec()
 	return sqlgraph.CountNodes(ctx, dq.driver, _spec)
 }
 
-func (dq *DoctorQuery) sqlExist(ctx context.Context) (bool, error) {
+func (dq *DiseaseQuery) sqlExist(ctx context.Context) (bool, error) {
 	n, err := dq.sqlCount(ctx)
 	if err != nil {
 		return false, fmt.Errorf("ent: check existence: %v", err)
@@ -333,14 +333,14 @@ func (dq *DoctorQuery) sqlExist(ctx context.Context) (bool, error) {
 	return n > 0, nil
 }
 
-func (dq *DoctorQuery) querySpec() *sqlgraph.QuerySpec {
+func (dq *DiseaseQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   doctor.Table,
-			Columns: doctor.Columns,
+			Table:   disease.Table,
+			Columns: disease.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: doctor.FieldID,
+				Column: disease.FieldID,
 			},
 		},
 		From:   dq.sql,
@@ -369,13 +369,13 @@ func (dq *DoctorQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (dq *DoctorQuery) sqlQuery() *sql.Selector {
+func (dq *DiseaseQuery) sqlQuery() *sql.Selector {
 	builder := sql.Dialect(dq.driver.Dialect())
-	t1 := builder.Table(doctor.Table)
-	selector := builder.Select(t1.Columns(doctor.Columns...)...).From(t1)
+	t1 := builder.Table(disease.Table)
+	selector := builder.Select(t1.Columns(disease.Columns...)...).From(t1)
 	if dq.sql != nil {
 		selector = dq.sql
-		selector.Select(selector.Columns(doctor.Columns...)...)
+		selector.Select(selector.Columns(disease.Columns...)...)
 	}
 	for _, p := range dq.predicates {
 		p(selector)
@@ -394,8 +394,8 @@ func (dq *DoctorQuery) sqlQuery() *sql.Selector {
 	return selector
 }
 
-// DoctorGroupBy is the builder for group-by Doctor entities.
-type DoctorGroupBy struct {
+// DiseaseGroupBy is the builder for group-by Disease entities.
+type DiseaseGroupBy struct {
 	config
 	fields []string
 	fns    []AggregateFunc
@@ -405,13 +405,13 @@ type DoctorGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (dgb *DoctorGroupBy) Aggregate(fns ...AggregateFunc) *DoctorGroupBy {
+func (dgb *DiseaseGroupBy) Aggregate(fns ...AggregateFunc) *DiseaseGroupBy {
 	dgb.fns = append(dgb.fns, fns...)
 	return dgb
 }
 
 // Scan applies the group-by query and scan the result into the given value.
-func (dgb *DoctorGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (dgb *DiseaseGroupBy) Scan(ctx context.Context, v interface{}) error {
 	query, err := dgb.path(ctx)
 	if err != nil {
 		return err
@@ -421,16 +421,16 @@ func (dgb *DoctorGroupBy) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (dgb *DoctorGroupBy) ScanX(ctx context.Context, v interface{}) {
+func (dgb *DiseaseGroupBy) ScanX(ctx context.Context, v interface{}) {
 	if err := dgb.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Strings(ctx context.Context) ([]string, error) {
+func (dgb *DiseaseGroupBy) Strings(ctx context.Context) ([]string, error) {
 	if len(dgb.fields) > 1 {
-		return nil, errors.New("ent: DoctorGroupBy.Strings is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: DiseaseGroupBy.Strings is not achievable when grouping more than 1 field")
 	}
 	var v []string
 	if err := dgb.Scan(ctx, &v); err != nil {
@@ -440,7 +440,7 @@ func (dgb *DoctorGroupBy) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (dgb *DoctorGroupBy) StringsX(ctx context.Context) []string {
+func (dgb *DiseaseGroupBy) StringsX(ctx context.Context) []string {
 	v, err := dgb.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -449,7 +449,7 @@ func (dgb *DoctorGroupBy) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) String(ctx context.Context) (_ string, err error) {
+func (dgb *DiseaseGroupBy) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = dgb.Strings(ctx); err != nil {
 		return
@@ -458,15 +458,15 @@ func (dgb *DoctorGroupBy) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorGroupBy.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseGroupBy.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (dgb *DoctorGroupBy) StringX(ctx context.Context) string {
+func (dgb *DiseaseGroupBy) StringX(ctx context.Context) string {
 	v, err := dgb.String(ctx)
 	if err != nil {
 		panic(err)
@@ -475,9 +475,9 @@ func (dgb *DoctorGroupBy) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Ints(ctx context.Context) ([]int, error) {
+func (dgb *DiseaseGroupBy) Ints(ctx context.Context) ([]int, error) {
 	if len(dgb.fields) > 1 {
-		return nil, errors.New("ent: DoctorGroupBy.Ints is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: DiseaseGroupBy.Ints is not achievable when grouping more than 1 field")
 	}
 	var v []int
 	if err := dgb.Scan(ctx, &v); err != nil {
@@ -487,7 +487,7 @@ func (dgb *DoctorGroupBy) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (dgb *DoctorGroupBy) IntsX(ctx context.Context) []int {
+func (dgb *DiseaseGroupBy) IntsX(ctx context.Context) []int {
 	v, err := dgb.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -496,7 +496,7 @@ func (dgb *DoctorGroupBy) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Int(ctx context.Context) (_ int, err error) {
+func (dgb *DiseaseGroupBy) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = dgb.Ints(ctx); err != nil {
 		return
@@ -505,15 +505,15 @@ func (dgb *DoctorGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorGroupBy.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseGroupBy.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (dgb *DoctorGroupBy) IntX(ctx context.Context) int {
+func (dgb *DiseaseGroupBy) IntX(ctx context.Context) int {
 	v, err := dgb.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -522,9 +522,9 @@ func (dgb *DoctorGroupBy) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Float64s(ctx context.Context) ([]float64, error) {
+func (dgb *DiseaseGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 	if len(dgb.fields) > 1 {
-		return nil, errors.New("ent: DoctorGroupBy.Float64s is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: DiseaseGroupBy.Float64s is not achievable when grouping more than 1 field")
 	}
 	var v []float64
 	if err := dgb.Scan(ctx, &v); err != nil {
@@ -534,7 +534,7 @@ func (dgb *DoctorGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (dgb *DoctorGroupBy) Float64sX(ctx context.Context) []float64 {
+func (dgb *DiseaseGroupBy) Float64sX(ctx context.Context) []float64 {
 	v, err := dgb.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -543,7 +543,7 @@ func (dgb *DoctorGroupBy) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Float64(ctx context.Context) (_ float64, err error) {
+func (dgb *DiseaseGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = dgb.Float64s(ctx); err != nil {
 		return
@@ -552,15 +552,15 @@ func (dgb *DoctorGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorGroupBy.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (dgb *DoctorGroupBy) Float64X(ctx context.Context) float64 {
+func (dgb *DiseaseGroupBy) Float64X(ctx context.Context) float64 {
 	v, err := dgb.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -569,9 +569,9 @@ func (dgb *DoctorGroupBy) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Bools(ctx context.Context) ([]bool, error) {
+func (dgb *DiseaseGroupBy) Bools(ctx context.Context) ([]bool, error) {
 	if len(dgb.fields) > 1 {
-		return nil, errors.New("ent: DoctorGroupBy.Bools is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: DiseaseGroupBy.Bools is not achievable when grouping more than 1 field")
 	}
 	var v []bool
 	if err := dgb.Scan(ctx, &v); err != nil {
@@ -581,7 +581,7 @@ func (dgb *DoctorGroupBy) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (dgb *DoctorGroupBy) BoolsX(ctx context.Context) []bool {
+func (dgb *DiseaseGroupBy) BoolsX(ctx context.Context) []bool {
 	v, err := dgb.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -590,7 +590,7 @@ func (dgb *DoctorGroupBy) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from group-by. It is only allowed when querying group-by with one field.
-func (dgb *DoctorGroupBy) Bool(ctx context.Context) (_ bool, err error) {
+func (dgb *DiseaseGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = dgb.Bools(ctx); err != nil {
 		return
@@ -599,15 +599,15 @@ func (dgb *DoctorGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorGroupBy.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseGroupBy.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (dgb *DoctorGroupBy) BoolX(ctx context.Context) bool {
+func (dgb *DiseaseGroupBy) BoolX(ctx context.Context) bool {
 	v, err := dgb.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -615,7 +615,7 @@ func (dgb *DoctorGroupBy) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (dgb *DoctorGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (dgb *DiseaseGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := dgb.sqlQuery().Query()
 	if err := dgb.driver.Query(ctx, query, args, rows); err != nil {
@@ -625,7 +625,7 @@ func (dgb *DoctorGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	return sql.ScanSlice(rows, v)
 }
 
-func (dgb *DoctorGroupBy) sqlQuery() *sql.Selector {
+func (dgb *DiseaseGroupBy) sqlQuery() *sql.Selector {
 	selector := dgb.sql
 	columns := make([]string, 0, len(dgb.fields)+len(dgb.fns))
 	columns = append(columns, dgb.fields...)
@@ -635,8 +635,8 @@ func (dgb *DoctorGroupBy) sqlQuery() *sql.Selector {
 	return selector.Select(columns...).GroupBy(dgb.fields...)
 }
 
-// DoctorSelect is the builder for select fields of Doctor entities.
-type DoctorSelect struct {
+// DiseaseSelect is the builder for select fields of Disease entities.
+type DiseaseSelect struct {
 	config
 	fields []string
 	// intermediate query (i.e. traversal path).
@@ -645,7 +645,7 @@ type DoctorSelect struct {
 }
 
 // Scan applies the selector query and scan the result into the given value.
-func (ds *DoctorSelect) Scan(ctx context.Context, v interface{}) error {
+func (ds *DiseaseSelect) Scan(ctx context.Context, v interface{}) error {
 	query, err := ds.path(ctx)
 	if err != nil {
 		return err
@@ -655,16 +655,16 @@ func (ds *DoctorSelect) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (ds *DoctorSelect) ScanX(ctx context.Context, v interface{}) {
+func (ds *DiseaseSelect) ScanX(ctx context.Context, v interface{}) {
 	if err := ds.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Strings(ctx context.Context) ([]string, error) {
+func (ds *DiseaseSelect) Strings(ctx context.Context) ([]string, error) {
 	if len(ds.fields) > 1 {
-		return nil, errors.New("ent: DoctorSelect.Strings is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: DiseaseSelect.Strings is not achievable when selecting more than 1 field")
 	}
 	var v []string
 	if err := ds.Scan(ctx, &v); err != nil {
@@ -674,7 +674,7 @@ func (ds *DoctorSelect) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (ds *DoctorSelect) StringsX(ctx context.Context) []string {
+func (ds *DiseaseSelect) StringsX(ctx context.Context) []string {
 	v, err := ds.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -683,7 +683,7 @@ func (ds *DoctorSelect) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) String(ctx context.Context) (_ string, err error) {
+func (ds *DiseaseSelect) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = ds.Strings(ctx); err != nil {
 		return
@@ -692,15 +692,15 @@ func (ds *DoctorSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorSelect.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseSelect.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (ds *DoctorSelect) StringX(ctx context.Context) string {
+func (ds *DiseaseSelect) StringX(ctx context.Context) string {
 	v, err := ds.String(ctx)
 	if err != nil {
 		panic(err)
@@ -709,9 +709,9 @@ func (ds *DoctorSelect) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Ints(ctx context.Context) ([]int, error) {
+func (ds *DiseaseSelect) Ints(ctx context.Context) ([]int, error) {
 	if len(ds.fields) > 1 {
-		return nil, errors.New("ent: DoctorSelect.Ints is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: DiseaseSelect.Ints is not achievable when selecting more than 1 field")
 	}
 	var v []int
 	if err := ds.Scan(ctx, &v); err != nil {
@@ -721,7 +721,7 @@ func (ds *DoctorSelect) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (ds *DoctorSelect) IntsX(ctx context.Context) []int {
+func (ds *DiseaseSelect) IntsX(ctx context.Context) []int {
 	v, err := ds.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -730,7 +730,7 @@ func (ds *DoctorSelect) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Int(ctx context.Context) (_ int, err error) {
+func (ds *DiseaseSelect) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = ds.Ints(ctx); err != nil {
 		return
@@ -739,15 +739,15 @@ func (ds *DoctorSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorSelect.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseSelect.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (ds *DoctorSelect) IntX(ctx context.Context) int {
+func (ds *DiseaseSelect) IntX(ctx context.Context) int {
 	v, err := ds.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -756,9 +756,9 @@ func (ds *DoctorSelect) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Float64s(ctx context.Context) ([]float64, error) {
+func (ds *DiseaseSelect) Float64s(ctx context.Context) ([]float64, error) {
 	if len(ds.fields) > 1 {
-		return nil, errors.New("ent: DoctorSelect.Float64s is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: DiseaseSelect.Float64s is not achievable when selecting more than 1 field")
 	}
 	var v []float64
 	if err := ds.Scan(ctx, &v); err != nil {
@@ -768,7 +768,7 @@ func (ds *DoctorSelect) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (ds *DoctorSelect) Float64sX(ctx context.Context) []float64 {
+func (ds *DiseaseSelect) Float64sX(ctx context.Context) []float64 {
 	v, err := ds.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -777,7 +777,7 @@ func (ds *DoctorSelect) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Float64(ctx context.Context) (_ float64, err error) {
+func (ds *DiseaseSelect) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = ds.Float64s(ctx); err != nil {
 		return
@@ -786,15 +786,15 @@ func (ds *DoctorSelect) Float64(ctx context.Context) (_ float64, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorSelect.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseSelect.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (ds *DoctorSelect) Float64X(ctx context.Context) float64 {
+func (ds *DiseaseSelect) Float64X(ctx context.Context) float64 {
 	v, err := ds.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -803,9 +803,9 @@ func (ds *DoctorSelect) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Bools(ctx context.Context) ([]bool, error) {
+func (ds *DiseaseSelect) Bools(ctx context.Context) ([]bool, error) {
 	if len(ds.fields) > 1 {
-		return nil, errors.New("ent: DoctorSelect.Bools is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: DiseaseSelect.Bools is not achievable when selecting more than 1 field")
 	}
 	var v []bool
 	if err := ds.Scan(ctx, &v); err != nil {
@@ -815,7 +815,7 @@ func (ds *DoctorSelect) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (ds *DoctorSelect) BoolsX(ctx context.Context) []bool {
+func (ds *DiseaseSelect) BoolsX(ctx context.Context) []bool {
 	v, err := ds.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -824,7 +824,7 @@ func (ds *DoctorSelect) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from selector. It is only allowed when selecting one field.
-func (ds *DoctorSelect) Bool(ctx context.Context) (_ bool, err error) {
+func (ds *DiseaseSelect) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = ds.Bools(ctx); err != nil {
 		return
@@ -833,15 +833,15 @@ func (ds *DoctorSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{doctor.Label}
+		err = &NotFoundError{disease.Label}
 	default:
-		err = fmt.Errorf("ent: DoctorSelect.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: DiseaseSelect.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (ds *DoctorSelect) BoolX(ctx context.Context) bool {
+func (ds *DiseaseSelect) BoolX(ctx context.Context) bool {
 	v, err := ds.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -849,7 +849,7 @@ func (ds *DoctorSelect) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (ds *DoctorSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ds *DiseaseSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := ds.sqlQuery().Query()
 	if err := ds.driver.Query(ctx, query, args, rows); err != nil {
@@ -859,7 +859,7 @@ func (ds *DoctorSelect) sqlScan(ctx context.Context, v interface{}) error {
 	return sql.ScanSlice(rows, v)
 }
 
-func (ds *DoctorSelect) sqlQuery() sql.Querier {
+func (ds *DiseaseSelect) sqlQuery() sql.Querier {
 	selector := ds.sql
 	selector.Select(selector.Columns(ds.fields...)...)
 	return selector

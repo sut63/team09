@@ -9,6 +9,19 @@ import (
 	"github.com/Piichet/app/ent"
 )
 
+// The DiseaseFunc type is an adapter to allow the use of ordinary
+// function as Disease mutator.
+type DiseaseFunc func(context.Context, *ent.DiseaseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DiseaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DiseaseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DiseaseMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DoctorFunc type is an adapter to allow the use of ordinary
 // function as Doctor mutator.
 type DoctorFunc func(context.Context, *ent.DoctorMutation) (ent.Value, error)
@@ -18,6 +31,45 @@ func (f DoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	mv, ok := m.(*ent.DoctorMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DoctorMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GenderFunc type is an adapter to allow the use of ordinary
+// function as Gender mutator.
+type GenderFunc func(context.Context, *ent.GenderMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GenderMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GenderMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The PositionFunc type is an adapter to allow the use of ordinary
+// function as Position mutator.
+type PositionFunc func(context.Context, *ent.PositionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PositionMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PositionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The TitleFunc type is an adapter to allow the use of ordinary
+// function as Title mutator.
+type TitleFunc func(context.Context, *ent.TitleMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TitleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TitleMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TitleMutation", m)
 	}
 	return f(ctx, mv)
 }

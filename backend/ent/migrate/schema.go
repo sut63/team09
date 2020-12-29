@@ -8,10 +8,22 @@ import (
 )
 
 var (
+	// DiseasesColumns holds the columns for the "diseases" table.
+	DiseasesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "disease", Type: field.TypeString},
+	}
+	// DiseasesTable holds the schema information for the "diseases" table.
+	DiseasesTable = &schema.Table{
+		Name:        "diseases",
+		Columns:     DiseasesColumns,
+		PrimaryKey:  []*schema.Column{DiseasesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// DoctorsColumns holds the columns for the "doctors" table.
 	DoctorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
+		{Name: "name", Type: field.TypeInt},
 	}
 	// DoctorsTable holds the schema information for the "doctors" table.
 	DoctorsTable = &schema.Table{
@@ -20,9 +32,49 @@ var (
 		PrimaryKey:  []*schema.Column{DoctorsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// GendersColumns holds the columns for the "genders" table.
+	GendersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "gender", Type: field.TypeString},
+	}
+	// GendersTable holds the schema information for the "genders" table.
+	GendersTable = &schema.Table{
+		Name:        "genders",
+		Columns:     GendersColumns,
+		PrimaryKey:  []*schema.Column{GendersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// PositionsColumns holds the columns for the "positions" table.
+	PositionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "position", Type: field.TypeString},
+	}
+	// PositionsTable holds the schema information for the "positions" table.
+	PositionsTable = &schema.Table{
+		Name:        "positions",
+		Columns:     PositionsColumns,
+		PrimaryKey:  []*schema.Column{PositionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// TitlesColumns holds the columns for the "titles" table.
+	TitlesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "title", Type: field.TypeString},
+	}
+	// TitlesTable holds the schema information for the "titles" table.
+	TitlesTable = &schema.Table{
+		Name:        "titles",
+		Columns:     TitlesColumns,
+		PrimaryKey:  []*schema.Column{TitlesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		DiseasesTable,
 		DoctorsTable,
+		GendersTable,
+		PositionsTable,
+		TitlesTable,
 	}
 )
 

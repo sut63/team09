@@ -6,5 +6,17 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
+// Disease is the predicate function for disease builders.
+type Disease func(*sql.Selector)
+
 // Doctor is the predicate function for doctor builders.
 type Doctor func(*sql.Selector)
+
+// Gender is the predicate function for gender builders.
+type Gender func(*sql.Selector)
+
+// Position is the predicate function for position builders.
+type Position func(*sql.Selector)
+
+// Title is the predicate function for title builders.
+type Title func(*sql.Selector)

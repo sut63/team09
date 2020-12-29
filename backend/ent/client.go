@@ -9,7 +9,11 @@ import (
 
 	"github.com/Piichet/app/ent/migrate"
 
+	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/gender"
+	"github.com/Piichet/app/ent/position"
+	"github.com/Piichet/app/ent/title"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -20,8 +24,16 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Disease is the client for interacting with the Disease builders.
+	Disease *DiseaseClient
 	// Doctor is the client for interacting with the Doctor builders.
 	Doctor *DoctorClient
+	// Gender is the client for interacting with the Gender builders.
+	Gender *GenderClient
+	// Position is the client for interacting with the Position builders.
+	Position *PositionClient
+	// Title is the client for interacting with the Title builders.
+	Title *TitleClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -35,7 +47,11 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Disease = NewDiseaseClient(c.config)
 	c.Doctor = NewDoctorClient(c.config)
+	c.Gender = NewGenderClient(c.config)
+	c.Position = NewPositionClient(c.config)
+	c.Title = NewTitleClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -66,9 +82,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Doctor: NewDoctorClient(cfg),
+		ctx:      ctx,
+		config:   cfg,
+		Disease:  NewDiseaseClient(cfg),
+		Doctor:   NewDoctorClient(cfg),
+		Gender:   NewGenderClient(cfg),
+		Position: NewPositionClient(cfg),
+		Title:    NewTitleClient(cfg),
 	}, nil
 }
 
@@ -83,15 +103,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config: cfg,
-		Doctor: NewDoctorClient(cfg),
+		config:   cfg,
+		Disease:  NewDiseaseClient(cfg),
+		Doctor:   NewDoctorClient(cfg),
+		Gender:   NewGenderClient(cfg),
+		Position: NewPositionClient(cfg),
+		Title:    NewTitleClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Doctor.
+//		Disease.
 //		Query().
 //		Count(ctx)
 //
@@ -113,7 +137,94 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Disease.Use(hooks...)
 	c.Doctor.Use(hooks...)
+	c.Gender.Use(hooks...)
+	c.Position.Use(hooks...)
+	c.Title.Use(hooks...)
+}
+
+// DiseaseClient is a client for the Disease schema.
+type DiseaseClient struct {
+	config
+}
+
+// NewDiseaseClient returns a client for the Disease from the given config.
+func NewDiseaseClient(c config) *DiseaseClient {
+	return &DiseaseClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `disease.Hooks(f(g(h())))`.
+func (c *DiseaseClient) Use(hooks ...Hook) {
+	c.hooks.Disease = append(c.hooks.Disease, hooks...)
+}
+
+// Create returns a create builder for Disease.
+func (c *DiseaseClient) Create() *DiseaseCreate {
+	mutation := newDiseaseMutation(c.config, OpCreate)
+	return &DiseaseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Disease.
+func (c *DiseaseClient) Update() *DiseaseUpdate {
+	mutation := newDiseaseMutation(c.config, OpUpdate)
+	return &DiseaseUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DiseaseClient) UpdateOne(d *Disease) *DiseaseUpdateOne {
+	mutation := newDiseaseMutation(c.config, OpUpdateOne, withDisease(d))
+	return &DiseaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DiseaseClient) UpdateOneID(id int) *DiseaseUpdateOne {
+	mutation := newDiseaseMutation(c.config, OpUpdateOne, withDiseaseID(id))
+	return &DiseaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Disease.
+func (c *DiseaseClient) Delete() *DiseaseDelete {
+	mutation := newDiseaseMutation(c.config, OpDelete)
+	return &DiseaseDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *DiseaseClient) DeleteOne(d *Disease) *DiseaseDeleteOne {
+	return c.DeleteOneID(d.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *DiseaseClient) DeleteOneID(id int) *DiseaseDeleteOne {
+	builder := c.Delete().Where(disease.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DiseaseDeleteOne{builder}
+}
+
+// Create returns a query builder for Disease.
+func (c *DiseaseClient) Query() *DiseaseQuery {
+	return &DiseaseQuery{config: c.config}
+}
+
+// Get returns a Disease entity by its id.
+func (c *DiseaseClient) Get(ctx context.Context, id int) (*Disease, error) {
+	return c.Query().Where(disease.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DiseaseClient) GetX(ctx context.Context, id int) *Disease {
+	d, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return d
+}
+
+// Hooks returns the client hooks.
+func (c *DiseaseClient) Hooks() []Hook {
+	return c.hooks.Disease
 }
 
 // DoctorClient is a client for the Doctor schema.
@@ -197,4 +308,253 @@ func (c *DoctorClient) GetX(ctx context.Context, id int) *Doctor {
 // Hooks returns the client hooks.
 func (c *DoctorClient) Hooks() []Hook {
 	return c.hooks.Doctor
+}
+
+// GenderClient is a client for the Gender schema.
+type GenderClient struct {
+	config
+}
+
+// NewGenderClient returns a client for the Gender from the given config.
+func NewGenderClient(c config) *GenderClient {
+	return &GenderClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `gender.Hooks(f(g(h())))`.
+func (c *GenderClient) Use(hooks ...Hook) {
+	c.hooks.Gender = append(c.hooks.Gender, hooks...)
+}
+
+// Create returns a create builder for Gender.
+func (c *GenderClient) Create() *GenderCreate {
+	mutation := newGenderMutation(c.config, OpCreate)
+	return &GenderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Gender.
+func (c *GenderClient) Update() *GenderUpdate {
+	mutation := newGenderMutation(c.config, OpUpdate)
+	return &GenderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GenderClient) UpdateOne(ge *Gender) *GenderUpdateOne {
+	mutation := newGenderMutation(c.config, OpUpdateOne, withGender(ge))
+	return &GenderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GenderClient) UpdateOneID(id int) *GenderUpdateOne {
+	mutation := newGenderMutation(c.config, OpUpdateOne, withGenderID(id))
+	return &GenderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Gender.
+func (c *GenderClient) Delete() *GenderDelete {
+	mutation := newGenderMutation(c.config, OpDelete)
+	return &GenderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GenderClient) DeleteOne(ge *Gender) *GenderDeleteOne {
+	return c.DeleteOneID(ge.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GenderClient) DeleteOneID(id int) *GenderDeleteOne {
+	builder := c.Delete().Where(gender.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GenderDeleteOne{builder}
+}
+
+// Create returns a query builder for Gender.
+func (c *GenderClient) Query() *GenderQuery {
+	return &GenderQuery{config: c.config}
+}
+
+// Get returns a Gender entity by its id.
+func (c *GenderClient) Get(ctx context.Context, id int) (*Gender, error) {
+	return c.Query().Where(gender.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GenderClient) GetX(ctx context.Context, id int) *Gender {
+	ge, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return ge
+}
+
+// Hooks returns the client hooks.
+func (c *GenderClient) Hooks() []Hook {
+	return c.hooks.Gender
+}
+
+// PositionClient is a client for the Position schema.
+type PositionClient struct {
+	config
+}
+
+// NewPositionClient returns a client for the Position from the given config.
+func NewPositionClient(c config) *PositionClient {
+	return &PositionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `position.Hooks(f(g(h())))`.
+func (c *PositionClient) Use(hooks ...Hook) {
+	c.hooks.Position = append(c.hooks.Position, hooks...)
+}
+
+// Create returns a create builder for Position.
+func (c *PositionClient) Create() *PositionCreate {
+	mutation := newPositionMutation(c.config, OpCreate)
+	return &PositionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Position.
+func (c *PositionClient) Update() *PositionUpdate {
+	mutation := newPositionMutation(c.config, OpUpdate)
+	return &PositionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PositionClient) UpdateOne(po *Position) *PositionUpdateOne {
+	mutation := newPositionMutation(c.config, OpUpdateOne, withPosition(po))
+	return &PositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PositionClient) UpdateOneID(id int) *PositionUpdateOne {
+	mutation := newPositionMutation(c.config, OpUpdateOne, withPositionID(id))
+	return &PositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Position.
+func (c *PositionClient) Delete() *PositionDelete {
+	mutation := newPositionMutation(c.config, OpDelete)
+	return &PositionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *PositionClient) DeleteOne(po *Position) *PositionDeleteOne {
+	return c.DeleteOneID(po.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PositionClient) DeleteOneID(id int) *PositionDeleteOne {
+	builder := c.Delete().Where(position.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PositionDeleteOne{builder}
+}
+
+// Create returns a query builder for Position.
+func (c *PositionClient) Query() *PositionQuery {
+	return &PositionQuery{config: c.config}
+}
+
+// Get returns a Position entity by its id.
+func (c *PositionClient) Get(ctx context.Context, id int) (*Position, error) {
+	return c.Query().Where(position.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PositionClient) GetX(ctx context.Context, id int) *Position {
+	po, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return po
+}
+
+// Hooks returns the client hooks.
+func (c *PositionClient) Hooks() []Hook {
+	return c.hooks.Position
+}
+
+// TitleClient is a client for the Title schema.
+type TitleClient struct {
+	config
+}
+
+// NewTitleClient returns a client for the Title from the given config.
+func NewTitleClient(c config) *TitleClient {
+	return &TitleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `title.Hooks(f(g(h())))`.
+func (c *TitleClient) Use(hooks ...Hook) {
+	c.hooks.Title = append(c.hooks.Title, hooks...)
+}
+
+// Create returns a create builder for Title.
+func (c *TitleClient) Create() *TitleCreate {
+	mutation := newTitleMutation(c.config, OpCreate)
+	return &TitleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Title.
+func (c *TitleClient) Update() *TitleUpdate {
+	mutation := newTitleMutation(c.config, OpUpdate)
+	return &TitleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TitleClient) UpdateOne(t *Title) *TitleUpdateOne {
+	mutation := newTitleMutation(c.config, OpUpdateOne, withTitle(t))
+	return &TitleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TitleClient) UpdateOneID(id int) *TitleUpdateOne {
+	mutation := newTitleMutation(c.config, OpUpdateOne, withTitleID(id))
+	return &TitleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Title.
+func (c *TitleClient) Delete() *TitleDelete {
+	mutation := newTitleMutation(c.config, OpDelete)
+	return &TitleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *TitleClient) DeleteOne(t *Title) *TitleDeleteOne {
+	return c.DeleteOneID(t.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *TitleClient) DeleteOneID(id int) *TitleDeleteOne {
+	builder := c.Delete().Where(title.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TitleDeleteOne{builder}
+}
+
+// Create returns a query builder for Title.
+func (c *TitleClient) Query() *TitleQuery {
+	return &TitleQuery{config: c.config}
+}
+
+// Get returns a Title entity by its id.
+func (c *TitleClient) Get(ctx context.Context, id int) (*Title, error) {
+	return c.Query().Where(title.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TitleClient) GetX(ctx context.Context, id int) *Title {
+	t, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return t
+}
+
+// Hooks returns the client hooks.
+func (c *TitleClient) Hooks() []Hook {
+	return c.hooks.Title
 }

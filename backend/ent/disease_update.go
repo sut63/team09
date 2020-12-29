@@ -6,50 +6,43 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
-// DoctorUpdate is the builder for updating Doctor entities.
-type DoctorUpdate struct {
+// DiseaseUpdate is the builder for updating Disease entities.
+type DiseaseUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *DoctorMutation
-	predicates []predicate.Doctor
+	mutation   *DiseaseMutation
+	predicates []predicate.Disease
 }
 
 // Where adds a new predicate for the builder.
-func (du *DoctorUpdate) Where(ps ...predicate.Doctor) *DoctorUpdate {
+func (du *DiseaseUpdate) Where(ps ...predicate.Disease) *DiseaseUpdate {
 	du.predicates = append(du.predicates, ps...)
 	return du
 }
 
-// SetName sets the name field.
-func (du *DoctorUpdate) SetName(i int) *DoctorUpdate {
-	du.mutation.ResetName()
-	du.mutation.SetName(i)
+// SetDisease sets the disease field.
+func (du *DiseaseUpdate) SetDisease(s string) *DiseaseUpdate {
+	du.mutation.SetDisease(s)
 	return du
 }
 
-// AddName adds i to name.
-func (du *DoctorUpdate) AddName(i int) *DoctorUpdate {
-	du.mutation.AddName(i)
-	return du
-}
-
-// Mutation returns the DoctorMutation object of the builder.
-func (du *DoctorUpdate) Mutation() *DoctorMutation {
+// Mutation returns the DiseaseMutation object of the builder.
+func (du *DiseaseUpdate) Mutation() *DiseaseMutation {
 	return du.mutation
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := du.mutation.Name(); ok {
-		if err := doctor.NameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+func (du *DiseaseUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := du.mutation.Disease(); ok {
+		if err := disease.DiseaseValidator(v); err != nil {
+			return 0, &ValidationError{Name: "disease", err: fmt.Errorf("ent: validator failed for field \"disease\": %w", err)}
 		}
 	}
 	var (
@@ -60,7 +53,7 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 		affected, err = du.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*DoctorMutation)
+			mutation, ok := m.(*DiseaseMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -80,7 +73,7 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (du *DoctorUpdate) SaveX(ctx context.Context) int {
+func (du *DiseaseUpdate) SaveX(ctx context.Context) int {
 	affected, err := du.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -89,26 +82,26 @@ func (du *DoctorUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (du *DoctorUpdate) Exec(ctx context.Context) error {
+func (du *DiseaseUpdate) Exec(ctx context.Context) error {
 	_, err := du.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (du *DoctorUpdate) ExecX(ctx context.Context) {
+func (du *DiseaseUpdate) ExecX(ctx context.Context) {
 	if err := du.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (du *DiseaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   doctor.Table,
-			Columns: doctor.Columns,
+			Table:   disease.Table,
+			Columns: disease.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: doctor.FieldID,
+				Column: disease.FieldID,
 			},
 		},
 	}
@@ -119,23 +112,16 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := du.mutation.Name(); ok {
+	if value, ok := du.mutation.Disease(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: doctor.FieldName,
-		})
-	}
-	if value, ok := du.mutation.AddedName(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldName,
+			Column: disease.FieldDisease,
 		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{doctor.Label}
+			err = &NotFoundError{disease.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
@@ -144,47 +130,40 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// DoctorUpdateOne is the builder for updating a single Doctor entity.
-type DoctorUpdateOne struct {
+// DiseaseUpdateOne is the builder for updating a single Disease entity.
+type DiseaseUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *DoctorMutation
+	mutation *DiseaseMutation
 }
 
-// SetName sets the name field.
-func (duo *DoctorUpdateOne) SetName(i int) *DoctorUpdateOne {
-	duo.mutation.ResetName()
-	duo.mutation.SetName(i)
+// SetDisease sets the disease field.
+func (duo *DiseaseUpdateOne) SetDisease(s string) *DiseaseUpdateOne {
+	duo.mutation.SetDisease(s)
 	return duo
 }
 
-// AddName adds i to name.
-func (duo *DoctorUpdateOne) AddName(i int) *DoctorUpdateOne {
-	duo.mutation.AddName(i)
-	return duo
-}
-
-// Mutation returns the DoctorMutation object of the builder.
-func (duo *DoctorUpdateOne) Mutation() *DoctorMutation {
+// Mutation returns the DiseaseMutation object of the builder.
+func (duo *DiseaseUpdateOne) Mutation() *DiseaseMutation {
 	return duo.mutation
 }
 
 // Save executes the query and returns the updated entity.
-func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
-	if v, ok := duo.mutation.Name(); ok {
-		if err := doctor.NameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+func (duo *DiseaseUpdateOne) Save(ctx context.Context) (*Disease, error) {
+	if v, ok := duo.mutation.Disease(); ok {
+		if err := disease.DiseaseValidator(v); err != nil {
+			return nil, &ValidationError{Name: "disease", err: fmt.Errorf("ent: validator failed for field \"disease\": %w", err)}
 		}
 	}
 	var (
 		err  error
-		node *Doctor
+		node *Disease
 	)
 	if len(duo.hooks) == 0 {
 		node, err = duo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*DoctorMutation)
+			mutation, ok := m.(*DiseaseMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -204,7 +183,7 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (duo *DoctorUpdateOne) SaveX(ctx context.Context) *Doctor {
+func (duo *DiseaseUpdateOne) SaveX(ctx context.Context) *Disease {
 	d, err := duo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -213,54 +192,47 @@ func (duo *DoctorUpdateOne) SaveX(ctx context.Context) *Doctor {
 }
 
 // Exec executes the query on the entity.
-func (duo *DoctorUpdateOne) Exec(ctx context.Context) error {
+func (duo *DiseaseUpdateOne) Exec(ctx context.Context) error {
 	_, err := duo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (duo *DoctorUpdateOne) ExecX(ctx context.Context) {
+func (duo *DiseaseUpdateOne) ExecX(ctx context.Context) {
 	if err := duo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) {
+func (duo *DiseaseUpdateOne) sqlSave(ctx context.Context) (d *Disease, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   doctor.Table,
-			Columns: doctor.Columns,
+			Table:   disease.Table,
+			Columns: disease.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: doctor.FieldID,
+				Column: disease.FieldID,
 			},
 		},
 	}
 	id, ok := duo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Doctor.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Disease.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := duo.mutation.Name(); ok {
+	if value, ok := duo.mutation.Disease(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: doctor.FieldName,
+			Column: disease.FieldDisease,
 		})
 	}
-	if value, ok := duo.mutation.AddedName(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldName,
-		})
-	}
-	d = &Doctor{config: duo.config}
+	d = &Disease{config: duo.config}
 	_spec.Assign = d.assignValues
 	_spec.ScanValues = d.scanValues()
 	if err = sqlgraph.UpdateNode(ctx, duo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{doctor.Label}
+			err = &NotFoundError{disease.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
