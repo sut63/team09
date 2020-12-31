@@ -5,6 +5,7 @@ package doctor
 import (
 	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -170,6 +171,62 @@ func NameLT(v int) predicate.Doctor {
 func NameLTE(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldName), v))
+	})
+}
+
+// HasOffice applies the HasEdge predicate on the "office" edge.
+func HasOffice() predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(OfficeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, OfficeTable, OfficeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasOfficeWith applies the HasEdge predicate on the "office" edge with a given conditions (other predicates).
+func HasOfficeWith(preds ...predicate.Office) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(OfficeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, OfficeTable, OfficeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasWorkingtime applies the HasEdge predicate on the "workingtime" edge.
+func HasWorkingtime() predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(WorkingtimeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasWorkingtimeWith applies the HasEdge predicate on the "workingtime" edge with a given conditions (other predicates).
+func HasWorkingtimeWith(preds ...predicate.Workingtime) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(WorkingtimeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

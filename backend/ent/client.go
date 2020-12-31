@@ -12,11 +12,14 @@ import (
 	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/doctor"
 	"github.com/Piichet/app/ent/gender"
+	"github.com/Piichet/app/ent/office"
 	"github.com/Piichet/app/ent/position"
 	"github.com/Piichet/app/ent/title"
+	"github.com/Piichet/app/ent/workingtime"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -30,10 +33,14 @@ type Client struct {
 	Doctor *DoctorClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// Office is the client for interacting with the Office builders.
+	Office *OfficeClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
+	// Workingtime is the client for interacting with the Workingtime builders.
+	Workingtime *WorkingtimeClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -50,8 +57,10 @@ func (c *Client) init() {
 	c.Disease = NewDiseaseClient(c.config)
 	c.Doctor = NewDoctorClient(c.config)
 	c.Gender = NewGenderClient(c.config)
+	c.Office = NewOfficeClient(c.config)
 	c.Position = NewPositionClient(c.config)
 	c.Title = NewTitleClient(c.config)
+	c.Workingtime = NewWorkingtimeClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -82,13 +91,15 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:      ctx,
-		config:   cfg,
-		Disease:  NewDiseaseClient(cfg),
-		Doctor:   NewDoctorClient(cfg),
-		Gender:   NewGenderClient(cfg),
-		Position: NewPositionClient(cfg),
-		Title:    NewTitleClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Disease:     NewDiseaseClient(cfg),
+		Doctor:      NewDoctorClient(cfg),
+		Gender:      NewGenderClient(cfg),
+		Office:      NewOfficeClient(cfg),
+		Position:    NewPositionClient(cfg),
+		Title:       NewTitleClient(cfg),
+		Workingtime: NewWorkingtimeClient(cfg),
 	}, nil
 }
 
@@ -103,12 +114,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:   cfg,
-		Disease:  NewDiseaseClient(cfg),
-		Doctor:   NewDoctorClient(cfg),
-		Gender:   NewGenderClient(cfg),
-		Position: NewPositionClient(cfg),
-		Title:    NewTitleClient(cfg),
+		config:      cfg,
+		Disease:     NewDiseaseClient(cfg),
+		Doctor:      NewDoctorClient(cfg),
+		Gender:      NewGenderClient(cfg),
+		Office:      NewOfficeClient(cfg),
+		Position:    NewPositionClient(cfg),
+		Title:       NewTitleClient(cfg),
+		Workingtime: NewWorkingtimeClient(cfg),
 	}, nil
 }
 
@@ -140,8 +153,10 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Disease.Use(hooks...)
 	c.Doctor.Use(hooks...)
 	c.Gender.Use(hooks...)
+	c.Office.Use(hooks...)
 	c.Position.Use(hooks...)
 	c.Title.Use(hooks...)
+	c.Workingtime.Use(hooks...)
 }
 
 // DiseaseClient is a client for the Disease schema.
@@ -305,6 +320,38 @@ func (c *DoctorClient) GetX(ctx context.Context, id int) *Doctor {
 	return d
 }
 
+// QueryOffice queries the office edge of a Doctor.
+func (c *DoctorClient) QueryOffice(d *Doctor) *OfficeQuery {
+	query := &OfficeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, id),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.OfficeTable, doctor.OfficeColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryWorkingtime queries the workingtime edge of a Doctor.
+func (c *DoctorClient) QueryWorkingtime(d *Doctor) *WorkingtimeQuery {
+	query := &WorkingtimeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, id),
+			sqlgraph.To(workingtime.Table, workingtime.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.WorkingtimeTable, doctor.WorkingtimeColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *DoctorClient) Hooks() []Hook {
 	return c.hooks.Doctor
@@ -391,6 +438,105 @@ func (c *GenderClient) GetX(ctx context.Context, id int) *Gender {
 // Hooks returns the client hooks.
 func (c *GenderClient) Hooks() []Hook {
 	return c.hooks.Gender
+}
+
+// OfficeClient is a client for the Office schema.
+type OfficeClient struct {
+	config
+}
+
+// NewOfficeClient returns a client for the Office from the given config.
+func NewOfficeClient(c config) *OfficeClient {
+	return &OfficeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `office.Hooks(f(g(h())))`.
+func (c *OfficeClient) Use(hooks ...Hook) {
+	c.hooks.Office = append(c.hooks.Office, hooks...)
+}
+
+// Create returns a create builder for Office.
+func (c *OfficeClient) Create() *OfficeCreate {
+	mutation := newOfficeMutation(c.config, OpCreate)
+	return &OfficeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Office.
+func (c *OfficeClient) Update() *OfficeUpdate {
+	mutation := newOfficeMutation(c.config, OpUpdate)
+	return &OfficeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *OfficeClient) UpdateOne(o *Office) *OfficeUpdateOne {
+	mutation := newOfficeMutation(c.config, OpUpdateOne, withOffice(o))
+	return &OfficeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *OfficeClient) UpdateOneID(id int) *OfficeUpdateOne {
+	mutation := newOfficeMutation(c.config, OpUpdateOne, withOfficeID(id))
+	return &OfficeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Office.
+func (c *OfficeClient) Delete() *OfficeDelete {
+	mutation := newOfficeMutation(c.config, OpDelete)
+	return &OfficeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *OfficeClient) DeleteOne(o *Office) *OfficeDeleteOne {
+	return c.DeleteOneID(o.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *OfficeClient) DeleteOneID(id int) *OfficeDeleteOne {
+	builder := c.Delete().Where(office.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &OfficeDeleteOne{builder}
+}
+
+// Create returns a query builder for Office.
+func (c *OfficeClient) Query() *OfficeQuery {
+	return &OfficeQuery{config: c.config}
+}
+
+// Get returns a Office entity by its id.
+func (c *OfficeClient) Get(ctx context.Context, id int) (*Office, error) {
+	return c.Query().Where(office.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *OfficeClient) GetX(ctx context.Context, id int) *Office {
+	o, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return o
+}
+
+// QueryDoctors queries the doctors edge of a Office.
+func (c *OfficeClient) QueryDoctors(o *Office) *DoctorQuery {
+	query := &DoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := o.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(office.Table, office.FieldID, id),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, office.DoctorsTable, office.DoctorsColumn),
+		)
+		fromV = sqlgraph.Neighbors(o.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *OfficeClient) Hooks() []Hook {
+	return c.hooks.Office
 }
 
 // PositionClient is a client for the Position schema.
@@ -557,4 +703,103 @@ func (c *TitleClient) GetX(ctx context.Context, id int) *Title {
 // Hooks returns the client hooks.
 func (c *TitleClient) Hooks() []Hook {
 	return c.hooks.Title
+}
+
+// WorkingtimeClient is a client for the Workingtime schema.
+type WorkingtimeClient struct {
+	config
+}
+
+// NewWorkingtimeClient returns a client for the Workingtime from the given config.
+func NewWorkingtimeClient(c config) *WorkingtimeClient {
+	return &WorkingtimeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `workingtime.Hooks(f(g(h())))`.
+func (c *WorkingtimeClient) Use(hooks ...Hook) {
+	c.hooks.Workingtime = append(c.hooks.Workingtime, hooks...)
+}
+
+// Create returns a create builder for Workingtime.
+func (c *WorkingtimeClient) Create() *WorkingtimeCreate {
+	mutation := newWorkingtimeMutation(c.config, OpCreate)
+	return &WorkingtimeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Workingtime.
+func (c *WorkingtimeClient) Update() *WorkingtimeUpdate {
+	mutation := newWorkingtimeMutation(c.config, OpUpdate)
+	return &WorkingtimeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WorkingtimeClient) UpdateOne(w *Workingtime) *WorkingtimeUpdateOne {
+	mutation := newWorkingtimeMutation(c.config, OpUpdateOne, withWorkingtime(w))
+	return &WorkingtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WorkingtimeClient) UpdateOneID(id int) *WorkingtimeUpdateOne {
+	mutation := newWorkingtimeMutation(c.config, OpUpdateOne, withWorkingtimeID(id))
+	return &WorkingtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Workingtime.
+func (c *WorkingtimeClient) Delete() *WorkingtimeDelete {
+	mutation := newWorkingtimeMutation(c.config, OpDelete)
+	return &WorkingtimeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *WorkingtimeClient) DeleteOne(w *Workingtime) *WorkingtimeDeleteOne {
+	return c.DeleteOneID(w.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *WorkingtimeClient) DeleteOneID(id int) *WorkingtimeDeleteOne {
+	builder := c.Delete().Where(workingtime.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WorkingtimeDeleteOne{builder}
+}
+
+// Create returns a query builder for Workingtime.
+func (c *WorkingtimeClient) Query() *WorkingtimeQuery {
+	return &WorkingtimeQuery{config: c.config}
+}
+
+// Get returns a Workingtime entity by its id.
+func (c *WorkingtimeClient) Get(ctx context.Context, id int) (*Workingtime, error) {
+	return c.Query().Where(workingtime.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WorkingtimeClient) GetX(ctx context.Context, id int) *Workingtime {
+	w, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return w
+}
+
+// QueryDoctors queries the doctors edge of a Workingtime.
+func (c *WorkingtimeClient) QueryDoctors(w *Workingtime) *DoctorQuery {
+	query := &DoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := w.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(workingtime.Table, workingtime.FieldID, id),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, workingtime.DoctorsTable, workingtime.DoctorsColumn),
+		)
+		fromV = sqlgraph.Neighbors(w.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *WorkingtimeClient) Hooks() []Hook {
+	return c.hooks.Workingtime
 }

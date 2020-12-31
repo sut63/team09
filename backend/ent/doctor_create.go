@@ -8,6 +8,8 @@ import (
 	"fmt"
 
 	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/office"
+	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
@@ -23,6 +25,44 @@ type DoctorCreate struct {
 func (dc *DoctorCreate) SetName(i int) *DoctorCreate {
 	dc.mutation.SetName(i)
 	return dc
+}
+
+// SetOfficeID sets the office edge to Office by id.
+func (dc *DoctorCreate) SetOfficeID(id int) *DoctorCreate {
+	dc.mutation.SetOfficeID(id)
+	return dc
+}
+
+// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
+func (dc *DoctorCreate) SetNillableOfficeID(id *int) *DoctorCreate {
+	if id != nil {
+		dc = dc.SetOfficeID(*id)
+	}
+	return dc
+}
+
+// SetOffice sets the office edge to Office.
+func (dc *DoctorCreate) SetOffice(o *Office) *DoctorCreate {
+	return dc.SetOfficeID(o.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (dc *DoctorCreate) SetWorkingtimeID(id int) *DoctorCreate {
+	dc.mutation.SetWorkingtimeID(id)
+	return dc
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (dc *DoctorCreate) SetNillableWorkingtimeID(id *int) *DoctorCreate {
+	if id != nil {
+		dc = dc.SetWorkingtimeID(*id)
+	}
+	return dc
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (dc *DoctorCreate) SetWorkingtime(w *Workingtime) *DoctorCreate {
+	return dc.SetWorkingtimeID(w.ID)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -107,6 +147,44 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 			Column: doctor.FieldName,
 		})
 		d.Name = value
+	}
+	if nodes := dc.mutation.OfficeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.OfficeTable,
+			Columns: []string{doctor.OfficeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.WorkingtimeTable,
+			Columns: []string{doctor.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return d, _spec
 }

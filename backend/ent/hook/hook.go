@@ -48,6 +48,19 @@ func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The OfficeFunc type is an adapter to allow the use of ordinary
+// function as Office mutator.
+type OfficeFunc func(context.Context, *ent.OfficeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f OfficeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.OfficeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OfficeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PositionFunc type is an adapter to allow the use of ordinary
 // function as Position mutator.
 type PositionFunc func(context.Context, *ent.PositionMutation) (ent.Value, error)
@@ -70,6 +83,19 @@ func (f TitleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	mv, ok := m.(*ent.TitleMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TitleMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The WorkingtimeFunc type is an adapter to allow the use of ordinary
+// function as Workingtime mutator.
+type WorkingtimeFunc func(context.Context, *ent.WorkingtimeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WorkingtimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.WorkingtimeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WorkingtimeMutation", m)
 	}
 	return f(ctx, mv)
 }

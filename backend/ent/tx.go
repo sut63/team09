@@ -18,10 +18,14 @@ type Tx struct {
 	Doctor *DoctorClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// Office is the client for interacting with the Office builders.
+	Office *OfficeClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
+	// Workingtime is the client for interacting with the Workingtime builders.
+	Workingtime *WorkingtimeClient
 
 	// lazily loaded.
 	client     *Client
@@ -160,8 +164,10 @@ func (tx *Tx) init() {
 	tx.Disease = NewDiseaseClient(tx.config)
 	tx.Doctor = NewDoctorClient(tx.config)
 	tx.Gender = NewGenderClient(tx.config)
+	tx.Office = NewOfficeClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
+	tx.Workingtime = NewWorkingtimeClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

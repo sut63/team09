@@ -14,7 +14,7 @@ type Office struct {
 // Fields of the Office.
 func (Office) Fields() []ent.Field {
 	return []ent.Field {
-		field.String("fname").NotEmpty(),
+		field.String("officename").NotEmpty(),
 	}
 }
 

@@ -282,6 +282,30 @@ func (f GenderMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GenderMutation", m)
 }
 
+// The OfficeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type OfficeQueryRuleFunc func(context.Context, *ent.OfficeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f OfficeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.OfficeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.OfficeQuery", q)
+}
+
+// The OfficeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type OfficeMutationRuleFunc func(context.Context, *ent.OfficeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f OfficeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.OfficeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.OfficeMutation", m)
+}
+
 // The PositionQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PositionQueryRuleFunc func(context.Context, *ent.PositionQuery) error
@@ -328,4 +352,28 @@ func (f TitleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation)
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TitleMutation", m)
+}
+
+// The WorkingtimeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type WorkingtimeQueryRuleFunc func(context.Context, *ent.WorkingtimeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f WorkingtimeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.WorkingtimeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.WorkingtimeQuery", q)
+}
+
+// The WorkingtimeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type WorkingtimeMutationRuleFunc func(context.Context, *ent.WorkingtimeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f WorkingtimeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.WorkingtimeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.WorkingtimeMutation", m)
 }
