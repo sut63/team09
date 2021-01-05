@@ -14,12 +14,12 @@ type Doctor struct {
 // Fields of the Doctor.
 func (Doctor) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("name").Positive(),
+		field.String("name").NotEmpty(),
 		field.Int("age").Positive(),
-		field.Int("email").Positive(),
+		field.String("email").NotEmpty(),
 		field.Int("pnumber").Positive(),
-		field.Int("address").Positive(),
-		field.Int("educational").Positive(),
+		field.String("address").NotEmpty(),
+		field.String("educational").NotEmpty(),
 	}
 }
 
