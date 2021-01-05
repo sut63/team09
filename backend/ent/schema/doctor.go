@@ -15,27 +15,32 @@ type Doctor struct {
 func (Doctor) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("name").Positive(),
+		field.Int("age").Positive(),
+		field.Int("email").Positive(),
+		field.Int("pnumber").Positive(),
+		field.Int("address").Positive(),
+		field.Int("educational").Positive(),
 	}
 }
 
 // Edges of the Doctor.
 func (Doctor) Edges() []ent.Edge {
 	return []ent.Edge{
-            		
-			// edge.From("title", Title.Type).
-            // Ref("titles").
-			// Unique(),
-			
-			// edge.From("gender", Gender.Type).
-            // Ref("genders").
-			// Unique(),
-			
-			// edge.From("position", Position.Type).
-            // Ref("positions").
-			// Unique(),
-			
-			// edge.From("disease", Disease.Type).
-            // Ref("disease").
-            // Unique(),
-    }
+
+		// edge.From("title", Title.Type).
+		// Ref("titles").
+		// Unique(),
+
+		// edge.From("gender", Gender.Type).
+		// Ref("genders").
+		// Unique(),
+
+		// edge.From("position", Position.Type).
+		// Ref("positions").
+		// Unique(),
+
+		// edge.From("disease", Disease.Type).
+		// Ref("disease").
+		// Unique(),
+	}
 }
