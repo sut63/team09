@@ -17,7 +17,7 @@ func (Doctor) Fields() []ent.Field {
 		field.Int("name").Positive(),
 		field.Int("age").Positive(),
 		field.Int("email").Positive(),
-		field.Int("pnumber").Positive(),
+		field.Int("phonenum").Positive(),
 		field.Int("address").Positive(),
 		field.Int("educational").Positive(),
 	}
