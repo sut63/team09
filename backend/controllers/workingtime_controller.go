@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"context"
-   	"fmt"
+	"fmt"
 	"strconv"
 	"time"
 
-	"github.com/Piichet/app/ent"
-	"github.com/Piichet/app/ent/workingtime"
+	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/workingtime"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,7 +32,7 @@ type Workingtime struct {
 // @Failure 500 {object} gin.H
 // @Router /workingtimes [post]
 func (ctl *WorkingtimeController) CreateWorkingtime(c *gin.Context) {
-	obj := ent.Workingtime{}
+	obj := Workingtime{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "workingtime binding failed",
@@ -181,4 +181,3 @@ func (ctl *WorkingtimeController) register() {
 	workingtimes.GET(":id", ctl.GetWorkingtime)
 	workingtimes.DELETE(":id", ctl.DeleteWokingtime)
 }
-

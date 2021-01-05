@@ -5,8 +5,8 @@ import (
    	"fmt"
 	"strconv"
 
-	"github.com/Piichet/app/ent"
-	"github.com/Piichet/app/ent/office"
+	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/office"
 	"github.com/gin-gonic/gin"
 )
 

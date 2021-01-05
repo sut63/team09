@@ -4,8 +4,9 @@ import (
    "context"
    "fmt"
    "strconv"
-   "github.com/Yui/app/ent"
-   "github.com/Yui/app/ent/doctor"
+   
+   "github.com/team09/app/ent"
+   "github.com/team09/app/ent/doctor"
    "github.com/gin-gonic/gin"
 )
 

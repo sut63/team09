@@ -1,4 +1,4 @@
-module github.com/Piichet/app
+module github.com/team09/app
 
 go 1.15
 
