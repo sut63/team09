@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/title"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/title"
 )
 
 // Title is the model entity for the Title schema.

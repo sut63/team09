@@ -24,6 +24,11 @@ var (
 	DoctorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeInt},
+		{Name: "age", Type: field.TypeInt},
+		{Name: "email", Type: field.TypeInt},
+		{Name: "pnumber", Type: field.TypeInt},
+		{Name: "address", Type: field.TypeInt},
+		{Name: "educational", Type: field.TypeInt},
 		{Name: "office_id", Type: field.TypeInt, Nullable: true},
 		{Name: "workingtime_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -35,14 +40,14 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "doctors_offices_doctors",
-				Columns: []*schema.Column{DoctorsColumns[2]},
+				Columns: []*schema.Column{DoctorsColumns[7]},
 
 				RefColumns: []*schema.Column{OfficesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "doctors_workingtimes_doctors",
-				Columns: []*schema.Column{DoctorsColumns[3]},
+				Columns: []*schema.Column{DoctorsColumns[8]},
 
 				RefColumns: []*schema.Column{WorkingtimesColumns[0]},
 				OnDelete:   schema.SetNull,

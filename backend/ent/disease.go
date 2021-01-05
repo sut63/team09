@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/disease"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/disease"
 )
 
 // Disease is the model entity for the Disease schema.

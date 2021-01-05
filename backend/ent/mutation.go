@@ -8,13 +8,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Piichet/app/ent/disease"
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/gender"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/position"
-	"github.com/Piichet/app/ent/title"
-	"github.com/Piichet/app/ent/workingtime"
+	"github.com/team09/app/ent/disease"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/title"
+	"github.com/team09/app/ent/workingtime"
 
 	"github.com/facebookincubator/ent"
 )
@@ -334,18 +334,24 @@ func (m *DiseaseMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type DoctorMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	name               *int
-	addname            *int
-	clearedFields      map[string]struct{}
-	office             *int
-	clearedoffice      bool
-	workingtime        *int
-	clearedworkingtime bool
-	done               bool
-	oldValue           func(context.Context) (*Doctor, error)
+	op             Op
+	typ            string
+	id             *int
+	name           *int
+	addname        *int
+	age            *int
+	addage         *int
+	email          *int
+	addemail       *int
+	pnumber        *int
+	addpnumber     *int
+	address        *int
+	addaddress     *int
+	educational    *int
+	addeducational *int
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Doctor, error)
 }
 
 var _ ent.Mutation = (*DoctorMutation)(nil)
@@ -484,82 +490,289 @@ func (m *DoctorMutation) ResetName() {
 	m.addname = nil
 }
 
-// SetOfficeID sets the office edge to Office by id.
-func (m *DoctorMutation) SetOfficeID(id int) {
-	m.office = &id
+// SetAge sets the age field.
+func (m *DoctorMutation) SetAge(i int) {
+	m.age = &i
+	m.addage = nil
 }
 
-// ClearOffice clears the office edge to Office.
-func (m *DoctorMutation) ClearOffice() {
-	m.clearedoffice = true
-}
-
-// OfficeCleared returns if the edge office was cleared.
-func (m *DoctorMutation) OfficeCleared() bool {
-	return m.clearedoffice
-}
-
-// OfficeID returns the office id in the mutation.
-func (m *DoctorMutation) OfficeID() (id int, exists bool) {
-	if m.office != nil {
-		return *m.office, true
+// Age returns the age value in the mutation.
+func (m *DoctorMutation) Age() (r int, exists bool) {
+	v := m.age
+	if v == nil {
+		return
 	}
-	return
+	return *v, true
 }
 
-// OfficeIDs returns the office ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// OfficeID instead. It exists only for internal usage by the builders.
-func (m *DoctorMutation) OfficeIDs() (ids []int) {
-	if id := m.office; id != nil {
-		ids = append(ids, *id)
+// OldAge returns the old age value of the Doctor.
+// If the Doctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DoctorMutation) OldAge(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAge is allowed only on UpdateOne operations")
 	}
-	return
-}
-
-// ResetOffice reset all changes of the "office" edge.
-func (m *DoctorMutation) ResetOffice() {
-	m.office = nil
-	m.clearedoffice = false
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (m *DoctorMutation) SetWorkingtimeID(id int) {
-	m.workingtime = &id
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (m *DoctorMutation) ClearWorkingtime() {
-	m.clearedworkingtime = true
-}
-
-// WorkingtimeCleared returns if the edge workingtime was cleared.
-func (m *DoctorMutation) WorkingtimeCleared() bool {
-	return m.clearedworkingtime
-}
-
-// WorkingtimeID returns the workingtime id in the mutation.
-func (m *DoctorMutation) WorkingtimeID() (id int, exists bool) {
-	if m.workingtime != nil {
-		return *m.workingtime, true
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAge requires an ID field in the mutation")
 	}
-	return
-}
-
-// WorkingtimeIDs returns the workingtime ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// WorkingtimeID instead. It exists only for internal usage by the builders.
-func (m *DoctorMutation) WorkingtimeIDs() (ids []int) {
-	if id := m.workingtime; id != nil {
-		ids = append(ids, *id)
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAge: %w", err)
 	}
-	return
+	return oldValue.Age, nil
 }
 
-// ResetWorkingtime reset all changes of the "workingtime" edge.
-func (m *DoctorMutation) ResetWorkingtime() {
-	m.workingtime = nil
-	m.clearedworkingtime = false
+// AddAge adds i to age.
+func (m *DoctorMutation) AddAge(i int) {
+	if m.addage != nil {
+		*m.addage += i
+	} else {
+		m.addage = &i
+	}
+}
+
+// AddedAge returns the value that was added to the age field in this mutation.
+func (m *DoctorMutation) AddedAge() (r int, exists bool) {
+	v := m.addage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAge reset all changes of the "age" field.
+func (m *DoctorMutation) ResetAge() {
+	m.age = nil
+	m.addage = nil
+}
+
+// SetEmail sets the email field.
+func (m *DoctorMutation) SetEmail(i int) {
+	m.email = &i
+	m.addemail = nil
+}
+
+// Email returns the email value in the mutation.
+func (m *DoctorMutation) Email() (r int, exists bool) {
+	v := m.email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmail returns the old email value of the Doctor.
+// If the Doctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DoctorMutation) OldEmail(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEmail is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmail: %w", err)
+	}
+	return oldValue.Email, nil
+}
+
+// AddEmail adds i to email.
+func (m *DoctorMutation) AddEmail(i int) {
+	if m.addemail != nil {
+		*m.addemail += i
+	} else {
+		m.addemail = &i
+	}
+}
+
+// AddedEmail returns the value that was added to the email field in this mutation.
+func (m *DoctorMutation) AddedEmail() (r int, exists bool) {
+	v := m.addemail
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEmail reset all changes of the "email" field.
+func (m *DoctorMutation) ResetEmail() {
+	m.email = nil
+	m.addemail = nil
+}
+
+// SetPnumber sets the pnumber field.
+func (m *DoctorMutation) SetPnumber(i int) {
+	m.pnumber = &i
+	m.addpnumber = nil
+}
+
+// Pnumber returns the pnumber value in the mutation.
+func (m *DoctorMutation) Pnumber() (r int, exists bool) {
+	v := m.pnumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPnumber returns the old pnumber value of the Doctor.
+// If the Doctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DoctorMutation) OldPnumber(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPnumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPnumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPnumber: %w", err)
+	}
+	return oldValue.Pnumber, nil
+}
+
+// AddPnumber adds i to pnumber.
+func (m *DoctorMutation) AddPnumber(i int) {
+	if m.addpnumber != nil {
+		*m.addpnumber += i
+	} else {
+		m.addpnumber = &i
+	}
+}
+
+// AddedPnumber returns the value that was added to the pnumber field in this mutation.
+func (m *DoctorMutation) AddedPnumber() (r int, exists bool) {
+	v := m.addpnumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPnumber reset all changes of the "pnumber" field.
+func (m *DoctorMutation) ResetPnumber() {
+	m.pnumber = nil
+	m.addpnumber = nil
+}
+
+// SetAddress sets the address field.
+func (m *DoctorMutation) SetAddress(i int) {
+	m.address = &i
+	m.addaddress = nil
+}
+
+// Address returns the address value in the mutation.
+func (m *DoctorMutation) Address() (r int, exists bool) {
+	v := m.address
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddress returns the old address value of the Doctor.
+// If the Doctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DoctorMutation) OldAddress(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddress is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddress requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddress: %w", err)
+	}
+	return oldValue.Address, nil
+}
+
+// AddAddress adds i to address.
+func (m *DoctorMutation) AddAddress(i int) {
+	if m.addaddress != nil {
+		*m.addaddress += i
+	} else {
+		m.addaddress = &i
+	}
+}
+
+// AddedAddress returns the value that was added to the address field in this mutation.
+func (m *DoctorMutation) AddedAddress() (r int, exists bool) {
+	v := m.addaddress
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAddress reset all changes of the "address" field.
+func (m *DoctorMutation) ResetAddress() {
+	m.address = nil
+	m.addaddress = nil
+}
+
+// SetEducational sets the educational field.
+func (m *DoctorMutation) SetEducational(i int) {
+	m.educational = &i
+	m.addeducational = nil
+}
+
+// Educational returns the educational value in the mutation.
+func (m *DoctorMutation) Educational() (r int, exists bool) {
+	v := m.educational
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEducational returns the old educational value of the Doctor.
+// If the Doctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DoctorMutation) OldEducational(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEducational is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEducational requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEducational: %w", err)
+	}
+	return oldValue.Educational, nil
+}
+
+// AddEducational adds i to educational.
+func (m *DoctorMutation) AddEducational(i int) {
+	if m.addeducational != nil {
+		*m.addeducational += i
+	} else {
+		m.addeducational = &i
+	}
+}
+
+// AddedEducational returns the value that was added to the educational field in this mutation.
+func (m *DoctorMutation) AddedEducational() (r int, exists bool) {
+	v := m.addeducational
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEducational reset all changes of the "educational" field.
+func (m *DoctorMutation) ResetEducational() {
+	m.educational = nil
+	m.addeducational = nil
 }
 
 // Op returns the operation name.
@@ -576,9 +789,24 @@ func (m *DoctorMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *DoctorMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 6)
 	if m.name != nil {
 		fields = append(fields, doctor.FieldName)
+	}
+	if m.age != nil {
+		fields = append(fields, doctor.FieldAge)
+	}
+	if m.email != nil {
+		fields = append(fields, doctor.FieldEmail)
+	}
+	if m.pnumber != nil {
+		fields = append(fields, doctor.FieldPnumber)
+	}
+	if m.address != nil {
+		fields = append(fields, doctor.FieldAddress)
+	}
+	if m.educational != nil {
+		fields = append(fields, doctor.FieldEducational)
 	}
 	return fields
 }
@@ -590,6 +818,16 @@ func (m *DoctorMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case doctor.FieldName:
 		return m.Name()
+	case doctor.FieldAge:
+		return m.Age()
+	case doctor.FieldEmail:
+		return m.Email()
+	case doctor.FieldPnumber:
+		return m.Pnumber()
+	case doctor.FieldAddress:
+		return m.Address()
+	case doctor.FieldEducational:
+		return m.Educational()
 	}
 	return nil, false
 }
@@ -601,6 +839,16 @@ func (m *DoctorMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case doctor.FieldName:
 		return m.OldName(ctx)
+	case doctor.FieldAge:
+		return m.OldAge(ctx)
+	case doctor.FieldEmail:
+		return m.OldEmail(ctx)
+	case doctor.FieldPnumber:
+		return m.OldPnumber(ctx)
+	case doctor.FieldAddress:
+		return m.OldAddress(ctx)
+	case doctor.FieldEducational:
+		return m.OldEducational(ctx)
 	}
 	return nil, fmt.Errorf("unknown Doctor field %s", name)
 }
@@ -617,6 +865,41 @@ func (m *DoctorMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
+	case doctor.FieldAge:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAge(v)
+		return nil
+	case doctor.FieldEmail:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmail(v)
+		return nil
+	case doctor.FieldPnumber:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPnumber(v)
+		return nil
+	case doctor.FieldAddress:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddress(v)
+		return nil
+	case doctor.FieldEducational:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEducational(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Doctor field %s", name)
 }
@@ -628,6 +911,21 @@ func (m *DoctorMutation) AddedFields() []string {
 	if m.addname != nil {
 		fields = append(fields, doctor.FieldName)
 	}
+	if m.addage != nil {
+		fields = append(fields, doctor.FieldAge)
+	}
+	if m.addemail != nil {
+		fields = append(fields, doctor.FieldEmail)
+	}
+	if m.addpnumber != nil {
+		fields = append(fields, doctor.FieldPnumber)
+	}
+	if m.addaddress != nil {
+		fields = append(fields, doctor.FieldAddress)
+	}
+	if m.addeducational != nil {
+		fields = append(fields, doctor.FieldEducational)
+	}
 	return fields
 }
 
@@ -638,6 +936,16 @@ func (m *DoctorMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case doctor.FieldName:
 		return m.AddedName()
+	case doctor.FieldAge:
+		return m.AddedAge()
+	case doctor.FieldEmail:
+		return m.AddedEmail()
+	case doctor.FieldPnumber:
+		return m.AddedPnumber()
+	case doctor.FieldAddress:
+		return m.AddedAddress()
+	case doctor.FieldEducational:
+		return m.AddedEducational()
 	}
 	return nil, false
 }
@@ -653,6 +961,41 @@ func (m *DoctorMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddName(v)
+		return nil
+	case doctor.FieldAge:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAge(v)
+		return nil
+	case doctor.FieldEmail:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEmail(v)
+		return nil
+	case doctor.FieldPnumber:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPnumber(v)
+		return nil
+	case doctor.FieldAddress:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAddress(v)
+		return nil
+	case doctor.FieldEducational:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEducational(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Doctor numeric field %s", name)
@@ -685,6 +1028,21 @@ func (m *DoctorMutation) ResetField(name string) error {
 	case doctor.FieldName:
 		m.ResetName()
 		return nil
+	case doctor.FieldAge:
+		m.ResetAge()
+		return nil
+	case doctor.FieldEmail:
+		m.ResetEmail()
+		return nil
+	case doctor.FieldPnumber:
+		m.ResetPnumber()
+		return nil
+	case doctor.FieldAddress:
+		m.ResetAddress()
+		return nil
+	case doctor.FieldEducational:
+		m.ResetEducational()
+		return nil
 	}
 	return fmt.Errorf("unknown Doctor field %s", name)
 }
@@ -692,83 +1050,45 @@ func (m *DoctorMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *DoctorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.office != nil {
-		edges = append(edges, doctor.EdgeOffice)
-	}
-	if m.workingtime != nil {
-		edges = append(edges, doctor.EdgeWorkingtime)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
 func (m *DoctorMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case doctor.EdgeOffice:
-		if id := m.office; id != nil {
-			return []ent.Value{*id}
-		}
-	case doctor.EdgeWorkingtime:
-		if id := m.workingtime; id != nil {
-			return []ent.Value{*id}
-		}
-	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *DoctorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
 func (m *DoctorMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *DoctorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedoffice {
-		edges = append(edges, doctor.EdgeOffice)
-	}
-	if m.clearedworkingtime {
-		edges = append(edges, doctor.EdgeWorkingtime)
-	}
+	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
 func (m *DoctorMutation) EdgeCleared(name string) bool {
-	switch name {
-	case doctor.EdgeOffice:
-		return m.clearedoffice
-	case doctor.EdgeWorkingtime:
-		return m.clearedworkingtime
-	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
 func (m *DoctorMutation) ClearEdge(name string) error {
-	switch name {
-	case doctor.EdgeOffice:
-		m.ClearOffice()
-		return nil
-	case doctor.EdgeWorkingtime:
-		m.ClearWorkingtime()
-		return nil
-	}
 	return fmt.Errorf("unknown Doctor unique edge %s", name)
 }
 
@@ -776,14 +1096,6 @@ func (m *DoctorMutation) ClearEdge(name string) error {
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
 func (m *DoctorMutation) ResetEdge(name string) error {
-	switch name {
-	case doctor.EdgeOffice:
-		m.ResetOffice()
-		return nil
-	case doctor.EdgeWorkingtime:
-		m.ResetWorkingtime()
-		return nil
-	}
 	return fmt.Errorf("unknown Doctor edge %s", name)
 }
 

@@ -7,11 +7,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 )
 
 // DoctorCreate is the builder for creating a Doctor entity.
@@ -27,42 +25,34 @@ func (dc *DoctorCreate) SetName(i int) *DoctorCreate {
 	return dc
 }
 
-// SetOfficeID sets the office edge to Office by id.
-func (dc *DoctorCreate) SetOfficeID(id int) *DoctorCreate {
-	dc.mutation.SetOfficeID(id)
+// SetAge sets the age field.
+func (dc *DoctorCreate) SetAge(i int) *DoctorCreate {
+	dc.mutation.SetAge(i)
 	return dc
 }
 
-// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
-func (dc *DoctorCreate) SetNillableOfficeID(id *int) *DoctorCreate {
-	if id != nil {
-		dc = dc.SetOfficeID(*id)
-	}
+// SetEmail sets the email field.
+func (dc *DoctorCreate) SetEmail(i int) *DoctorCreate {
+	dc.mutation.SetEmail(i)
 	return dc
 }
 
-// SetOffice sets the office edge to Office.
-func (dc *DoctorCreate) SetOffice(o *Office) *DoctorCreate {
-	return dc.SetOfficeID(o.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (dc *DoctorCreate) SetWorkingtimeID(id int) *DoctorCreate {
-	dc.mutation.SetWorkingtimeID(id)
+// SetPnumber sets the pnumber field.
+func (dc *DoctorCreate) SetPnumber(i int) *DoctorCreate {
+	dc.mutation.SetPnumber(i)
 	return dc
 }
 
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (dc *DoctorCreate) SetNillableWorkingtimeID(id *int) *DoctorCreate {
-	if id != nil {
-		dc = dc.SetWorkingtimeID(*id)
-	}
+// SetAddress sets the address field.
+func (dc *DoctorCreate) SetAddress(i int) *DoctorCreate {
+	dc.mutation.SetAddress(i)
 	return dc
 }
 
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (dc *DoctorCreate) SetWorkingtime(w *Workingtime) *DoctorCreate {
-	return dc.SetWorkingtimeID(w.ID)
+// SetEducational sets the educational field.
+func (dc *DoctorCreate) SetEducational(i int) *DoctorCreate {
+	dc.mutation.SetEducational(i)
+	return dc
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -78,6 +68,46 @@ func (dc *DoctorCreate) Save(ctx context.Context) (*Doctor, error) {
 	if v, ok := dc.mutation.Name(); ok {
 		if err := doctor.NameValidator(v); err != nil {
 			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Age(); !ok {
+		return nil, &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	}
+	if v, ok := dc.mutation.Age(); ok {
+		if err := doctor.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Email(); !ok {
+		return nil, &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
+	}
+	if v, ok := dc.mutation.Email(); ok {
+		if err := doctor.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Pnumber(); !ok {
+		return nil, &ValidationError{Name: "pnumber", err: errors.New("ent: missing required field \"pnumber\"")}
+	}
+	if v, ok := dc.mutation.Pnumber(); ok {
+		if err := doctor.PnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Address(); !ok {
+		return nil, &ValidationError{Name: "address", err: errors.New("ent: missing required field \"address\"")}
+	}
+	if v, ok := dc.mutation.Address(); ok {
+		if err := doctor.AddressValidator(v); err != nil {
+			return nil, &ValidationError{Name: "address", err: fmt.Errorf("ent: validator failed for field \"address\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Educational(); !ok {
+		return nil, &ValidationError{Name: "educational", err: errors.New("ent: missing required field \"educational\"")}
+	}
+	if v, ok := dc.mutation.Educational(); ok {
+		if err := doctor.EducationalValidator(v); err != nil {
+			return nil, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
 		}
 	}
 	var (
@@ -148,43 +178,45 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 		})
 		d.Name = value
 	}
-	if nodes := dc.mutation.OfficeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.OfficeTable,
-			Columns: []string{doctor.OfficeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
+	if value, ok := dc.mutation.Age(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAge,
+		})
+		d.Age = value
 	}
-	if nodes := dc.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.WorkingtimeTable,
-			Columns: []string{doctor.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
+	if value, ok := dc.mutation.Email(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEmail,
+		})
+		d.Email = value
+	}
+	if value, ok := dc.mutation.Pnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldPnumber,
+		})
+		d.Pnumber = value
+	}
+	if value, ok := dc.mutation.Address(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAddress,
+		})
+		d.Address = value
+	}
+	if value, ok := dc.mutation.Educational(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEducational,
+		})
+		d.Educational = value
 	}
 	return d, _spec
 }

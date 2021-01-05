@@ -6,13 +6,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/predicate"
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/predicate"
 )
 
 // DoctorUpdate is the builder for updating Doctor entities.
@@ -42,59 +40,74 @@ func (du *DoctorUpdate) AddName(i int) *DoctorUpdate {
 	return du
 }
 
-// SetOfficeID sets the office edge to Office by id.
-func (du *DoctorUpdate) SetOfficeID(id int) *DoctorUpdate {
-	du.mutation.SetOfficeID(id)
+// SetAge sets the age field.
+func (du *DoctorUpdate) SetAge(i int) *DoctorUpdate {
+	du.mutation.ResetAge()
+	du.mutation.SetAge(i)
 	return du
 }
 
-// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
-func (du *DoctorUpdate) SetNillableOfficeID(id *int) *DoctorUpdate {
-	if id != nil {
-		du = du.SetOfficeID(*id)
-	}
+// AddAge adds i to age.
+func (du *DoctorUpdate) AddAge(i int) *DoctorUpdate {
+	du.mutation.AddAge(i)
 	return du
 }
 
-// SetOffice sets the office edge to Office.
-func (du *DoctorUpdate) SetOffice(o *Office) *DoctorUpdate {
-	return du.SetOfficeID(o.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (du *DoctorUpdate) SetWorkingtimeID(id int) *DoctorUpdate {
-	du.mutation.SetWorkingtimeID(id)
+// SetEmail sets the email field.
+func (du *DoctorUpdate) SetEmail(i int) *DoctorUpdate {
+	du.mutation.ResetEmail()
+	du.mutation.SetEmail(i)
 	return du
 }
 
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (du *DoctorUpdate) SetNillableWorkingtimeID(id *int) *DoctorUpdate {
-	if id != nil {
-		du = du.SetWorkingtimeID(*id)
-	}
+// AddEmail adds i to email.
+func (du *DoctorUpdate) AddEmail(i int) *DoctorUpdate {
+	du.mutation.AddEmail(i)
 	return du
 }
 
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (du *DoctorUpdate) SetWorkingtime(w *Workingtime) *DoctorUpdate {
-	return du.SetWorkingtimeID(w.ID)
+// SetPnumber sets the pnumber field.
+func (du *DoctorUpdate) SetPnumber(i int) *DoctorUpdate {
+	du.mutation.ResetPnumber()
+	du.mutation.SetPnumber(i)
+	return du
+}
+
+// AddPnumber adds i to pnumber.
+func (du *DoctorUpdate) AddPnumber(i int) *DoctorUpdate {
+	du.mutation.AddPnumber(i)
+	return du
+}
+
+// SetAddress sets the address field.
+func (du *DoctorUpdate) SetAddress(i int) *DoctorUpdate {
+	du.mutation.ResetAddress()
+	du.mutation.SetAddress(i)
+	return du
+}
+
+// AddAddress adds i to address.
+func (du *DoctorUpdate) AddAddress(i int) *DoctorUpdate {
+	du.mutation.AddAddress(i)
+	return du
+}
+
+// SetEducational sets the educational field.
+func (du *DoctorUpdate) SetEducational(i int) *DoctorUpdate {
+	du.mutation.ResetEducational()
+	du.mutation.SetEducational(i)
+	return du
+}
+
+// AddEducational adds i to educational.
+func (du *DoctorUpdate) AddEducational(i int) *DoctorUpdate {
+	du.mutation.AddEducational(i)
+	return du
 }
 
 // Mutation returns the DoctorMutation object of the builder.
 func (du *DoctorUpdate) Mutation() *DoctorMutation {
 	return du.mutation
-}
-
-// ClearOffice clears the office edge to Office.
-func (du *DoctorUpdate) ClearOffice() *DoctorUpdate {
-	du.mutation.ClearOffice()
-	return du
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (du *DoctorUpdate) ClearWorkingtime() *DoctorUpdate {
-	du.mutation.ClearWorkingtime()
-	return du
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -104,7 +117,31 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
-
+	if v, ok := du.mutation.Age(); ok {
+		if err := doctor.AgeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Email(); ok {
+		if err := doctor.EmailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Pnumber(); ok {
+		if err := doctor.PnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Address(); ok {
+		if err := doctor.AddressValidator(v); err != nil {
+			return 0, &ValidationError{Name: "address", err: fmt.Errorf("ent: validator failed for field \"address\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Educational(); ok {
+		if err := doctor.EducationalValidator(v); err != nil {
+			return 0, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
+		}
+	}
 	var (
 		err      error
 		affected int
@@ -186,75 +223,75 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: doctor.FieldName,
 		})
 	}
-	if du.mutation.OfficeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.OfficeTable,
-			Columns: []string{doctor.OfficeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	if value, ok := du.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAge,
+		})
 	}
-	if nodes := du.mutation.OfficeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.OfficeTable,
-			Columns: []string{doctor.OfficeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	if value, ok := du.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAge,
+		})
 	}
-	if du.mutation.WorkingtimeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.WorkingtimeTable,
-			Columns: []string{doctor.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	if value, ok := du.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEmail,
+		})
 	}
-	if nodes := du.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.WorkingtimeTable,
-			Columns: []string{doctor.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	if value, ok := du.mutation.AddedEmail(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEmail,
+		})
+	}
+	if value, ok := du.mutation.Pnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldPnumber,
+		})
+	}
+	if value, ok := du.mutation.AddedPnumber(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldPnumber,
+		})
+	}
+	if value, ok := du.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAddress,
+		})
+	}
+	if value, ok := du.mutation.AddedAddress(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAddress,
+		})
+	}
+	if value, ok := du.mutation.Educational(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEducational,
+		})
+	}
+	if value, ok := du.mutation.AddedEducational(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEducational,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -287,59 +324,74 @@ func (duo *DoctorUpdateOne) AddName(i int) *DoctorUpdateOne {
 	return duo
 }
 
-// SetOfficeID sets the office edge to Office by id.
-func (duo *DoctorUpdateOne) SetOfficeID(id int) *DoctorUpdateOne {
-	duo.mutation.SetOfficeID(id)
+// SetAge sets the age field.
+func (duo *DoctorUpdateOne) SetAge(i int) *DoctorUpdateOne {
+	duo.mutation.ResetAge()
+	duo.mutation.SetAge(i)
 	return duo
 }
 
-// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
-func (duo *DoctorUpdateOne) SetNillableOfficeID(id *int) *DoctorUpdateOne {
-	if id != nil {
-		duo = duo.SetOfficeID(*id)
-	}
+// AddAge adds i to age.
+func (duo *DoctorUpdateOne) AddAge(i int) *DoctorUpdateOne {
+	duo.mutation.AddAge(i)
 	return duo
 }
 
-// SetOffice sets the office edge to Office.
-func (duo *DoctorUpdateOne) SetOffice(o *Office) *DoctorUpdateOne {
-	return duo.SetOfficeID(o.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (duo *DoctorUpdateOne) SetWorkingtimeID(id int) *DoctorUpdateOne {
-	duo.mutation.SetWorkingtimeID(id)
+// SetEmail sets the email field.
+func (duo *DoctorUpdateOne) SetEmail(i int) *DoctorUpdateOne {
+	duo.mutation.ResetEmail()
+	duo.mutation.SetEmail(i)
 	return duo
 }
 
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (duo *DoctorUpdateOne) SetNillableWorkingtimeID(id *int) *DoctorUpdateOne {
-	if id != nil {
-		duo = duo.SetWorkingtimeID(*id)
-	}
+// AddEmail adds i to email.
+func (duo *DoctorUpdateOne) AddEmail(i int) *DoctorUpdateOne {
+	duo.mutation.AddEmail(i)
 	return duo
 }
 
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (duo *DoctorUpdateOne) SetWorkingtime(w *Workingtime) *DoctorUpdateOne {
-	return duo.SetWorkingtimeID(w.ID)
+// SetPnumber sets the pnumber field.
+func (duo *DoctorUpdateOne) SetPnumber(i int) *DoctorUpdateOne {
+	duo.mutation.ResetPnumber()
+	duo.mutation.SetPnumber(i)
+	return duo
+}
+
+// AddPnumber adds i to pnumber.
+func (duo *DoctorUpdateOne) AddPnumber(i int) *DoctorUpdateOne {
+	duo.mutation.AddPnumber(i)
+	return duo
+}
+
+// SetAddress sets the address field.
+func (duo *DoctorUpdateOne) SetAddress(i int) *DoctorUpdateOne {
+	duo.mutation.ResetAddress()
+	duo.mutation.SetAddress(i)
+	return duo
+}
+
+// AddAddress adds i to address.
+func (duo *DoctorUpdateOne) AddAddress(i int) *DoctorUpdateOne {
+	duo.mutation.AddAddress(i)
+	return duo
+}
+
+// SetEducational sets the educational field.
+func (duo *DoctorUpdateOne) SetEducational(i int) *DoctorUpdateOne {
+	duo.mutation.ResetEducational()
+	duo.mutation.SetEducational(i)
+	return duo
+}
+
+// AddEducational adds i to educational.
+func (duo *DoctorUpdateOne) AddEducational(i int) *DoctorUpdateOne {
+	duo.mutation.AddEducational(i)
+	return duo
 }
 
 // Mutation returns the DoctorMutation object of the builder.
 func (duo *DoctorUpdateOne) Mutation() *DoctorMutation {
 	return duo.mutation
-}
-
-// ClearOffice clears the office edge to Office.
-func (duo *DoctorUpdateOne) ClearOffice() *DoctorUpdateOne {
-	duo.mutation.ClearOffice()
-	return duo
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (duo *DoctorUpdateOne) ClearWorkingtime() *DoctorUpdateOne {
-	duo.mutation.ClearWorkingtime()
-	return duo
 }
 
 // Save executes the query and returns the updated entity.
@@ -349,7 +401,31 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
-
+	if v, ok := duo.mutation.Age(); ok {
+		if err := doctor.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Email(); ok {
+		if err := doctor.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Pnumber(); ok {
+		if err := doctor.PnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Address(); ok {
+		if err := doctor.AddressValidator(v); err != nil {
+			return nil, &ValidationError{Name: "address", err: fmt.Errorf("ent: validator failed for field \"address\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Educational(); ok {
+		if err := doctor.EducationalValidator(v); err != nil {
+			return nil, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Doctor
@@ -429,75 +505,75 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 			Column: doctor.FieldName,
 		})
 	}
-	if duo.mutation.OfficeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.OfficeTable,
-			Columns: []string{doctor.OfficeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	if value, ok := duo.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAge,
+		})
 	}
-	if nodes := duo.mutation.OfficeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.OfficeTable,
-			Columns: []string{doctor.OfficeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	if value, ok := duo.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAge,
+		})
 	}
-	if duo.mutation.WorkingtimeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.WorkingtimeTable,
-			Columns: []string{doctor.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	if value, ok := duo.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEmail,
+		})
 	}
-	if nodes := duo.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.WorkingtimeTable,
-			Columns: []string{doctor.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	if value, ok := duo.mutation.AddedEmail(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEmail,
+		})
+	}
+	if value, ok := duo.mutation.Pnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldPnumber,
+		})
+	}
+	if value, ok := duo.mutation.AddedPnumber(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldPnumber,
+		})
+	}
+	if value, ok := duo.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAddress,
+		})
+	}
+	if value, ok := duo.mutation.AddedAddress(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldAddress,
+		})
+	}
+	if value, ok := duo.mutation.Educational(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEducational,
+		})
+	}
+	if value, ok := duo.mutation.AddedEducational(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: doctor.FieldEducational,
+		})
 	}
 	d = &Doctor{config: duo.config}
 	_spec.Assign = d.assignValues

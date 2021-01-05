@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/doctor"
 )
 
 // Doctor is the model entity for the Doctor schema.
@@ -19,50 +17,18 @@ type Doctor struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name int `json:"name,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the DoctorQuery when eager-loading is set.
-	Edges          DoctorEdges `json:"edges"`
+	// Age holds the value of the "age" field.
+	Age int `json:"age,omitempty"`
+	// Email holds the value of the "email" field.
+	Email int `json:"email,omitempty"`
+	// Pnumber holds the value of the "pnumber" field.
+	Pnumber int `json:"pnumber,omitempty"`
+	// Address holds the value of the "address" field.
+	Address int `json:"address,omitempty"`
+	// Educational holds the value of the "educational" field.
+	Educational    int `json:"educational,omitempty"`
 	office_id      *int
 	workingtime_id *int
-}
-
-// DoctorEdges holds the relations/edges for other nodes in the graph.
-type DoctorEdges struct {
-	// Office holds the value of the office edge.
-	Office *Office
-	// Workingtime holds the value of the workingtime edge.
-	Workingtime *Workingtime
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
-}
-
-// OfficeOrErr returns the Office value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e DoctorEdges) OfficeOrErr() (*Office, error) {
-	if e.loadedTypes[0] {
-		if e.Office == nil {
-			// The edge office was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: office.Label}
-		}
-		return e.Office, nil
-	}
-	return nil, &NotLoadedError{edge: "office"}
-}
-
-// WorkingtimeOrErr returns the Workingtime value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e DoctorEdges) WorkingtimeOrErr() (*Workingtime, error) {
-	if e.loadedTypes[1] {
-		if e.Workingtime == nil {
-			// The edge workingtime was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: workingtime.Label}
-		}
-		return e.Workingtime, nil
-	}
-	return nil, &NotLoadedError{edge: "workingtime"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -70,6 +36,11 @@ func (*Doctor) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // id
 		&sql.NullInt64{}, // name
+		&sql.NullInt64{}, // age
+		&sql.NullInt64{}, // email
+		&sql.NullInt64{}, // pnumber
+		&sql.NullInt64{}, // address
+		&sql.NullInt64{}, // educational
 	}
 }
 
@@ -98,7 +69,32 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Name = int(value.Int64)
 	}
-	values = values[1:]
+	if value, ok := values[1].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field age", values[1])
+	} else if value.Valid {
+		d.Age = int(value.Int64)
+	}
+	if value, ok := values[2].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field email", values[2])
+	} else if value.Valid {
+		d.Email = int(value.Int64)
+	}
+	if value, ok := values[3].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field pnumber", values[3])
+	} else if value.Valid {
+		d.Pnumber = int(value.Int64)
+	}
+	if value, ok := values[4].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field address", values[4])
+	} else if value.Valid {
+		d.Address = int(value.Int64)
+	}
+	if value, ok := values[5].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field educational", values[5])
+	} else if value.Valid {
+		d.Educational = int(value.Int64)
+	}
+	values = values[6:]
 	if len(values) == len(doctor.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field office_id", value)
@@ -114,16 +110,6 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
-}
-
-// QueryOffice queries the office edge of the Doctor.
-func (d *Doctor) QueryOffice() *OfficeQuery {
-	return (&DoctorClient{config: d.config}).QueryOffice(d)
-}
-
-// QueryWorkingtime queries the workingtime edge of the Doctor.
-func (d *Doctor) QueryWorkingtime() *WorkingtimeQuery {
-	return (&DoctorClient{config: d.config}).QueryWorkingtime(d)
 }
 
 // Update returns a builder for updating this Doctor.
@@ -151,6 +137,16 @@ func (d *Doctor) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(fmt.Sprintf("%v", d.Name))
+	builder.WriteString(", age=")
+	builder.WriteString(fmt.Sprintf("%v", d.Age))
+	builder.WriteString(", email=")
+	builder.WriteString(fmt.Sprintf("%v", d.Email))
+	builder.WriteString(", pnumber=")
+	builder.WriteString(fmt.Sprintf("%v", d.Pnumber))
+	builder.WriteString(", address=")
+	builder.WriteString(fmt.Sprintf("%v", d.Address))
+	builder.WriteString(", educational=")
+	builder.WriteString(fmt.Sprintf("%v", d.Educational))
 	builder.WriteByte(')')
 	return builder.String()
 }

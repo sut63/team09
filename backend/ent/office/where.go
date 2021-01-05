@@ -3,9 +3,9 @@
 package office
 
 import (
-	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/team09/app/ent/predicate"
 )
 
 // ID filters vertices based on their identifier.

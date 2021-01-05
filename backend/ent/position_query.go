@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/Piichet/app/ent/position"
-	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/predicate"
 )
 
 // PositionQuery is the builder for querying Position entities.

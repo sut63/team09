@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Piichet/app/ent"
+	"github.com/team09/app/ent"
 )
 
 // The DiseaseFunc type is an adapter to allow the use of ordinary

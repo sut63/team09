@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/workingtime"
 )
 
 // WorkingtimeCreate is the builder for creating a Workingtime entity.

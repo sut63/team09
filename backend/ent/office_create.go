@@ -7,10 +7,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/office"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 )
 
 // OfficeCreate is the builder for creating a Office entity.

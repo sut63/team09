@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/office"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/office"
 )
 
 // Office is the model entity for the Office schema.

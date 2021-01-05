@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Piichet/app/ent"
+	"github.com/team09/app/ent"
 )
 
 var (

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/position"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/position"
 )
 
 // Position is the model entity for the Position schema.

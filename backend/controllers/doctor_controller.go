@@ -4,7 +4,7 @@ import (
    "context"
    "fmt"
    "strconv"
-   
+
    "github.com/team09/app/ent"
    "github.com/team09/app/ent/doctor"
    "github.com/gin-gonic/gin"
@@ -22,7 +22,7 @@ type DoctorController struct {
 // @ID create-doctor
 // @Accept   json
 // @Produce  json
-// @Param doctor body ent.User true "Doctor entity"
+// @Param doctor body ent.Doctor true "Doctor entity"
 // @Success 200 {object} ent.Doctor
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H

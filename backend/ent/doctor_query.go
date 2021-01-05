@@ -8,13 +8,11 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/predicate"
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/predicate"
 )
 
 // DoctorQuery is the builder for querying Doctor entities.
@@ -25,10 +23,7 @@ type DoctorQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Doctor
-	// eager-loading edges.
-	withOffice      *OfficeQuery
-	withWorkingtime *WorkingtimeQuery
-	withFKs         bool
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,42 +51,6 @@ func (dq *DoctorQuery) Offset(offset int) *DoctorQuery {
 func (dq *DoctorQuery) Order(o ...OrderFunc) *DoctorQuery {
 	dq.order = append(dq.order, o...)
 	return dq
-}
-
-// QueryOffice chains the current query on the office edge.
-func (dq *DoctorQuery) QueryOffice() *OfficeQuery {
-	query := &OfficeQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
-			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.OfficeTable, doctor.OfficeColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryWorkingtime chains the current query on the workingtime edge.
-func (dq *DoctorQuery) QueryWorkingtime() *WorkingtimeQuery {
-	query := &WorkingtimeQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
-			sqlgraph.To(workingtime.Table, workingtime.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.WorkingtimeTable, doctor.WorkingtimeColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // First returns the first Doctor entity in the query. Returns *NotFoundError when no doctor was found.
@@ -273,28 +232,6 @@ func (dq *DoctorQuery) Clone() *DoctorQuery {
 	}
 }
 
-//  WithOffice tells the query-builder to eager-loads the nodes that are connected to
-// the "office" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DoctorQuery) WithOffice(opts ...func(*OfficeQuery)) *DoctorQuery {
-	query := &OfficeQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withOffice = query
-	return dq
-}
-
-//  WithWorkingtime tells the query-builder to eager-loads the nodes that are connected to
-// the "workingtime" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DoctorQuery) WithWorkingtime(opts ...func(*WorkingtimeQuery)) *DoctorQuery {
-	query := &WorkingtimeQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withWorkingtime = query
-	return dq
-}
-
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -359,17 +296,10 @@ func (dq *DoctorQuery) prepareQuery(ctx context.Context) error {
 
 func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 	var (
-		nodes       = []*Doctor{}
-		withFKs     = dq.withFKs
-		_spec       = dq.querySpec()
-		loadedTypes = [2]bool{
-			dq.withOffice != nil,
-			dq.withWorkingtime != nil,
-		}
+		nodes   = []*Doctor{}
+		withFKs = dq.withFKs
+		_spec   = dq.querySpec()
 	)
-	if dq.withOffice != nil || dq.withWorkingtime != nil {
-		withFKs = true
-	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, doctor.ForeignKeys...)
 	}
@@ -387,7 +317,6 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
-		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, dq.driver, _spec); err != nil {
@@ -396,57 +325,6 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-
-	if query := dq.withOffice; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Doctor)
-		for i := range nodes {
-			if fk := nodes[i].office_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(office.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "office_id" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Office = n
-			}
-		}
-	}
-
-	if query := dq.withWorkingtime; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Doctor)
-		for i := range nodes {
-			if fk := nodes[i].workingtime_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(workingtime.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "workingtime_id" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Workingtime = n
-			}
-		}
-	}
-
 	return nodes, nil
 }
 

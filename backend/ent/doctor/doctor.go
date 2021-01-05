@@ -9,34 +9,30 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-
-	// EdgeOffice holds the string denoting the office edge name in mutations.
-	EdgeOffice = "office"
-	// EdgeWorkingtime holds the string denoting the workingtime edge name in mutations.
-	EdgeWorkingtime = "workingtime"
+	// FieldAge holds the string denoting the age field in the database.
+	FieldAge = "age"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldPnumber holds the string denoting the pnumber field in the database.
+	FieldPnumber = "pnumber"
+	// FieldAddress holds the string denoting the address field in the database.
+	FieldAddress = "address"
+	// FieldEducational holds the string denoting the educational field in the database.
+	FieldEducational = "educational"
 
 	// Table holds the table name of the doctor in the database.
 	Table = "doctors"
-	// OfficeTable is the table the holds the office relation/edge.
-	OfficeTable = "doctors"
-	// OfficeInverseTable is the table name for the Office entity.
-	// It exists in this package in order to avoid circular dependency with the "office" package.
-	OfficeInverseTable = "offices"
-	// OfficeColumn is the table column denoting the office relation/edge.
-	OfficeColumn = "office_id"
-	// WorkingtimeTable is the table the holds the workingtime relation/edge.
-	WorkingtimeTable = "doctors"
-	// WorkingtimeInverseTable is the table name for the Workingtime entity.
-	// It exists in this package in order to avoid circular dependency with the "workingtime" package.
-	WorkingtimeInverseTable = "workingtimes"
-	// WorkingtimeColumn is the table column denoting the workingtime relation/edge.
-	WorkingtimeColumn = "workingtime_id"
 )
 
 // Columns holds all SQL columns for doctor fields.
 var Columns = []string{
 	FieldID,
 	FieldName,
+	FieldAge,
+	FieldEmail,
+	FieldPnumber,
+	FieldAddress,
+	FieldEducational,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Doctor type.
@@ -48,4 +44,14 @@ var ForeignKeys = []string{
 var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(int) error
+	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	AgeValidator func(int) error
+	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	EmailValidator func(int) error
+	// PnumberValidator is a validator for the "pnumber" field. It is called by the builders before save.
+	PnumberValidator func(int) error
+	// AddressValidator is a validator for the "address" field. It is called by the builders before save.
+	AddressValidator func(int) error
+	// EducationalValidator is a validator for the "educational" field. It is called by the builders before save.
+	EducationalValidator func(int) error
 )

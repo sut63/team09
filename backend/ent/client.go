@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Piichet/app/ent/migrate"
+	"github.com/team09/app/ent/migrate"
 
-	"github.com/Piichet/app/ent/disease"
-	"github.com/Piichet/app/ent/doctor"
-	"github.com/Piichet/app/ent/gender"
-	"github.com/Piichet/app/ent/office"
-	"github.com/Piichet/app/ent/position"
-	"github.com/Piichet/app/ent/title"
-	"github.com/Piichet/app/ent/workingtime"
+	"github.com/team09/app/ent/disease"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/title"
+	"github.com/team09/app/ent/workingtime"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -318,38 +318,6 @@ func (c *DoctorClient) GetX(ctx context.Context, id int) *Doctor {
 		panic(err)
 	}
 	return d
-}
-
-// QueryOffice queries the office edge of a Doctor.
-func (c *DoctorClient) QueryOffice(d *Doctor) *OfficeQuery {
-	query := &OfficeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, id),
-			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.OfficeTable, doctor.OfficeColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryWorkingtime queries the workingtime edge of a Doctor.
-func (c *DoctorClient) QueryWorkingtime(d *Doctor) *WorkingtimeQuery {
-	query := &WorkingtimeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, id),
-			sqlgraph.To(workingtime.Table, workingtime.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.WorkingtimeTable, doctor.WorkingtimeColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
 }
 
 // Hooks returns the client hooks.

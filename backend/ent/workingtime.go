@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/workingtime"
 )
 
 // Workingtime is the model entity for the Workingtime schema.

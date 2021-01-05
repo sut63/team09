@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Piichet/app/ent/gender"
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/gender"
 )
 
 // Gender is the model entity for the Gender schema.

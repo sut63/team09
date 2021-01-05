@@ -3,9 +3,8 @@
 package doctor
 
 import (
-	"github.com/Piichet/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
-	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/team09/app/ent/predicate"
 )
 
 // ID filters vertices based on their identifier.
@@ -98,6 +97,41 @@ func Name(v int) predicate.Doctor {
 	})
 }
 
+// Age applies equality check predicate on the "age" field. It's identical to AgeEQ.
+func Age(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAge), v))
+	})
+}
+
+// Email applies equality check predicate on the "email" field. It's identical to EmailEQ.
+func Email(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmail), v))
+	})
+}
+
+// Pnumber applies equality check predicate on the "pnumber" field. It's identical to PnumberEQ.
+func Pnumber(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPnumber), v))
+	})
+}
+
+// Address applies equality check predicate on the "address" field. It's identical to AddressEQ.
+func Address(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddress), v))
+	})
+}
+
+// Educational applies equality check predicate on the "educational" field. It's identical to EducationalEQ.
+func Educational(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEducational), v))
+	})
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
@@ -174,59 +208,383 @@ func NameLTE(v int) predicate.Doctor {
 	})
 }
 
-// HasOffice applies the HasEdge predicate on the "office" edge.
-func HasOffice() predicate.Doctor {
+// AgeEQ applies the EQ predicate on the "age" field.
+func AgeEQ(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(OfficeTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, OfficeTable, OfficeColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
+		s.Where(sql.EQ(s.C(FieldAge), v))
 	})
 }
 
-// HasOfficeWith applies the HasEdge predicate on the "office" edge with a given conditions (other predicates).
-func HasOfficeWith(preds ...predicate.Office) predicate.Doctor {
+// AgeNEQ applies the NEQ predicate on the "age" field.
+func AgeNEQ(v int) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(OfficeInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, OfficeTable, OfficeColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
+		s.Where(sql.NEQ(s.C(FieldAge), v))
 	})
 }
 
-// HasWorkingtime applies the HasEdge predicate on the "workingtime" edge.
-func HasWorkingtime() predicate.Doctor {
+// AgeIn applies the In predicate on the "age" field.
+func AgeIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
 	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkingtimeTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAge), v...))
 	})
 }
 
-// HasWorkingtimeWith applies the HasEdge predicate on the "workingtime" edge with a given conditions (other predicates).
-func HasWorkingtimeWith(preds ...predicate.Workingtime) predicate.Doctor {
+// AgeNotIn applies the NotIn predicate on the "age" field.
+func AgeNotIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
 	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkingtimeInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAge), v...))
+	})
+}
+
+// AgeGT applies the GT predicate on the "age" field.
+func AgeGT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAge), v))
+	})
+}
+
+// AgeGTE applies the GTE predicate on the "age" field.
+func AgeGTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAge), v))
+	})
+}
+
+// AgeLT applies the LT predicate on the "age" field.
+func AgeLT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAge), v))
+	})
+}
+
+// AgeLTE applies the LTE predicate on the "age" field.
+func AgeLTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAge), v))
+	})
+}
+
+// EmailEQ applies the EQ predicate on the "email" field.
+func EmailEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmail), v))
+	})
+}
+
+// EmailNEQ applies the NEQ predicate on the "email" field.
+func EmailNEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEmail), v))
+	})
+}
+
+// EmailIn applies the In predicate on the "email" field.
+func EmailIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEmail), v...))
+	})
+}
+
+// EmailNotIn applies the NotIn predicate on the "email" field.
+func EmailNotIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEmail), v...))
+	})
+}
+
+// EmailGT applies the GT predicate on the "email" field.
+func EmailGT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEmail), v))
+	})
+}
+
+// EmailGTE applies the GTE predicate on the "email" field.
+func EmailGTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEmail), v))
+	})
+}
+
+// EmailLT applies the LT predicate on the "email" field.
+func EmailLT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEmail), v))
+	})
+}
+
+// EmailLTE applies the LTE predicate on the "email" field.
+func EmailLTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEmail), v))
+	})
+}
+
+// PnumberEQ applies the EQ predicate on the "pnumber" field.
+func PnumberEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPnumber), v))
+	})
+}
+
+// PnumberNEQ applies the NEQ predicate on the "pnumber" field.
+func PnumberNEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPnumber), v))
+	})
+}
+
+// PnumberIn applies the In predicate on the "pnumber" field.
+func PnumberIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPnumber), v...))
+	})
+}
+
+// PnumberNotIn applies the NotIn predicate on the "pnumber" field.
+func PnumberNotIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPnumber), v...))
+	})
+}
+
+// PnumberGT applies the GT predicate on the "pnumber" field.
+func PnumberGT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPnumber), v))
+	})
+}
+
+// PnumberGTE applies the GTE predicate on the "pnumber" field.
+func PnumberGTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPnumber), v))
+	})
+}
+
+// PnumberLT applies the LT predicate on the "pnumber" field.
+func PnumberLT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPnumber), v))
+	})
+}
+
+// PnumberLTE applies the LTE predicate on the "pnumber" field.
+func PnumberLTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPnumber), v))
+	})
+}
+
+// AddressEQ applies the EQ predicate on the "address" field.
+func AddressEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddress), v))
+	})
+}
+
+// AddressNEQ applies the NEQ predicate on the "address" field.
+func AddressNEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAddress), v))
+	})
+}
+
+// AddressIn applies the In predicate on the "address" field.
+func AddressIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAddress), v...))
+	})
+}
+
+// AddressNotIn applies the NotIn predicate on the "address" field.
+func AddressNotIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAddress), v...))
+	})
+}
+
+// AddressGT applies the GT predicate on the "address" field.
+func AddressGT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAddress), v))
+	})
+}
+
+// AddressGTE applies the GTE predicate on the "address" field.
+func AddressGTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAddress), v))
+	})
+}
+
+// AddressLT applies the LT predicate on the "address" field.
+func AddressLT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAddress), v))
+	})
+}
+
+// AddressLTE applies the LTE predicate on the "address" field.
+func AddressLTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAddress), v))
+	})
+}
+
+// EducationalEQ applies the EQ predicate on the "educational" field.
+func EducationalEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEducational), v))
+	})
+}
+
+// EducationalNEQ applies the NEQ predicate on the "educational" field.
+func EducationalNEQ(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEducational), v))
+	})
+}
+
+// EducationalIn applies the In predicate on the "educational" field.
+func EducationalIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEducational), v...))
+	})
+}
+
+// EducationalNotIn applies the NotIn predicate on the "educational" field.
+func EducationalNotIn(vs ...int) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEducational), v...))
+	})
+}
+
+// EducationalGT applies the GT predicate on the "educational" field.
+func EducationalGT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEducational), v))
+	})
+}
+
+// EducationalGTE applies the GTE predicate on the "educational" field.
+func EducationalGTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEducational), v))
+	})
+}
+
+// EducationalLT applies the LT predicate on the "educational" field.
+func EducationalLT(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEducational), v))
+	})
+}
+
+// EducationalLTE applies the LTE predicate on the "educational" field.
+func EducationalLTE(v int) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEducational), v))
 	})
 }
 
