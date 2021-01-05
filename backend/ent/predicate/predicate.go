@@ -15,8 +15,14 @@ type Doctor func(*sql.Selector)
 // Gender is the predicate function for gender builders.
 type Gender func(*sql.Selector)
 
+// Office is the predicate function for office builders.
+type Office func(*sql.Selector)
+
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)
 
 // Title is the predicate function for title builders.
 type Title func(*sql.Selector)
+
+// Workingtime is the predicate function for workingtime builders.
+type Workingtime func(*sql.Selector)

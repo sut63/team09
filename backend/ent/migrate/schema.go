@@ -24,13 +24,30 @@ var (
 	DoctorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeInt},
+		{Name: "office_id", Type: field.TypeInt, Nullable: true},
+		{Name: "workingtime_id", Type: field.TypeInt, Nullable: true},
 	}
 	// DoctorsTable holds the schema information for the "doctors" table.
 	DoctorsTable = &schema.Table{
-		Name:        "doctors",
-		Columns:     DoctorsColumns,
-		PrimaryKey:  []*schema.Column{DoctorsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "doctors",
+		Columns:    DoctorsColumns,
+		PrimaryKey: []*schema.Column{DoctorsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "doctors_offices_doctors",
+				Columns: []*schema.Column{DoctorsColumns[2]},
+
+				RefColumns: []*schema.Column{OfficesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "doctors_workingtimes_doctors",
+				Columns: []*schema.Column{DoctorsColumns[3]},
+
+				RefColumns: []*schema.Column{WorkingtimesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// GendersColumns holds the columns for the "genders" table.
 	GendersColumns = []*schema.Column{
@@ -42,6 +59,18 @@ var (
 		Name:        "genders",
 		Columns:     GendersColumns,
 		PrimaryKey:  []*schema.Column{GendersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// OfficesColumns holds the columns for the "offices" table.
+	OfficesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "officename", Type: field.TypeString},
+	}
+	// OfficesTable holds the schema information for the "offices" table.
+	OfficesTable = &schema.Table{
+		Name:        "offices",
+		Columns:     OfficesColumns,
+		PrimaryKey:  []*schema.Column{OfficesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// PositionsColumns holds the columns for the "positions" table.
@@ -68,15 +97,31 @@ var (
 		PrimaryKey:  []*schema.Column{TitlesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// WorkingtimesColumns holds the columns for the "workingtimes" table.
+	WorkingtimesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "added_time", Type: field.TypeTime},
+	}
+	// WorkingtimesTable holds the schema information for the "workingtimes" table.
+	WorkingtimesTable = &schema.Table{
+		Name:        "workingtimes",
+		Columns:     WorkingtimesColumns,
+		PrimaryKey:  []*schema.Column{WorkingtimesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		DiseasesTable,
 		DoctorsTable,
 		GendersTable,
+		OfficesTable,
 		PositionsTable,
 		TitlesTable,
+		WorkingtimesTable,
 	}
 )
 
 func init() {
+	DoctorsTable.ForeignKeys[0].RefTable = OfficesTable
+	DoctorsTable.ForeignKeys[1].RefTable = WorkingtimesTable
 }

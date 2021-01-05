@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/office"
+	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
@@ -17,6 +19,50 @@ type Doctor struct {
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name int `json:"name,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the DoctorQuery when eager-loading is set.
+	Edges          DoctorEdges `json:"edges"`
+	office_id      *int
+	workingtime_id *int
+}
+
+// DoctorEdges holds the relations/edges for other nodes in the graph.
+type DoctorEdges struct {
+	// Office holds the value of the office edge.
+	Office *Office
+	// Workingtime holds the value of the workingtime edge.
+	Workingtime *Workingtime
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// OfficeOrErr returns the Office value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) OfficeOrErr() (*Office, error) {
+	if e.loadedTypes[0] {
+		if e.Office == nil {
+			// The edge office was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: office.Label}
+		}
+		return e.Office, nil
+	}
+	return nil, &NotLoadedError{edge: "office"}
+}
+
+// WorkingtimeOrErr returns the Workingtime value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) WorkingtimeOrErr() (*Workingtime, error) {
+	if e.loadedTypes[1] {
+		if e.Workingtime == nil {
+			// The edge workingtime was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: workingtime.Label}
+		}
+		return e.Workingtime, nil
+	}
+	return nil, &NotLoadedError{edge: "workingtime"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -24,6 +70,14 @@ func (*Doctor) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // id
 		&sql.NullInt64{}, // name
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Doctor) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // office_id
+		&sql.NullInt64{}, // workingtime_id
 	}
 }
 
@@ -44,7 +98,32 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Name = int(value.Int64)
 	}
+	values = values[1:]
+	if len(values) == len(doctor.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field office_id", value)
+		} else if value.Valid {
+			d.office_id = new(int)
+			*d.office_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field workingtime_id", value)
+		} else if value.Valid {
+			d.workingtime_id = new(int)
+			*d.workingtime_id = int(value.Int64)
+		}
+	}
 	return nil
+}
+
+// QueryOffice queries the office edge of the Doctor.
+func (d *Doctor) QueryOffice() *OfficeQuery {
+	return (&DoctorClient{config: d.config}).QueryOffice(d)
+}
+
+// QueryWorkingtime queries the workingtime edge of the Doctor.
+func (d *Doctor) QueryWorkingtime() *WorkingtimeQuery {
+	return (&DoctorClient{config: d.config}).QueryWorkingtime(d)
 }
 
 // Update returns a builder for updating this Doctor.

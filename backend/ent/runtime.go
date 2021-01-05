@@ -6,6 +6,7 @@ import (
 	"github.com/Piichet/app/ent/disease"
 	"github.com/Piichet/app/ent/doctor"
 	"github.com/Piichet/app/ent/gender"
+	"github.com/Piichet/app/ent/office"
 	"github.com/Piichet/app/ent/position"
 	"github.com/Piichet/app/ent/schema"
 	"github.com/Piichet/app/ent/title"
@@ -33,6 +34,12 @@ func init() {
 	genderDescGender := genderFields[0].Descriptor()
 	// gender.GenderValidator is a validator for the "gender" field. It is called by the builders before save.
 	gender.GenderValidator = genderDescGender.Validators[0].(func(string) error)
+	officeFields := schema.Office{}.Fields()
+	_ = officeFields
+	// officeDescOfficename is the schema descriptor for officename field.
+	officeDescOfficename := officeFields[0].Descriptor()
+	// office.OfficenameValidator is a validator for the "officename" field. It is called by the builders before save.
+	office.OfficenameValidator = officeDescOfficename.Validators[0].(func(string) error)
 	positionFields := schema.Position{}.Fields()
 	_ = positionFields
 	// positionDescPosition is the schema descriptor for position field.

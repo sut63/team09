@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { EntUser } from '../../api/models/EntUser';
 import Swal from 'sweetalert2';
 import {
   // Content,
@@ -201,7 +200,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/history" variant="body2">
+              <Link href="/user" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

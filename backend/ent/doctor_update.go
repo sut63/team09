@@ -7,7 +7,9 @@ import (
 	"fmt"
 
 	"github.com/Piichet/app/ent/doctor"
+	"github.com/Piichet/app/ent/office"
 	"github.com/Piichet/app/ent/predicate"
+	"github.com/Piichet/app/ent/workingtime"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -40,9 +42,59 @@ func (du *DoctorUpdate) AddName(i int) *DoctorUpdate {
 	return du
 }
 
+// SetOfficeID sets the office edge to Office by id.
+func (du *DoctorUpdate) SetOfficeID(id int) *DoctorUpdate {
+	du.mutation.SetOfficeID(id)
+	return du
+}
+
+// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillableOfficeID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetOfficeID(*id)
+	}
+	return du
+}
+
+// SetOffice sets the office edge to Office.
+func (du *DoctorUpdate) SetOffice(o *Office) *DoctorUpdate {
+	return du.SetOfficeID(o.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (du *DoctorUpdate) SetWorkingtimeID(id int) *DoctorUpdate {
+	du.mutation.SetWorkingtimeID(id)
+	return du
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillableWorkingtimeID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetWorkingtimeID(*id)
+	}
+	return du
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (du *DoctorUpdate) SetWorkingtime(w *Workingtime) *DoctorUpdate {
+	return du.SetWorkingtimeID(w.ID)
+}
+
 // Mutation returns the DoctorMutation object of the builder.
 func (du *DoctorUpdate) Mutation() *DoctorMutation {
 	return du.mutation
+}
+
+// ClearOffice clears the office edge to Office.
+func (du *DoctorUpdate) ClearOffice() *DoctorUpdate {
+	du.mutation.ClearOffice()
+	return du
+}
+
+// ClearWorkingtime clears the workingtime edge to Workingtime.
+func (du *DoctorUpdate) ClearWorkingtime() *DoctorUpdate {
+	du.mutation.ClearWorkingtime()
+	return du
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -52,6 +104,7 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -133,6 +186,76 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: doctor.FieldName,
 		})
 	}
+	if du.mutation.OfficeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.OfficeTable,
+			Columns: []string{doctor.OfficeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.OfficeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.OfficeTable,
+			Columns: []string{doctor.OfficeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.WorkingtimeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.WorkingtimeTable,
+			Columns: []string{doctor.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.WorkingtimeTable,
+			Columns: []string{doctor.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{doctor.Label}
@@ -164,9 +287,59 @@ func (duo *DoctorUpdateOne) AddName(i int) *DoctorUpdateOne {
 	return duo
 }
 
+// SetOfficeID sets the office edge to Office by id.
+func (duo *DoctorUpdateOne) SetOfficeID(id int) *DoctorUpdateOne {
+	duo.mutation.SetOfficeID(id)
+	return duo
+}
+
+// SetNillableOfficeID sets the office edge to Office by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillableOfficeID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetOfficeID(*id)
+	}
+	return duo
+}
+
+// SetOffice sets the office edge to Office.
+func (duo *DoctorUpdateOne) SetOffice(o *Office) *DoctorUpdateOne {
+	return duo.SetOfficeID(o.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (duo *DoctorUpdateOne) SetWorkingtimeID(id int) *DoctorUpdateOne {
+	duo.mutation.SetWorkingtimeID(id)
+	return duo
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillableWorkingtimeID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetWorkingtimeID(*id)
+	}
+	return duo
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (duo *DoctorUpdateOne) SetWorkingtime(w *Workingtime) *DoctorUpdateOne {
+	return duo.SetWorkingtimeID(w.ID)
+}
+
 // Mutation returns the DoctorMutation object of the builder.
 func (duo *DoctorUpdateOne) Mutation() *DoctorMutation {
 	return duo.mutation
+}
+
+// ClearOffice clears the office edge to Office.
+func (duo *DoctorUpdateOne) ClearOffice() *DoctorUpdateOne {
+	duo.mutation.ClearOffice()
+	return duo
+}
+
+// ClearWorkingtime clears the workingtime edge to Workingtime.
+func (duo *DoctorUpdateOne) ClearWorkingtime() *DoctorUpdateOne {
+	duo.mutation.ClearWorkingtime()
+	return duo
 }
 
 // Save executes the query and returns the updated entity.
@@ -176,6 +349,7 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Doctor
@@ -254,6 +428,76 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 			Value:  value,
 			Column: doctor.FieldName,
 		})
+	}
+	if duo.mutation.OfficeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.OfficeTable,
+			Columns: []string{doctor.OfficeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.OfficeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.OfficeTable,
+			Columns: []string{doctor.OfficeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.WorkingtimeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.WorkingtimeTable,
+			Columns: []string{doctor.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.WorkingtimeTable,
+			Columns: []string{doctor.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	d = &Doctor{config: duo.config}
 	_spec.Assign = d.assignValues
