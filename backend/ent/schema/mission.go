@@ -23,7 +23,6 @@ func (Mission) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("departments",Department.Type).StorageKey(edge.Column("mission_id")),
 
-		// edge.To("drugs",Drug.Type).StorageKey(edge.Column("unit_id")),
 	}
 }
  
