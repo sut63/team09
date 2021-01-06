@@ -10,8 +10,18 @@ const (
 	// FieldPosition holds the string denoting the position field in the database.
 	FieldPosition = "position"
 
+	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
+	EdgeDoctors = "doctors"
+
 	// Table holds the table name of the position in the database.
 	Table = "positions"
+	// DoctorsTable is the table the holds the doctors relation/edge.
+	DoctorsTable = "doctors"
+	// DoctorsInverseTable is the table name for the Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "doctor" package.
+	DoctorsInverseTable = "doctors"
+	// DoctorsColumn is the table column denoting the doctors relation/edge.
+	DoctorsColumn = "position_id"
 )
 
 // Columns holds all SQL columns for position fields.

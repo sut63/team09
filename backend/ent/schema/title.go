@@ -21,6 +21,7 @@ func (Title) Fields() []ent.Field {
 // Edges of the Title.
 func (Title) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("titles", Doctor.Type),
+		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("title_id")),
 	}
 }
+ 

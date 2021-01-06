@@ -10,18 +10,18 @@ const (
 	// FieldAddedTime holds the string denoting the added_time field in the database.
 	FieldAddedTime = "added_time"
 
-	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
-	EdgeDoctors = "doctors"
+	// EdgeOffices holds the string denoting the offices edge name in mutations.
+	EdgeOffices = "offices"
 
 	// Table holds the table name of the workingtime in the database.
 	Table = "workingtimes"
-	// DoctorsTable is the table the holds the doctors relation/edge.
-	DoctorsTable = "doctors"
-	// DoctorsInverseTable is the table name for the Doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "doctor" package.
-	DoctorsInverseTable = "doctors"
-	// DoctorsColumn is the table column denoting the doctors relation/edge.
-	DoctorsColumn = "workingtime_id"
+	// OfficesTable is the table the holds the offices relation/edge.
+	OfficesTable = "offices"
+	// OfficesInverseTable is the table name for the Office entity.
+	// It exists in this package in order to avoid circular dependency with the "office" package.
+	OfficesInverseTable = "offices"
+	// OfficesColumn is the table column denoting the offices relation/edge.
+	OfficesColumn = "workingtime_id"
 )
 
 // Columns holds all SQL columns for workingtime fields.

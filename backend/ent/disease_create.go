@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/disease"
+	"github.com/team09/app/ent/doctor"
 )
 
 // DiseaseCreate is the builder for creating a Disease entity.
@@ -23,6 +24,21 @@ type DiseaseCreate struct {
 func (dc *DiseaseCreate) SetDisease(s string) *DiseaseCreate {
 	dc.mutation.SetDisease(s)
 	return dc
+}
+
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (dc *DiseaseCreate) AddDoctorIDs(ids ...int) *DiseaseCreate {
+	dc.mutation.AddDoctorIDs(ids...)
+	return dc
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (dc *DiseaseCreate) AddDoctors(d ...*Doctor) *DiseaseCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return dc.AddDoctorIDs(ids...)
 }
 
 // Mutation returns the DiseaseMutation object of the builder.
@@ -107,6 +123,25 @@ func (dc *DiseaseCreate) createSpec() (*Disease, *sqlgraph.CreateSpec) {
 			Column: disease.FieldDisease,
 		})
 		d.Disease = value
+	}
+	if nodes := dc.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   disease.DoctorsTable,
+			Columns: []string{disease.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return d, _spec
 }

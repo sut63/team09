@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/title"
 )
@@ -33,9 +34,39 @@ func (tu *TitleUpdate) SetTitle(s string) *TitleUpdate {
 	return tu
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (tu *TitleUpdate) AddDoctorIDs(ids ...int) *TitleUpdate {
+	tu.mutation.AddDoctorIDs(ids...)
+	return tu
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (tu *TitleUpdate) AddDoctors(d ...*Doctor) *TitleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return tu.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the TitleMutation object of the builder.
 func (tu *TitleUpdate) Mutation() *TitleMutation {
 	return tu.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (tu *TitleUpdate) RemoveDoctorIDs(ids ...int) *TitleUpdate {
+	tu.mutation.RemoveDoctorIDs(ids...)
+	return tu
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (tu *TitleUpdate) RemoveDoctors(d ...*Doctor) *TitleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return tu.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -45,6 +76,7 @@ func (tu *TitleUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "title", err: fmt.Errorf("ent: validator failed for field \"title\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -119,6 +151,44 @@ func (tu *TitleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: title.FieldTitle,
 		})
 	}
+	if nodes := tu.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.DoctorsTable,
+			Columns: []string{title.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.DoctorsTable,
+			Columns: []string{title.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{title.Label}
@@ -143,9 +213,39 @@ func (tuo *TitleUpdateOne) SetTitle(s string) *TitleUpdateOne {
 	return tuo
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (tuo *TitleUpdateOne) AddDoctorIDs(ids ...int) *TitleUpdateOne {
+	tuo.mutation.AddDoctorIDs(ids...)
+	return tuo
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (tuo *TitleUpdateOne) AddDoctors(d ...*Doctor) *TitleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return tuo.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the TitleMutation object of the builder.
 func (tuo *TitleUpdateOne) Mutation() *TitleMutation {
 	return tuo.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (tuo *TitleUpdateOne) RemoveDoctorIDs(ids ...int) *TitleUpdateOne {
+	tuo.mutation.RemoveDoctorIDs(ids...)
+	return tuo
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (tuo *TitleUpdateOne) RemoveDoctors(d ...*Doctor) *TitleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return tuo.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -155,6 +255,7 @@ func (tuo *TitleUpdateOne) Save(ctx context.Context) (*Title, error) {
 			return nil, &ValidationError{Name: "title", err: fmt.Errorf("ent: validator failed for field \"title\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Title
@@ -226,6 +327,44 @@ func (tuo *TitleUpdateOne) sqlSave(ctx context.Context) (t *Title, err error) {
 			Value:  value,
 			Column: title.FieldTitle,
 		})
+	}
+	if nodes := tuo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.DoctorsTable,
+			Columns: []string{title.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.DoctorsTable,
+			Columns: []string{title.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	t = &Title{config: tuo.config}
 	_spec.Assign = t.assignValues

@@ -20,8 +20,63 @@ const (
 	// FieldEducational holds the string denoting the educational field in the database.
 	FieldEducational = "educational"
 
+	// EdgeTitle holds the string denoting the title edge name in mutations.
+	EdgeTitle = "title"
+	// EdgeGender holds the string denoting the gender edge name in mutations.
+	EdgeGender = "gender"
+	// EdgePosition holds the string denoting the position edge name in mutations.
+	EdgePosition = "position"
+	// EdgeDisease holds the string denoting the disease edge name in mutations.
+	EdgeDisease = "disease"
+	// EdgeOffices holds the string denoting the offices edge name in mutations.
+	EdgeOffices = "offices"
+	// EdgeDepartments holds the string denoting the departments edge name in mutations.
+	EdgeDepartments = "departments"
+
 	// Table holds the table name of the doctor in the database.
 	Table = "doctors"
+	// TitleTable is the table the holds the title relation/edge.
+	TitleTable = "doctors"
+	// TitleInverseTable is the table name for the Title entity.
+	// It exists in this package in order to avoid circular dependency with the "title" package.
+	TitleInverseTable = "titles"
+	// TitleColumn is the table column denoting the title relation/edge.
+	TitleColumn = "title_id"
+	// GenderTable is the table the holds the gender relation/edge.
+	GenderTable = "doctors"
+	// GenderInverseTable is the table name for the Gender entity.
+	// It exists in this package in order to avoid circular dependency with the "gender" package.
+	GenderInverseTable = "genders"
+	// GenderColumn is the table column denoting the gender relation/edge.
+	GenderColumn = "gender_id"
+	// PositionTable is the table the holds the position relation/edge.
+	PositionTable = "doctors"
+	// PositionInverseTable is the table name for the Position entity.
+	// It exists in this package in order to avoid circular dependency with the "position" package.
+	PositionInverseTable = "positions"
+	// PositionColumn is the table column denoting the position relation/edge.
+	PositionColumn = "position_id"
+	// DiseaseTable is the table the holds the disease relation/edge.
+	DiseaseTable = "doctors"
+	// DiseaseInverseTable is the table name for the Disease entity.
+	// It exists in this package in order to avoid circular dependency with the "disease" package.
+	DiseaseInverseTable = "diseases"
+	// DiseaseColumn is the table column denoting the disease relation/edge.
+	DiseaseColumn = "disease_id"
+	// OfficesTable is the table the holds the offices relation/edge.
+	OfficesTable = "offices"
+	// OfficesInverseTable is the table name for the Office entity.
+	// It exists in this package in order to avoid circular dependency with the "office" package.
+	OfficesInverseTable = "offices"
+	// OfficesColumn is the table column denoting the offices relation/edge.
+	OfficesColumn = "doctor_id"
+	// DepartmentsTable is the table the holds the departments relation/edge.
+	DepartmentsTable = "departments"
+	// DepartmentsInverseTable is the table name for the Department entity.
+	// It exists in this package in order to avoid circular dependency with the "department" package.
+	DepartmentsInverseTable = "departments"
+	// DepartmentsColumn is the table column denoting the departments relation/edge.
+	DepartmentsColumn = "doctor_id"
 )
 
 // Columns holds all SQL columns for doctor fields.
@@ -37,21 +92,23 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Doctor type.
 var ForeignKeys = []string{
-	"office_id",
-	"workingtime_id",
+	"disease_id",
+	"gender_id",
+	"position_id",
+	"title_id",
 }
 
 var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator func(int) error
+	NameValidator func(string) error
 	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
 	AgeValidator func(int) error
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
-	EmailValidator func(int) error
+	EmailValidator func(string) error
 	// PnumberValidator is a validator for the "pnumber" field. It is called by the builders before save.
 	PnumberValidator func(int) error
 	// AddressValidator is a validator for the "address" field. It is called by the builders before save.
-	AddressValidator func(int) error
+	AddressValidator func(string) error
 	// EducationalValidator is a validator for the "educational" field. It is called by the builders before save.
-	EducationalValidator func(int) error
+	EducationalValidator func(string) error
 )

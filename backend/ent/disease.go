@@ -17,6 +17,27 @@ type Disease struct {
 	ID int `json:"id,omitempty"`
 	// Disease holds the value of the "disease" field.
 	Disease string `json:"disease,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the DiseaseQuery when eager-loading is set.
+	Edges DiseaseEdges `json:"edges"`
+}
+
+// DiseaseEdges holds the relations/edges for other nodes in the graph.
+type DiseaseEdges struct {
+	// Doctors holds the value of the doctors edge.
+	Doctors []*Doctor
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// DoctorsOrErr returns the Doctors value or an error if the edge
+// was not loaded in eager-loading.
+func (e DiseaseEdges) DoctorsOrErr() ([]*Doctor, error) {
+	if e.loadedTypes[0] {
+		return e.Doctors, nil
+	}
+	return nil, &NotLoadedError{edge: "doctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,6 +66,11 @@ func (d *Disease) assignValues(values ...interface{}) error {
 		d.Disease = value.String
 	}
 	return nil
+}
+
+// QueryDoctors queries the doctors edge of the Disease.
+func (d *Disease) QueryDoctors() *DoctorQuery {
+	return (&DiseaseClient{config: d.config}).QueryDoctors(d)
 }
 
 // Update returns a builder for updating this Disease.

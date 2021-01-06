@@ -9,8 +9,14 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
+	"github.com/team09/app/ent/title"
 )
 
 // DoctorUpdate is the builder for updating Doctor entities.
@@ -28,15 +34,8 @@ func (du *DoctorUpdate) Where(ps ...predicate.Doctor) *DoctorUpdate {
 }
 
 // SetName sets the name field.
-func (du *DoctorUpdate) SetName(i int) *DoctorUpdate {
-	du.mutation.ResetName()
-	du.mutation.SetName(i)
-	return du
-}
-
-// AddName adds i to name.
-func (du *DoctorUpdate) AddName(i int) *DoctorUpdate {
-	du.mutation.AddName(i)
+func (du *DoctorUpdate) SetName(s string) *DoctorUpdate {
+	du.mutation.SetName(s)
 	return du
 }
 
@@ -54,15 +53,8 @@ func (du *DoctorUpdate) AddAge(i int) *DoctorUpdate {
 }
 
 // SetEmail sets the email field.
-func (du *DoctorUpdate) SetEmail(i int) *DoctorUpdate {
-	du.mutation.ResetEmail()
-	du.mutation.SetEmail(i)
-	return du
-}
-
-// AddEmail adds i to email.
-func (du *DoctorUpdate) AddEmail(i int) *DoctorUpdate {
-	du.mutation.AddEmail(i)
+func (du *DoctorUpdate) SetEmail(s string) *DoctorUpdate {
+	du.mutation.SetEmail(s)
 	return du
 }
 
@@ -80,34 +72,180 @@ func (du *DoctorUpdate) AddPnumber(i int) *DoctorUpdate {
 }
 
 // SetAddress sets the address field.
-func (du *DoctorUpdate) SetAddress(i int) *DoctorUpdate {
-	du.mutation.ResetAddress()
-	du.mutation.SetAddress(i)
-	return du
-}
-
-// AddAddress adds i to address.
-func (du *DoctorUpdate) AddAddress(i int) *DoctorUpdate {
-	du.mutation.AddAddress(i)
+func (du *DoctorUpdate) SetAddress(s string) *DoctorUpdate {
+	du.mutation.SetAddress(s)
 	return du
 }
 
 // SetEducational sets the educational field.
-func (du *DoctorUpdate) SetEducational(i int) *DoctorUpdate {
-	du.mutation.ResetEducational()
-	du.mutation.SetEducational(i)
+func (du *DoctorUpdate) SetEducational(s string) *DoctorUpdate {
+	du.mutation.SetEducational(s)
 	return du
 }
 
-// AddEducational adds i to educational.
-func (du *DoctorUpdate) AddEducational(i int) *DoctorUpdate {
-	du.mutation.AddEducational(i)
+// SetTitleID sets the title edge to Title by id.
+func (du *DoctorUpdate) SetTitleID(id int) *DoctorUpdate {
+	du.mutation.SetTitleID(id)
 	return du
+}
+
+// SetNillableTitleID sets the title edge to Title by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillableTitleID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetTitleID(*id)
+	}
+	return du
+}
+
+// SetTitle sets the title edge to Title.
+func (du *DoctorUpdate) SetTitle(t *Title) *DoctorUpdate {
+	return du.SetTitleID(t.ID)
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (du *DoctorUpdate) SetGenderID(id int) *DoctorUpdate {
+	du.mutation.SetGenderID(id)
+	return du
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillableGenderID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetGenderID(*id)
+	}
+	return du
+}
+
+// SetGender sets the gender edge to Gender.
+func (du *DoctorUpdate) SetGender(g *Gender) *DoctorUpdate {
+	return du.SetGenderID(g.ID)
+}
+
+// SetPositionID sets the position edge to Position by id.
+func (du *DoctorUpdate) SetPositionID(id int) *DoctorUpdate {
+	du.mutation.SetPositionID(id)
+	return du
+}
+
+// SetNillablePositionID sets the position edge to Position by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillablePositionID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetPositionID(*id)
+	}
+	return du
+}
+
+// SetPosition sets the position edge to Position.
+func (du *DoctorUpdate) SetPosition(p *Position) *DoctorUpdate {
+	return du.SetPositionID(p.ID)
+}
+
+// SetDiseaseID sets the disease edge to Disease by id.
+func (du *DoctorUpdate) SetDiseaseID(id int) *DoctorUpdate {
+	du.mutation.SetDiseaseID(id)
+	return du
+}
+
+// SetNillableDiseaseID sets the disease edge to Disease by id if the given value is not nil.
+func (du *DoctorUpdate) SetNillableDiseaseID(id *int) *DoctorUpdate {
+	if id != nil {
+		du = du.SetDiseaseID(*id)
+	}
+	return du
+}
+
+// SetDisease sets the disease edge to Disease.
+func (du *DoctorUpdate) SetDisease(d *Disease) *DoctorUpdate {
+	return du.SetDiseaseID(d.ID)
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (du *DoctorUpdate) AddOfficeIDs(ids ...int) *DoctorUpdate {
+	du.mutation.AddOfficeIDs(ids...)
+	return du
+}
+
+// AddOffices adds the offices edges to Office.
+func (du *DoctorUpdate) AddOffices(o ...*Office) *DoctorUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return du.AddOfficeIDs(ids...)
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (du *DoctorUpdate) AddDepartmentIDs(ids ...int) *DoctorUpdate {
+	du.mutation.AddDepartmentIDs(ids...)
+	return du
+}
+
+// AddDepartments adds the departments edges to Department.
+func (du *DoctorUpdate) AddDepartments(d ...*Department) *DoctorUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.AddDepartmentIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
 func (du *DoctorUpdate) Mutation() *DoctorMutation {
 	return du.mutation
+}
+
+// ClearTitle clears the title edge to Title.
+func (du *DoctorUpdate) ClearTitle() *DoctorUpdate {
+	du.mutation.ClearTitle()
+	return du
+}
+
+// ClearGender clears the gender edge to Gender.
+func (du *DoctorUpdate) ClearGender() *DoctorUpdate {
+	du.mutation.ClearGender()
+	return du
+}
+
+// ClearPosition clears the position edge to Position.
+func (du *DoctorUpdate) ClearPosition() *DoctorUpdate {
+	du.mutation.ClearPosition()
+	return du
+}
+
+// ClearDisease clears the disease edge to Disease.
+func (du *DoctorUpdate) ClearDisease() *DoctorUpdate {
+	du.mutation.ClearDisease()
+	return du
+}
+
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (du *DoctorUpdate) RemoveOfficeIDs(ids ...int) *DoctorUpdate {
+	du.mutation.RemoveOfficeIDs(ids...)
+	return du
+}
+
+// RemoveOffices removes offices edges to Office.
+func (du *DoctorUpdate) RemoveOffices(o ...*Office) *DoctorUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return du.RemoveOfficeIDs(ids...)
+}
+
+// RemoveDepartmentIDs removes the departments edge to Department by ids.
+func (du *DoctorUpdate) RemoveDepartmentIDs(ids ...int) *DoctorUpdate {
+	du.mutation.RemoveDepartmentIDs(ids...)
+	return du
+}
+
+// RemoveDepartments removes departments edges to Department.
+func (du *DoctorUpdate) RemoveDepartments(d ...*Department) *DoctorUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.RemoveDepartmentIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -142,6 +280,7 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -211,14 +350,7 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldName,
-		})
-	}
-	if value, ok := du.mutation.AddedName(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldName,
 		})
@@ -239,14 +371,7 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldEmail,
-		})
-	}
-	if value, ok := du.mutation.AddedEmail(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEmail,
 		})
@@ -267,31 +392,233 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.Address(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldAddress,
-		})
-	}
-	if value, ok := du.mutation.AddedAddress(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldAddress,
 		})
 	}
 	if value, ok := du.mutation.Educational(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEducational,
 		})
 	}
-	if value, ok := du.mutation.AddedEducational(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldEducational,
-		})
+	if du.mutation.TitleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.TitleTable,
+			Columns: []string{doctor.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.TitleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.TitleTable,
+			Columns: []string{doctor.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.GenderTable,
+			Columns: []string{doctor.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.GenderTable,
+			Columns: []string{doctor.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.PositionTable,
+			Columns: []string{doctor.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.PositionTable,
+			Columns: []string{doctor.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.DiseaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.DiseaseTable,
+			Columns: []string{doctor.DiseaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: disease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.DiseaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.DiseaseTable,
+			Columns: []string{doctor.DiseaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: disease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := du.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.OfficesTable,
+			Columns: []string{doctor.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.OfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.OfficesTable,
+			Columns: []string{doctor.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := du.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.DepartmentsTable,
+			Columns: []string{doctor.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.DepartmentsTable,
+			Columns: []string{doctor.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -312,15 +639,8 @@ type DoctorUpdateOne struct {
 }
 
 // SetName sets the name field.
-func (duo *DoctorUpdateOne) SetName(i int) *DoctorUpdateOne {
-	duo.mutation.ResetName()
-	duo.mutation.SetName(i)
-	return duo
-}
-
-// AddName adds i to name.
-func (duo *DoctorUpdateOne) AddName(i int) *DoctorUpdateOne {
-	duo.mutation.AddName(i)
+func (duo *DoctorUpdateOne) SetName(s string) *DoctorUpdateOne {
+	duo.mutation.SetName(s)
 	return duo
 }
 
@@ -338,15 +658,8 @@ func (duo *DoctorUpdateOne) AddAge(i int) *DoctorUpdateOne {
 }
 
 // SetEmail sets the email field.
-func (duo *DoctorUpdateOne) SetEmail(i int) *DoctorUpdateOne {
-	duo.mutation.ResetEmail()
-	duo.mutation.SetEmail(i)
-	return duo
-}
-
-// AddEmail adds i to email.
-func (duo *DoctorUpdateOne) AddEmail(i int) *DoctorUpdateOne {
-	duo.mutation.AddEmail(i)
+func (duo *DoctorUpdateOne) SetEmail(s string) *DoctorUpdateOne {
+	duo.mutation.SetEmail(s)
 	return duo
 }
 
@@ -364,34 +677,180 @@ func (duo *DoctorUpdateOne) AddPnumber(i int) *DoctorUpdateOne {
 }
 
 // SetAddress sets the address field.
-func (duo *DoctorUpdateOne) SetAddress(i int) *DoctorUpdateOne {
-	duo.mutation.ResetAddress()
-	duo.mutation.SetAddress(i)
-	return duo
-}
-
-// AddAddress adds i to address.
-func (duo *DoctorUpdateOne) AddAddress(i int) *DoctorUpdateOne {
-	duo.mutation.AddAddress(i)
+func (duo *DoctorUpdateOne) SetAddress(s string) *DoctorUpdateOne {
+	duo.mutation.SetAddress(s)
 	return duo
 }
 
 // SetEducational sets the educational field.
-func (duo *DoctorUpdateOne) SetEducational(i int) *DoctorUpdateOne {
-	duo.mutation.ResetEducational()
-	duo.mutation.SetEducational(i)
+func (duo *DoctorUpdateOne) SetEducational(s string) *DoctorUpdateOne {
+	duo.mutation.SetEducational(s)
 	return duo
 }
 
-// AddEducational adds i to educational.
-func (duo *DoctorUpdateOne) AddEducational(i int) *DoctorUpdateOne {
-	duo.mutation.AddEducational(i)
+// SetTitleID sets the title edge to Title by id.
+func (duo *DoctorUpdateOne) SetTitleID(id int) *DoctorUpdateOne {
+	duo.mutation.SetTitleID(id)
 	return duo
+}
+
+// SetNillableTitleID sets the title edge to Title by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillableTitleID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetTitleID(*id)
+	}
+	return duo
+}
+
+// SetTitle sets the title edge to Title.
+func (duo *DoctorUpdateOne) SetTitle(t *Title) *DoctorUpdateOne {
+	return duo.SetTitleID(t.ID)
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (duo *DoctorUpdateOne) SetGenderID(id int) *DoctorUpdateOne {
+	duo.mutation.SetGenderID(id)
+	return duo
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillableGenderID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetGenderID(*id)
+	}
+	return duo
+}
+
+// SetGender sets the gender edge to Gender.
+func (duo *DoctorUpdateOne) SetGender(g *Gender) *DoctorUpdateOne {
+	return duo.SetGenderID(g.ID)
+}
+
+// SetPositionID sets the position edge to Position by id.
+func (duo *DoctorUpdateOne) SetPositionID(id int) *DoctorUpdateOne {
+	duo.mutation.SetPositionID(id)
+	return duo
+}
+
+// SetNillablePositionID sets the position edge to Position by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillablePositionID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetPositionID(*id)
+	}
+	return duo
+}
+
+// SetPosition sets the position edge to Position.
+func (duo *DoctorUpdateOne) SetPosition(p *Position) *DoctorUpdateOne {
+	return duo.SetPositionID(p.ID)
+}
+
+// SetDiseaseID sets the disease edge to Disease by id.
+func (duo *DoctorUpdateOne) SetDiseaseID(id int) *DoctorUpdateOne {
+	duo.mutation.SetDiseaseID(id)
+	return duo
+}
+
+// SetNillableDiseaseID sets the disease edge to Disease by id if the given value is not nil.
+func (duo *DoctorUpdateOne) SetNillableDiseaseID(id *int) *DoctorUpdateOne {
+	if id != nil {
+		duo = duo.SetDiseaseID(*id)
+	}
+	return duo
+}
+
+// SetDisease sets the disease edge to Disease.
+func (duo *DoctorUpdateOne) SetDisease(d *Disease) *DoctorUpdateOne {
+	return duo.SetDiseaseID(d.ID)
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (duo *DoctorUpdateOne) AddOfficeIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.AddOfficeIDs(ids...)
+	return duo
+}
+
+// AddOffices adds the offices edges to Office.
+func (duo *DoctorUpdateOne) AddOffices(o ...*Office) *DoctorUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return duo.AddOfficeIDs(ids...)
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (duo *DoctorUpdateOne) AddDepartmentIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.AddDepartmentIDs(ids...)
+	return duo
+}
+
+// AddDepartments adds the departments edges to Department.
+func (duo *DoctorUpdateOne) AddDepartments(d ...*Department) *DoctorUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.AddDepartmentIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
 func (duo *DoctorUpdateOne) Mutation() *DoctorMutation {
 	return duo.mutation
+}
+
+// ClearTitle clears the title edge to Title.
+func (duo *DoctorUpdateOne) ClearTitle() *DoctorUpdateOne {
+	duo.mutation.ClearTitle()
+	return duo
+}
+
+// ClearGender clears the gender edge to Gender.
+func (duo *DoctorUpdateOne) ClearGender() *DoctorUpdateOne {
+	duo.mutation.ClearGender()
+	return duo
+}
+
+// ClearPosition clears the position edge to Position.
+func (duo *DoctorUpdateOne) ClearPosition() *DoctorUpdateOne {
+	duo.mutation.ClearPosition()
+	return duo
+}
+
+// ClearDisease clears the disease edge to Disease.
+func (duo *DoctorUpdateOne) ClearDisease() *DoctorUpdateOne {
+	duo.mutation.ClearDisease()
+	return duo
+}
+
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (duo *DoctorUpdateOne) RemoveOfficeIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.RemoveOfficeIDs(ids...)
+	return duo
+}
+
+// RemoveOffices removes offices edges to Office.
+func (duo *DoctorUpdateOne) RemoveOffices(o ...*Office) *DoctorUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return duo.RemoveOfficeIDs(ids...)
+}
+
+// RemoveDepartmentIDs removes the departments edge to Department by ids.
+func (duo *DoctorUpdateOne) RemoveDepartmentIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.RemoveDepartmentIDs(ids...)
+	return duo
+}
+
+// RemoveDepartments removes departments edges to Department.
+func (duo *DoctorUpdateOne) RemoveDepartments(d ...*Department) *DoctorUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.RemoveDepartmentIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -426,6 +885,7 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 			return nil, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Doctor
@@ -493,14 +953,7 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 	_spec.Node.ID.Value = id
 	if value, ok := duo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldName,
-		})
-	}
-	if value, ok := duo.mutation.AddedName(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldName,
 		})
@@ -521,14 +974,7 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 	}
 	if value, ok := duo.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldEmail,
-		})
-	}
-	if value, ok := duo.mutation.AddedEmail(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEmail,
 		})
@@ -549,31 +995,233 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 	}
 	if value, ok := duo.mutation.Address(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldAddress,
-		})
-	}
-	if value, ok := duo.mutation.AddedAddress(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldAddress,
 		})
 	}
 	if value, ok := duo.mutation.Educational(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEducational,
 		})
 	}
-	if value, ok := duo.mutation.AddedEducational(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldEducational,
-		})
+	if duo.mutation.TitleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.TitleTable,
+			Columns: []string{doctor.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.TitleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.TitleTable,
+			Columns: []string{doctor.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.GenderTable,
+			Columns: []string{doctor.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.GenderTable,
+			Columns: []string{doctor.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.PositionTable,
+			Columns: []string{doctor.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.PositionTable,
+			Columns: []string{doctor.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.DiseaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.DiseaseTable,
+			Columns: []string{doctor.DiseaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: disease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.DiseaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.DiseaseTable,
+			Columns: []string{doctor.DiseaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: disease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.OfficesTable,
+			Columns: []string{doctor.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.OfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.OfficesTable,
+			Columns: []string{doctor.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.DepartmentsTable,
+			Columns: []string{doctor.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.DepartmentsTable,
+			Columns: []string{doctor.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	d = &Doctor{config: duo.config}
 	_spec.Assign = d.assignValues

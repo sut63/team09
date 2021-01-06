@@ -12,7 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/workingtime"
 )
@@ -26,7 +26,7 @@ type WorkingtimeQuery struct {
 	unique     []string
 	predicates []predicate.Workingtime
 	// eager-loading edges.
-	withDoctors *DoctorQuery
+	withOffices *OfficeQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,17 +56,17 @@ func (wq *WorkingtimeQuery) Order(o ...OrderFunc) *WorkingtimeQuery {
 	return wq
 }
 
-// QueryDoctors chains the current query on the doctors edge.
-func (wq *WorkingtimeQuery) QueryDoctors() *DoctorQuery {
-	query := &DoctorQuery{config: wq.config}
+// QueryOffices chains the current query on the offices edge.
+func (wq *WorkingtimeQuery) QueryOffices() *OfficeQuery {
+	query := &OfficeQuery{config: wq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := wq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(workingtime.Table, workingtime.FieldID, wq.sqlQuery()),
-			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, workingtime.DoctorsTable, workingtime.DoctorsColumn),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, workingtime.OfficesTable, workingtime.OfficesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(wq.driver.Dialect(), step)
 		return fromU, nil
@@ -253,14 +253,14 @@ func (wq *WorkingtimeQuery) Clone() *WorkingtimeQuery {
 	}
 }
 
-//  WithDoctors tells the query-builder to eager-loads the nodes that are connected to
-// the "doctors" edge. The optional arguments used to configure the query builder of the edge.
-func (wq *WorkingtimeQuery) WithDoctors(opts ...func(*DoctorQuery)) *WorkingtimeQuery {
-	query := &DoctorQuery{config: wq.config}
+//  WithOffices tells the query-builder to eager-loads the nodes that are connected to
+// the "offices" edge. The optional arguments used to configure the query builder of the edge.
+func (wq *WorkingtimeQuery) WithOffices(opts ...func(*OfficeQuery)) *WorkingtimeQuery {
+	query := &OfficeQuery{config: wq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	wq.withDoctors = query
+	wq.withOffices = query
 	return wq
 }
 
@@ -331,7 +331,7 @@ func (wq *WorkingtimeQuery) sqlAll(ctx context.Context) ([]*Workingtime, error) 
 		nodes       = []*Workingtime{}
 		_spec       = wq.querySpec()
 		loadedTypes = [1]bool{
-			wq.withDoctors != nil,
+			wq.withOffices != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -355,7 +355,7 @@ func (wq *WorkingtimeQuery) sqlAll(ctx context.Context) ([]*Workingtime, error) 
 		return nodes, nil
 	}
 
-	if query := wq.withDoctors; query != nil {
+	if query := wq.withOffices; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Workingtime)
 		for i := range nodes {
@@ -363,8 +363,8 @@ func (wq *WorkingtimeQuery) sqlAll(ctx context.Context) ([]*Workingtime, error) 
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.Doctor(func(s *sql.Selector) {
-			s.Where(sql.InValues(workingtime.DoctorsColumn, fks...))
+		query.Where(predicate.Office(func(s *sql.Selector) {
+			s.Where(sql.InValues(workingtime.OfficesColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -379,7 +379,7 @@ func (wq *WorkingtimeQuery) sqlAll(ctx context.Context) ([]*Workingtime, error) 
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "workingtime_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Doctors = append(node.Edges.Doctors, n)
+			node.Edges.Offices = append(node.Edges.Offices, n)
 		}
 	}
 

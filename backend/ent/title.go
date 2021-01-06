@@ -17,6 +17,27 @@ type Title struct {
 	ID int `json:"id,omitempty"`
 	// Title holds the value of the "title" field.
 	Title string `json:"title,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the TitleQuery when eager-loading is set.
+	Edges TitleEdges `json:"edges"`
+}
+
+// TitleEdges holds the relations/edges for other nodes in the graph.
+type TitleEdges struct {
+	// Doctors holds the value of the doctors edge.
+	Doctors []*Doctor
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// DoctorsOrErr returns the Doctors value or an error if the edge
+// was not loaded in eager-loading.
+func (e TitleEdges) DoctorsOrErr() ([]*Doctor, error) {
+	if e.loadedTypes[0] {
+		return e.Doctors, nil
+	}
+	return nil, &NotLoadedError{edge: "doctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,6 +66,11 @@ func (t *Title) assignValues(values ...interface{}) error {
 		t.Title = value.String
 	}
 	return nil
+}
+
+// QueryDoctors queries the doctors edge of the Title.
+func (t *Title) QueryDoctors() *DoctorQuery {
+	return (&TitleClient{config: t.config}).QueryDoctors(t)
 }
 
 // Update returns a builder for updating this Title.

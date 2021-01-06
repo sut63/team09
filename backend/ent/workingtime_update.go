@@ -10,7 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/workingtime"
 )
@@ -35,19 +35,19 @@ func (wu *WorkingtimeUpdate) SetAddedTime(t time.Time) *WorkingtimeUpdate {
 	return wu
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (wu *WorkingtimeUpdate) AddDoctorIDs(ids ...int) *WorkingtimeUpdate {
-	wu.mutation.AddDoctorIDs(ids...)
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (wu *WorkingtimeUpdate) AddOfficeIDs(ids ...int) *WorkingtimeUpdate {
+	wu.mutation.AddOfficeIDs(ids...)
 	return wu
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (wu *WorkingtimeUpdate) AddDoctors(d ...*Doctor) *WorkingtimeUpdate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// AddOffices adds the offices edges to Office.
+func (wu *WorkingtimeUpdate) AddOffices(o ...*Office) *WorkingtimeUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
 	}
-	return wu.AddDoctorIDs(ids...)
+	return wu.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the WorkingtimeMutation object of the builder.
@@ -55,19 +55,19 @@ func (wu *WorkingtimeUpdate) Mutation() *WorkingtimeMutation {
 	return wu.mutation
 }
 
-// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
-func (wu *WorkingtimeUpdate) RemoveDoctorIDs(ids ...int) *WorkingtimeUpdate {
-	wu.mutation.RemoveDoctorIDs(ids...)
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (wu *WorkingtimeUpdate) RemoveOfficeIDs(ids ...int) *WorkingtimeUpdate {
+	wu.mutation.RemoveOfficeIDs(ids...)
 	return wu
 }
 
-// RemoveDoctors removes doctors edges to Doctor.
-func (wu *WorkingtimeUpdate) RemoveDoctors(d ...*Doctor) *WorkingtimeUpdate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// RemoveOffices removes offices edges to Office.
+func (wu *WorkingtimeUpdate) RemoveOffices(o ...*Office) *WorkingtimeUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
 	}
-	return wu.RemoveDoctorIDs(ids...)
+	return wu.RemoveOfficeIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -147,17 +147,17 @@ func (wu *WorkingtimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: workingtime.FieldAddedTime,
 		})
 	}
-	if nodes := wu.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+	if nodes := wu.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   workingtime.DoctorsTable,
-			Columns: []string{workingtime.DoctorsColumn},
+			Table:   workingtime.OfficesTable,
+			Columns: []string{workingtime.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: office.FieldID,
 				},
 			},
 		}
@@ -166,17 +166,17 @@ func (wu *WorkingtimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wu.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if nodes := wu.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   workingtime.DoctorsTable,
-			Columns: []string{workingtime.DoctorsColumn},
+			Table:   workingtime.OfficesTable,
+			Columns: []string{workingtime.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: office.FieldID,
 				},
 			},
 		}
@@ -209,19 +209,19 @@ func (wuo *WorkingtimeUpdateOne) SetAddedTime(t time.Time) *WorkingtimeUpdateOne
 	return wuo
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (wuo *WorkingtimeUpdateOne) AddDoctorIDs(ids ...int) *WorkingtimeUpdateOne {
-	wuo.mutation.AddDoctorIDs(ids...)
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (wuo *WorkingtimeUpdateOne) AddOfficeIDs(ids ...int) *WorkingtimeUpdateOne {
+	wuo.mutation.AddOfficeIDs(ids...)
 	return wuo
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (wuo *WorkingtimeUpdateOne) AddDoctors(d ...*Doctor) *WorkingtimeUpdateOne {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// AddOffices adds the offices edges to Office.
+func (wuo *WorkingtimeUpdateOne) AddOffices(o ...*Office) *WorkingtimeUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
 	}
-	return wuo.AddDoctorIDs(ids...)
+	return wuo.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the WorkingtimeMutation object of the builder.
@@ -229,19 +229,19 @@ func (wuo *WorkingtimeUpdateOne) Mutation() *WorkingtimeMutation {
 	return wuo.mutation
 }
 
-// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
-func (wuo *WorkingtimeUpdateOne) RemoveDoctorIDs(ids ...int) *WorkingtimeUpdateOne {
-	wuo.mutation.RemoveDoctorIDs(ids...)
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (wuo *WorkingtimeUpdateOne) RemoveOfficeIDs(ids ...int) *WorkingtimeUpdateOne {
+	wuo.mutation.RemoveOfficeIDs(ids...)
 	return wuo
 }
 
-// RemoveDoctors removes doctors edges to Doctor.
-func (wuo *WorkingtimeUpdateOne) RemoveDoctors(d ...*Doctor) *WorkingtimeUpdateOne {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// RemoveOffices removes offices edges to Office.
+func (wuo *WorkingtimeUpdateOne) RemoveOffices(o ...*Office) *WorkingtimeUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
 	}
-	return wuo.RemoveDoctorIDs(ids...)
+	return wuo.RemoveOfficeIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -319,17 +319,17 @@ func (wuo *WorkingtimeUpdateOne) sqlSave(ctx context.Context) (w *Workingtime, e
 			Column: workingtime.FieldAddedTime,
 		})
 	}
-	if nodes := wuo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+	if nodes := wuo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   workingtime.DoctorsTable,
-			Columns: []string{workingtime.DoctorsColumn},
+			Table:   workingtime.OfficesTable,
+			Columns: []string{workingtime.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: office.FieldID,
 				},
 			},
 		}
@@ -338,17 +338,17 @@ func (wuo *WorkingtimeUpdateOne) sqlSave(ctx context.Context) (w *Workingtime, e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := wuo.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if nodes := wuo.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   workingtime.DoctorsTable,
-			Columns: []string{workingtime.DoctorsColumn},
+			Table:   workingtime.OfficesTable,
+			Columns: []string{workingtime.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: office.FieldID,
 				},
 			},
 		}

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -11,8 +12,14 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
+	"github.com/team09/app/ent/title"
 )
 
 // DoctorQuery is the builder for querying Doctor entities.
@@ -23,7 +30,14 @@ type DoctorQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Doctor
-	withFKs    bool
+	// eager-loading edges.
+	withTitle       *TitleQuery
+	withGender      *GenderQuery
+	withPosition    *PositionQuery
+	withDisease     *DiseaseQuery
+	withOffices     *OfficeQuery
+	withDepartments *DepartmentQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -51,6 +65,114 @@ func (dq *DoctorQuery) Offset(offset int) *DoctorQuery {
 func (dq *DoctorQuery) Order(o ...OrderFunc) *DoctorQuery {
 	dq.order = append(dq.order, o...)
 	return dq
+}
+
+// QueryTitle chains the current query on the title edge.
+func (dq *DoctorQuery) QueryTitle() *TitleQuery {
+	query := &TitleQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(title.Table, title.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.TitleTable, doctor.TitleColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryGender chains the current query on the gender edge.
+func (dq *DoctorQuery) QueryGender() *GenderQuery {
+	query := &GenderQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(gender.Table, gender.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.GenderTable, doctor.GenderColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPosition chains the current query on the position edge.
+func (dq *DoctorQuery) QueryPosition() *PositionQuery {
+	query := &PositionQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(position.Table, position.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.PositionTable, doctor.PositionColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDisease chains the current query on the disease edge.
+func (dq *DoctorQuery) QueryDisease() *DiseaseQuery {
+	query := &DiseaseQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(disease.Table, disease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.DiseaseTable, doctor.DiseaseColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryOffices chains the current query on the offices edge.
+func (dq *DoctorQuery) QueryOffices() *OfficeQuery {
+	query := &OfficeQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.OfficesTable, doctor.OfficesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDepartments chains the current query on the departments edge.
+func (dq *DoctorQuery) QueryDepartments() *DepartmentQuery {
+	query := &DepartmentQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.DepartmentsTable, doctor.DepartmentsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Doctor entity in the query. Returns *NotFoundError when no doctor was found.
@@ -232,13 +354,79 @@ func (dq *DoctorQuery) Clone() *DoctorQuery {
 	}
 }
 
+//  WithTitle tells the query-builder to eager-loads the nodes that are connected to
+// the "title" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithTitle(opts ...func(*TitleQuery)) *DoctorQuery {
+	query := &TitleQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withTitle = query
+	return dq
+}
+
+//  WithGender tells the query-builder to eager-loads the nodes that are connected to
+// the "gender" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithGender(opts ...func(*GenderQuery)) *DoctorQuery {
+	query := &GenderQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withGender = query
+	return dq
+}
+
+//  WithPosition tells the query-builder to eager-loads the nodes that are connected to
+// the "position" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithPosition(opts ...func(*PositionQuery)) *DoctorQuery {
+	query := &PositionQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withPosition = query
+	return dq
+}
+
+//  WithDisease tells the query-builder to eager-loads the nodes that are connected to
+// the "disease" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithDisease(opts ...func(*DiseaseQuery)) *DoctorQuery {
+	query := &DiseaseQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withDisease = query
+	return dq
+}
+
+//  WithOffices tells the query-builder to eager-loads the nodes that are connected to
+// the "offices" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithOffices(opts ...func(*OfficeQuery)) *DoctorQuery {
+	query := &OfficeQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withOffices = query
+	return dq
+}
+
+//  WithDepartments tells the query-builder to eager-loads the nodes that are connected to
+// the "departments" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithDepartments(opts ...func(*DepartmentQuery)) *DoctorQuery {
+	query := &DepartmentQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withDepartments = query
+	return dq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		Name int `json:"name,omitempty"`
+//		Name string `json:"name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -264,7 +452,7 @@ func (dq *DoctorQuery) GroupBy(field string, fields ...string) *DoctorGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Name int `json:"name,omitempty"`
+//		Name string `json:"name,omitempty"`
 //	}
 //
 //	client.Doctor.Query().
@@ -296,10 +484,21 @@ func (dq *DoctorQuery) prepareQuery(ctx context.Context) error {
 
 func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 	var (
-		nodes   = []*Doctor{}
-		withFKs = dq.withFKs
-		_spec   = dq.querySpec()
+		nodes       = []*Doctor{}
+		withFKs     = dq.withFKs
+		_spec       = dq.querySpec()
+		loadedTypes = [6]bool{
+			dq.withTitle != nil,
+			dq.withGender != nil,
+			dq.withPosition != nil,
+			dq.withDisease != nil,
+			dq.withOffices != nil,
+			dq.withDepartments != nil,
+		}
 	)
+	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil {
+		withFKs = true
+	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, doctor.ForeignKeys...)
 	}
@@ -317,6 +516,7 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, dq.driver, _spec); err != nil {
@@ -325,6 +525,163 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := dq.withTitle; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Doctor)
+		for i := range nodes {
+			if fk := nodes[i].title_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(title.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "title_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Title = n
+			}
+		}
+	}
+
+	if query := dq.withGender; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Doctor)
+		for i := range nodes {
+			if fk := nodes[i].gender_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(gender.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Gender = n
+			}
+		}
+	}
+
+	if query := dq.withPosition; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Doctor)
+		for i := range nodes {
+			if fk := nodes[i].position_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(position.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "position_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Position = n
+			}
+		}
+	}
+
+	if query := dq.withDisease; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Doctor)
+		for i := range nodes {
+			if fk := nodes[i].disease_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(disease.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "disease_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Disease = n
+			}
+		}
+	}
+
+	if query := dq.withOffices; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Doctor)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Office(func(s *sql.Selector) {
+			s.Where(sql.InValues(doctor.OfficesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.doctor_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Offices = append(node.Edges.Offices, n)
+		}
+	}
+
+	if query := dq.withDepartments; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Doctor)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Department(func(s *sql.Selector) {
+			s.Where(sql.InValues(doctor.DepartmentsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.doctor_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Departments = append(node.Edges.Departments, n)
+		}
+	}
+
 	return nodes, nil
 }
 

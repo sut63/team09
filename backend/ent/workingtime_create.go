@@ -10,7 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -27,19 +27,19 @@ func (wc *WorkingtimeCreate) SetAddedTime(t time.Time) *WorkingtimeCreate {
 	return wc
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (wc *WorkingtimeCreate) AddDoctorIDs(ids ...int) *WorkingtimeCreate {
-	wc.mutation.AddDoctorIDs(ids...)
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (wc *WorkingtimeCreate) AddOfficeIDs(ids ...int) *WorkingtimeCreate {
+	wc.mutation.AddOfficeIDs(ids...)
 	return wc
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (wc *WorkingtimeCreate) AddDoctors(d ...*Doctor) *WorkingtimeCreate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// AddOffices adds the offices edges to Office.
+func (wc *WorkingtimeCreate) AddOffices(o ...*Office) *WorkingtimeCreate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
 	}
-	return wc.AddDoctorIDs(ids...)
+	return wc.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the WorkingtimeMutation object of the builder.
@@ -120,17 +120,17 @@ func (wc *WorkingtimeCreate) createSpec() (*Workingtime, *sqlgraph.CreateSpec) {
 		})
 		w.AddedTime = value
 	}
-	if nodes := wc.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if nodes := wc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   workingtime.DoctorsTable,
-			Columns: []string{workingtime.DoctorsColumn},
+			Table:   workingtime.OfficesTable,
+			Columns: []string{workingtime.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: office.FieldID,
 				},
 			},
 		}

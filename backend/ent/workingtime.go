@@ -25,20 +25,20 @@ type Workingtime struct {
 
 // WorkingtimeEdges holds the relations/edges for other nodes in the graph.
 type WorkingtimeEdges struct {
-	// Doctors holds the value of the doctors edge.
-	Doctors []*Doctor
+	// Offices holds the value of the offices edge.
+	Offices []*Office
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// DoctorsOrErr returns the Doctors value or an error if the edge
+// OfficesOrErr returns the Offices value or an error if the edge
 // was not loaded in eager-loading.
-func (e WorkingtimeEdges) DoctorsOrErr() ([]*Doctor, error) {
+func (e WorkingtimeEdges) OfficesOrErr() ([]*Office, error) {
 	if e.loadedTypes[0] {
-		return e.Doctors, nil
+		return e.Offices, nil
 	}
-	return nil, &NotLoadedError{edge: "doctors"}
+	return nil, &NotLoadedError{edge: "offices"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -69,9 +69,9 @@ func (w *Workingtime) assignValues(values ...interface{}) error {
 	return nil
 }
 
-// QueryDoctors queries the doctors edge of the Workingtime.
-func (w *Workingtime) QueryDoctors() *DoctorQuery {
-	return (&WorkingtimeClient{config: w.config}).QueryDoctors(w)
+// QueryOffices queries the offices edge of the Workingtime.
+func (w *Workingtime) QueryOffices() *OfficeQuery {
+	return (&WorkingtimeClient{config: w.config}).QueryOffices(w)
 }
 
 // Update returns a builder for updating this Workingtime.

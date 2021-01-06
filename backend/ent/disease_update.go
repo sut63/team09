@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/disease"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/predicate"
 )
 
@@ -33,9 +34,39 @@ func (du *DiseaseUpdate) SetDisease(s string) *DiseaseUpdate {
 	return du
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (du *DiseaseUpdate) AddDoctorIDs(ids ...int) *DiseaseUpdate {
+	du.mutation.AddDoctorIDs(ids...)
+	return du
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (du *DiseaseUpdate) AddDoctors(d ...*Doctor) *DiseaseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the DiseaseMutation object of the builder.
 func (du *DiseaseUpdate) Mutation() *DiseaseMutation {
 	return du.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (du *DiseaseUpdate) RemoveDoctorIDs(ids ...int) *DiseaseUpdate {
+	du.mutation.RemoveDoctorIDs(ids...)
+	return du
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (du *DiseaseUpdate) RemoveDoctors(d ...*Doctor) *DiseaseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return du.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -45,6 +76,7 @@ func (du *DiseaseUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "disease", err: fmt.Errorf("ent: validator failed for field \"disease\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -119,6 +151,44 @@ func (du *DiseaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: disease.FieldDisease,
 		})
 	}
+	if nodes := du.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   disease.DoctorsTable,
+			Columns: []string{disease.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   disease.DoctorsTable,
+			Columns: []string{disease.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{disease.Label}
@@ -143,9 +213,39 @@ func (duo *DiseaseUpdateOne) SetDisease(s string) *DiseaseUpdateOne {
 	return duo
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (duo *DiseaseUpdateOne) AddDoctorIDs(ids ...int) *DiseaseUpdateOne {
+	duo.mutation.AddDoctorIDs(ids...)
+	return duo
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (duo *DiseaseUpdateOne) AddDoctors(d ...*Doctor) *DiseaseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the DiseaseMutation object of the builder.
 func (duo *DiseaseUpdateOne) Mutation() *DiseaseMutation {
 	return duo.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (duo *DiseaseUpdateOne) RemoveDoctorIDs(ids ...int) *DiseaseUpdateOne {
+	duo.mutation.RemoveDoctorIDs(ids...)
+	return duo
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (duo *DiseaseUpdateOne) RemoveDoctors(d ...*Doctor) *DiseaseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return duo.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -155,6 +255,7 @@ func (duo *DiseaseUpdateOne) Save(ctx context.Context) (*Disease, error) {
 			return nil, &ValidationError{Name: "disease", err: fmt.Errorf("ent: validator failed for field \"disease\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Disease
@@ -226,6 +327,44 @@ func (duo *DiseaseUpdateOne) sqlSave(ctx context.Context) (d *Disease, err error
 			Value:  value,
 			Column: disease.FieldDisease,
 		})
+	}
+	if nodes := duo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   disease.DoctorsTable,
+			Columns: []string{disease.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   disease.DoctorsTable,
+			Columns: []string{disease.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	d = &Disease{config: duo.config}
 	_spec.Assign = d.assignValues

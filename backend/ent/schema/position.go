@@ -21,6 +21,7 @@ func (Position) Fields() []ent.Field {
 // Edges of the Position.
 func (Position) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("position", Doctor.Type),
+		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("position_id")),
 	}
 }
+ 

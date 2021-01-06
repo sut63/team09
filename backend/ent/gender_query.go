@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -11,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/gender"
 	"github.com/team09/app/ent/predicate"
 )
@@ -23,6 +25,8 @@ type GenderQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Gender
+	// eager-loading edges.
+	withDoctors *DoctorQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +54,24 @@ func (gq *GenderQuery) Offset(offset int) *GenderQuery {
 func (gq *GenderQuery) Order(o ...OrderFunc) *GenderQuery {
 	gq.order = append(gq.order, o...)
 	return gq
+}
+
+// QueryDoctors chains the current query on the doctors edge.
+func (gq *GenderQuery) QueryDoctors() *DoctorQuery {
+	query := &DoctorQuery{config: gq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := gq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(gender.Table, gender.FieldID, gq.sqlQuery()),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, gender.DoctorsTable, gender.DoctorsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Gender entity in the query. Returns *NotFoundError when no gender was found.
@@ -231,6 +253,17 @@ func (gq *GenderQuery) Clone() *GenderQuery {
 	}
 }
 
+//  WithDoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "doctors" edge. The optional arguments used to configure the query builder of the edge.
+func (gq *GenderQuery) WithDoctors(opts ...func(*DoctorQuery)) *GenderQuery {
+	query := &DoctorQuery{config: gq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	gq.withDoctors = query
+	return gq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -295,8 +328,11 @@ func (gq *GenderQuery) prepareQuery(ctx context.Context) error {
 
 func (gq *GenderQuery) sqlAll(ctx context.Context) ([]*Gender, error) {
 	var (
-		nodes = []*Gender{}
-		_spec = gq.querySpec()
+		nodes       = []*Gender{}
+		_spec       = gq.querySpec()
+		loadedTypes = [1]bool{
+			gq.withDoctors != nil,
+		}
 	)
 	_spec.ScanValues = func() []interface{} {
 		node := &Gender{config: gq.config}
@@ -309,6 +345,7 @@ func (gq *GenderQuery) sqlAll(ctx context.Context) ([]*Gender, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, gq.driver, _spec); err != nil {
@@ -317,6 +354,35 @@ func (gq *GenderQuery) sqlAll(ctx context.Context) ([]*Gender, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := gq.withDoctors; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Gender)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Doctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(gender.DoctorsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.gender_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "gender_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Doctors = append(node.Edges.Doctors, n)
+		}
+	}
+
 	return nodes, nil
 }
 

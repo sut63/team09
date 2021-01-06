@@ -7,7 +7,11 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/title"
 )
 
 // Doctor is the model entity for the Doctor schema.
@@ -16,39 +20,139 @@ type Doctor struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name int `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 	// Age holds the value of the "age" field.
 	Age int `json:"age,omitempty"`
 	// Email holds the value of the "email" field.
-	Email int `json:"email,omitempty"`
+	Email string `json:"email,omitempty"`
 	// Pnumber holds the value of the "pnumber" field.
 	Pnumber int `json:"pnumber,omitempty"`
 	// Address holds the value of the "address" field.
-	Address int `json:"address,omitempty"`
+	Address string `json:"address,omitempty"`
 	// Educational holds the value of the "educational" field.
-	Educational    int `json:"educational,omitempty"`
-	office_id      *int
-	workingtime_id *int
+	Educational string `json:"educational,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the DoctorQuery when eager-loading is set.
+	Edges       DoctorEdges `json:"edges"`
+	disease_id  *int
+	gender_id   *int
+	position_id *int
+	title_id    *int
+}
+
+// DoctorEdges holds the relations/edges for other nodes in the graph.
+type DoctorEdges struct {
+	// Title holds the value of the title edge.
+	Title *Title
+	// Gender holds the value of the gender edge.
+	Gender *Gender
+	// Position holds the value of the position edge.
+	Position *Position
+	// Disease holds the value of the disease edge.
+	Disease *Disease
+	// Offices holds the value of the offices edge.
+	Offices []*Office
+	// Departments holds the value of the departments edge.
+	Departments []*Department
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [6]bool
+}
+
+// TitleOrErr returns the Title value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) TitleOrErr() (*Title, error) {
+	if e.loadedTypes[0] {
+		if e.Title == nil {
+			// The edge title was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: title.Label}
+		}
+		return e.Title, nil
+	}
+	return nil, &NotLoadedError{edge: "title"}
+}
+
+// GenderOrErr returns the Gender value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) GenderOrErr() (*Gender, error) {
+	if e.loadedTypes[1] {
+		if e.Gender == nil {
+			// The edge gender was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: gender.Label}
+		}
+		return e.Gender, nil
+	}
+	return nil, &NotLoadedError{edge: "gender"}
+}
+
+// PositionOrErr returns the Position value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) PositionOrErr() (*Position, error) {
+	if e.loadedTypes[2] {
+		if e.Position == nil {
+			// The edge position was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: position.Label}
+		}
+		return e.Position, nil
+	}
+	return nil, &NotLoadedError{edge: "position"}
+}
+
+// DiseaseOrErr returns the Disease value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) DiseaseOrErr() (*Disease, error) {
+	if e.loadedTypes[3] {
+		if e.Disease == nil {
+			// The edge disease was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: disease.Label}
+		}
+		return e.Disease, nil
+	}
+	return nil, &NotLoadedError{edge: "disease"}
+}
+
+// OfficesOrErr returns the Offices value or an error if the edge
+// was not loaded in eager-loading.
+func (e DoctorEdges) OfficesOrErr() ([]*Office, error) {
+	if e.loadedTypes[4] {
+		return e.Offices, nil
+	}
+	return nil, &NotLoadedError{edge: "offices"}
+}
+
+// DepartmentsOrErr returns the Departments value or an error if the edge
+// was not loaded in eager-loading.
+func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
+	if e.loadedTypes[5] {
+		return e.Departments, nil
+	}
+	return nil, &NotLoadedError{edge: "departments"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Doctor) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
-		&sql.NullInt64{}, // name
-		&sql.NullInt64{}, // age
-		&sql.NullInt64{}, // email
-		&sql.NullInt64{}, // pnumber
-		&sql.NullInt64{}, // address
-		&sql.NullInt64{}, // educational
+		&sql.NullInt64{},  // id
+		&sql.NullString{}, // name
+		&sql.NullInt64{},  // age
+		&sql.NullString{}, // email
+		&sql.NullInt64{},  // pnumber
+		&sql.NullString{}, // address
+		&sql.NullString{}, // educational
 	}
 }
 
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Doctor) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // office_id
-		&sql.NullInt64{}, // workingtime_id
+		&sql.NullInt64{}, // disease_id
+		&sql.NullInt64{}, // gender_id
+		&sql.NullInt64{}, // position_id
+		&sql.NullInt64{}, // title_id
 	}
 }
 
@@ -64,52 +168,94 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	}
 	d.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
+	if value, ok := values[0].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field name", values[0])
 	} else if value.Valid {
-		d.Name = int(value.Int64)
+		d.Name = value.String
 	}
 	if value, ok := values[1].(*sql.NullInt64); !ok {
 		return fmt.Errorf("unexpected type %T for field age", values[1])
 	} else if value.Valid {
 		d.Age = int(value.Int64)
 	}
-	if value, ok := values[2].(*sql.NullInt64); !ok {
+	if value, ok := values[2].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field email", values[2])
 	} else if value.Valid {
-		d.Email = int(value.Int64)
+		d.Email = value.String
 	}
 	if value, ok := values[3].(*sql.NullInt64); !ok {
 		return fmt.Errorf("unexpected type %T for field pnumber", values[3])
 	} else if value.Valid {
 		d.Pnumber = int(value.Int64)
 	}
-	if value, ok := values[4].(*sql.NullInt64); !ok {
+	if value, ok := values[4].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field address", values[4])
 	} else if value.Valid {
-		d.Address = int(value.Int64)
+		d.Address = value.String
 	}
-	if value, ok := values[5].(*sql.NullInt64); !ok {
+	if value, ok := values[5].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field educational", values[5])
 	} else if value.Valid {
-		d.Educational = int(value.Int64)
+		d.Educational = value.String
 	}
 	values = values[6:]
 	if len(values) == len(doctor.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field office_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field disease_id", value)
 		} else if value.Valid {
-			d.office_id = new(int)
-			*d.office_id = int(value.Int64)
+			d.disease_id = new(int)
+			*d.disease_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field workingtime_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field gender_id", value)
 		} else if value.Valid {
-			d.workingtime_id = new(int)
-			*d.workingtime_id = int(value.Int64)
+			d.gender_id = new(int)
+			*d.gender_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field position_id", value)
+		} else if value.Valid {
+			d.position_id = new(int)
+			*d.position_id = int(value.Int64)
+		}
+		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field title_id", value)
+		} else if value.Valid {
+			d.title_id = new(int)
+			*d.title_id = int(value.Int64)
 		}
 	}
 	return nil
+}
+
+// QueryTitle queries the title edge of the Doctor.
+func (d *Doctor) QueryTitle() *TitleQuery {
+	return (&DoctorClient{config: d.config}).QueryTitle(d)
+}
+
+// QueryGender queries the gender edge of the Doctor.
+func (d *Doctor) QueryGender() *GenderQuery {
+	return (&DoctorClient{config: d.config}).QueryGender(d)
+}
+
+// QueryPosition queries the position edge of the Doctor.
+func (d *Doctor) QueryPosition() *PositionQuery {
+	return (&DoctorClient{config: d.config}).QueryPosition(d)
+}
+
+// QueryDisease queries the disease edge of the Doctor.
+func (d *Doctor) QueryDisease() *DiseaseQuery {
+	return (&DoctorClient{config: d.config}).QueryDisease(d)
+}
+
+// QueryOffices queries the offices edge of the Doctor.
+func (d *Doctor) QueryOffices() *OfficeQuery {
+	return (&DoctorClient{config: d.config}).QueryOffices(d)
+}
+
+// QueryDepartments queries the departments edge of the Doctor.
+func (d *Doctor) QueryDepartments() *DepartmentQuery {
+	return (&DoctorClient{config: d.config}).QueryDepartments(d)
 }
 
 // Update returns a builder for updating this Doctor.
@@ -136,17 +282,17 @@ func (d *Doctor) String() string {
 	builder.WriteString("Doctor(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
 	builder.WriteString(", name=")
-	builder.WriteString(fmt.Sprintf("%v", d.Name))
+	builder.WriteString(d.Name)
 	builder.WriteString(", age=")
 	builder.WriteString(fmt.Sprintf("%v", d.Age))
 	builder.WriteString(", email=")
-	builder.WriteString(fmt.Sprintf("%v", d.Email))
+	builder.WriteString(d.Email)
 	builder.WriteString(", pnumber=")
 	builder.WriteString(fmt.Sprintf("%v", d.Pnumber))
 	builder.WriteString(", address=")
-	builder.WriteString(fmt.Sprintf("%v", d.Address))
+	builder.WriteString(d.Address)
 	builder.WriteString(", educational=")
-	builder.WriteString(fmt.Sprintf("%v", d.Educational))
+	builder.WriteString(d.Educational)
 	builder.WriteByte(')')
 	return builder.String()
 }

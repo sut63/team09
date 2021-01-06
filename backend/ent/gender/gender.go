@@ -10,8 +10,18 @@ const (
 	// FieldGender holds the string denoting the gender field in the database.
 	FieldGender = "gender"
 
+	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
+	EdgeDoctors = "doctors"
+
 	// Table holds the table name of the gender in the database.
 	Table = "genders"
+	// DoctorsTable is the table the holds the doctors relation/edge.
+	DoctorsTable = "doctors"
+	// DoctorsInverseTable is the table name for the Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "doctor" package.
+	DoctorsInverseTable = "doctors"
+	// DoctorsColumn is the table column denoting the doctors relation/edge.
+	DoctorsColumn = "gender_id"
 )
 
 // Columns holds all SQL columns for gender fields.

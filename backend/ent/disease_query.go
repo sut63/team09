@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -12,6 +13,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/disease"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/predicate"
 )
 
@@ -23,6 +25,8 @@ type DiseaseQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Disease
+	// eager-loading edges.
+	withDoctors *DoctorQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +54,24 @@ func (dq *DiseaseQuery) Offset(offset int) *DiseaseQuery {
 func (dq *DiseaseQuery) Order(o ...OrderFunc) *DiseaseQuery {
 	dq.order = append(dq.order, o...)
 	return dq
+}
+
+// QueryDoctors chains the current query on the doctors edge.
+func (dq *DiseaseQuery) QueryDoctors() *DoctorQuery {
+	query := &DoctorQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(disease.Table, disease.FieldID, dq.sqlQuery()),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, disease.DoctorsTable, disease.DoctorsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Disease entity in the query. Returns *NotFoundError when no disease was found.
@@ -231,6 +253,17 @@ func (dq *DiseaseQuery) Clone() *DiseaseQuery {
 	}
 }
 
+//  WithDoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "doctors" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DiseaseQuery) WithDoctors(opts ...func(*DoctorQuery)) *DiseaseQuery {
+	query := &DoctorQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withDoctors = query
+	return dq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -295,8 +328,11 @@ func (dq *DiseaseQuery) prepareQuery(ctx context.Context) error {
 
 func (dq *DiseaseQuery) sqlAll(ctx context.Context) ([]*Disease, error) {
 	var (
-		nodes = []*Disease{}
-		_spec = dq.querySpec()
+		nodes       = []*Disease{}
+		_spec       = dq.querySpec()
+		loadedTypes = [1]bool{
+			dq.withDoctors != nil,
+		}
 	)
 	_spec.ScanValues = func() []interface{} {
 		node := &Disease{config: dq.config}
@@ -309,6 +345,7 @@ func (dq *DiseaseQuery) sqlAll(ctx context.Context) ([]*Disease, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, dq.driver, _spec); err != nil {
@@ -317,6 +354,35 @@ func (dq *DiseaseQuery) sqlAll(ctx context.Context) ([]*Disease, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := dq.withDoctors; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Disease)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Doctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(disease.DoctorsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.disease_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "disease_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "disease_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Doctors = append(node.Edges.Doctors, n)
+		}
+	}
+
 	return nodes, nil
 }
 

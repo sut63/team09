@@ -176,25 +176,25 @@ func AddedTimeLTE(v time.Time) predicate.Workingtime {
 	})
 }
 
-// HasDoctors applies the HasEdge predicate on the "doctors" edge.
-func HasDoctors() predicate.Workingtime {
+// HasOffices applies the HasEdge predicate on the "offices" edge.
+func HasOffices() predicate.Workingtime {
 	return predicate.Workingtime(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DoctorsTable, DoctorsColumn),
+			sqlgraph.To(OfficesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, OfficesTable, OfficesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasDoctorsWith applies the HasEdge predicate on the "doctors" edge with a given conditions (other predicates).
-func HasDoctorsWith(preds ...predicate.Doctor) predicate.Workingtime {
+// HasOfficesWith applies the HasEdge predicate on the "offices" edge with a given conditions (other predicates).
+func HasOfficesWith(preds ...predicate.Office) predicate.Workingtime {
 	return predicate.Workingtime(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DoctorsTable, DoctorsColumn),
+			sqlgraph.To(OfficesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, OfficesTable, OfficesColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

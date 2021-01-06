@@ -10,8 +10,18 @@ const (
 	// FieldTitle holds the string denoting the title field in the database.
 	FieldTitle = "title"
 
+	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
+	EdgeDoctors = "doctors"
+
 	// Table holds the table name of the title in the database.
 	Table = "titles"
+	// DoctorsTable is the table the holds the doctors relation/edge.
+	DoctorsTable = "doctors"
+	// DoctorsInverseTable is the table name for the Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "doctor" package.
+	DoctorsInverseTable = "doctors"
+	// DoctorsColumn is the table column denoting the doctors relation/edge.
+	DoctorsColumn = "title_id"
 )
 
 // Columns holds all SQL columns for title fields.

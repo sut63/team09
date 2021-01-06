@@ -21,7 +21,7 @@ func (Disease) Fields() []ent.Field {
 // Edges of the Disease.
 func (Disease) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("diseases", Doctor.Type),
+		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("disease_id")),
 		
 	}
-}
+} 
