@@ -17,6 +17,7 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
+	"github.com/team09/app/ent/schedule"
 )
 
 // DepartmentQuery is the builder for querying Department entities.
@@ -28,10 +29,11 @@ type DepartmentQuery struct {
 	unique     []string
 	predicates []predicate.Department
 	// eager-loading edges.
-	withMission *MissionQuery
-	withDoctor  *DoctorQuery
-	withOffices *OfficeQuery
-	withFKs     bool
+	withMission   *MissionQuery
+	withDoctor    *DoctorQuery
+	withOffices   *OfficeQuery
+	withSchedules *ScheduleQuery
+	withFKs       bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -108,6 +110,24 @@ func (dq *DepartmentQuery) QueryOffices() *OfficeQuery {
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
 			sqlgraph.To(office.Table, office.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, department.OfficesTable, department.OfficesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySchedules chains the current query on the schedules edge.
+func (dq *DepartmentQuery) QuerySchedules() *ScheduleQuery {
+	query := &ScheduleQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
+			sqlgraph.To(schedule.Table, schedule.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SchedulesTable, department.SchedulesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -327,6 +347,17 @@ func (dq *DepartmentQuery) WithOffices(opts ...func(*OfficeQuery)) *DepartmentQu
 	return dq
 }
 
+//  WithSchedules tells the query-builder to eager-loads the nodes that are connected to
+// the "schedules" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithSchedules(opts ...func(*ScheduleQuery)) *DepartmentQuery {
+	query := &ScheduleQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withSchedules = query
+	return dq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -394,10 +425,11 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		nodes       = []*Department{}
 		withFKs     = dq.withFKs
 		_spec       = dq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			dq.withMission != nil,
 			dq.withDoctor != nil,
 			dq.withOffices != nil,
+			dq.withSchedules != nil,
 		}
 	)
 	if dq.withMission != nil || dq.withDoctor != nil {
@@ -505,6 +537,34 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Offices = append(node.Edges.Offices, n)
+		}
+	}
+
+	if query := dq.withSchedules; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Department)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Schedule(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.SchedulesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.schedule_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "schedule_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Schedules = append(node.Edges.Schedules, n)
 		}
 	}
 

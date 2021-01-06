@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -15,6 +16,7 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
+	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/speacial_doctor"
 	"github.com/team09/app/ent/workingtime"
 )
@@ -32,6 +34,7 @@ type OfficeQuery struct {
 	withWorkingtime    *WorkingtimeQuery
 	withDepartment     *DepartmentQuery
 	withSpeacialDoctor *SpeacialDoctorQuery
+	withSchedules      *ScheduleQuery
 	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -127,6 +130,24 @@ func (oq *OfficeQuery) QuerySpeacialDoctor() *SpeacialDoctorQuery {
 			sqlgraph.From(office.Table, office.FieldID, oq.sqlQuery()),
 			sqlgraph.To(speacial_doctor.Table, speacial_doctor.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, office.SpeacialDoctorTable, office.SpeacialDoctorColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySchedules chains the current query on the schedules edge.
+func (oq *OfficeQuery) QuerySchedules() *ScheduleQuery {
+	query := &ScheduleQuery{config: oq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := oq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(office.Table, office.FieldID, oq.sqlQuery()),
+			sqlgraph.To(schedule.Table, schedule.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, office.SchedulesTable, office.SchedulesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
 		return fromU, nil
@@ -357,6 +378,17 @@ func (oq *OfficeQuery) WithSpeacialDoctor(opts ...func(*SpeacialDoctorQuery)) *O
 	return oq
 }
 
+//  WithSchedules tells the query-builder to eager-loads the nodes that are connected to
+// the "schedules" edge. The optional arguments used to configure the query builder of the edge.
+func (oq *OfficeQuery) WithSchedules(opts ...func(*ScheduleQuery)) *OfficeQuery {
+	query := &ScheduleQuery{config: oq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	oq.withSchedules = query
+	return oq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -424,11 +456,12 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 		nodes       = []*Office{}
 		withFKs     = oq.withFKs
 		_spec       = oq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			oq.withDoctor != nil,
 			oq.withWorkingtime != nil,
 			oq.withDepartment != nil,
 			oq.withSpeacialDoctor != nil,
+			oq.withSchedules != nil,
 		}
 	)
 	if oq.withDoctor != nil || oq.withWorkingtime != nil || oq.withDepartment != nil || oq.withSpeacialDoctor != nil {
@@ -558,6 +591,34 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 			for i := range nodes {
 				nodes[i].Edges.SpeacialDoctor = n
 			}
+		}
+	}
+
+	if query := oq.withSchedules; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Office)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Schedule(func(s *sql.Selector) {
+			s.Where(sql.InValues(office.SchedulesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.schedule_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "schedule_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Schedules = append(node.Edges.Schedules, n)
 		}
 	}
 

@@ -18,6 +18,8 @@ const (
 	EdgeDepartment = "department"
 	// EdgeSpeacialDoctor holds the string denoting the speacial_doctor edge name in mutations.
 	EdgeSpeacialDoctor = "speacial_doctor"
+	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
+	EdgeSchedules = "schedules"
 
 	// Table holds the table name of the office in the database.
 	Table = "offices"
@@ -49,6 +51,13 @@ const (
 	SpeacialDoctorInverseTable = "speacial_doctors"
 	// SpeacialDoctorColumn is the table column denoting the speacial_doctor relation/edge.
 	SpeacialDoctorColumn = "speacial_doctor_id"
+	// SchedulesTable is the table the holds the schedules relation/edge.
+	SchedulesTable = "schedules"
+	// SchedulesInverseTable is the table name for the Schedule entity.
+	// It exists in this package in order to avoid circular dependency with the "schedule" package.
+	SchedulesInverseTable = "schedules"
+	// SchedulesColumn is the table column denoting the schedules relation/edge.
+	SchedulesColumn = "schedule_id"
 )
 
 // Columns holds all SQL columns for office fields.

@@ -100,6 +100,19 @@ func (f PositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
+// The ScheduleFunc type is an adapter to allow the use of ordinary
+// function as Schedule mutator.
+type ScheduleFunc func(context.Context, *ent.ScheduleMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ScheduleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ScheduleMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ScheduleMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The Speacial_doctorFunc type is an adapter to allow the use of ordinary
 // function as Speacial_doctor mutator.
 type Speacial_doctorFunc func(context.Context, *ent.SpeacialDoctorMutation) (ent.Value, error)

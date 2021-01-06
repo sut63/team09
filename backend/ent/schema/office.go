@@ -33,5 +33,8 @@ func (Office) Edges() []ent.Edge {
 
 		edge.From("speacial_doctor", Speacial_doctor.Type).
 			Ref("offices").Unique(),
+
+		edge.To("schedules", Schedule.Type).
+			StorageKey(edge.Column("schedule_id")),
 	}
 }

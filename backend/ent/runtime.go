@@ -10,6 +10,7 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/schema"
 	"github.com/team09/app/ent/speacial_doctor"
 	"github.com/team09/app/ent/title"
@@ -85,6 +86,12 @@ func init() {
 	positionDescPosition := positionFields[0].Descriptor()
 	// position.PositionValidator is a validator for the "position" field. It is called by the builders before save.
 	position.PositionValidator = positionDescPosition.Validators[0].(func(string) error)
+	scheduleFields := schema.Schedule{}.Fields()
+	_ = scheduleFields
+	// scheduleDescActivity is the schema descriptor for activity field.
+	scheduleDescActivity := scheduleFields[0].Descriptor()
+	// schedule.ActivityValidator is a validator for the "activity" field. It is called by the builders before save.
+	schedule.ActivityValidator = scheduleDescActivity.Validators[0].(func(string) error)
 	speacial_doctorFields := schema.Speacial_doctor{}.Fields()
 	_ = speacial_doctorFields
 	// speacial_doctorDescName is the schema descriptor for name field.

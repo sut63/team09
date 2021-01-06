@@ -40,9 +40,11 @@ type OfficeEdges struct {
 	Department *Department
 	// SpeacialDoctor holds the value of the speacial_doctor edge.
 	SpeacialDoctor *Speacial_doctor
+	// Schedules holds the value of the schedules edge.
+	Schedules []*Schedule
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // DoctorOrErr returns the Doctor value or an error if the edge
@@ -99,6 +101,15 @@ func (e OfficeEdges) SpeacialDoctorOrErr() (*Speacial_doctor, error) {
 		return e.SpeacialDoctor, nil
 	}
 	return nil, &NotLoadedError{edge: "speacial_doctor"}
+}
+
+// SchedulesOrErr returns the Schedules value or an error if the edge
+// was not loaded in eager-loading.
+func (e OfficeEdges) SchedulesOrErr() ([]*Schedule, error) {
+	if e.loadedTypes[4] {
+		return e.Schedules, nil
+	}
+	return nil, &NotLoadedError{edge: "schedules"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -184,6 +195,11 @@ func (o *Office) QueryDepartment() *DepartmentQuery {
 // QuerySpeacialDoctor queries the speacial_doctor edge of the Office.
 func (o *Office) QuerySpeacialDoctor() *Speacial_doctorQuery {
 	return (&OfficeClient{config: o.config}).QuerySpeacialDoctor(o)
+}
+
+// QuerySchedules queries the schedules edge of the Office.
+func (o *Office) QuerySchedules() *ScheduleQuery {
+	return (&OfficeClient{config: o.config}).QuerySchedules(o)
 }
 
 // Update returns a builder for updating this Office.

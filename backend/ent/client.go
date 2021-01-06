@@ -16,6 +16,7 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/speacial_doctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/workingtime"
@@ -44,6 +45,8 @@ type Client struct {
 	Office *OfficeClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
+	// Schedule is the client for interacting with the Schedule builders.
+	Schedule *ScheduleClient
 	// Speacial_doctor is the client for interacting with the Speacial_doctor builders.
 	Speacial_doctor *Speacial_doctorClient
 	// Title is the client for interacting with the Title builders.
@@ -70,6 +73,7 @@ func (c *Client) init() {
 	c.Mission = NewMissionClient(c.config)
 	c.Office = NewOfficeClient(c.config)
 	c.Position = NewPositionClient(c.config)
+	c.Schedule = NewScheduleClient(c.config)
 	c.Speacial_doctor = NewSpeacial_doctorClient(c.config)
 	c.Title = NewTitleClient(c.config)
 	c.Workingtime = NewWorkingtimeClient(c.config)
@@ -112,6 +116,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Mission:         NewMissionClient(cfg),
 		Office:          NewOfficeClient(cfg),
 		Position:        NewPositionClient(cfg),
+		Schedule:        NewScheduleClient(cfg),
 		Speacial_doctor: NewSpeacial_doctorClient(cfg),
 		Title:           NewTitleClient(cfg),
 		Workingtime:     NewWorkingtimeClient(cfg),
@@ -137,6 +142,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Mission:         NewMissionClient(cfg),
 		Office:          NewOfficeClient(cfg),
 		Position:        NewPositionClient(cfg),
+		Schedule:        NewScheduleClient(cfg),
 		Speacial_doctor: NewSpeacial_doctorClient(cfg),
 		Title:           NewTitleClient(cfg),
 		Workingtime:     NewWorkingtimeClient(cfg),
@@ -175,6 +181,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Mission.Use(hooks...)
 	c.Office.Use(hooks...)
 	c.Position.Use(hooks...)
+	c.Schedule.Use(hooks...)
 	c.Speacial_doctor.Use(hooks...)
 	c.Title.Use(hooks...)
 	c.Workingtime.Use(hooks...)
@@ -299,6 +306,22 @@ func (c *DepartmentClient) QueryOffices(d *Department) *OfficeQuery {
 			sqlgraph.From(department.Table, department.FieldID, id),
 			sqlgraph.To(office.Table, office.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, department.OfficesTable, department.OfficesColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySchedules queries the schedules edge of a Department.
+func (c *DepartmentClient) QuerySchedules(d *Department) *ScheduleQuery {
+	query := &ScheduleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(schedule.Table, schedule.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SchedulesTable, department.SchedulesColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -552,6 +575,22 @@ func (c *DoctorClient) QueryDisease(d *Doctor) *DiseaseQuery {
 	return query
 }
 
+// QueryDepartments queries the departments edge of a Doctor.
+func (c *DoctorClient) QueryDepartments(d *Doctor) *DepartmentQuery {
+	query := &DepartmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.DepartmentsTable, doctor.DepartmentsColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryOffices queries the offices edge of a Doctor.
 func (c *DoctorClient) QueryOffices(d *Doctor) *OfficeQuery {
 	query := &OfficeQuery{config: c.config}
@@ -577,6 +616,22 @@ func (c *DoctorClient) QueryDepartments(d *Doctor) *DepartmentQuery {
 			sqlgraph.From(doctor.Table, doctor.FieldID, id),
 			sqlgraph.To(department.Table, department.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, doctor.DepartmentsTable, doctor.DepartmentsColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySchedules queries the schedules edge of a Doctor.
+func (c *DoctorClient) QuerySchedules(d *Doctor) *ScheduleQuery {
+	query := &ScheduleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, id),
+			sqlgraph.To(schedule.Table, schedule.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SchedulesTable, doctor.SchedulesColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -929,6 +984,22 @@ func (c *OfficeClient) QuerySpeacialDoctor(o *Office) *SpeacialDoctorQuery {
 	return query
 }
 
+// QuerySchedules queries the schedules edge of a Office.
+func (c *OfficeClient) QuerySchedules(o *Office) *ScheduleQuery {
+	query := &ScheduleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := o.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(office.Table, office.FieldID, id),
+			sqlgraph.To(schedule.Table, schedule.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, office.SchedulesTable, office.SchedulesColumn),
+		)
+		fromV = sqlgraph.Neighbors(o.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *OfficeClient) Hooks() []Hook {
 	return c.hooks.Office
@@ -1031,6 +1102,137 @@ func (c *PositionClient) QueryDoctors(po *Position) *DoctorQuery {
 // Hooks returns the client hooks.
 func (c *PositionClient) Hooks() []Hook {
 	return c.hooks.Position
+}
+
+// ScheduleClient is a client for the Schedule schema.
+type ScheduleClient struct {
+	config
+}
+
+// NewScheduleClient returns a client for the Schedule from the given config.
+func NewScheduleClient(c config) *ScheduleClient {
+	return &ScheduleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `schedule.Hooks(f(g(h())))`.
+func (c *ScheduleClient) Use(hooks ...Hook) {
+	c.hooks.Schedule = append(c.hooks.Schedule, hooks...)
+}
+
+// Create returns a create builder for Schedule.
+func (c *ScheduleClient) Create() *ScheduleCreate {
+	mutation := newScheduleMutation(c.config, OpCreate)
+	return &ScheduleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Schedule.
+func (c *ScheduleClient) Update() *ScheduleUpdate {
+	mutation := newScheduleMutation(c.config, OpUpdate)
+	return &ScheduleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ScheduleClient) UpdateOne(s *Schedule) *ScheduleUpdateOne {
+	mutation := newScheduleMutation(c.config, OpUpdateOne, withSchedule(s))
+	return &ScheduleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ScheduleClient) UpdateOneID(id int) *ScheduleUpdateOne {
+	mutation := newScheduleMutation(c.config, OpUpdateOne, withScheduleID(id))
+	return &ScheduleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Schedule.
+func (c *ScheduleClient) Delete() *ScheduleDelete {
+	mutation := newScheduleMutation(c.config, OpDelete)
+	return &ScheduleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ScheduleClient) DeleteOne(s *Schedule) *ScheduleDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ScheduleClient) DeleteOneID(id int) *ScheduleDeleteOne {
+	builder := c.Delete().Where(schedule.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ScheduleDeleteOne{builder}
+}
+
+// Create returns a query builder for Schedule.
+func (c *ScheduleClient) Query() *ScheduleQuery {
+	return &ScheduleQuery{config: c.config}
+}
+
+// Get returns a Schedule entity by its id.
+func (c *ScheduleClient) Get(ctx context.Context, id int) (*Schedule, error) {
+	return c.Query().Where(schedule.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ScheduleClient) GetX(ctx context.Context, id int) *Schedule {
+	s, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return s
+}
+
+// QueryDocter queries the docter edge of a Schedule.
+func (c *ScheduleClient) QueryDocter(s *Schedule) *DoctorQuery {
+	query := &DoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(schedule.Table, schedule.FieldID, id),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DocterTable, schedule.DocterColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartment queries the department edge of a Schedule.
+func (c *ScheduleClient) QueryDepartment(s *Schedule) *DepartmentQuery {
+	query := &DepartmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(schedule.Table, schedule.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DepartmentTable, schedule.DepartmentColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryOffice queries the office edge of a Schedule.
+func (c *ScheduleClient) QueryOffice(s *Schedule) *OfficeQuery {
+	query := &OfficeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(schedule.Table, schedule.FieldID, id),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, schedule.OfficeTable, schedule.OfficeColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ScheduleClient) Hooks() []Hook {
+	return c.hooks.Schedule
 }
 
 // Speacial_doctorClient is a client for the Speacial_doctor schema.

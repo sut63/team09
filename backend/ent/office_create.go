@@ -12,6 +12,7 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/speacial_doctor"
 	"github.com/team09/app/ent/workingtime"
 )
@@ -103,6 +104,21 @@ func (oc *OfficeCreate) SetNillableSpeacialDoctorID(id *int) *OfficeCreate {
 // SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
 func (oc *OfficeCreate) SetSpeacialDoctor(s *Speacial_doctor) *OfficeCreate {
 	return oc.SetSpeacialDoctorID(s.ID)
+}
+
+// AddScheduleIDs adds the schedules edge to Schedule by ids.
+func (oc *OfficeCreate) AddScheduleIDs(ids ...int) *OfficeCreate {
+	oc.mutation.AddScheduleIDs(ids...)
+	return oc
+}
+
+// AddSchedules adds the schedules edges to Schedule.
+func (oc *OfficeCreate) AddSchedules(s ...*Schedule) *OfficeCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return oc.AddScheduleIDs(ids...)
 }
 
 // Mutation returns the OfficeMutation object of the builder.
@@ -256,6 +272,25 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: speacial_doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := oc.mutation.SchedulesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   office.SchedulesTable,
+			Columns: []string{office.SchedulesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: schedule.FieldID,
 				},
 			},
 		}
