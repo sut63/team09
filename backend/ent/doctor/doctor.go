@@ -28,10 +28,14 @@ const (
 	EdgePosition = "position"
 	// EdgeDisease holds the string denoting the disease edge name in mutations.
 	EdgeDisease = "disease"
+	// EdgeDepartments holds the string denoting the departments edge name in mutations.
+	EdgeDepartments = "departments"
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
 	EdgeDepartments = "departments"
+	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
+	EdgeSchedules = "schedules"
 
 	// Table holds the table name of the doctor in the database.
 	Table = "doctors"
@@ -63,6 +67,13 @@ const (
 	DiseaseInverseTable = "diseases"
 	// DiseaseColumn is the table column denoting the disease relation/edge.
 	DiseaseColumn = "disease_id"
+	// DepartmentsTable is the table the holds the departments relation/edge.
+	DepartmentsTable = "departments"
+	// DepartmentsInverseTable is the table name for the Department entity.
+	// It exists in this package in order to avoid circular dependency with the "department" package.
+	DepartmentsInverseTable = "departments"
+	// DepartmentsColumn is the table column denoting the departments relation/edge.
+	DepartmentsColumn = "doctor_id"
 	// OfficesTable is the table the holds the offices relation/edge.
 	OfficesTable = "offices"
 	// OfficesInverseTable is the table name for the Office entity.
@@ -77,6 +88,13 @@ const (
 	DepartmentsInverseTable = "departments"
 	// DepartmentsColumn is the table column denoting the departments relation/edge.
 	DepartmentsColumn = "doctor_id"
+	// SchedulesTable is the table the holds the schedules relation/edge.
+	SchedulesTable = "schedules"
+	// SchedulesInverseTable is the table name for the Schedule entity.
+	// It exists in this package in order to avoid circular dependency with the "schedule" package.
+	SchedulesInverseTable = "schedules"
+	// SchedulesColumn is the table column denoting the schedules relation/edge.
+	SchedulesColumn = "schedule_id"
 )
 
 // Columns holds all SQL columns for doctor fields.

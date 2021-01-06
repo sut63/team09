@@ -27,6 +27,9 @@ type Office func(*sql.Selector)
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)
 
+// Schedule is the predicate function for schedule builders.
+type Schedule func(*sql.Selector)
+
 // Speacial_doctor is the predicate function for speacial_doctor builders.
 type Speacial_doctor func(*sql.Selector)
 

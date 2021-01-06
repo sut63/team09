@@ -13,6 +13,7 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/schedule"
 )
 
 // DepartmentCreate is the builder for creating a Department entity.
@@ -85,6 +86,21 @@ func (dc *DepartmentCreate) AddOffices(o ...*Office) *DepartmentCreate {
 		ids[i] = o[i].ID
 	}
 	return dc.AddOfficeIDs(ids...)
+}
+
+// AddScheduleIDs adds the schedules edge to Schedule by ids.
+func (dc *DepartmentCreate) AddScheduleIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddScheduleIDs(ids...)
+	return dc
+}
+
+// AddSchedules adds the schedules edges to Schedule.
+func (dc *DepartmentCreate) AddSchedules(s ...*Schedule) *DepartmentCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return dc.AddScheduleIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -235,6 +251,25 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.SchedulesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SchedulesTable,
+			Columns: []string{department.SchedulesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: schedule.FieldID,
 				},
 			},
 		}

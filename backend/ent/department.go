@@ -36,9 +36,11 @@ type DepartmentEdges struct {
 	Doctor *Doctor
 	// Offices holds the value of the offices edge.
 	Offices []*Office
+	// Schedules holds the value of the schedules edge.
+	Schedules []*Schedule
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // MissionOrErr returns the Mission value or an error if the edge
@@ -76,6 +78,15 @@ func (e DepartmentEdges) OfficesOrErr() ([]*Office, error) {
 		return e.Offices, nil
 	}
 	return nil, &NotLoadedError{edge: "offices"}
+}
+
+// SchedulesOrErr returns the Schedules value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) SchedulesOrErr() ([]*Schedule, error) {
+	if e.loadedTypes[3] {
+		return e.Schedules, nil
+	}
+	return nil, &NotLoadedError{edge: "schedules"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -148,6 +159,11 @@ func (d *Department) QueryDoctor() *DoctorQuery {
 // QueryOffices queries the offices edge of the Department.
 func (d *Department) QueryOffices() *OfficeQuery {
 	return (&DepartmentClient{config: d.config}).QueryOffices(d)
+}
+
+// QuerySchedules queries the schedules edge of the Department.
+func (d *Department) QuerySchedules() *ScheduleQuery {
+	return (&DepartmentClient{config: d.config}).QuerySchedules(d)
 }
 
 // Update returns a builder for updating this Department.

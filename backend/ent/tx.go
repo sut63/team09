@@ -26,6 +26,8 @@ type Tx struct {
 	Office *OfficeClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
+	// Schedule is the client for interacting with the Schedule builders.
+	Schedule *ScheduleClient
 	// Speacial_doctor is the client for interacting with the Speacial_doctor builders.
 	Speacial_doctor *Speacial_doctorClient
 	// Title is the client for interacting with the Title builders.
@@ -174,6 +176,7 @@ func (tx *Tx) init() {
 	tx.Mission = NewMissionClient(tx.config)
 	tx.Office = NewOfficeClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
+	tx.Schedule = NewScheduleClient(tx.config)
 	tx.Speacial_doctor = NewSpeacial_doctorClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
 	tx.Workingtime = NewWorkingtimeClient(tx.config)

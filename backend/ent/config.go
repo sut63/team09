@@ -31,6 +31,7 @@ type hooks struct {
 	Mission         []ent.Hook
 	Office          []ent.Hook
 	Position        []ent.Hook
+	Schedule        []ent.Hook
 	Speacial_doctor []ent.Hook
 	Title           []ent.Hook
 	Workingtime     []ent.Hook

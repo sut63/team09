@@ -378,6 +378,30 @@ func (f PositionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PositionMutation", m)
 }
 
+// The ScheduleQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type ScheduleQueryRuleFunc func(context.Context, *ent.ScheduleQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f ScheduleQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ScheduleQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.ScheduleQuery", q)
+}
+
+// The ScheduleMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type ScheduleMutationRuleFunc func(context.Context, *ent.ScheduleMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f ScheduleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.ScheduleMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.ScheduleMutation", m)
+}
+
 // The Speacial_doctorQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type Speacial_doctorQueryRuleFunc func(context.Context, *ent.SpeacialDoctorQuery) error
