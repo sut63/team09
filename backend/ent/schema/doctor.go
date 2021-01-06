@@ -43,7 +43,6 @@ func (Doctor) Edges() []ent.Edge {
 			Ref("doctors").
 			Unique(),
 
-		edge.To("departments", Department.Type).StorageKey(edge.Column("doctor_id")),
 		edge.To("offices", Office.Type).
 			StorageKey(edge.Column("doctor_id")),
 
