@@ -42,5 +42,7 @@ func (Doctor) Edges() []ent.Edge {
 		 edge.From("disease", Disease.Type).
 		 Ref("diseases").
 		 Unique(),
+
+		 edge.To("departments",Department.Type).StorageKey(edge.Column("doctor_id")),
 	}
 }
