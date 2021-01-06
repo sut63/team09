@@ -14,8 +14,9 @@ type Department struct {
 // Fields of the Department.
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("DepartmentType").NotEmpty(),
+		field.String("Detail").NotEmpty(),
 		field.String("Name").NotEmpty(),
+
 	}
 }
 
