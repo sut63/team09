@@ -25,3 +25,4 @@ func (Workingtime) Edges() []ent.Edge {
 		StorageKey(edge.Column("workingtime_id")),
 	}
 }
+ 

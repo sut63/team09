@@ -24,3 +24,4 @@ func (Title) Edges() []ent.Edge {
 		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("title_id")),
 	}
 }
+ 

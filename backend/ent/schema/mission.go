@@ -26,3 +26,4 @@ func (Mission) Edges() []ent.Edge {
 		// edge.To("drugs",Drug.Type).StorageKey(edge.Column("unit_id")),
 	}
 }
+ 

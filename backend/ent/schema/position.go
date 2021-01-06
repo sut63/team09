@@ -24,3 +24,4 @@ func (Position) Edges() []ent.Edge {
 		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("position_id")),
 	}
 }
+ 

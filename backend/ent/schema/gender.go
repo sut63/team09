@@ -24,3 +24,4 @@ func (Gender) Edges() []ent.Edge {
 		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("gender_id")),
 	}
 }
+ 

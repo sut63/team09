@@ -24,4 +24,4 @@ func (Disease) Edges() []ent.Edge {
 		edge.To("doctors", Doctor.Type).StorageKey(edge.Column("disease_id")),
 		
 	}
-}
+} 

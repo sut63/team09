@@ -24,3 +24,4 @@ func (Speacial_doctor) Edges() []ent.Edge {
 		StorageKey(edge.Column("speacial_doctor_id")),
 	}
 }
+ 

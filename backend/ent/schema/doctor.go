@@ -52,3 +52,4 @@ func (Doctor) Edges() []ent.Edge {
 
 	}
 }
+ 
