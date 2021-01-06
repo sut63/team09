@@ -3,6 +3,7 @@ package schema
 import (
    "github.com/facebookincubator/ent"
    "github.com/facebookincubator/ent/schema/field"
+   "github.com/facebookincubator/ent/schema/edge"
 )
 
 // Disease holds the schema definition for the Disease entity.
@@ -19,5 +20,8 @@ func (Disease) Fields() []ent.Field {
 
 // Edges of the Disease.
 func (Disease) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("diseases", Doctor.Type),
+		
+	}
 }

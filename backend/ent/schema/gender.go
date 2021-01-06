@@ -3,6 +3,7 @@ package schema
 import (
    "github.com/facebookincubator/ent"
    "github.com/facebookincubator/ent/schema/field"
+   "github.com/facebookincubator/ent/schema/edge"
 )
 
 // Gender holds the schema definition for the Gender entity.
@@ -19,5 +20,7 @@ func (Gender) Fields() []ent.Field {
 
 // Edges of the Gender.
 func (Gender) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("genders", Doctor.Type),
+	}
 }
