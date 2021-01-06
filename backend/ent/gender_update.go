@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/gender"
 	"github.com/team09/app/ent/predicate"
 )
@@ -33,9 +34,39 @@ func (gu *GenderUpdate) SetGender(s string) *GenderUpdate {
 	return gu
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (gu *GenderUpdate) AddDoctorIDs(ids ...int) *GenderUpdate {
+	gu.mutation.AddDoctorIDs(ids...)
+	return gu
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (gu *GenderUpdate) AddDoctors(d ...*Doctor) *GenderUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return gu.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the GenderMutation object of the builder.
 func (gu *GenderUpdate) Mutation() *GenderMutation {
 	return gu.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (gu *GenderUpdate) RemoveDoctorIDs(ids ...int) *GenderUpdate {
+	gu.mutation.RemoveDoctorIDs(ids...)
+	return gu
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (gu *GenderUpdate) RemoveDoctors(d ...*Doctor) *GenderUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return gu.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -45,6 +76,7 @@ func (gu *GenderUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -119,6 +151,44 @@ func (gu *GenderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: gender.FieldGender,
 		})
 	}
+	if nodes := gu.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.DoctorsTable,
+			Columns: []string{gender.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gu.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.DoctorsTable,
+			Columns: []string{gender.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, gu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{gender.Label}
@@ -143,9 +213,39 @@ func (guo *GenderUpdateOne) SetGender(s string) *GenderUpdateOne {
 	return guo
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (guo *GenderUpdateOne) AddDoctorIDs(ids ...int) *GenderUpdateOne {
+	guo.mutation.AddDoctorIDs(ids...)
+	return guo
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (guo *GenderUpdateOne) AddDoctors(d ...*Doctor) *GenderUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return guo.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the GenderMutation object of the builder.
 func (guo *GenderUpdateOne) Mutation() *GenderMutation {
 	return guo.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (guo *GenderUpdateOne) RemoveDoctorIDs(ids ...int) *GenderUpdateOne {
+	guo.mutation.RemoveDoctorIDs(ids...)
+	return guo
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (guo *GenderUpdateOne) RemoveDoctors(d ...*Doctor) *GenderUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return guo.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -155,6 +255,7 @@ func (guo *GenderUpdateOne) Save(ctx context.Context) (*Gender, error) {
 			return nil, &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Gender
@@ -226,6 +327,44 @@ func (guo *GenderUpdateOne) sqlSave(ctx context.Context) (ge *Gender, err error)
 			Value:  value,
 			Column: gender.FieldGender,
 		})
+	}
+	if nodes := guo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.DoctorsTable,
+			Columns: []string{gender.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := guo.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.DoctorsTable,
+			Columns: []string{gender.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	ge = &Gender{config: guo.config}
 	_spec.Assign = ge.assignValues

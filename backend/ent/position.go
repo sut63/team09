@@ -17,6 +17,27 @@ type Position struct {
 	ID int `json:"id,omitempty"`
 	// Position holds the value of the "position" field.
 	Position string `json:"position,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the PositionQuery when eager-loading is set.
+	Edges PositionEdges `json:"edges"`
+}
+
+// PositionEdges holds the relations/edges for other nodes in the graph.
+type PositionEdges struct {
+	// Doctors holds the value of the doctors edge.
+	Doctors []*Doctor
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// DoctorsOrErr returns the Doctors value or an error if the edge
+// was not loaded in eager-loading.
+func (e PositionEdges) DoctorsOrErr() ([]*Doctor, error) {
+	if e.loadedTypes[0] {
+		return e.Doctors, nil
+	}
+	return nil, &NotLoadedError{edge: "doctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,6 +66,11 @@ func (po *Position) assignValues(values ...interface{}) error {
 		po.Position = value.String
 	}
 	return nil
+}
+
+// QueryDoctors queries the doctors edge of the Position.
+func (po *Position) QueryDoctors() *DoctorQuery {
+	return (&PositionClient{config: po.config}).QueryDoctors(po)
 }
 
 // Update returns a builder for updating this Position.

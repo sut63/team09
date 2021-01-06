@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/title"
 )
 
@@ -23,6 +24,21 @@ type TitleCreate struct {
 func (tc *TitleCreate) SetTitle(s string) *TitleCreate {
 	tc.mutation.SetTitle(s)
 	return tc
+}
+
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (tc *TitleCreate) AddDoctorIDs(ids ...int) *TitleCreate {
+	tc.mutation.AddDoctorIDs(ids...)
+	return tc
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (tc *TitleCreate) AddDoctors(d ...*Doctor) *TitleCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return tc.AddDoctorIDs(ids...)
 }
 
 // Mutation returns the TitleMutation object of the builder.
@@ -107,6 +123,25 @@ func (tc *TitleCreate) createSpec() (*Title, *sqlgraph.CreateSpec) {
 			Column: title.FieldTitle,
 		})
 		t.Title = value
+	}
+	if nodes := tc.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.DoctorsTable,
+			Columns: []string{title.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return t, _spec
 }

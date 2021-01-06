@@ -7,7 +7,11 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/workingtime"
 )
 
 // Office is the model entity for the Office schema.
@@ -19,25 +23,82 @@ type Office struct {
 	Officename string `json:"officename,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
-	Edges OfficeEdges `json:"edges"`
+	Edges              OfficeEdges `json:"edges"`
+	department_id      *int
+	doctor_id          *int
+	speacial_doctor_id *int
+	workingtime_id     *int
 }
 
 // OfficeEdges holds the relations/edges for other nodes in the graph.
 type OfficeEdges struct {
-	// Doctors holds the value of the doctors edge.
-	Doctors []*Doctor
+	// Doctor holds the value of the doctor edge.
+	Doctor *Doctor
+	// Workingtime holds the value of the workingtime edge.
+	Workingtime *Workingtime
+	// Department holds the value of the department edge.
+	Department *Department
+	// SpeacialDoctor holds the value of the speacial_doctor edge.
+	SpeacialDoctor *Speacial_doctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [4]bool
 }
 
-// DoctorsOrErr returns the Doctors value or an error if the edge
-// was not loaded in eager-loading.
-func (e OfficeEdges) DoctorsOrErr() ([]*Doctor, error) {
+// DoctorOrErr returns the Doctor value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e OfficeEdges) DoctorOrErr() (*Doctor, error) {
 	if e.loadedTypes[0] {
-		return e.Doctors, nil
+		if e.Doctor == nil {
+			// The edge doctor was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: doctor.Label}
+		}
+		return e.Doctor, nil
 	}
-	return nil, &NotLoadedError{edge: "doctors"}
+	return nil, &NotLoadedError{edge: "doctor"}
+}
+
+// WorkingtimeOrErr returns the Workingtime value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e OfficeEdges) WorkingtimeOrErr() (*Workingtime, error) {
+	if e.loadedTypes[1] {
+		if e.Workingtime == nil {
+			// The edge workingtime was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: workingtime.Label}
+		}
+		return e.Workingtime, nil
+	}
+	return nil, &NotLoadedError{edge: "workingtime"}
+}
+
+// DepartmentOrErr returns the Department value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e OfficeEdges) DepartmentOrErr() (*Department, error) {
+	if e.loadedTypes[2] {
+		if e.Department == nil {
+			// The edge department was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: department.Label}
+		}
+		return e.Department, nil
+	}
+	return nil, &NotLoadedError{edge: "department"}
+}
+
+// SpeacialDoctorOrErr returns the SpeacialDoctor value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e OfficeEdges) SpeacialDoctorOrErr() (*Speacial_doctor, error) {
+	if e.loadedTypes[3] {
+		if e.SpeacialDoctor == nil {
+			// The edge speacial_doctor was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: speacial_doctor.Label}
+		}
+		return e.SpeacialDoctor, nil
+	}
+	return nil, &NotLoadedError{edge: "speacial_doctor"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -45,6 +106,16 @@ func (*Office) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // officename
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Office) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // department_id
+		&sql.NullInt64{}, // doctor_id
+		&sql.NullInt64{}, // speacial_doctor_id
+		&sql.NullInt64{}, // workingtime_id
 	}
 }
 
@@ -65,12 +136,54 @@ func (o *Office) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		o.Officename = value.String
 	}
+	values = values[1:]
+	if len(values) == len(office.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
+		} else if value.Valid {
+			o.department_id = new(int)
+			*o.department_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field doctor_id", value)
+		} else if value.Valid {
+			o.doctor_id = new(int)
+			*o.doctor_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field speacial_doctor_id", value)
+		} else if value.Valid {
+			o.speacial_doctor_id = new(int)
+			*o.speacial_doctor_id = int(value.Int64)
+		}
+		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field workingtime_id", value)
+		} else if value.Valid {
+			o.workingtime_id = new(int)
+			*o.workingtime_id = int(value.Int64)
+		}
+	}
 	return nil
 }
 
-// QueryDoctors queries the doctors edge of the Office.
-func (o *Office) QueryDoctors() *DoctorQuery {
-	return (&OfficeClient{config: o.config}).QueryDoctors(o)
+// QueryDoctor queries the doctor edge of the Office.
+func (o *Office) QueryDoctor() *DoctorQuery {
+	return (&OfficeClient{config: o.config}).QueryDoctor(o)
+}
+
+// QueryWorkingtime queries the workingtime edge of the Office.
+func (o *Office) QueryWorkingtime() *WorkingtimeQuery {
+	return (&OfficeClient{config: o.config}).QueryWorkingtime(o)
+}
+
+// QueryDepartment queries the department edge of the Office.
+func (o *Office) QueryDepartment() *DepartmentQuery {
+	return (&OfficeClient{config: o.config}).QueryDepartment(o)
+}
+
+// QuerySpeacialDoctor queries the speacial_doctor edge of the Office.
+func (o *Office) QuerySpeacialDoctor() *Speacial_doctorQuery {
+	return (&OfficeClient{config: o.config}).QuerySpeacialDoctor(o)
 }
 
 // Update returns a builder for updating this Office.

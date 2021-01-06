@@ -24,6 +24,9 @@ func (Department) Edges() []ent.Edge {
 	return []ent.Edge {
 		edge.From("mission", Mission.Type).Ref("departments").Unique(),
 		edge.From("doctor", Doctor.Type).Ref("departments").Unique(),
+
+		edge.To("offices", Office.Type).
+		StorageKey(edge.Column("department_id")),
 	}
 }
 

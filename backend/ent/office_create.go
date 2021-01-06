@@ -9,8 +9,11 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
+	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeCreate is the builder for creating a Office entity.
@@ -26,19 +29,80 @@ func (oc *OfficeCreate) SetOfficename(s string) *OfficeCreate {
 	return oc
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (oc *OfficeCreate) AddDoctorIDs(ids ...int) *OfficeCreate {
-	oc.mutation.AddDoctorIDs(ids...)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (oc *OfficeCreate) SetDoctorID(id int) *OfficeCreate {
+	oc.mutation.SetDoctorID(id)
 	return oc
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (oc *OfficeCreate) AddDoctors(d ...*Doctor) *OfficeCreate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableDoctorID(id *int) *OfficeCreate {
+	if id != nil {
+		oc = oc.SetDoctorID(*id)
 	}
-	return oc.AddDoctorIDs(ids...)
+	return oc
+}
+
+// SetDoctor sets the doctor edge to Doctor.
+func (oc *OfficeCreate) SetDoctor(d *Doctor) *OfficeCreate {
+	return oc.SetDoctorID(d.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (oc *OfficeCreate) SetWorkingtimeID(id int) *OfficeCreate {
+	oc.mutation.SetWorkingtimeID(id)
+	return oc
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableWorkingtimeID(id *int) *OfficeCreate {
+	if id != nil {
+		oc = oc.SetWorkingtimeID(*id)
+	}
+	return oc
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (oc *OfficeCreate) SetWorkingtime(w *Workingtime) *OfficeCreate {
+	return oc.SetWorkingtimeID(w.ID)
+}
+
+// SetDepartmentID sets the department edge to Department by id.
+func (oc *OfficeCreate) SetDepartmentID(id int) *OfficeCreate {
+	oc.mutation.SetDepartmentID(id)
+	return oc
+}
+
+// SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableDepartmentID(id *int) *OfficeCreate {
+	if id != nil {
+		oc = oc.SetDepartmentID(*id)
+	}
+	return oc
+}
+
+// SetDepartment sets the department edge to Department.
+func (oc *OfficeCreate) SetDepartment(d *Department) *OfficeCreate {
+	return oc.SetDepartmentID(d.ID)
+}
+
+// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+func (oc *OfficeCreate) SetSpeacialDoctorID(id int) *OfficeCreate {
+	oc.mutation.SetSpeacialDoctorID(id)
+	return oc
+}
+
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableSpeacialDoctorID(id *int) *OfficeCreate {
+	if id != nil {
+		oc = oc.SetSpeacialDoctorID(*id)
+	}
+	return oc
+}
+
+// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
+func (oc *OfficeCreate) SetSpeacialDoctor(s *Speacial_doctor) *OfficeCreate {
+	return oc.SetSpeacialDoctorID(s.ID)
 }
 
 // Mutation returns the OfficeMutation object of the builder.
@@ -124,17 +188,74 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		})
 		o.Officename = value
 	}
-	if nodes := oc.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if nodes := oc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   office.DoctorsTable,
-			Columns: []string{office.DoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DoctorTable,
+			Columns: []string{office.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := oc.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.WorkingtimeTable,
+			Columns: []string{office.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := oc.mutation.DepartmentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DepartmentTable,
+			Columns: []string{office.DepartmentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := oc.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.SpeacialDoctorTable,
+			Columns: []string{office.SpeacialDoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: speacial_doctor.FieldID,
 				},
 			},
 		}

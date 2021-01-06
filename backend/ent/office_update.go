@@ -9,9 +9,12 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
+	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeUpdate is the builder for updating Office entities.
@@ -34,19 +37,80 @@ func (ou *OfficeUpdate) SetOfficename(s string) *OfficeUpdate {
 	return ou
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (ou *OfficeUpdate) AddDoctorIDs(ids ...int) *OfficeUpdate {
-	ou.mutation.AddDoctorIDs(ids...)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (ou *OfficeUpdate) SetDoctorID(id int) *OfficeUpdate {
+	ou.mutation.SetDoctorID(id)
 	return ou
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (ou *OfficeUpdate) AddDoctors(d ...*Doctor) *OfficeUpdate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (ou *OfficeUpdate) SetNillableDoctorID(id *int) *OfficeUpdate {
+	if id != nil {
+		ou = ou.SetDoctorID(*id)
 	}
-	return ou.AddDoctorIDs(ids...)
+	return ou
+}
+
+// SetDoctor sets the doctor edge to Doctor.
+func (ou *OfficeUpdate) SetDoctor(d *Doctor) *OfficeUpdate {
+	return ou.SetDoctorID(d.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (ou *OfficeUpdate) SetWorkingtimeID(id int) *OfficeUpdate {
+	ou.mutation.SetWorkingtimeID(id)
+	return ou
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (ou *OfficeUpdate) SetNillableWorkingtimeID(id *int) *OfficeUpdate {
+	if id != nil {
+		ou = ou.SetWorkingtimeID(*id)
+	}
+	return ou
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (ou *OfficeUpdate) SetWorkingtime(w *Workingtime) *OfficeUpdate {
+	return ou.SetWorkingtimeID(w.ID)
+}
+
+// SetDepartmentID sets the department edge to Department by id.
+func (ou *OfficeUpdate) SetDepartmentID(id int) *OfficeUpdate {
+	ou.mutation.SetDepartmentID(id)
+	return ou
+}
+
+// SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
+func (ou *OfficeUpdate) SetNillableDepartmentID(id *int) *OfficeUpdate {
+	if id != nil {
+		ou = ou.SetDepartmentID(*id)
+	}
+	return ou
+}
+
+// SetDepartment sets the department edge to Department.
+func (ou *OfficeUpdate) SetDepartment(d *Department) *OfficeUpdate {
+	return ou.SetDepartmentID(d.ID)
+}
+
+// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+func (ou *OfficeUpdate) SetSpeacialDoctorID(id int) *OfficeUpdate {
+	ou.mutation.SetSpeacialDoctorID(id)
+	return ou
+}
+
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+func (ou *OfficeUpdate) SetNillableSpeacialDoctorID(id *int) *OfficeUpdate {
+	if id != nil {
+		ou = ou.SetSpeacialDoctorID(*id)
+	}
+	return ou
+}
+
+// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
+func (ou *OfficeUpdate) SetSpeacialDoctor(s *Speacial_doctor) *OfficeUpdate {
+	return ou.SetSpeacialDoctorID(s.ID)
 }
 
 // Mutation returns the OfficeMutation object of the builder.
@@ -54,19 +118,28 @@ func (ou *OfficeUpdate) Mutation() *OfficeMutation {
 	return ou.mutation
 }
 
-// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
-func (ou *OfficeUpdate) RemoveDoctorIDs(ids ...int) *OfficeUpdate {
-	ou.mutation.RemoveDoctorIDs(ids...)
+// ClearDoctor clears the doctor edge to Doctor.
+func (ou *OfficeUpdate) ClearDoctor() *OfficeUpdate {
+	ou.mutation.ClearDoctor()
 	return ou
 }
 
-// RemoveDoctors removes doctors edges to Doctor.
-func (ou *OfficeUpdate) RemoveDoctors(d ...*Doctor) *OfficeUpdate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return ou.RemoveDoctorIDs(ids...)
+// ClearWorkingtime clears the workingtime edge to Workingtime.
+func (ou *OfficeUpdate) ClearWorkingtime() *OfficeUpdate {
+	ou.mutation.ClearWorkingtime()
+	return ou
+}
+
+// ClearDepartment clears the department edge to Department.
+func (ou *OfficeUpdate) ClearDepartment() *OfficeUpdate {
+	ou.mutation.ClearDepartment()
+	return ou
+}
+
+// ClearSpeacialDoctor clears the speacial_doctor edge to Speacial_doctor.
+func (ou *OfficeUpdate) ClearSpeacialDoctor() *OfficeUpdate {
+	ou.mutation.ClearSpeacialDoctor()
+	return ou
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -151,12 +224,28 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: office.FieldOfficename,
 		})
 	}
-	if nodes := ou.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+	if ou.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   office.DoctorsTable,
-			Columns: []string{office.DoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DoctorTable,
+			Columns: []string{office.DoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ou.mutation.DoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DoctorTable,
+			Columns: []string{office.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -168,19 +257,105 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ou.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if ou.mutation.WorkingtimeCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   office.DoctorsTable,
-			Columns: []string{office.DoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.WorkingtimeTable,
+			Columns: []string{office.WorkingtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ou.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.WorkingtimeTable,
+			Columns: []string{office.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ou.mutation.DepartmentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DepartmentTable,
+			Columns: []string{office.DepartmentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ou.mutation.DepartmentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DepartmentTable,
+			Columns: []string{office.DepartmentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ou.mutation.SpeacialDoctorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.SpeacialDoctorTable,
+			Columns: []string{office.SpeacialDoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: speacial_doctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ou.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.SpeacialDoctorTable,
+			Columns: []string{office.SpeacialDoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: speacial_doctor.FieldID,
 				},
 			},
 		}
@@ -213,19 +388,80 @@ func (ouo *OfficeUpdateOne) SetOfficename(s string) *OfficeUpdateOne {
 	return ouo
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (ouo *OfficeUpdateOne) AddDoctorIDs(ids ...int) *OfficeUpdateOne {
-	ouo.mutation.AddDoctorIDs(ids...)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (ouo *OfficeUpdateOne) SetDoctorID(id int) *OfficeUpdateOne {
+	ouo.mutation.SetDoctorID(id)
 	return ouo
 }
 
-// AddDoctors adds the doctors edges to Doctor.
-func (ouo *OfficeUpdateOne) AddDoctors(d ...*Doctor) *OfficeUpdateOne {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (ouo *OfficeUpdateOne) SetNillableDoctorID(id *int) *OfficeUpdateOne {
+	if id != nil {
+		ouo = ouo.SetDoctorID(*id)
 	}
-	return ouo.AddDoctorIDs(ids...)
+	return ouo
+}
+
+// SetDoctor sets the doctor edge to Doctor.
+func (ouo *OfficeUpdateOne) SetDoctor(d *Doctor) *OfficeUpdateOne {
+	return ouo.SetDoctorID(d.ID)
+}
+
+// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
+func (ouo *OfficeUpdateOne) SetWorkingtimeID(id int) *OfficeUpdateOne {
+	ouo.mutation.SetWorkingtimeID(id)
+	return ouo
+}
+
+// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
+func (ouo *OfficeUpdateOne) SetNillableWorkingtimeID(id *int) *OfficeUpdateOne {
+	if id != nil {
+		ouo = ouo.SetWorkingtimeID(*id)
+	}
+	return ouo
+}
+
+// SetWorkingtime sets the workingtime edge to Workingtime.
+func (ouo *OfficeUpdateOne) SetWorkingtime(w *Workingtime) *OfficeUpdateOne {
+	return ouo.SetWorkingtimeID(w.ID)
+}
+
+// SetDepartmentID sets the department edge to Department by id.
+func (ouo *OfficeUpdateOne) SetDepartmentID(id int) *OfficeUpdateOne {
+	ouo.mutation.SetDepartmentID(id)
+	return ouo
+}
+
+// SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
+func (ouo *OfficeUpdateOne) SetNillableDepartmentID(id *int) *OfficeUpdateOne {
+	if id != nil {
+		ouo = ouo.SetDepartmentID(*id)
+	}
+	return ouo
+}
+
+// SetDepartment sets the department edge to Department.
+func (ouo *OfficeUpdateOne) SetDepartment(d *Department) *OfficeUpdateOne {
+	return ouo.SetDepartmentID(d.ID)
+}
+
+// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+func (ouo *OfficeUpdateOne) SetSpeacialDoctorID(id int) *OfficeUpdateOne {
+	ouo.mutation.SetSpeacialDoctorID(id)
+	return ouo
+}
+
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+func (ouo *OfficeUpdateOne) SetNillableSpeacialDoctorID(id *int) *OfficeUpdateOne {
+	if id != nil {
+		ouo = ouo.SetSpeacialDoctorID(*id)
+	}
+	return ouo
+}
+
+// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
+func (ouo *OfficeUpdateOne) SetSpeacialDoctor(s *Speacial_doctor) *OfficeUpdateOne {
+	return ouo.SetSpeacialDoctorID(s.ID)
 }
 
 // Mutation returns the OfficeMutation object of the builder.
@@ -233,19 +469,28 @@ func (ouo *OfficeUpdateOne) Mutation() *OfficeMutation {
 	return ouo.mutation
 }
 
-// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
-func (ouo *OfficeUpdateOne) RemoveDoctorIDs(ids ...int) *OfficeUpdateOne {
-	ouo.mutation.RemoveDoctorIDs(ids...)
+// ClearDoctor clears the doctor edge to Doctor.
+func (ouo *OfficeUpdateOne) ClearDoctor() *OfficeUpdateOne {
+	ouo.mutation.ClearDoctor()
 	return ouo
 }
 
-// RemoveDoctors removes doctors edges to Doctor.
-func (ouo *OfficeUpdateOne) RemoveDoctors(d ...*Doctor) *OfficeUpdateOne {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return ouo.RemoveDoctorIDs(ids...)
+// ClearWorkingtime clears the workingtime edge to Workingtime.
+func (ouo *OfficeUpdateOne) ClearWorkingtime() *OfficeUpdateOne {
+	ouo.mutation.ClearWorkingtime()
+	return ouo
+}
+
+// ClearDepartment clears the department edge to Department.
+func (ouo *OfficeUpdateOne) ClearDepartment() *OfficeUpdateOne {
+	ouo.mutation.ClearDepartment()
+	return ouo
+}
+
+// ClearSpeacialDoctor clears the speacial_doctor edge to Speacial_doctor.
+func (ouo *OfficeUpdateOne) ClearSpeacialDoctor() *OfficeUpdateOne {
+	ouo.mutation.ClearSpeacialDoctor()
+	return ouo
 }
 
 // Save executes the query and returns the updated entity.
@@ -328,12 +573,28 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Column: office.FieldOfficename,
 		})
 	}
-	if nodes := ouo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+	if ouo.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   office.DoctorsTable,
-			Columns: []string{office.DoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DoctorTable,
+			Columns: []string{office.DoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ouo.mutation.DoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DoctorTable,
+			Columns: []string{office.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -345,19 +606,105 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ouo.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if ouo.mutation.WorkingtimeCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   office.DoctorsTable,
-			Columns: []string{office.DoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.WorkingtimeTable,
+			Columns: []string{office.WorkingtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ouo.mutation.WorkingtimeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.WorkingtimeTable,
+			Columns: []string{office.WorkingtimeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: workingtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ouo.mutation.DepartmentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DepartmentTable,
+			Columns: []string{office.DepartmentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ouo.mutation.DepartmentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.DepartmentTable,
+			Columns: []string{office.DepartmentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ouo.mutation.SpeacialDoctorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.SpeacialDoctorTable,
+			Columns: []string{office.SpeacialDoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: speacial_doctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ouo.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   office.SpeacialDoctorTable,
+			Columns: []string{office.SpeacialDoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: speacial_doctor.FieldID,
 				},
 			},
 		}

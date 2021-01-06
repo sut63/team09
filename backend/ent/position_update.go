@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
 )
@@ -33,9 +34,39 @@ func (pu *PositionUpdate) SetPosition(s string) *PositionUpdate {
 	return pu
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (pu *PositionUpdate) AddDoctorIDs(ids ...int) *PositionUpdate {
+	pu.mutation.AddDoctorIDs(ids...)
+	return pu
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (pu *PositionUpdate) AddDoctors(d ...*Doctor) *PositionUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return pu.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the PositionMutation object of the builder.
 func (pu *PositionUpdate) Mutation() *PositionMutation {
 	return pu.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (pu *PositionUpdate) RemoveDoctorIDs(ids ...int) *PositionUpdate {
+	pu.mutation.RemoveDoctorIDs(ids...)
+	return pu
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (pu *PositionUpdate) RemoveDoctors(d ...*Doctor) *PositionUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return pu.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -45,6 +76,7 @@ func (pu *PositionUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "position", err: fmt.Errorf("ent: validator failed for field \"position\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -119,6 +151,44 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: position.FieldPosition,
 		})
 	}
+	if nodes := pu.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   position.DoctorsTable,
+			Columns: []string{position.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   position.DoctorsTable,
+			Columns: []string{position.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{position.Label}
@@ -143,9 +213,39 @@ func (puo *PositionUpdateOne) SetPosition(s string) *PositionUpdateOne {
 	return puo
 }
 
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (puo *PositionUpdateOne) AddDoctorIDs(ids ...int) *PositionUpdateOne {
+	puo.mutation.AddDoctorIDs(ids...)
+	return puo
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (puo *PositionUpdateOne) AddDoctors(d ...*Doctor) *PositionUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return puo.AddDoctorIDs(ids...)
+}
+
 // Mutation returns the PositionMutation object of the builder.
 func (puo *PositionUpdateOne) Mutation() *PositionMutation {
 	return puo.mutation
+}
+
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (puo *PositionUpdateOne) RemoveDoctorIDs(ids ...int) *PositionUpdateOne {
+	puo.mutation.RemoveDoctorIDs(ids...)
+	return puo
+}
+
+// RemoveDoctors removes doctors edges to Doctor.
+func (puo *PositionUpdateOne) RemoveDoctors(d ...*Doctor) *PositionUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return puo.RemoveDoctorIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -155,6 +255,7 @@ func (puo *PositionUpdateOne) Save(ctx context.Context) (*Position, error) {
 			return nil, &ValidationError{Name: "position", err: fmt.Errorf("ent: validator failed for field \"position\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *Position
@@ -226,6 +327,44 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (po *Position, err er
 			Value:  value,
 			Column: position.FieldPosition,
 		})
+	}
+	if nodes := puo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   position.DoctorsTable,
+			Columns: []string{position.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   position.DoctorsTable,
+			Columns: []string{position.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	po = &Position{config: puo.config}
 	_spec.Assign = po.assignValues

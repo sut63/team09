@@ -9,6 +9,19 @@ import (
 	"github.com/team09/app/ent"
 )
 
+// The DepartmentFunc type is an adapter to allow the use of ordinary
+// function as Department mutator.
+type DepartmentFunc func(context.Context, *ent.DepartmentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DepartmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DepartmentMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DepartmentMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DiseaseFunc type is an adapter to allow the use of ordinary
 // function as Disease mutator.
 type DiseaseFunc func(context.Context, *ent.DiseaseMutation) (ent.Value, error)
@@ -48,6 +61,19 @@ func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The MissionFunc type is an adapter to allow the use of ordinary
+// function as Mission mutator.
+type MissionFunc func(context.Context, *ent.MissionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MissionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.MissionMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MissionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The OfficeFunc type is an adapter to allow the use of ordinary
 // function as Office mutator.
 type OfficeFunc func(context.Context, *ent.OfficeMutation) (ent.Value, error)
@@ -70,6 +96,19 @@ func (f PositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	mv, ok := m.(*ent.PositionMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PositionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The Speacial_doctorFunc type is an adapter to allow the use of ordinary
+// function as Speacial_doctor mutator.
+type Speacial_doctorFunc func(context.Context, *ent.SpeacialDoctorMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f Speacial_doctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SpeacialDoctorMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpeacialDoctorMutation", m)
 	}
 	return f(ctx, mv)
 }

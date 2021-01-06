@@ -21,7 +21,20 @@ func (Office) Fields() []ent.Field {
 // Edges of the Office.
 func (Office) Edges() []ent.Edge {
 	return []ent.Edge {
-		edge.To("doctors", Doctor.Type).
-		StorageKey(edge.Column("office_id")),
+
+		edge.From("doctor", Doctor.Type).
+		Ref("offices").Unique(),
+		
+		edge.From("workingtime", Workingtime.Type).
+		Ref("offices").Unique(),
+
+		edge.From("department", Department.Type).
+		Ref("offices").Unique(),
+
+		edge.From("speacial_doctor", Speacial_doctor.Type).
+		Ref("offices").Unique(),
+
+		
+
 	}
 }

@@ -28,21 +28,27 @@ func (Doctor) Edges() []ent.Edge {
 	return []ent.Edge{
 
 		 edge.From("title", Title.Type).
-		 Ref("titles").
+		 Ref("doctors").
 		 Unique(),
 
 		 edge.From("gender", Gender.Type).
-		 Ref("genders").
+		 Ref("doctors").
 		 Unique(),
 
 		 edge.From("position", Position.Type).
-		 Ref("positions").
+		 Ref("doctors").
 		 Unique(),
 
 		 edge.From("disease", Disease.Type).
-		 Ref("diseases").
+		 Ref("doctors").
 		 Unique(),
 
 		 edge.To("departments",Department.Type).StorageKey(edge.Column("doctor_id")),
+		 edge.To("offices",Office.Type).
+		 StorageKey(edge.Column("doctor_id")),
+
+		 edge.To("departments",Department.Type).
+		 StorageKey(edge.Column("doctor_id")),
+
 	}
 }

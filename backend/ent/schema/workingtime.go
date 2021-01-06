@@ -21,7 +21,7 @@ func (Workingtime) Fields() []ent.Field {
 // Edges of the Workingtime.
 func (Workingtime) Edges() []ent.Edge {
 	return []ent.Edge {
-		edge.To("doctors", Doctor.Type).
+		edge.To("offices", Office.Type).
 		StorageKey(edge.Column("workingtime_id")),
 	}
 }

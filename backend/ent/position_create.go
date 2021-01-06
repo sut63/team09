@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/position"
 )
 
@@ -23,6 +24,21 @@ type PositionCreate struct {
 func (pc *PositionCreate) SetPosition(s string) *PositionCreate {
 	pc.mutation.SetPosition(s)
 	return pc
+}
+
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (pc *PositionCreate) AddDoctorIDs(ids ...int) *PositionCreate {
+	pc.mutation.AddDoctorIDs(ids...)
+	return pc
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (pc *PositionCreate) AddDoctors(d ...*Doctor) *PositionCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return pc.AddDoctorIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
@@ -107,6 +123,25 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Column: position.FieldPosition,
 		})
 		po.Position = value
+	}
+	if nodes := pc.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   position.DoctorsTable,
+			Columns: []string{position.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return po, _spec
 }

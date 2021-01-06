@@ -3,12 +3,15 @@
 package ent
 
 import (
+	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schema"
+	"github.com/team09/app/ent/speacial_doctor"
 	"github.com/team09/app/ent/title"
 )
 
@@ -16,6 +19,16 @@ import (
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	departmentFields := schema.Department{}.Fields()
+	_ = departmentFields
+	// departmentDescDepartmentType is the schema descriptor for DepartmentType field.
+	departmentDescDepartmentType := departmentFields[0].Descriptor()
+	// department.DepartmentTypeValidator is a validator for the "DepartmentType" field. It is called by the builders before save.
+	department.DepartmentTypeValidator = departmentDescDepartmentType.Validators[0].(func(string) error)
+	// departmentDescName is the schema descriptor for Name field.
+	departmentDescName := departmentFields[1].Descriptor()
+	// department.NameValidator is a validator for the "Name" field. It is called by the builders before save.
+	department.NameValidator = departmentDescName.Validators[0].(func(string) error)
 	diseaseFields := schema.Disease{}.Fields()
 	_ = diseaseFields
 	// diseaseDescDisease is the schema descriptor for disease field.
@@ -27,7 +40,7 @@ func init() {
 	// doctorDescName is the schema descriptor for name field.
 	doctorDescName := doctorFields[0].Descriptor()
 	// doctor.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	doctor.NameValidator = doctorDescName.Validators[0].(func(int) error)
+	doctor.NameValidator = doctorDescName.Validators[0].(func(string) error)
 	// doctorDescAge is the schema descriptor for age field.
 	doctorDescAge := doctorFields[1].Descriptor()
 	// doctor.AgeValidator is a validator for the "age" field. It is called by the builders before save.
@@ -35,7 +48,7 @@ func init() {
 	// doctorDescEmail is the schema descriptor for email field.
 	doctorDescEmail := doctorFields[2].Descriptor()
 	// doctor.EmailValidator is a validator for the "email" field. It is called by the builders before save.
-	doctor.EmailValidator = doctorDescEmail.Validators[0].(func(int) error)
+	doctor.EmailValidator = doctorDescEmail.Validators[0].(func(string) error)
 	// doctorDescPnumber is the schema descriptor for pnumber field.
 	doctorDescPnumber := doctorFields[3].Descriptor()
 	// doctor.PnumberValidator is a validator for the "pnumber" field. It is called by the builders before save.
@@ -43,17 +56,23 @@ func init() {
 	// doctorDescAddress is the schema descriptor for address field.
 	doctorDescAddress := doctorFields[4].Descriptor()
 	// doctor.AddressValidator is a validator for the "address" field. It is called by the builders before save.
-	doctor.AddressValidator = doctorDescAddress.Validators[0].(func(int) error)
+	doctor.AddressValidator = doctorDescAddress.Validators[0].(func(string) error)
 	// doctorDescEducational is the schema descriptor for educational field.
 	doctorDescEducational := doctorFields[5].Descriptor()
 	// doctor.EducationalValidator is a validator for the "educational" field. It is called by the builders before save.
-	doctor.EducationalValidator = doctorDescEducational.Validators[0].(func(int) error)
+	doctor.EducationalValidator = doctorDescEducational.Validators[0].(func(string) error)
 	genderFields := schema.Gender{}.Fields()
 	_ = genderFields
 	// genderDescGender is the schema descriptor for gender field.
 	genderDescGender := genderFields[0].Descriptor()
 	// gender.GenderValidator is a validator for the "gender" field. It is called by the builders before save.
 	gender.GenderValidator = genderDescGender.Validators[0].(func(string) error)
+	missionFields := schema.Mission{}.Fields()
+	_ = missionFields
+	// missionDescMissionType is the schema descriptor for MissionType field.
+	missionDescMissionType := missionFields[0].Descriptor()
+	// mission.MissionTypeValidator is a validator for the "MissionType" field. It is called by the builders before save.
+	mission.MissionTypeValidator = missionDescMissionType.Validators[0].(func(string) error)
 	officeFields := schema.Office{}.Fields()
 	_ = officeFields
 	// officeDescOfficename is the schema descriptor for officename field.
@@ -66,6 +85,12 @@ func init() {
 	positionDescPosition := positionFields[0].Descriptor()
 	// position.PositionValidator is a validator for the "position" field. It is called by the builders before save.
 	position.PositionValidator = positionDescPosition.Validators[0].(func(string) error)
+	speacial_doctorFields := schema.Speacial_doctor{}.Fields()
+	_ = speacial_doctorFields
+	// speacial_doctorDescName is the schema descriptor for name field.
+	speacial_doctorDescName := speacial_doctorFields[0].Descriptor()
+	// speacial_doctor.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	speacial_doctor.NameValidator = speacial_doctorDescName.Validators[0].(func(string) error)
 	titleFields := schema.Title{}.Fields()
 	_ = titleFields
 	// titleDescTitle is the schema descriptor for title field.

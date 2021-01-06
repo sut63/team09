@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/gender"
 )
 
@@ -23,6 +24,21 @@ type GenderCreate struct {
 func (gc *GenderCreate) SetGender(s string) *GenderCreate {
 	gc.mutation.SetGender(s)
 	return gc
+}
+
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (gc *GenderCreate) AddDoctorIDs(ids ...int) *GenderCreate {
+	gc.mutation.AddDoctorIDs(ids...)
+	return gc
+}
+
+// AddDoctors adds the doctors edges to Doctor.
+func (gc *GenderCreate) AddDoctors(d ...*Doctor) *GenderCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return gc.AddDoctorIDs(ids...)
 }
 
 // Mutation returns the GenderMutation object of the builder.
@@ -107,6 +123,25 @@ func (gc *GenderCreate) createSpec() (*Gender, *sqlgraph.CreateSpec) {
 			Column: gender.FieldGender,
 		})
 		ge.Gender = value
+	}
+	if nodes := gc.mutation.DoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.DoctorsTable,
+			Columns: []string{gender.DoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return ge, _spec
 }
