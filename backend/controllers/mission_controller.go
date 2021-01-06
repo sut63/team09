@@ -37,7 +37,7 @@ func (ctl *MissionController) CreateMission(c *gin.Context) {
 	}
 	m, err := ctl.client.Mission.
 		Create().
-		SetMissionname(obj.Missionname).
+		SetMissionType(obj.MissionType).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
