@@ -52,5 +52,8 @@ func (Doctor) Edges() []ent.Edge {
 
 		edge.To("schedules", Schedule.Type).
 			StorageKey(edge.Column("schedule_id")),
+
+		edge.To("trainings",Training.Type).
+			StorageKey(edge.Column("doctor_id")),
 	}
 }
