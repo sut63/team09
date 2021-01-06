@@ -1,19 +1,27 @@
 package controllers
- 
-import (
-   "context"
-   "fmt"
-   "strconv"
 
-   "github.com/team09/app/ent"
-   "github.com/team09/app/ent/doctor"
-   "github.com/gin-gonic/gin"
+import (
+	"context"
+	"fmt"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/doctor"
 )
 
 // DoctorController defines the struct for the doctor controller
 type DoctorController struct {
 	client *ent.Client
 	router gin.IRouter
+}
+type Doctor struct {
+	Name        string
+	Age         int
+	Email       string
+	Pnumber     int
+	Address     string
+	Educational string
 }
 
 // CreateDoctor handles POST requests for adding doctor entities
@@ -38,6 +46,11 @@ func (ctl *DoctorController) CreateDoctor(c *gin.Context) {
 	d, err := ctl.client.Doctor.
 		Create().
 		SetName(obj.Name).
+		SetAge(obj.Age).
+		SetEmail(obj.Email).
+		SetPnumber(obj.Pnumber).
+		SetAddress(obj.Address).
+		SetEducational(obj.Educational).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -96,21 +109,25 @@ func (ctl *DoctorController) ListDoctor(c *gin.Context) {
 	limit := 10
 	if limitQuery != "" {
 		limit64, err := strconv.ParseInt(limitQuery, 10, 64)
-		if err == nil {limit = int(limit64)}
+		if err == nil {
+			limit = int(limit64)
+		}
 	}
 	offsetQuery := c.Query("offset")
 	offset := 0
 	if offsetQuery != "" {
 		offset64, err := strconv.ParseInt(offsetQuery, 10, 64)
-		if err == nil {offset = int(offset64)}
+		if err == nil {
+			offset = int(offset64)
+		}
 	}
 	doctors, err := ctl.client.Doctor.
 		Query().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
-		if err != nil {
-		c.JSON(400, gin.H{"error": err.Error(),})
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, doctors)
@@ -155,14 +172,14 @@ func NewDoctorController(router gin.IRouter, client *ent.Client) *DoctorControll
 	}
 	dc.register()
 	return dc
- }
-  
- // InitUserController registers routes to the main engine
- func (ctl *DoctorController) register() {
+}
+
+// InitUserController registers routes to the main engine
+func (ctl *DoctorController) register() {
 	doctors := ctl.router.Group("/doctors")
 	doctors.GET("", ctl.ListDoctor)
 	// CRUD
 	doctors.POST("", ctl.CreateDoctor)
 	doctors.GET(":id", ctl.GetDoctor)
 	doctors.DELETE(":id", ctl.DeleteDoctor)
- }
+}
