@@ -126,15 +126,15 @@ func (f ScheduleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
-// The Special_DoctorFunc type is an adapter to allow the use of ordinary
-// function as Special_Doctor mutator.
-type Special_DoctorFunc func(context.Context, *ent.SpecialDoctorMutation) (ent.Value, error)
+// The SpecialdoctorFunc type is an adapter to allow the use of ordinary
+// function as Specialdoctor mutator.
+type SpecialdoctorFunc func(context.Context, *ent.SpecialdoctorMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f Special_DoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SpecialDoctorMutation)
+func (f SpecialdoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SpecialdoctorMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialDoctorMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialdoctorMutation", m)
 	}
 	return f(ctx, mv)
 }

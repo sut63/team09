@@ -8,30 +8,28 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team09/app/ent/department"
-	"github.com/team09/app/ent/doctor"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 )
 
-// Special_Doctor is the model entity for the Special_Doctor schema.
-type Special_Doctor struct {
+// Specialdoctor is the model entity for the Specialdoctor schema.
+type Specialdoctor struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Other holds the value of the "Other" field.
 	Other string `json:"Other,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the Special_DoctorQuery when eager-loading is set.
-	Edges                 Special_DoctorEdges `json:"edges"`
-	department_id         *int
-	special_doctor_doctor *int
-	specialist_id         *int
+	// The values are being populated by the SpecialdoctorQuery when eager-loading is set.
+	Edges         SpecialdoctorEdges `json:"edges"`
+	department_id *int
+	specialist_id *int
 }
 
-// Special_DoctorEdges holds the relations/edges for other nodes in the graph.
-type Special_DoctorEdges struct {
+// SpecialdoctorEdges holds the relations/edges for other nodes in the graph.
+type SpecialdoctorEdges struct {
 	// Doctor holds the value of the doctor edge.
-	Doctor *Doctor
+	Doctor []*Doctor
 	// Department holds the value of the department edge.
 	Department *Department
 	// Specialist holds the value of the specialist edge.
@@ -44,14 +42,9 @@ type Special_DoctorEdges struct {
 }
 
 // DoctorOrErr returns the Doctor value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e Special_DoctorEdges) DoctorOrErr() (*Doctor, error) {
+// was not loaded in eager-loading.
+func (e SpecialdoctorEdges) DoctorOrErr() ([]*Doctor, error) {
 	if e.loadedTypes[0] {
-		if e.Doctor == nil {
-			// The edge doctor was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: doctor.Label}
-		}
 		return e.Doctor, nil
 	}
 	return nil, &NotLoadedError{edge: "doctor"}
@@ -59,7 +52,7 @@ func (e Special_DoctorEdges) DoctorOrErr() (*Doctor, error) {
 
 // DepartmentOrErr returns the Department value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e Special_DoctorEdges) DepartmentOrErr() (*Department, error) {
+func (e SpecialdoctorEdges) DepartmentOrErr() (*Department, error) {
 	if e.loadedTypes[1] {
 		if e.Department == nil {
 			// The edge department was loaded in eager-loading,
@@ -73,7 +66,7 @@ func (e Special_DoctorEdges) DepartmentOrErr() (*Department, error) {
 
 // SpecialistOrErr returns the Specialist value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e Special_DoctorEdges) SpecialistOrErr() (*Specialist, error) {
+func (e SpecialdoctorEdges) SpecialistOrErr() (*Specialist, error) {
 	if e.loadedTypes[2] {
 		if e.Specialist == nil {
 			// The edge specialist was loaded in eager-loading,
@@ -87,7 +80,7 @@ func (e Special_DoctorEdges) SpecialistOrErr() (*Specialist, error) {
 
 // OfficesOrErr returns the Offices value or an error if the edge
 // was not loaded in eager-loading.
-func (e Special_DoctorEdges) OfficesOrErr() ([]*Office, error) {
+func (e SpecialdoctorEdges) OfficesOrErr() ([]*Office, error) {
 	if e.loadedTypes[3] {
 		return e.Offices, nil
 	}
@@ -95,7 +88,7 @@ func (e Special_DoctorEdges) OfficesOrErr() ([]*Office, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Special_Doctor) scanValues() []interface{} {
+func (*Specialdoctor) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // Other
@@ -103,109 +96,102 @@ func (*Special_Doctor) scanValues() []interface{} {
 }
 
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
-func (*Special_Doctor) fkValues() []interface{} {
+func (*Specialdoctor) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // department_id
-		&sql.NullInt64{}, // special_doctor_doctor
 		&sql.NullInt64{}, // specialist_id
 	}
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the Special_Doctor fields.
-func (sd *Special_Doctor) assignValues(values ...interface{}) error {
-	if m, n := len(values), len(special_doctor.Columns); m < n {
+// to the Specialdoctor fields.
+func (s *Specialdoctor) assignValues(values ...interface{}) error {
+	if m, n := len(values), len(specialdoctor.Columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	value, ok := values[0].(*sql.NullInt64)
 	if !ok {
 		return fmt.Errorf("unexpected type %T for field id", value)
 	}
-	sd.ID = int(value.Int64)
+	s.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field Other", values[0])
 	} else if value.Valid {
-		sd.Other = value.String
+		s.Other = value.String
 	}
 	values = values[1:]
-	if len(values) == len(special_doctor.ForeignKeys) {
+	if len(values) == len(specialdoctor.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
 		} else if value.Valid {
-			sd.department_id = new(int)
-			*sd.department_id = int(value.Int64)
+			s.department_id = new(int)
+			*s.department_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field special_doctor_doctor", value)
-		} else if value.Valid {
-			sd.special_doctor_doctor = new(int)
-			*sd.special_doctor_doctor = int(value.Int64)
-		}
-		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field specialist_id", value)
 		} else if value.Valid {
-			sd.specialist_id = new(int)
-			*sd.specialist_id = int(value.Int64)
+			s.specialist_id = new(int)
+			*s.specialist_id = int(value.Int64)
 		}
 	}
 	return nil
 }
 
-// QueryDoctor queries the doctor edge of the Special_Doctor.
-func (sd *Special_Doctor) QueryDoctor() *DoctorQuery {
-	return (&Special_DoctorClient{config: sd.config}).QueryDoctor(sd)
+// QueryDoctor queries the doctor edge of the Specialdoctor.
+func (s *Specialdoctor) QueryDoctor() *DoctorQuery {
+	return (&SpecialdoctorClient{config: s.config}).QueryDoctor(s)
 }
 
-// QueryDepartment queries the department edge of the Special_Doctor.
-func (sd *Special_Doctor) QueryDepartment() *DepartmentQuery {
-	return (&Special_DoctorClient{config: sd.config}).QueryDepartment(sd)
+// QueryDepartment queries the department edge of the Specialdoctor.
+func (s *Specialdoctor) QueryDepartment() *DepartmentQuery {
+	return (&SpecialdoctorClient{config: s.config}).QueryDepartment(s)
 }
 
-// QuerySpecialist queries the specialist edge of the Special_Doctor.
-func (sd *Special_Doctor) QuerySpecialist() *SpecialistQuery {
-	return (&Special_DoctorClient{config: sd.config}).QuerySpecialist(sd)
+// QuerySpecialist queries the specialist edge of the Specialdoctor.
+func (s *Specialdoctor) QuerySpecialist() *SpecialistQuery {
+	return (&SpecialdoctorClient{config: s.config}).QuerySpecialist(s)
 }
 
-// QueryOffices queries the offices edge of the Special_Doctor.
-func (sd *Special_Doctor) QueryOffices() *OfficeQuery {
-	return (&Special_DoctorClient{config: sd.config}).QueryOffices(sd)
+// QueryOffices queries the offices edge of the Specialdoctor.
+func (s *Specialdoctor) QueryOffices() *OfficeQuery {
+	return (&SpecialdoctorClient{config: s.config}).QueryOffices(s)
 }
 
-// Update returns a builder for updating this Special_Doctor.
-// Note that, you need to call Special_Doctor.Unwrap() before calling this method, if this Special_Doctor
+// Update returns a builder for updating this Specialdoctor.
+// Note that, you need to call Specialdoctor.Unwrap() before calling this method, if this Specialdoctor
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (sd *Special_Doctor) Update() *Special_DoctorUpdateOne {
-	return (&Special_DoctorClient{config: sd.config}).UpdateOne(sd)
+func (s *Specialdoctor) Update() *SpecialdoctorUpdateOne {
+	return (&SpecialdoctorClient{config: s.config}).UpdateOne(s)
 }
 
 // Unwrap unwraps the entity that was returned from a transaction after it was closed,
 // so that all next queries will be executed through the driver which created the transaction.
-func (sd *Special_Doctor) Unwrap() *Special_Doctor {
-	tx, ok := sd.config.driver.(*txDriver)
+func (s *Specialdoctor) Unwrap() *Specialdoctor {
+	tx, ok := s.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: Special_Doctor is not a transactional entity")
+		panic("ent: Specialdoctor is not a transactional entity")
 	}
-	sd.config.driver = tx.drv
-	return sd
+	s.config.driver = tx.drv
+	return s
 }
 
 // String implements the fmt.Stringer.
-func (sd *Special_Doctor) String() string {
+func (s *Specialdoctor) String() string {
 	var builder strings.Builder
-	builder.WriteString("Special_Doctor(")
-	builder.WriteString(fmt.Sprintf("id=%v", sd.ID))
+	builder.WriteString("Specialdoctor(")
+	builder.WriteString(fmt.Sprintf("id=%v", s.ID))
 	builder.WriteString(", Other=")
-	builder.WriteString(sd.Other)
+	builder.WriteString(s.Other)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// Special_Doctors is a parsable slice of Special_Doctor.
-type Special_Doctors []*Special_Doctor
+// Specialdoctors is a parsable slice of Specialdoctor.
+type Specialdoctors []*Specialdoctor
 
-func (sd Special_Doctors) config(cfg config) {
-	for _i := range sd {
-		sd[_i].config = cfg
+func (s Specialdoctors) config(cfg config) {
+	for _i := range s {
+		s[_i].config = cfg
 	}
 }

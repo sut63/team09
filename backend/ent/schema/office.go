@@ -31,7 +31,7 @@ func (Office) Edges() []ent.Edge {
 		edge.From("department", Department.Type).
 			Ref("offices").Unique(),
 
-		edge.From("speacial_doctor", Special_Doctor.Type).
+		edge.From("speacialdoctor", Specialdoctor.Type).
 			Ref("offices").Unique(),
 
 		edge.To("schedules", Schedule.Type).

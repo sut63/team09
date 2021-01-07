@@ -33,11 +33,12 @@ type Doctor struct {
 	Educational string `json:"educational,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DoctorQuery when eager-loading is set.
-	Edges       DoctorEdges `json:"edges"`
-	disease_id  *int
-	gender_id   *int
-	position_id *int
-	title_id    *int
+	Edges            DoctorEdges `json:"edges"`
+	disease_id       *int
+	gender_id        *int
+	position_id      *int
+	specialdoctor_id *int
+	title_id         *int
 }
 
 // DoctorEdges holds the relations/edges for other nodes in the graph.
@@ -174,6 +175,7 @@ func (*Doctor) fkValues() []interface{} {
 		&sql.NullInt64{}, // disease_id
 		&sql.NullInt64{}, // gender_id
 		&sql.NullInt64{}, // position_id
+		&sql.NullInt64{}, // specialdoctor_id
 		&sql.NullInt64{}, // title_id
 	}
 }
@@ -241,6 +243,12 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 			*d.position_id = int(value.Int64)
 		}
 		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field specialdoctor_id", value)
+		} else if value.Valid {
+			d.specialdoctor_id = new(int)
+			*d.specialdoctor_id = int(value.Int64)
+		}
+		if value, ok := values[4].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field title_id", value)
 		} else if value.Valid {
 			d.title_id = new(int)

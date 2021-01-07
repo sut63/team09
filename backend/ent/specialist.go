@@ -24,20 +24,20 @@ type Specialist struct {
 
 // SpecialistEdges holds the relations/edges for other nodes in the graph.
 type SpecialistEdges struct {
-	// SpecialDoctors holds the value of the special_doctors edge.
-	SpecialDoctors []*Special_Doctor
+	// Specialdoctors holds the value of the specialdoctors edge.
+	Specialdoctors []*Specialdoctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// SpecialDoctorsOrErr returns the SpecialDoctors value or an error if the edge
+// SpecialdoctorsOrErr returns the Specialdoctors value or an error if the edge
 // was not loaded in eager-loading.
-func (e SpecialistEdges) SpecialDoctorsOrErr() ([]*Special_Doctor, error) {
+func (e SpecialistEdges) SpecialdoctorsOrErr() ([]*Specialdoctor, error) {
 	if e.loadedTypes[0] {
-		return e.SpecialDoctors, nil
+		return e.Specialdoctors, nil
 	}
-	return nil, &NotLoadedError{edge: "special_doctors"}
+	return nil, &NotLoadedError{edge: "specialdoctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -68,9 +68,9 @@ func (s *Specialist) assignValues(values ...interface{}) error {
 	return nil
 }
 
-// QuerySpecialDoctors queries the special_doctors edge of the Specialist.
-func (s *Specialist) QuerySpecialDoctors() *Special_DoctorQuery {
-	return (&SpecialistClient{config: s.config}).QuerySpecialDoctors(s)
+// QuerySpecialdoctors queries the specialdoctors edge of the Specialist.
+func (s *Specialist) QuerySpecialdoctors() *SpecialdoctorQuery {
+	return (&SpecialistClient{config: s.config}).QuerySpecialdoctors(s)
 }
 
 // Update returns a builder for updating this Specialist.

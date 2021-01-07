@@ -426,28 +426,28 @@ func (f ScheduleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.ScheduleMutation", m)
 }
 
-// The Special_DoctorQueryRuleFunc type is an adapter to allow the use of ordinary
+// The SpecialdoctorQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type Special_DoctorQueryRuleFunc func(context.Context, *ent.SpecialDoctorQuery) error
+type SpecialdoctorQueryRuleFunc func(context.Context, *ent.SpecialdoctorQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f Special_DoctorQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.SpecialDoctorQuery); ok {
+func (f SpecialdoctorQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.SpecialdoctorQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.SpecialDoctorQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.SpecialdoctorQuery", q)
 }
 
-// The Special_DoctorMutationRuleFunc type is an adapter to allow the use of ordinary
+// The SpecialdoctorMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type Special_DoctorMutationRuleFunc func(context.Context, *ent.SpecialDoctorMutation) error
+type SpecialdoctorMutationRuleFunc func(context.Context, *ent.SpecialdoctorMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f Special_DoctorMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.SpecialDoctorMutation); ok {
+func (f SpecialdoctorMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.SpecialdoctorMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.SpecialDoctorMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.SpecialdoctorMutation", m)
 }
 
 // The SpecialistQueryRuleFunc type is an adapter to allow the use of ordinary

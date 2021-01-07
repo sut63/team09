@@ -10,18 +10,18 @@ const (
 	// FieldSpecialist holds the string denoting the specialist field in the database.
 	FieldSpecialist = "specialist"
 
-	// EdgeSpecialDoctors holds the string denoting the special_doctors edge name in mutations.
-	EdgeSpecialDoctors = "special_doctors"
+	// EdgeSpecialdoctors holds the string denoting the specialdoctors edge name in mutations.
+	EdgeSpecialdoctors = "specialdoctors"
 
 	// Table holds the table name of the specialist in the database.
 	Table = "specialists"
-	// SpecialDoctorsTable is the table the holds the special_doctors relation/edge.
-	SpecialDoctorsTable = "special_doctors"
-	// SpecialDoctorsInverseTable is the table name for the Special_Doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "special_doctor" package.
-	SpecialDoctorsInverseTable = "special_doctors"
-	// SpecialDoctorsColumn is the table column denoting the special_doctors relation/edge.
-	SpecialDoctorsColumn = "specialist_id"
+	// SpecialdoctorsTable is the table the holds the specialdoctors relation/edge.
+	SpecialdoctorsTable = "specialdoctors"
+	// SpecialdoctorsInverseTable is the table name for the Specialdoctor entity.
+	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
+	SpecialdoctorsInverseTable = "specialdoctors"
+	// SpecialdoctorsColumn is the table column denoting the specialdoctors relation/edge.
+	SpecialdoctorsColumn = "specialist_id"
 )
 
 // Columns holds all SQL columns for specialist fields.

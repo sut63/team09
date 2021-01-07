@@ -1,15 +1,15 @@
 package controllers
  
 import (
-    "time"
-   "context"
-   "fmt"
-   "strconv"
-   "github.com/team09/app/ent"
-   "github.com/team09/app/ent/department"
-   "github.com/team09/app/ent/course"
-   "github.com/team09/app/ent/doctor"
-   "github.com/gin-gonic/gin"
+	"time"
+   	"context"
+   
+   	"strconv"
+   	"github.com/team09/app/ent"
+   	"github.com/team09/app/ent/department"
+   	"github.com/team09/app/ent/course"
+   	"github.com/team09/app/ent/doctor"
+   	"github.com/gin-gonic/gin"
 )
 
 // TrainingController defines the struct for the training controller
@@ -27,7 +27,7 @@ type Training struct {
     Datetwo    string
 }
 
-// CreateTrainings handles POST requests for adding training entities
+// CreateTraining handles POST requests for adding training entities
 // @Summary Create training
 // @Description Create training
 // @ID create-training
@@ -38,7 +38,6 @@ type Training struct {
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /trainings [post]
-
 func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 	obj := Training{}
 	if err := c.ShouldBind(&obj); err != nil {
@@ -92,8 +91,8 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
         SetDepartment(de).
         SetDoctor(d).
         SetBranch(obj.Branch).
-        SetDateoneTime(time).
-        SetDatetwoTime(time).
+        SetDateone(time1).
+        SetDatetwo(time2).
         Save(context.Background())
     
     if err != nil {
@@ -158,7 +157,7 @@ func NewTrainingController(router gin.IRouter, client *ent.Client) *TrainingCont
 		client: client,
 		router: router,
 	}
-	dic.register()
+	tr.register()
 	return tr
 }
 

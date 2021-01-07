@@ -10,7 +10,7 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -23,11 +23,11 @@ type Office struct {
 	Officename string `json:"officename,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
-	Edges             OfficeEdges `json:"edges"`
-	department_id     *int
-	doctor_id         *int
-	special_doctor_id *int
-	workingtime_id    *int
+	Edges            OfficeEdges `json:"edges"`
+	department_id    *int
+	doctor_id        *int
+	specialdoctor_id *int
+	workingtime_id   *int
 }
 
 // OfficeEdges holds the relations/edges for other nodes in the graph.
@@ -38,8 +38,8 @@ type OfficeEdges struct {
 	Workingtime *Workingtime
 	// Department holds the value of the department edge.
 	Department *Department
-	// SpeacialDoctor holds the value of the speacial_doctor edge.
-	SpeacialDoctor *Special_Doctor
+	// Speacialdoctor holds the value of the speacialdoctor edge.
+	Speacialdoctor *Specialdoctor
 	// Schedules holds the value of the schedules edge.
 	Schedules []*Schedule
 	// loadedTypes holds the information for reporting if a
@@ -89,18 +89,18 @@ func (e OfficeEdges) DepartmentOrErr() (*Department, error) {
 	return nil, &NotLoadedError{edge: "department"}
 }
 
-// SpeacialDoctorOrErr returns the SpeacialDoctor value or an error if the edge
+// SpeacialdoctorOrErr returns the Speacialdoctor value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e OfficeEdges) SpeacialDoctorOrErr() (*Special_Doctor, error) {
+func (e OfficeEdges) SpeacialdoctorOrErr() (*Specialdoctor, error) {
 	if e.loadedTypes[3] {
-		if e.SpeacialDoctor == nil {
-			// The edge speacial_doctor was loaded in eager-loading,
+		if e.Speacialdoctor == nil {
+			// The edge speacialdoctor was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: special_doctor.Label}
+			return nil, &NotFoundError{label: specialdoctor.Label}
 		}
-		return e.SpeacialDoctor, nil
+		return e.Speacialdoctor, nil
 	}
-	return nil, &NotLoadedError{edge: "speacial_doctor"}
+	return nil, &NotLoadedError{edge: "speacialdoctor"}
 }
 
 // SchedulesOrErr returns the Schedules value or an error if the edge
@@ -125,7 +125,7 @@ func (*Office) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // department_id
 		&sql.NullInt64{}, // doctor_id
-		&sql.NullInt64{}, // special_doctor_id
+		&sql.NullInt64{}, // specialdoctor_id
 		&sql.NullInt64{}, // workingtime_id
 	}
 }
@@ -162,10 +162,10 @@ func (o *Office) assignValues(values ...interface{}) error {
 			*o.doctor_id = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field special_doctor_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field specialdoctor_id", value)
 		} else if value.Valid {
-			o.special_doctor_id = new(int)
-			*o.special_doctor_id = int(value.Int64)
+			o.specialdoctor_id = new(int)
+			*o.specialdoctor_id = int(value.Int64)
 		}
 		if value, ok := values[3].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field workingtime_id", value)
@@ -192,9 +192,9 @@ func (o *Office) QueryDepartment() *DepartmentQuery {
 	return (&OfficeClient{config: o.config}).QueryDepartment(o)
 }
 
-// QuerySpeacialDoctor queries the speacial_doctor edge of the Office.
-func (o *Office) QuerySpeacialDoctor() *Special_DoctorQuery {
-	return (&OfficeClient{config: o.config}).QuerySpeacialDoctor(o)
+// QuerySpeacialdoctor queries the speacialdoctor edge of the Office.
+func (o *Office) QuerySpeacialdoctor() *SpecialdoctorQuery {
+	return (&OfficeClient{config: o.config}).QuerySpeacialdoctor(o)
 }
 
 // QuerySchedules queries the schedules edge of the Office.

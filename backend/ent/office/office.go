@@ -16,8 +16,8 @@ const (
 	EdgeWorkingtime = "workingtime"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
 	EdgeDepartment = "department"
-	// EdgeSpeacialDoctor holds the string denoting the speacial_doctor edge name in mutations.
-	EdgeSpeacialDoctor = "speacial_doctor"
+	// EdgeSpeacialdoctor holds the string denoting the speacialdoctor edge name in mutations.
+	EdgeSpeacialdoctor = "speacialdoctor"
 	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
 	EdgeSchedules = "schedules"
 
@@ -44,13 +44,13 @@ const (
 	DepartmentInverseTable = "departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
-	// SpeacialDoctorTable is the table the holds the speacial_doctor relation/edge.
-	SpeacialDoctorTable = "offices"
-	// SpeacialDoctorInverseTable is the table name for the Special_Doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "special_doctor" package.
-	SpeacialDoctorInverseTable = "special_doctors"
-	// SpeacialDoctorColumn is the table column denoting the speacial_doctor relation/edge.
-	SpeacialDoctorColumn = "special_doctor_id"
+	// SpeacialdoctorTable is the table the holds the speacialdoctor relation/edge.
+	SpeacialdoctorTable = "offices"
+	// SpeacialdoctorInverseTable is the table name for the Specialdoctor entity.
+	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
+	SpeacialdoctorInverseTable = "specialdoctors"
+	// SpeacialdoctorColumn is the table column denoting the speacialdoctor relation/edge.
+	SpeacialdoctorColumn = "specialdoctor_id"
 	// SchedulesTable is the table the holds the schedules relation/edge.
 	SchedulesTable = "schedules"
 	// SchedulesInverseTable is the table name for the Schedule entity.
@@ -70,7 +70,7 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"department_id",
 	"doctor_id",
-	"special_doctor_id",
+	"specialdoctor_id",
 	"workingtime_id",
 }
 

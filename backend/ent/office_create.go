@@ -13,7 +13,7 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -87,23 +87,23 @@ func (oc *OfficeCreate) SetDepartment(d *Department) *OfficeCreate {
 	return oc.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
-func (oc *OfficeCreate) SetSpeacialDoctorID(id int) *OfficeCreate {
-	oc.mutation.SetSpeacialDoctorID(id)
+// SetSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id.
+func (oc *OfficeCreate) SetSpeacialdoctorID(id int) *OfficeCreate {
+	oc.mutation.SetSpeacialdoctorID(id)
 	return oc
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
-func (oc *OfficeCreate) SetNillableSpeacialDoctorID(id *int) *OfficeCreate {
+// SetNillableSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableSpeacialdoctorID(id *int) *OfficeCreate {
 	if id != nil {
-		oc = oc.SetSpeacialDoctorID(*id)
+		oc = oc.SetSpeacialdoctorID(*id)
 	}
 	return oc
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
-func (oc *OfficeCreate) SetSpeacialDoctor(s *Special_Doctor) *OfficeCreate {
-	return oc.SetSpeacialDoctorID(s.ID)
+// SetSpeacialdoctor sets the speacialdoctor edge to Specialdoctor.
+func (oc *OfficeCreate) SetSpeacialdoctor(s *Specialdoctor) *OfficeCreate {
+	return oc.SetSpeacialdoctorID(s.ID)
 }
 
 // AddScheduleIDs adds the schedules edge to Schedule by ids.
@@ -261,17 +261,17 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := oc.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+	if nodes := oc.mutation.SpeacialdoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpeacialDoctorTable,
-			Columns: []string{office.SpeacialDoctorColumn},
+			Table:   office.SpeacialdoctorTable,
+			Columns: []string{office.SpeacialdoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

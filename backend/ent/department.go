@@ -40,8 +40,8 @@ type DepartmentEdges struct {
 	Schedules []*Schedule
 	// Trainings holds the value of the trainings edge.
 	Trainings []*Training
-	// SpecialDoctors holds the value of the special_doctors edge.
-	SpecialDoctors []*Special_Doctor
+	// Specialdoctors holds the value of the specialdoctors edge.
+	Specialdoctors []*Specialdoctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [6]bool
@@ -102,13 +102,13 @@ func (e DepartmentEdges) TrainingsOrErr() ([]*Training, error) {
 	return nil, &NotLoadedError{edge: "trainings"}
 }
 
-// SpecialDoctorsOrErr returns the SpecialDoctors value or an error if the edge
+// SpecialdoctorsOrErr returns the Specialdoctors value or an error if the edge
 // was not loaded in eager-loading.
-func (e DepartmentEdges) SpecialDoctorsOrErr() ([]*Special_Doctor, error) {
+func (e DepartmentEdges) SpecialdoctorsOrErr() ([]*Specialdoctor, error) {
 	if e.loadedTypes[5] {
-		return e.SpecialDoctors, nil
+		return e.Specialdoctors, nil
 	}
-	return nil, &NotLoadedError{edge: "special_doctors"}
+	return nil, &NotLoadedError{edge: "specialdoctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -193,9 +193,9 @@ func (d *Department) QueryTrainings() *TrainingQuery {
 	return (&DepartmentClient{config: d.config}).QueryTrainings(d)
 }
 
-// QuerySpecialDoctors queries the special_doctors edge of the Department.
-func (d *Department) QuerySpecialDoctors() *Special_DoctorQuery {
-	return (&DepartmentClient{config: d.config}).QuerySpecialDoctors(d)
+// QuerySpecialdoctors queries the specialdoctors edge of the Department.
+func (d *Department) QuerySpecialdoctors() *SpecialdoctorQuery {
+	return (&DepartmentClient{config: d.config}).QuerySpecialdoctors(d)
 }
 
 // Update returns a builder for updating this Department.

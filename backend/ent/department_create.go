@@ -14,7 +14,7 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/training"
 )
 
@@ -120,19 +120,19 @@ func (dc *DepartmentCreate) AddTrainings(t ...*Training) *DepartmentCreate {
 	return dc.AddTrainingIDs(ids...)
 }
 
-// AddSpecialDoctorIDs adds the special_doctors edge to Special_Doctor by ids.
-func (dc *DepartmentCreate) AddSpecialDoctorIDs(ids ...int) *DepartmentCreate {
-	dc.mutation.AddSpecialDoctorIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (dc *DepartmentCreate) AddSpecialdoctorIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddSpecialdoctorIDs(ids...)
 	return dc
 }
 
-// AddSpecialDoctors adds the special_doctors edges to Special_Doctor.
-func (dc *DepartmentCreate) AddSpecialDoctors(s ...*Special_Doctor) *DepartmentCreate {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (dc *DepartmentCreate) AddSpecialdoctors(s ...*Specialdoctor) *DepartmentCreate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return dc.AddSpecialDoctorIDs(ids...)
+	return dc.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -329,17 +329,17 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialDoctorsIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   department.SpecialDoctorsTable,
-			Columns: []string{department.SpecialDoctorsColumn},
+			Table:   department.SpecialdoctorsTable,
+			Columns: []string{department.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
