@@ -1,19 +1,19 @@
 package controllers
- 
-import (
-   "context"
-   "fmt"
-   "strconv"
 
-   "github.com/team09/app/ent"
-   "github.com/team09/app/ent/specialist"
-   "github.com/gin-gonic/gin"
+import (
+	"context"
+	"fmt"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/specialist"
 )
- 
+
 // SpecialistController defines the struct for the specialist controller
 type SpecialistController struct {
-   client *ent.Client
-   router gin.IRouter
+	client *ent.Client
+	router gin.IRouter
 }
 
 // CreateSpecialist handles POST requests for adding specialist entities
@@ -35,7 +35,7 @@ func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	d, err := ctl.client.Specialist.
 		Create().
 		SetSpecialist(obj.Specialist).
@@ -46,10 +46,10 @@ func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	c.JSON(200, d)
- }
- 
+}
+
 // GetSpecialist handles GET requests to retrieve a specialist entity
 // @Summary Get a specialist entity by ID
 // @Description get specialist by ID
@@ -69,7 +69,7 @@ func (ctl *SpecialistController) GetSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	d, err := ctl.client.Specialist.
 		Query().
 		Where(specialist.IDEQ(int(id))).
@@ -80,11 +80,11 @@ func (ctl *SpecialistController) GetSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
-	c.JSON(200, d)
- }
 
- // ListSpecialist handles request to get a list of specialist entities
+	c.JSON(200, d)
+}
+
+// ListSpecialist handles request to get a list of specialist entities
 // @Summary List specialist entities
 // @Description list specialist entities
 // @ID list-specialist
@@ -100,30 +100,34 @@ func (ctl *SpecialistController) ListSpecialist(c *gin.Context) {
 	limit := 10
 	if limitQuery != "" {
 		limit64, err := strconv.ParseInt(limitQuery, 10, 64)
-		if err == nil {limit = int(limit64)}
+		if err == nil {
+			limit = int(limit64)
+		}
 	}
-  
+
 	offsetQuery := c.Query("offset")
 	offset := 0
 	if offsetQuery != "" {
 		offset64, err := strconv.ParseInt(offsetQuery, 10, 64)
-		if err == nil {offset = int(offset64)}
+		if err == nil {
+			offset = int(offset64)
+		}
 	}
-  
+
 	specialists, err := ctl.client.Specialist.
 		Query().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
-		if err != nil {
-		c.JSON(400, gin.H{"error": err.Error(),})
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-  
+
 	c.JSON(200, specialists)
- }
- 
- // DeleteSpecialist handles DELETE requests to delete a specialist entity
+}
+
+// DeleteSpecialist handles DELETE requests to delete a specialist entity
 // @Summary Delete a specialist entity by ID
 // @Description get specialist by ID
 // @ID delete-specialist
@@ -142,7 +146,7 @@ func (ctl *SpecialistController) DeleteSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	err = ctl.client.Specialist.
 		DeleteOneID(int(id)).
 		Exec(context.Background())
@@ -152,11 +156,11 @@ func (ctl *SpecialistController) DeleteSpecialist(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
- }
- 
- // NewSpecialistController creates and registers handles for the specialist controller
+}
+
+// NewSpecialistController creates and registers handles for the specialist controller
 func NewSpecialistController(router gin.IRouter, client *ent.Client) *SpecialistController {
 	uc := &SpecialistController{
 		client: client,
@@ -164,16 +168,15 @@ func NewSpecialistController(router gin.IRouter, client *ent.Client) *Specialist
 	}
 	uc.register()
 	return uc
- }
-  
- // InitSpecialistController registers routes to the main engine
- func (ctl *SpecialistController) register() {
+}
+
+// InitSpecialistController registers routes to the main engine
+func (ctl *SpecialistController) register() {
 	specialists := ctl.router.Group("/specialists")
-  
-	specialistsist.GET("", ctl.ListSpecialist)
+
+	specialists.GET("", ctl.ListSpecialist)
 	// CRUD
 	specialists.POST("", ctl.CreateSpecialist)
 	specialists.GET(":id", ctl.GetSpecialist)
 	specialists.DELETE(":id", ctl.DeleteSpecialist)
- }
- 
+}

@@ -9,7 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 )
 
@@ -26,19 +26,19 @@ func (sc *SpecialistCreate) SetSpecialist(s string) *SpecialistCreate {
 	return sc
 }
 
-// AddSpecialDoctorIDs adds the special_doctors edge to Special_Doctor by ids.
-func (sc *SpecialistCreate) AddSpecialDoctorIDs(ids ...int) *SpecialistCreate {
-	sc.mutation.AddSpecialDoctorIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (sc *SpecialistCreate) AddSpecialdoctorIDs(ids ...int) *SpecialistCreate {
+	sc.mutation.AddSpecialdoctorIDs(ids...)
 	return sc
 }
 
-// AddSpecialDoctors adds the special_doctors edges to Special_Doctor.
-func (sc *SpecialistCreate) AddSpecialDoctors(s ...*Special_Doctor) *SpecialistCreate {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (sc *SpecialistCreate) AddSpecialdoctors(s ...*Specialdoctor) *SpecialistCreate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return sc.AddSpecialDoctorIDs(ids...)
+	return sc.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the SpecialistMutation object of the builder.
@@ -124,17 +124,17 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		})
 		s.Specialist = value
 	}
-	if nodes := sc.mutation.SpecialDoctorsIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialDoctorsTable,
-			Columns: []string{specialist.SpecialDoctorsColumn},
+			Table:   specialist.SpecialdoctorsTable,
+			Columns: []string{specialist.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

@@ -18,7 +18,7 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/training"
 )
 
@@ -36,7 +36,7 @@ type DepartmentQuery struct {
 	withOffices        *OfficeQuery
 	withSchedules      *ScheduleQuery
 	withTrainings      *TrainingQuery
-	withSpecialDoctors *SpecialDoctorQuery
+	withSpecialdoctors *SpecialdoctorQuery
 	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -157,17 +157,17 @@ func (dq *DepartmentQuery) QueryTrainings() *TrainingQuery {
 	return query
 }
 
-// QuerySpecialDoctors chains the current query on the special_doctors edge.
-func (dq *DepartmentQuery) QuerySpecialDoctors() *SpecialDoctorQuery {
-	query := &SpecialDoctorQuery{config: dq.config}
+// QuerySpecialdoctors chains the current query on the specialdoctors edge.
+func (dq *DepartmentQuery) QuerySpecialdoctors() *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
-			sqlgraph.To(special_doctor.Table, special_doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialDoctorsTable, department.SpecialDoctorsColumn),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialdoctorsTable, department.SpecialdoctorsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -409,14 +409,14 @@ func (dq *DepartmentQuery) WithTrainings(opts ...func(*TrainingQuery)) *Departme
 	return dq
 }
 
-//  WithSpecialDoctors tells the query-builder to eager-loads the nodes that are connected to
-// the "special_doctors" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DepartmentQuery) WithSpecialDoctors(opts ...func(*SpecialDoctorQuery)) *DepartmentQuery {
-	query := &SpecialDoctorQuery{config: dq.config}
+//  WithSpecialdoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "specialdoctors" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithSpecialdoctors(opts ...func(*SpecialdoctorQuery)) *DepartmentQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	dq.withSpecialDoctors = query
+	dq.withSpecialdoctors = query
 	return dq
 }
 
@@ -493,7 +493,7 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			dq.withOffices != nil,
 			dq.withSchedules != nil,
 			dq.withTrainings != nil,
-			dq.withSpecialDoctors != nil,
+			dq.withSpecialdoctors != nil,
 		}
 	)
 	if dq.withMission != nil || dq.withDoctor != nil {
@@ -660,7 +660,7 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		}
 	}
 
-	if query := dq.withSpecialDoctors; query != nil {
+	if query := dq.withSpecialdoctors; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Department)
 		for i := range nodes {
@@ -668,8 +668,8 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.Special_Doctor(func(s *sql.Selector) {
-			s.Where(sql.InValues(department.SpecialDoctorsColumn, fks...))
+		query.Where(predicate.Specialdoctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.SpecialdoctorsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -684,7 +684,7 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.SpecialDoctors = append(node.Edges.SpecialDoctors, n)
+			node.Edges.Specialdoctors = append(node.Edges.Specialdoctors, n)
 		}
 	}
 

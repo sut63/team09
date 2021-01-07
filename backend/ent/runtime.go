@@ -13,7 +13,7 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/schema"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
@@ -101,12 +101,12 @@ func init() {
 	scheduleDescActivity := scheduleFields[0].Descriptor()
 	// schedule.ActivityValidator is a validator for the "activity" field. It is called by the builders before save.
 	schedule.ActivityValidator = scheduleDescActivity.Validators[0].(func(string) error)
-	special_doctorFields := schema.Special_Doctor{}.Fields()
-	_ = special_doctorFields
-	// special_doctorDescOther is the schema descriptor for Other field.
-	special_doctorDescOther := special_doctorFields[0].Descriptor()
-	// special_doctor.OtherValidator is a validator for the "Other" field. It is called by the builders before save.
-	special_doctor.OtherValidator = special_doctorDescOther.Validators[0].(func(string) error)
+	specialdoctorFields := schema.Specialdoctor{}.Fields()
+	_ = specialdoctorFields
+	// specialdoctorDescOther is the schema descriptor for Other field.
+	specialdoctorDescOther := specialdoctorFields[0].Descriptor()
+	// specialdoctor.OtherValidator is a validator for the "Other" field. It is called by the builders before save.
+	specialdoctor.OtherValidator = specialdoctorDescOther.Validators[0].(func(string) error)
 	specialistFields := schema.Specialist{}.Fields()
 	_ = specialistFields
 	// specialistDescSpecialist is the schema descriptor for specialist field.

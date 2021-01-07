@@ -33,8 +33,8 @@ type Position func(*sql.Selector)
 // Schedule is the predicate function for schedule builders.
 type Schedule func(*sql.Selector)
 
-// Special_Doctor is the predicate function for special_doctor builders.
-type Special_Doctor func(*sql.Selector)
+// Specialdoctor is the predicate function for specialdoctor builders.
+type Specialdoctor func(*sql.Selector)
 
 // Specialist is the predicate function for specialist builders.
 type Specialist func(*sql.Selector)

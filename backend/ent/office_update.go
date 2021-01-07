@@ -14,7 +14,7 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -95,23 +95,23 @@ func (ou *OfficeUpdate) SetDepartment(d *Department) *OfficeUpdate {
 	return ou.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
-func (ou *OfficeUpdate) SetSpeacialDoctorID(id int) *OfficeUpdate {
-	ou.mutation.SetSpeacialDoctorID(id)
+// SetSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id.
+func (ou *OfficeUpdate) SetSpeacialdoctorID(id int) *OfficeUpdate {
+	ou.mutation.SetSpeacialdoctorID(id)
 	return ou
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
-func (ou *OfficeUpdate) SetNillableSpeacialDoctorID(id *int) *OfficeUpdate {
+// SetNillableSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id if the given value is not nil.
+func (ou *OfficeUpdate) SetNillableSpeacialdoctorID(id *int) *OfficeUpdate {
 	if id != nil {
-		ou = ou.SetSpeacialDoctorID(*id)
+		ou = ou.SetSpeacialdoctorID(*id)
 	}
 	return ou
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
-func (ou *OfficeUpdate) SetSpeacialDoctor(s *Special_Doctor) *OfficeUpdate {
-	return ou.SetSpeacialDoctorID(s.ID)
+// SetSpeacialdoctor sets the speacialdoctor edge to Specialdoctor.
+func (ou *OfficeUpdate) SetSpeacialdoctor(s *Specialdoctor) *OfficeUpdate {
+	return ou.SetSpeacialdoctorID(s.ID)
 }
 
 // AddScheduleIDs adds the schedules edge to Schedule by ids.
@@ -152,9 +152,9 @@ func (ou *OfficeUpdate) ClearDepartment() *OfficeUpdate {
 	return ou
 }
 
-// ClearSpeacialDoctor clears the speacial_doctor edge to Special_Doctor.
-func (ou *OfficeUpdate) ClearSpeacialDoctor() *OfficeUpdate {
-	ou.mutation.ClearSpeacialDoctor()
+// ClearSpeacialdoctor clears the speacialdoctor edge to Specialdoctor.
+func (ou *OfficeUpdate) ClearSpeacialdoctor() *OfficeUpdate {
+	ou.mutation.ClearSpeacialdoctor()
 	return ou
 }
 
@@ -360,33 +360,33 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ou.mutation.SpeacialDoctorCleared() {
+	if ou.mutation.SpeacialdoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpeacialDoctorTable,
-			Columns: []string{office.SpeacialDoctorColumn},
+			Table:   office.SpeacialdoctorTable,
+			Columns: []string{office.SpeacialdoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ou.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+	if nodes := ou.mutation.SpeacialdoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpeacialDoctorTable,
-			Columns: []string{office.SpeacialDoctorColumn},
+			Table:   office.SpeacialdoctorTable,
+			Columns: []string{office.SpeacialdoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
@@ -514,23 +514,23 @@ func (ouo *OfficeUpdateOne) SetDepartment(d *Department) *OfficeUpdateOne {
 	return ouo.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
-func (ouo *OfficeUpdateOne) SetSpeacialDoctorID(id int) *OfficeUpdateOne {
-	ouo.mutation.SetSpeacialDoctorID(id)
+// SetSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id.
+func (ouo *OfficeUpdateOne) SetSpeacialdoctorID(id int) *OfficeUpdateOne {
+	ouo.mutation.SetSpeacialdoctorID(id)
 	return ouo
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
-func (ouo *OfficeUpdateOne) SetNillableSpeacialDoctorID(id *int) *OfficeUpdateOne {
+// SetNillableSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id if the given value is not nil.
+func (ouo *OfficeUpdateOne) SetNillableSpeacialdoctorID(id *int) *OfficeUpdateOne {
 	if id != nil {
-		ouo = ouo.SetSpeacialDoctorID(*id)
+		ouo = ouo.SetSpeacialdoctorID(*id)
 	}
 	return ouo
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
-func (ouo *OfficeUpdateOne) SetSpeacialDoctor(s *Special_Doctor) *OfficeUpdateOne {
-	return ouo.SetSpeacialDoctorID(s.ID)
+// SetSpeacialdoctor sets the speacialdoctor edge to Specialdoctor.
+func (ouo *OfficeUpdateOne) SetSpeacialdoctor(s *Specialdoctor) *OfficeUpdateOne {
+	return ouo.SetSpeacialdoctorID(s.ID)
 }
 
 // AddScheduleIDs adds the schedules edge to Schedule by ids.
@@ -571,9 +571,9 @@ func (ouo *OfficeUpdateOne) ClearDepartment() *OfficeUpdateOne {
 	return ouo
 }
 
-// ClearSpeacialDoctor clears the speacial_doctor edge to Special_Doctor.
-func (ouo *OfficeUpdateOne) ClearSpeacialDoctor() *OfficeUpdateOne {
-	ouo.mutation.ClearSpeacialDoctor()
+// ClearSpeacialdoctor clears the speacialdoctor edge to Specialdoctor.
+func (ouo *OfficeUpdateOne) ClearSpeacialdoctor() *OfficeUpdateOne {
+	ouo.mutation.ClearSpeacialdoctor()
 	return ouo
 }
 
@@ -777,33 +777,33 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ouo.mutation.SpeacialDoctorCleared() {
+	if ouo.mutation.SpeacialdoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpeacialDoctorTable,
-			Columns: []string{office.SpeacialDoctorColumn},
+			Table:   office.SpeacialdoctorTable,
+			Columns: []string{office.SpeacialdoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ouo.mutation.SpeacialDoctorIDs(); len(nodes) > 0 {
+	if nodes := ouo.mutation.SpeacialdoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpeacialDoctorTable,
-			Columns: []string{office.SpeacialDoctorColumn},
+			Table:   office.SpeacialdoctorTable,
+			Columns: []string{office.SpeacialdoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: special_doctor.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

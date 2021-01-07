@@ -113,6 +113,7 @@ var ForeignKeys = []string{
 	"disease_id",
 	"gender_id",
 	"position_id",
+	"specialdoctor_id",
 	"title_id",
 }
 
