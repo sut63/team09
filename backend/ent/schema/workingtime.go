@@ -14,7 +14,8 @@ type Workingtime struct {
 // Fields of the Workingtime.
 func (Workingtime) Fields() []ent.Field {
 	return []ent.Field {
-		field.Time("added_time"),
+		field.Time("added_time1"),
+		field.Time("added_time2"),
 	}
 }
 
