@@ -21,9 +21,15 @@ type WorkingtimeCreate struct {
 	hooks    []Hook
 }
 
-// SetAddedTime sets the added_time field.
-func (wc *WorkingtimeCreate) SetAddedTime(t time.Time) *WorkingtimeCreate {
-	wc.mutation.SetAddedTime(t)
+// SetAddedTime1 sets the added_time1 field.
+func (wc *WorkingtimeCreate) SetAddedTime1(t time.Time) *WorkingtimeCreate {
+	wc.mutation.SetAddedTime1(t)
+	return wc
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (wc *WorkingtimeCreate) SetAddedTime2(t time.Time) *WorkingtimeCreate {
+	wc.mutation.SetAddedTime2(t)
 	return wc
 }
 
@@ -49,8 +55,11 @@ func (wc *WorkingtimeCreate) Mutation() *WorkingtimeMutation {
 
 // Save creates the Workingtime in the database.
 func (wc *WorkingtimeCreate) Save(ctx context.Context) (*Workingtime, error) {
-	if _, ok := wc.mutation.AddedTime(); !ok {
-		return nil, &ValidationError{Name: "added_time", err: errors.New("ent: missing required field \"added_time\"")}
+	if _, ok := wc.mutation.AddedTime1(); !ok {
+		return nil, &ValidationError{Name: "added_time1", err: errors.New("ent: missing required field \"added_time1\"")}
+	}
+	if _, ok := wc.mutation.AddedTime2(); !ok {
+		return nil, &ValidationError{Name: "added_time2", err: errors.New("ent: missing required field \"added_time2\"")}
 	}
 	var (
 		err  error
@@ -112,13 +121,21 @@ func (wc *WorkingtimeCreate) createSpec() (*Workingtime, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := wc.mutation.AddedTime(); ok {
+	if value, ok := wc.mutation.AddedTime1(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: workingtime.FieldAddedTime,
+			Column: workingtime.FieldAddedTime1,
 		})
-		w.AddedTime = value
+		w.AddedTime1 = value
+	}
+	if value, ok := wc.mutation.AddedTime2(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: workingtime.FieldAddedTime2,
+		})
+		w.AddedTime2 = value
 	}
 	if nodes := wc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

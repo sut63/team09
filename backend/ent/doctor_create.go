@@ -17,6 +17,7 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/title"
+	"github.com/team09/app/ent/training"
 )
 
 // DoctorCreate is the builder for creating a Doctor entity.
@@ -138,21 +139,6 @@ func (dc *DoctorCreate) SetDisease(d *Disease) *DoctorCreate {
 	return dc.SetDiseaseID(d.ID)
 }
 
-// AddDepartmentIDs adds the departments edge to Department by ids.
-func (dc *DoctorCreate) AddDepartmentIDs(ids ...int) *DoctorCreate {
-	dc.mutation.AddDepartmentIDs(ids...)
-	return dc
-}
-
-// AddDepartments adds the departments edges to Department.
-func (dc *DoctorCreate) AddDepartments(d ...*Department) *DoctorCreate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return dc.AddDepartmentIDs(ids...)
-}
-
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (dc *DoctorCreate) AddOfficeIDs(ids ...int) *DoctorCreate {
 	dc.mutation.AddOfficeIDs(ids...)
@@ -196,6 +182,21 @@ func (dc *DoctorCreate) AddSchedules(s ...*Schedule) *DoctorCreate {
 		ids[i] = s[i].ID
 	}
 	return dc.AddScheduleIDs(ids...)
+}
+
+// AddTrainingIDs adds the trainings edge to Training by ids.
+func (dc *DoctorCreate) AddTrainingIDs(ids ...int) *DoctorCreate {
+	dc.mutation.AddTrainingIDs(ids...)
+	return dc
+}
+
+// AddTrainings adds the trainings edges to Training.
+func (dc *DoctorCreate) AddTrainings(t ...*Training) *DoctorCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return dc.AddTrainingIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -437,25 +438,6 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.DepartmentsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   doctor.DepartmentsTable,
-			Columns: []string{doctor.DepartmentsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: department.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := dc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -505,6 +487,25 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: schedule.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.TrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.TrainingsTable,
+			Columns: []string{doctor.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
 				},
 			},
 		}

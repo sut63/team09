@@ -270,12 +270,12 @@ func (wq *WorkingtimeQuery) WithOffices(opts ...func(*OfficeQuery)) *Workingtime
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		AddedTime1 time.Time `json:"added_time1,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Workingtime.Query().
-//		GroupBy(workingtime.FieldAddedTime).
+//		GroupBy(workingtime.FieldAddedTime1).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (wq *WorkingtimeQuery) GroupBy(field string, fields ...string) *Workingtime
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		AddedTime1 time.Time `json:"added_time1,omitempty"`
 //	}
 //
 //	client.Workingtime.Query().
-//		Select(workingtime.FieldAddedTime).
+//		Select(workingtime.FieldAddedTime1).
 //		Scan(ctx, &v)
 //
 func (wq *WorkingtimeQuery) Select(field string, fields ...string) *WorkingtimeSelect {

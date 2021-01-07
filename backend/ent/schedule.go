@@ -25,8 +25,10 @@ type Schedule struct {
 	AddedTime time.Time `json:"added_time,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ScheduleQuery when eager-loading is set.
-	Edges       ScheduleEdges `json:"edges"`
-	schedule_id *int
+	Edges         ScheduleEdges `json:"edges"`
+	department_id *int
+	schedule_id   *int
+	office_id     *int
 }
 
 // ScheduleEdges holds the relations/edges for other nodes in the graph.
@@ -96,7 +98,9 @@ func (*Schedule) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Schedule) fkValues() []interface{} {
 	return []interface{}{
+		&sql.NullInt64{}, // department_id
 		&sql.NullInt64{}, // schedule_id
+		&sql.NullInt64{}, // office_id
 	}
 }
 
@@ -125,10 +129,22 @@ func (s *Schedule) assignValues(values ...interface{}) error {
 	values = values[2:]
 	if len(values) == len(schedule.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
+		} else if value.Valid {
+			s.department_id = new(int)
+			*s.department_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field schedule_id", value)
 		} else if value.Valid {
 			s.schedule_id = new(int)
 			*s.schedule_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field office_id", value)
+		} else if value.Valid {
+			s.office_id = new(int)
+			*s.office_id = int(value.Int64)
 		}
 	}
 	return nil

@@ -25,12 +25,16 @@ func (Special_Doctor) Edges() []ent.Edge {
 		Unique(),
 			
 		edge.From("department", Department.Type).
-		Ref("departments").
-		Unique(),
+		Ref("special_doctors").Unique(),
 
 		edge.From("specialist", Specialist.Type).
-		Ref("Special_Doctors").
+		Ref("special_doctors").
 		Unique(),
+
+		edge.To("offices",Office.Type).
+		StorageKey(edge.Column("special_doctor_id")),
+
+
 	}
 
 }

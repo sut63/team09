@@ -31,10 +31,10 @@ func (Office) Edges() []ent.Edge {
 		edge.From("department", Department.Type).
 			Ref("offices").Unique(),
 
-		edge.From("speacial_doctor", Speacial_doctor.Type).
+		edge.From("speacial_doctor", Special_Doctor.Type).
 			Ref("offices").Unique(),
 
 		edge.To("schedules", Schedule.Type).
-			StorageKey(edge.Column("schedule_id")),
+			StorageKey(edge.Column("office_id")),
 	}
 }

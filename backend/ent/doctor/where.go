@@ -841,34 +841,6 @@ func HasDiseaseWith(preds ...predicate.Disease) predicate.Doctor {
 	})
 }
 
-// HasDepartments applies the HasEdge predicate on the "departments" edge.
-func HasDepartments() predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DepartmentsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DepartmentsTable, DepartmentsColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasDepartmentsWith applies the HasEdge predicate on the "departments" edge with a given conditions (other predicates).
-func HasDepartmentsWith(preds ...predicate.Department) predicate.Doctor {
-	return predicate.Doctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DepartmentsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DepartmentsTable, DepartmentsColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasOffices applies the HasEdge predicate on the "offices" edge.
 func HasOffices() predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
@@ -944,6 +916,34 @@ func HasSchedulesWith(preds ...predicate.Schedule) predicate.Doctor {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(SchedulesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, SchedulesTable, SchedulesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasTrainings applies the HasEdge predicate on the "trainings" edge.
+func HasTrainings() predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TrainingsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TrainingsTable, TrainingsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTrainingsWith applies the HasEdge predicate on the "trainings" edge with a given conditions (other predicates).
+func HasTrainingsWith(preds ...predicate.Training) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TrainingsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TrainingsTable, TrainingsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

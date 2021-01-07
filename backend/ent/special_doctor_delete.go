@@ -10,25 +10,25 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/predicate"
-	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/special_doctor"
 )
 
-// SpeacialDoctorDelete is the builder for deleting a SpeacialDoctor entity.
-type SpeacialDoctorDelete struct {
+// SpecialDoctorDelete is the builder for deleting a SpecialDoctor entity.
+type SpecialDoctorDelete struct {
 	config
 	hooks      []Hook
-	mutation   *SpeacialDoctorMutation
-	predicates []predicate.Speacial_doctor
+	mutation   *SpecialDoctorMutation
+	predicates []predicate.Special_Doctor
 }
 
 // Where adds a new predicate to the delete builder.
-func (sdd *SpeacialDoctorDelete) Where(ps ...predicate.Speacial_doctor) *SpeacialDoctorDelete {
+func (sdd *SpecialDoctorDelete) Where(ps ...predicate.Special_Doctor) *SpecialDoctorDelete {
 	sdd.predicates = append(sdd.predicates, ps...)
 	return sdd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (sdd *SpeacialDoctorDelete) Exec(ctx context.Context) (int, error) {
+func (sdd *SpecialDoctorDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
@@ -37,7 +37,7 @@ func (sdd *SpeacialDoctorDelete) Exec(ctx context.Context) (int, error) {
 		affected, err = sdd.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*SpeacialDoctorMutation)
+			mutation, ok := m.(*SpecialDoctorMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -57,7 +57,7 @@ func (sdd *SpeacialDoctorDelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (sdd *SpeacialDoctorDelete) ExecX(ctx context.Context) int {
+func (sdd *SpecialDoctorDelete) ExecX(ctx context.Context) int {
 	n, err := sdd.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -65,13 +65,13 @@ func (sdd *SpeacialDoctorDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (sdd *SpeacialDoctorDelete) sqlExec(ctx context.Context) (int, error) {
+func (sdd *SpecialDoctorDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: speacial_doctor.Table,
+			Table: special_doctor.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: speacial_doctor.FieldID,
+				Column: special_doctor.FieldID,
 			},
 		},
 	}
@@ -85,25 +85,25 @@ func (sdd *SpeacialDoctorDelete) sqlExec(ctx context.Context) (int, error) {
 	return sqlgraph.DeleteNodes(ctx, sdd.driver, _spec)
 }
 
-// SpeacialDoctorDeleteOne is the builder for deleting a single Speacial_doctor entity.
-type SpeacialDoctorDeleteOne struct {
-	sdd *SpeacialDoctorDelete
+// SpecialDoctorDeleteOne is the builder for deleting a single Special_Doctor entity.
+type SpecialDoctorDeleteOne struct {
+	sdd *SpecialDoctorDelete
 }
 
 // Exec executes the deletion query.
-func (sddo *SpeacialDoctorDeleteOne) Exec(ctx context.Context) error {
+func (sddo *SpecialDoctorDeleteOne) Exec(ctx context.Context) error {
 	n, err := sddo.sdd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{speacial_doctor.Label}
+		return &NotFoundError{special_doctor.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (sddo *SpeacialDoctorDeleteOne) ExecX(ctx context.Context) {
+func (sddo *SpecialDoctorDeleteOne) ExecX(ctx context.Context) {
 	sddo.sdd.ExecX(ctx)
 }

@@ -7,8 +7,10 @@ const (
 	Label = "workingtime"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAddedTime holds the string denoting the added_time field in the database.
-	FieldAddedTime = "added_time"
+	// FieldAddedTime1 holds the string denoting the added_time1 field in the database.
+	FieldAddedTime1 = "added_time1"
+	// FieldAddedTime2 holds the string denoting the added_time2 field in the database.
+	FieldAddedTime2 = "added_time2"
 
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
@@ -27,5 +29,6 @@ const (
 // Columns holds all SQL columns for workingtime fields.
 var Columns = []string{
 	FieldID,
-	FieldAddedTime,
+	FieldAddedTime1,
+	FieldAddedTime2,
 }

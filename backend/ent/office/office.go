@@ -46,18 +46,18 @@ const (
 	DepartmentColumn = "department_id"
 	// SpeacialDoctorTable is the table the holds the speacial_doctor relation/edge.
 	SpeacialDoctorTable = "offices"
-	// SpeacialDoctorInverseTable is the table name for the Speacial_doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "speacial_doctor" package.
-	SpeacialDoctorInverseTable = "speacial_doctors"
+	// SpeacialDoctorInverseTable is the table name for the Special_Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "special_doctor" package.
+	SpeacialDoctorInverseTable = "special_doctors"
 	// SpeacialDoctorColumn is the table column denoting the speacial_doctor relation/edge.
-	SpeacialDoctorColumn = "speacial_doctor_id"
+	SpeacialDoctorColumn = "special_doctor_id"
 	// SchedulesTable is the table the holds the schedules relation/edge.
 	SchedulesTable = "schedules"
 	// SchedulesInverseTable is the table name for the Schedule entity.
 	// It exists in this package in order to avoid circular dependency with the "schedule" package.
 	SchedulesInverseTable = "schedules"
 	// SchedulesColumn is the table column denoting the schedules relation/edge.
-	SchedulesColumn = "schedule_id"
+	SchedulesColumn = "office_id"
 )
 
 // Columns holds all SQL columns for office fields.
@@ -70,7 +70,7 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"department_id",
 	"doctor_id",
-	"speacial_doctor_id",
+	"special_doctor_id",
 	"workingtime_id",
 }
 

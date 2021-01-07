@@ -10,6 +10,7 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
+	// "github.com/team09/app/ent/special_doctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -20,10 +21,11 @@ type OfficeController struct {
 }
 
 type Office struct {
-	Officename  string
-	Doctor      int
-	Department  int
-	Workingtime int
+	Officename     string
+	Doctor         int
+	Department     int
+	Workingtime    int
+	Special_Doctor int
 }
 
 // CreateOffice handles POST requests for adding office entities
@@ -45,6 +47,8 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		})
 		return
 	}
+
+	
 
 	wt, err := ctl.client.Workingtime.
 		Query().

@@ -306,7 +306,7 @@ func HasSpeacialDoctor() predicate.Office {
 }
 
 // HasSpeacialDoctorWith applies the HasEdge predicate on the "speacial_doctor" edge with a given conditions (other predicates).
-func HasSpeacialDoctorWith(preds ...predicate.Speacial_doctor) predicate.Office {
+func HasSpeacialDoctorWith(preds ...predicate.Special_Doctor) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
