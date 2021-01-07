@@ -13,6 +13,15 @@ import (
    swaggerFiles "github.com/swaggo/files"
    ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+type Course struct{
+    Course []Course
+}
+
+type Course struct {
+    Namecourse   string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -71,6 +80,26 @@ func main() {
    controllers.NewWoringtimeController(v1, client)
    controllers.NewOfficeController(v1, client)
    controllers.NewDoctorController(v1, client)
+   controllers.NewTrainingController(v1, client)
+   controllers.NewCourseController(v1, client)
+
+    //setcourse
+    courses := Courses{
+        Course: []Course{
+            Course{"ลักสูตรฝึกอบรมแพทย์ประจำบ้าน"},
+            Course{"หลักสูตรฝึกอบรมแพทย์ประจำบ้านต่อยอด"},
+            Course{"หลูกสูตร Ph.D. in Clinical Sciences"},
+    
+        },
+    }
+    
+    for _, co := range courses.Course {
+        client.Course.
+            Create().
+            SetNamecourse(co.Namecourse).
+            Save(context.Background())
+    }
+    
  
    router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
    router.Run()
