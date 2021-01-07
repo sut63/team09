@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"time"
+	
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -16,8 +16,8 @@ type Training struct {
 func (Training) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("branch").NotEmpty(),
-		field.Time("dateone").Default(time.Now).Immutable(),
-		field.Time("datetwo").Default(time.Now).Immutable(),
+		field.Time("dateone"),
+		field.Time("datetwo"),
 		 
     }
 
