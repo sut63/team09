@@ -29,9 +29,15 @@ func (wu *WorkingtimeUpdate) Where(ps ...predicate.Workingtime) *WorkingtimeUpda
 	return wu
 }
 
-// SetAddedTime sets the added_time field.
-func (wu *WorkingtimeUpdate) SetAddedTime(t time.Time) *WorkingtimeUpdate {
-	wu.mutation.SetAddedTime(t)
+// SetAddedTime1 sets the added_time1 field.
+func (wu *WorkingtimeUpdate) SetAddedTime1(t time.Time) *WorkingtimeUpdate {
+	wu.mutation.SetAddedTime1(t)
+	return wu
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (wu *WorkingtimeUpdate) SetAddedTime2(t time.Time) *WorkingtimeUpdate {
+	wu.mutation.SetAddedTime2(t)
 	return wu
 }
 
@@ -140,11 +146,18 @@ func (wu *WorkingtimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := wu.mutation.AddedTime(); ok {
+	if value, ok := wu.mutation.AddedTime1(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: workingtime.FieldAddedTime,
+			Column: workingtime.FieldAddedTime1,
+		})
+	}
+	if value, ok := wu.mutation.AddedTime2(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: workingtime.FieldAddedTime2,
 		})
 	}
 	if nodes := wu.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
@@ -203,9 +216,15 @@ type WorkingtimeUpdateOne struct {
 	mutation *WorkingtimeMutation
 }
 
-// SetAddedTime sets the added_time field.
-func (wuo *WorkingtimeUpdateOne) SetAddedTime(t time.Time) *WorkingtimeUpdateOne {
-	wuo.mutation.SetAddedTime(t)
+// SetAddedTime1 sets the added_time1 field.
+func (wuo *WorkingtimeUpdateOne) SetAddedTime1(t time.Time) *WorkingtimeUpdateOne {
+	wuo.mutation.SetAddedTime1(t)
+	return wuo
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (wuo *WorkingtimeUpdateOne) SetAddedTime2(t time.Time) *WorkingtimeUpdateOne {
+	wuo.mutation.SetAddedTime2(t)
 	return wuo
 }
 
@@ -312,11 +331,18 @@ func (wuo *WorkingtimeUpdateOne) sqlSave(ctx context.Context) (w *Workingtime, e
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Workingtime.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := wuo.mutation.AddedTime(); ok {
+	if value, ok := wuo.mutation.AddedTime1(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: workingtime.FieldAddedTime,
+			Column: workingtime.FieldAddedTime1,
+		})
+	}
+	if value, ok := wuo.mutation.AddedTime2(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: workingtime.FieldAddedTime2,
 		})
 	}
 	if nodes := wuo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {

@@ -12,6 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Course is the client for interacting with the Course builders.
+	Course *CourseClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
 	// Disease is the client for interacting with the Disease builders.
@@ -28,10 +30,14 @@ type Tx struct {
 	Position *PositionClient
 	// Schedule is the client for interacting with the Schedule builders.
 	Schedule *ScheduleClient
-	// Speacial_doctor is the client for interacting with the Speacial_doctor builders.
-	Speacial_doctor *Speacial_doctorClient
+	// Special_Doctor is the client for interacting with the Special_Doctor builders.
+	Special_Doctor *Special_DoctorClient
+	// Specialist is the client for interacting with the Specialist builders.
+	Specialist *SpecialistClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
+	// Training is the client for interacting with the Training builders.
+	Training *TrainingClient
 	// Workingtime is the client for interacting with the Workingtime builders.
 	Workingtime *WorkingtimeClient
 
@@ -169,6 +175,7 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Course = NewCourseClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.Disease = NewDiseaseClient(tx.config)
 	tx.Doctor = NewDoctorClient(tx.config)
@@ -177,8 +184,10 @@ func (tx *Tx) init() {
 	tx.Office = NewOfficeClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Schedule = NewScheduleClient(tx.config)
-	tx.Speacial_doctor = NewSpeacial_doctorClient(tx.config)
+	tx.Special_Doctor = NewSpecial_DoctorClient(tx.config)
+	tx.Specialist = NewSpecialistClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
+	tx.Training = NewTrainingClient(tx.config)
 	tx.Workingtime = NewWorkingtimeClient(tx.config)
 }
 
@@ -189,7 +198,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Department.QueryXXX(), the query will be executed
+// applies a query, for example: Course.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

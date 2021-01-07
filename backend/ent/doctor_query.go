@@ -21,6 +21,7 @@ import (
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/title"
+	"github.com/team09/app/ent/training"
 )
 
 // DoctorQuery is the builder for querying Doctor entities.
@@ -36,10 +37,10 @@ type DoctorQuery struct {
 	withGender      *GenderQuery
 	withPosition    *PositionQuery
 	withDisease     *DiseaseQuery
-	withDepartments *DepartmentQuery
 	withOffices     *OfficeQuery
 	withDepartments *DepartmentQuery
 	withSchedules   *ScheduleQuery
+	withTrainings   *TrainingQuery
 	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -142,24 +143,6 @@ func (dq *DoctorQuery) QueryDisease() *DiseaseQuery {
 	return query
 }
 
-// QueryDepartments chains the current query on the departments edge.
-func (dq *DoctorQuery) QueryDepartments() *DepartmentQuery {
-	query := &DepartmentQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
-			sqlgraph.To(department.Table, department.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, doctor.DepartmentsTable, doctor.DepartmentsColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
 // QueryOffices chains the current query on the offices edge.
 func (dq *DoctorQuery) QueryOffices() *OfficeQuery {
 	query := &OfficeQuery{config: dq.config}
@@ -207,6 +190,24 @@ func (dq *DoctorQuery) QuerySchedules() *ScheduleQuery {
 			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
 			sqlgraph.To(schedule.Table, schedule.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SchedulesTable, doctor.SchedulesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTrainings chains the current query on the trainings edge.
+func (dq *DoctorQuery) QueryTrainings() *TrainingQuery {
+	query := &TrainingQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(training.Table, training.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.TrainingsTable, doctor.TrainingsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -437,17 +438,6 @@ func (dq *DoctorQuery) WithDisease(opts ...func(*DiseaseQuery)) *DoctorQuery {
 	return dq
 }
 
-//  WithDepartments tells the query-builder to eager-loads the nodes that are connected to
-// the "departments" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DoctorQuery) WithDepartments(opts ...func(*DepartmentQuery)) *DoctorQuery {
-	query := &DepartmentQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withDepartments = query
-	return dq
-}
-
 //  WithOffices tells the query-builder to eager-loads the nodes that are connected to
 // the "offices" edge. The optional arguments used to configure the query builder of the edge.
 func (dq *DoctorQuery) WithOffices(opts ...func(*OfficeQuery)) *DoctorQuery {
@@ -478,6 +468,17 @@ func (dq *DoctorQuery) WithSchedules(opts ...func(*ScheduleQuery)) *DoctorQuery 
 		opt(query)
 	}
 	dq.withSchedules = query
+	return dq
+}
+
+//  WithTrainings tells the query-builder to eager-loads the nodes that are connected to
+// the "trainings" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithTrainings(opts ...func(*TrainingQuery)) *DoctorQuery {
+	query := &TrainingQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withTrainings = query
 	return dq
 }
 
@@ -553,10 +554,10 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			dq.withGender != nil,
 			dq.withPosition != nil,
 			dq.withDisease != nil,
-			dq.withDepartments != nil,
 			dq.withOffices != nil,
 			dq.withDepartments != nil,
 			dq.withSchedules != nil,
+			dq.withTrainings != nil,
 		}
 	)
 	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil {
@@ -689,34 +690,6 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 		}
 	}
 
-	if query := dq.withDepartments; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Doctor)
-		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
-		}
-		query.withFKs = true
-		query.Where(predicate.Department(func(s *sql.Selector) {
-			s.Where(sql.InValues(doctor.DepartmentsColumn, fks...))
-		}))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			fk := n.doctor_id
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
-			}
-			node.Edges.Departments = append(node.Edges.Departments, n)
-		}
-	}
-
 	if query := dq.withOffices; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Doctor)
@@ -798,6 +771,34 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Schedules = append(node.Edges.Schedules, n)
+		}
+	}
+
+	if query := dq.withTrainings; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Doctor)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Training(func(s *sql.Selector) {
+			s.Where(sql.InValues(doctor.TrainingsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.doctor_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Trainings = append(node.Edges.Trainings, n)
 		}
 	}
 

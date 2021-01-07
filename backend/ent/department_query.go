@@ -18,6 +18,8 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
+	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/training"
 )
 
 // DepartmentQuery is the builder for querying Department entities.
@@ -29,11 +31,13 @@ type DepartmentQuery struct {
 	unique     []string
 	predicates []predicate.Department
 	// eager-loading edges.
-	withMission   *MissionQuery
-	withDoctor    *DoctorQuery
-	withOffices   *OfficeQuery
-	withSchedules *ScheduleQuery
-	withFKs       bool
+	withMission        *MissionQuery
+	withDoctor         *DoctorQuery
+	withOffices        *OfficeQuery
+	withSchedules      *ScheduleQuery
+	withTrainings      *TrainingQuery
+	withSpecialDoctors *SpecialDoctorQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -128,6 +132,42 @@ func (dq *DepartmentQuery) QuerySchedules() *ScheduleQuery {
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
 			sqlgraph.To(schedule.Table, schedule.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, department.SchedulesTable, department.SchedulesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTrainings chains the current query on the trainings edge.
+func (dq *DepartmentQuery) QueryTrainings() *TrainingQuery {
+	query := &TrainingQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
+			sqlgraph.To(training.Table, training.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.TrainingsTable, department.TrainingsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySpecialDoctors chains the current query on the special_doctors edge.
+func (dq *DepartmentQuery) QuerySpecialDoctors() *SpecialDoctorQuery {
+	query := &SpecialDoctorQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
+			sqlgraph.To(special_doctor.Table, special_doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialDoctorsTable, department.SpecialDoctorsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -358,18 +398,40 @@ func (dq *DepartmentQuery) WithSchedules(opts ...func(*ScheduleQuery)) *Departme
 	return dq
 }
 
+//  WithTrainings tells the query-builder to eager-loads the nodes that are connected to
+// the "trainings" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithTrainings(opts ...func(*TrainingQuery)) *DepartmentQuery {
+	query := &TrainingQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withTrainings = query
+	return dq
+}
+
+//  WithSpecialDoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "special_doctors" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithSpecialDoctors(opts ...func(*SpecialDoctorQuery)) *DepartmentQuery {
+	query := &SpecialDoctorQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withSpecialDoctors = query
+	return dq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		DepartmentType string `json:"DepartmentType,omitempty"`
+//		Detail string `json:"Detail,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		GroupBy(department.FieldDepartmentType).
+//		GroupBy(department.FieldDetail).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -390,11 +452,11 @@ func (dq *DepartmentQuery) GroupBy(field string, fields ...string) *DepartmentGr
 // Example:
 //
 //	var v []struct {
-//		DepartmentType string `json:"DepartmentType,omitempty"`
+//		Detail string `json:"Detail,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		Select(department.FieldDepartmentType).
+//		Select(department.FieldDetail).
 //		Scan(ctx, &v)
 //
 func (dq *DepartmentQuery) Select(field string, fields ...string) *DepartmentSelect {
@@ -425,11 +487,13 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		nodes       = []*Department{}
 		withFKs     = dq.withFKs
 		_spec       = dq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [6]bool{
 			dq.withMission != nil,
 			dq.withDoctor != nil,
 			dq.withOffices != nil,
 			dq.withSchedules != nil,
+			dq.withTrainings != nil,
+			dq.withSpecialDoctors != nil,
 		}
 	)
 	if dq.withMission != nil || dq.withDoctor != nil {
@@ -556,15 +620,71 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.schedule_id
+			fk := n.department_id
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "schedule_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "department_id" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Schedules = append(node.Edges.Schedules, n)
+		}
+	}
+
+	if query := dq.withTrainings; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Department)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Training(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.TrainingsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.department_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "department_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Trainings = append(node.Edges.Trainings, n)
+		}
+	}
+
+	if query := dq.withSpecialDoctors; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Department)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Special_Doctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.SpecialDoctorsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.department_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "department_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.SpecialDoctors = append(node.Edges.SpecialDoctors, n)
 		}
 	}
 

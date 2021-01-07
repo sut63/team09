@@ -50,14 +50,14 @@ type DoctorEdges struct {
 	Position *Position
 	// Disease holds the value of the disease edge.
 	Disease *Disease
-	// Departments holds the value of the departments edge.
-	Departments []*Department
 	// Offices holds the value of the offices edge.
 	Offices []*Office
 	// Departments holds the value of the departments edge.
 	Departments []*Department
 	// Schedules holds the value of the schedules edge.
 	Schedules []*Schedule
+	// Trainings holds the value of the trainings edge.
+	Trainings []*Training
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [8]bool
@@ -119,19 +119,10 @@ func (e DoctorEdges) DiseaseOrErr() (*Disease, error) {
 	return nil, &NotLoadedError{edge: "disease"}
 }
 
-// DepartmentsOrErr returns the Departments value or an error if the edge
-// was not loaded in eager-loading.
-func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[4] {
-		return e.Departments, nil
-	}
-	return nil, &NotLoadedError{edge: "departments"}
-}
-
 // OfficesOrErr returns the Offices value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) OfficesOrErr() ([]*Office, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[4] {
 		return e.Offices, nil
 	}
 	return nil, &NotLoadedError{edge: "offices"}
@@ -140,7 +131,7 @@ func (e DoctorEdges) OfficesOrErr() ([]*Office, error) {
 // DepartmentsOrErr returns the Departments value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[6] {
+	if e.loadedTypes[5] {
 		return e.Departments, nil
 	}
 	return nil, &NotLoadedError{edge: "departments"}
@@ -149,10 +140,19 @@ func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
 // SchedulesOrErr returns the Schedules value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) SchedulesOrErr() ([]*Schedule, error) {
-	if e.loadedTypes[7] {
+	if e.loadedTypes[6] {
 		return e.Schedules, nil
 	}
 	return nil, &NotLoadedError{edge: "schedules"}
+}
+
+// TrainingsOrErr returns the Trainings value or an error if the edge
+// was not loaded in eager-loading.
+func (e DoctorEdges) TrainingsOrErr() ([]*Training, error) {
+	if e.loadedTypes[7] {
+		return e.Trainings, nil
+	}
+	return nil, &NotLoadedError{edge: "trainings"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -270,11 +270,6 @@ func (d *Doctor) QueryDisease() *DiseaseQuery {
 	return (&DoctorClient{config: d.config}).QueryDisease(d)
 }
 
-// QueryDepartments queries the departments edge of the Doctor.
-func (d *Doctor) QueryDepartments() *DepartmentQuery {
-	return (&DoctorClient{config: d.config}).QueryDepartments(d)
-}
-
 // QueryOffices queries the offices edge of the Doctor.
 func (d *Doctor) QueryOffices() *OfficeQuery {
 	return (&DoctorClient{config: d.config}).QueryOffices(d)
@@ -288,6 +283,11 @@ func (d *Doctor) QueryDepartments() *DepartmentQuery {
 // QuerySchedules queries the schedules edge of the Doctor.
 func (d *Doctor) QuerySchedules() *ScheduleQuery {
 	return (&DoctorClient{config: d.config}).QuerySchedules(d)
+}
+
+// QueryTrainings queries the trainings edge of the Doctor.
+func (d *Doctor) QueryTrainings() *TrainingQuery {
+	return (&DoctorClient{config: d.config}).QueryTrainings(d)
 }
 
 // Update returns a builder for updating this Doctor.

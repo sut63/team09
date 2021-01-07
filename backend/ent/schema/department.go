@@ -30,9 +30,12 @@ func (Department) Edges() []ent.Edge {
 			StorageKey(edge.Column("department_id")),
 
 		edge.To("schedules", Schedule.Type).
-			StorageKey(edge.Column("schedule_id")),
+			StorageKey(edge.Column("department_id")),
 
-			edge.To("trainings",Training.Type).
+		edge.To("trainings",Training.Type).
+			StorageKey(edge.Column("department_id")),
+		
+		edge.To("special_doctors",Special_Doctor.Type).
 			StorageKey(edge.Column("department_id")),
 	}
 }

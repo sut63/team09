@@ -9,6 +9,19 @@ import (
 	"github.com/team09/app/ent"
 )
 
+// The CourseFunc type is an adapter to allow the use of ordinary
+// function as Course mutator.
+type CourseFunc func(context.Context, *ent.CourseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CourseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CourseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CourseMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DepartmentFunc type is an adapter to allow the use of ordinary
 // function as Department mutator.
 type DepartmentFunc func(context.Context, *ent.DepartmentMutation) (ent.Value, error)
@@ -113,15 +126,28 @@ func (f ScheduleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
-// The Speacial_doctorFunc type is an adapter to allow the use of ordinary
-// function as Speacial_doctor mutator.
-type Speacial_doctorFunc func(context.Context, *ent.SpeacialDoctorMutation) (ent.Value, error)
+// The Special_DoctorFunc type is an adapter to allow the use of ordinary
+// function as Special_Doctor mutator.
+type Special_DoctorFunc func(context.Context, *ent.SpecialDoctorMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f Speacial_doctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SpeacialDoctorMutation)
+func (f Special_DoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SpecialDoctorMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpeacialDoctorMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialDoctorMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The SpecialistFunc type is an adapter to allow the use of ordinary
+// function as Specialist mutator.
+type SpecialistFunc func(context.Context, *ent.SpecialistMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SpecialistFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SpecialistMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialistMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -135,6 +161,19 @@ func (f TitleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	mv, ok := m.(*ent.TitleMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TitleMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The TrainingFunc type is an adapter to allow the use of ordinary
+// function as Training mutator.
+type TrainingFunc func(context.Context, *ent.TrainingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TrainingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TrainingMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TrainingMutation", m)
 	}
 	return f(ctx, mv)
 }

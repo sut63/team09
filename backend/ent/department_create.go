@@ -14,6 +14,8 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
+	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/training"
 )
 
 // DepartmentCreate is the builder for creating a Department entity.
@@ -23,9 +25,9 @@ type DepartmentCreate struct {
 	hooks    []Hook
 }
 
-// SetDepartmentType sets the DepartmentType field.
-func (dc *DepartmentCreate) SetDepartmentType(s string) *DepartmentCreate {
-	dc.mutation.SetDepartmentType(s)
+// SetDetail sets the Detail field.
+func (dc *DepartmentCreate) SetDetail(s string) *DepartmentCreate {
+	dc.mutation.SetDetail(s)
 	return dc
 }
 
@@ -103,6 +105,36 @@ func (dc *DepartmentCreate) AddSchedules(s ...*Schedule) *DepartmentCreate {
 	return dc.AddScheduleIDs(ids...)
 }
 
+// AddTrainingIDs adds the trainings edge to Training by ids.
+func (dc *DepartmentCreate) AddTrainingIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddTrainingIDs(ids...)
+	return dc
+}
+
+// AddTrainings adds the trainings edges to Training.
+func (dc *DepartmentCreate) AddTrainings(t ...*Training) *DepartmentCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return dc.AddTrainingIDs(ids...)
+}
+
+// AddSpecialDoctorIDs adds the special_doctors edge to Special_Doctor by ids.
+func (dc *DepartmentCreate) AddSpecialDoctorIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddSpecialDoctorIDs(ids...)
+	return dc
+}
+
+// AddSpecialDoctors adds the special_doctors edges to Special_Doctor.
+func (dc *DepartmentCreate) AddSpecialDoctors(s ...*Special_Doctor) *DepartmentCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return dc.AddSpecialDoctorIDs(ids...)
+}
+
 // Mutation returns the DepartmentMutation object of the builder.
 func (dc *DepartmentCreate) Mutation() *DepartmentMutation {
 	return dc.mutation
@@ -110,12 +142,12 @@ func (dc *DepartmentCreate) Mutation() *DepartmentMutation {
 
 // Save creates the Department in the database.
 func (dc *DepartmentCreate) Save(ctx context.Context) (*Department, error) {
-	if _, ok := dc.mutation.DepartmentType(); !ok {
-		return nil, &ValidationError{Name: "DepartmentType", err: errors.New("ent: missing required field \"DepartmentType\"")}
+	if _, ok := dc.mutation.Detail(); !ok {
+		return nil, &ValidationError{Name: "Detail", err: errors.New("ent: missing required field \"Detail\"")}
 	}
-	if v, ok := dc.mutation.DepartmentType(); ok {
-		if err := department.DepartmentTypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "DepartmentType", err: fmt.Errorf("ent: validator failed for field \"DepartmentType\": %w", err)}
+	if v, ok := dc.mutation.Detail(); ok {
+		if err := department.DetailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Detail", err: fmt.Errorf("ent: validator failed for field \"Detail\": %w", err)}
 		}
 	}
 	if _, ok := dc.mutation.Name(); !ok {
@@ -186,13 +218,13 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := dc.mutation.DepartmentType(); ok {
+	if value, ok := dc.mutation.Detail(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: department.FieldDepartmentType,
+			Column: department.FieldDetail,
 		})
-		d.DepartmentType = value
+		d.Detail = value
 	}
 	if value, ok := dc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -270,6 +302,44 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: schedule.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.TrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.TrainingsTable,
+			Columns: []string{department.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.SpecialDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialDoctorsTable,
+			Columns: []string{department.SpecialDoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}

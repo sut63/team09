@@ -88,7 +88,7 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 	time2, err := time.Parse(time.RFC3339, obj.Datetwo)
     t, err := ctl.client.Training.
         Create().
-        SetCourse(c).
+        SetCourse(co).
         SetDepartment(de).
         SetDoctor(d).
         SetBranch(obj.Branch).

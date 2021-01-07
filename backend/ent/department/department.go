@@ -7,8 +7,8 @@ const (
 	Label = "department"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldDepartmentType holds the string denoting the departmenttype field in the database.
-	FieldDepartmentType = "department_type"
+	// FieldDetail holds the string denoting the detail field in the database.
+	FieldDetail = "detail"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 
@@ -20,6 +20,10 @@ const (
 	EdgeOffices = "offices"
 	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
 	EdgeSchedules = "schedules"
+	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
+	EdgeTrainings = "trainings"
+	// EdgeSpecialDoctors holds the string denoting the special_doctors edge name in mutations.
+	EdgeSpecialDoctors = "special_doctors"
 
 	// Table holds the table name of the department in the database.
 	Table = "departments"
@@ -50,13 +54,27 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "schedule" package.
 	SchedulesInverseTable = "schedules"
 	// SchedulesColumn is the table column denoting the schedules relation/edge.
-	SchedulesColumn = "schedule_id"
+	SchedulesColumn = "department_id"
+	// TrainingsTable is the table the holds the trainings relation/edge.
+	TrainingsTable = "trainings"
+	// TrainingsInverseTable is the table name for the Training entity.
+	// It exists in this package in order to avoid circular dependency with the "training" package.
+	TrainingsInverseTable = "trainings"
+	// TrainingsColumn is the table column denoting the trainings relation/edge.
+	TrainingsColumn = "department_id"
+	// SpecialDoctorsTable is the table the holds the special_doctors relation/edge.
+	SpecialDoctorsTable = "special_doctors"
+	// SpecialDoctorsInverseTable is the table name for the Special_Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "special_doctor" package.
+	SpecialDoctorsInverseTable = "special_doctors"
+	// SpecialDoctorsColumn is the table column denoting the special_doctors relation/edge.
+	SpecialDoctorsColumn = "department_id"
 )
 
 // Columns holds all SQL columns for department fields.
 var Columns = []string{
 	FieldID,
-	FieldDepartmentType,
+	FieldDetail,
 	FieldName,
 }
 
@@ -67,8 +85,8 @@ var ForeignKeys = []string{
 }
 
 var (
-	// DepartmentTypeValidator is a validator for the "DepartmentType" field. It is called by the builders before save.
-	DepartmentTypeValidator func(string) error
+	// DetailValidator is a validator for the "Detail" field. It is called by the builders before save.
+	DetailValidator func(string) error
 	// NameValidator is a validator for the "Name" field. It is called by the builders before save.
 	NameValidator func(string) error
 )

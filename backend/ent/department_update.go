@@ -15,6 +15,8 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
+	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/training"
 )
 
 // DepartmentUpdate is the builder for updating Department entities.
@@ -31,9 +33,9 @@ func (du *DepartmentUpdate) Where(ps ...predicate.Department) *DepartmentUpdate 
 	return du
 }
 
-// SetDepartmentType sets the DepartmentType field.
-func (du *DepartmentUpdate) SetDepartmentType(s string) *DepartmentUpdate {
-	du.mutation.SetDepartmentType(s)
+// SetDetail sets the Detail field.
+func (du *DepartmentUpdate) SetDetail(s string) *DepartmentUpdate {
+	du.mutation.SetDetail(s)
 	return du
 }
 
@@ -111,6 +113,36 @@ func (du *DepartmentUpdate) AddSchedules(s ...*Schedule) *DepartmentUpdate {
 	return du.AddScheduleIDs(ids...)
 }
 
+// AddTrainingIDs adds the trainings edge to Training by ids.
+func (du *DepartmentUpdate) AddTrainingIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.AddTrainingIDs(ids...)
+	return du
+}
+
+// AddTrainings adds the trainings edges to Training.
+func (du *DepartmentUpdate) AddTrainings(t ...*Training) *DepartmentUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return du.AddTrainingIDs(ids...)
+}
+
+// AddSpecialDoctorIDs adds the special_doctors edge to Special_Doctor by ids.
+func (du *DepartmentUpdate) AddSpecialDoctorIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.AddSpecialDoctorIDs(ids...)
+	return du
+}
+
+// AddSpecialDoctors adds the special_doctors edges to Special_Doctor.
+func (du *DepartmentUpdate) AddSpecialDoctors(s ...*Special_Doctor) *DepartmentUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return du.AddSpecialDoctorIDs(ids...)
+}
+
 // Mutation returns the DepartmentMutation object of the builder.
 func (du *DepartmentUpdate) Mutation() *DepartmentMutation {
 	return du.mutation
@@ -158,11 +190,41 @@ func (du *DepartmentUpdate) RemoveSchedules(s ...*Schedule) *DepartmentUpdate {
 	return du.RemoveScheduleIDs(ids...)
 }
 
+// RemoveTrainingIDs removes the trainings edge to Training by ids.
+func (du *DepartmentUpdate) RemoveTrainingIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.RemoveTrainingIDs(ids...)
+	return du
+}
+
+// RemoveTrainings removes trainings edges to Training.
+func (du *DepartmentUpdate) RemoveTrainings(t ...*Training) *DepartmentUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return du.RemoveTrainingIDs(ids...)
+}
+
+// RemoveSpecialDoctorIDs removes the special_doctors edge to Special_Doctor by ids.
+func (du *DepartmentUpdate) RemoveSpecialDoctorIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.RemoveSpecialDoctorIDs(ids...)
+	return du
+}
+
+// RemoveSpecialDoctors removes special_doctors edges to Special_Doctor.
+func (du *DepartmentUpdate) RemoveSpecialDoctors(s ...*Special_Doctor) *DepartmentUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return du.RemoveSpecialDoctorIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (du *DepartmentUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := du.mutation.DepartmentType(); ok {
-		if err := department.DepartmentTypeValidator(v); err != nil {
-			return 0, &ValidationError{Name: "DepartmentType", err: fmt.Errorf("ent: validator failed for field \"DepartmentType\": %w", err)}
+	if v, ok := du.mutation.Detail(); ok {
+		if err := department.DetailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Detail", err: fmt.Errorf("ent: validator failed for field \"Detail\": %w", err)}
 		}
 	}
 	if v, ok := du.mutation.Name(); ok {
@@ -238,11 +300,11 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := du.mutation.DepartmentType(); ok {
+	if value, ok := du.mutation.Detail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: department.FieldDepartmentType,
+			Column: department.FieldDetail,
 		})
 	}
 	if value, ok := du.mutation.Name(); ok {
@@ -398,6 +460,82 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := du.mutation.RemovedTrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.TrainingsTable,
+			Columns: []string{department.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.TrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.TrainingsTable,
+			Columns: []string{department.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := du.mutation.RemovedSpecialDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialDoctorsTable,
+			Columns: []string{department.SpecialDoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: special_doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.SpecialDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialDoctorsTable,
+			Columns: []string{department.SpecialDoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: special_doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{department.Label}
@@ -416,9 +554,9 @@ type DepartmentUpdateOne struct {
 	mutation *DepartmentMutation
 }
 
-// SetDepartmentType sets the DepartmentType field.
-func (duo *DepartmentUpdateOne) SetDepartmentType(s string) *DepartmentUpdateOne {
-	duo.mutation.SetDepartmentType(s)
+// SetDetail sets the Detail field.
+func (duo *DepartmentUpdateOne) SetDetail(s string) *DepartmentUpdateOne {
+	duo.mutation.SetDetail(s)
 	return duo
 }
 
@@ -496,6 +634,36 @@ func (duo *DepartmentUpdateOne) AddSchedules(s ...*Schedule) *DepartmentUpdateOn
 	return duo.AddScheduleIDs(ids...)
 }
 
+// AddTrainingIDs adds the trainings edge to Training by ids.
+func (duo *DepartmentUpdateOne) AddTrainingIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.AddTrainingIDs(ids...)
+	return duo
+}
+
+// AddTrainings adds the trainings edges to Training.
+func (duo *DepartmentUpdateOne) AddTrainings(t ...*Training) *DepartmentUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return duo.AddTrainingIDs(ids...)
+}
+
+// AddSpecialDoctorIDs adds the special_doctors edge to Special_Doctor by ids.
+func (duo *DepartmentUpdateOne) AddSpecialDoctorIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.AddSpecialDoctorIDs(ids...)
+	return duo
+}
+
+// AddSpecialDoctors adds the special_doctors edges to Special_Doctor.
+func (duo *DepartmentUpdateOne) AddSpecialDoctors(s ...*Special_Doctor) *DepartmentUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return duo.AddSpecialDoctorIDs(ids...)
+}
+
 // Mutation returns the DepartmentMutation object of the builder.
 func (duo *DepartmentUpdateOne) Mutation() *DepartmentMutation {
 	return duo.mutation
@@ -543,11 +711,41 @@ func (duo *DepartmentUpdateOne) RemoveSchedules(s ...*Schedule) *DepartmentUpdat
 	return duo.RemoveScheduleIDs(ids...)
 }
 
+// RemoveTrainingIDs removes the trainings edge to Training by ids.
+func (duo *DepartmentUpdateOne) RemoveTrainingIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.RemoveTrainingIDs(ids...)
+	return duo
+}
+
+// RemoveTrainings removes trainings edges to Training.
+func (duo *DepartmentUpdateOne) RemoveTrainings(t ...*Training) *DepartmentUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return duo.RemoveTrainingIDs(ids...)
+}
+
+// RemoveSpecialDoctorIDs removes the special_doctors edge to Special_Doctor by ids.
+func (duo *DepartmentUpdateOne) RemoveSpecialDoctorIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.RemoveSpecialDoctorIDs(ids...)
+	return duo
+}
+
+// RemoveSpecialDoctors removes special_doctors edges to Special_Doctor.
+func (duo *DepartmentUpdateOne) RemoveSpecialDoctors(s ...*Special_Doctor) *DepartmentUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return duo.RemoveSpecialDoctorIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (duo *DepartmentUpdateOne) Save(ctx context.Context) (*Department, error) {
-	if v, ok := duo.mutation.DepartmentType(); ok {
-		if err := department.DepartmentTypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "DepartmentType", err: fmt.Errorf("ent: validator failed for field \"DepartmentType\": %w", err)}
+	if v, ok := duo.mutation.Detail(); ok {
+		if err := department.DetailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Detail", err: fmt.Errorf("ent: validator failed for field \"Detail\": %w", err)}
 		}
 	}
 	if v, ok := duo.mutation.Name(); ok {
@@ -621,11 +819,11 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (d *Department, err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Department.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := duo.mutation.DepartmentType(); ok {
+	if value, ok := duo.mutation.Detail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: department.FieldDepartmentType,
+			Column: department.FieldDetail,
 		})
 	}
 	if value, ok := duo.mutation.Name(); ok {
@@ -773,6 +971,82 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (d *Department, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: schedule.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedTrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.TrainingsTable,
+			Columns: []string{department.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.TrainingsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.TrainingsTable,
+			Columns: []string{department.TrainingsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedSpecialDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialDoctorsTable,
+			Columns: []string{department.SpecialDoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: special_doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.SpecialDoctorsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialDoctorsTable,
+			Columns: []string{department.SpecialDoctorsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}

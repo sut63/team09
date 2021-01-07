@@ -13,7 +13,7 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/special_doctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -87,13 +87,13 @@ func (oc *OfficeCreate) SetDepartment(d *Department) *OfficeCreate {
 	return oc.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
 func (oc *OfficeCreate) SetSpeacialDoctorID(id int) *OfficeCreate {
 	oc.mutation.SetSpeacialDoctorID(id)
 	return oc
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
 func (oc *OfficeCreate) SetNillableSpeacialDoctorID(id *int) *OfficeCreate {
 	if id != nil {
 		oc = oc.SetSpeacialDoctorID(*id)
@@ -101,8 +101,8 @@ func (oc *OfficeCreate) SetNillableSpeacialDoctorID(id *int) *OfficeCreate {
 	return oc
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
-func (oc *OfficeCreate) SetSpeacialDoctor(s *Speacial_doctor) *OfficeCreate {
+// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
+func (oc *OfficeCreate) SetSpeacialDoctor(s *Special_Doctor) *OfficeCreate {
 	return oc.SetSpeacialDoctorID(s.ID)
 }
 
@@ -271,7 +271,7 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: speacial_doctor.FieldID,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}

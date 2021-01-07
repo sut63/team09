@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"github.com/team09/app/ent/course"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
@@ -12,20 +13,28 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/schema"
-	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/special_doctor"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
+	"github.com/team09/app/ent/training"
 )
 
 // The init function reads all schema descriptors with runtime
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	courseFields := schema.Course{}.Fields()
+	_ = courseFields
+	// courseDescNamecourse is the schema descriptor for namecourse field.
+	courseDescNamecourse := courseFields[0].Descriptor()
+	// course.NamecourseValidator is a validator for the "namecourse" field. It is called by the builders before save.
+	course.NamecourseValidator = courseDescNamecourse.Validators[0].(func(string) error)
 	departmentFields := schema.Department{}.Fields()
 	_ = departmentFields
-	// departmentDescDepartmentType is the schema descriptor for DepartmentType field.
-	departmentDescDepartmentType := departmentFields[0].Descriptor()
-	// department.DepartmentTypeValidator is a validator for the "DepartmentType" field. It is called by the builders before save.
-	department.DepartmentTypeValidator = departmentDescDepartmentType.Validators[0].(func(string) error)
+	// departmentDescDetail is the schema descriptor for Detail field.
+	departmentDescDetail := departmentFields[0].Descriptor()
+	// department.DetailValidator is a validator for the "Detail" field. It is called by the builders before save.
+	department.DetailValidator = departmentDescDetail.Validators[0].(func(string) error)
 	// departmentDescName is the schema descriptor for Name field.
 	departmentDescName := departmentFields[1].Descriptor()
 	// department.NameValidator is a validator for the "Name" field. It is called by the builders before save.
@@ -92,16 +101,28 @@ func init() {
 	scheduleDescActivity := scheduleFields[0].Descriptor()
 	// schedule.ActivityValidator is a validator for the "activity" field. It is called by the builders before save.
 	schedule.ActivityValidator = scheduleDescActivity.Validators[0].(func(string) error)
-	speacial_doctorFields := schema.Speacial_doctor{}.Fields()
-	_ = speacial_doctorFields
-	// speacial_doctorDescName is the schema descriptor for name field.
-	speacial_doctorDescName := speacial_doctorFields[0].Descriptor()
-	// speacial_doctor.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	speacial_doctor.NameValidator = speacial_doctorDescName.Validators[0].(func(string) error)
+	special_doctorFields := schema.Special_Doctor{}.Fields()
+	_ = special_doctorFields
+	// special_doctorDescOther is the schema descriptor for Other field.
+	special_doctorDescOther := special_doctorFields[0].Descriptor()
+	// special_doctor.OtherValidator is a validator for the "Other" field. It is called by the builders before save.
+	special_doctor.OtherValidator = special_doctorDescOther.Validators[0].(func(string) error)
+	specialistFields := schema.Specialist{}.Fields()
+	_ = specialistFields
+	// specialistDescSpecialist is the schema descriptor for specialist field.
+	specialistDescSpecialist := specialistFields[0].Descriptor()
+	// specialist.SpecialistValidator is a validator for the "specialist" field. It is called by the builders before save.
+	specialist.SpecialistValidator = specialistDescSpecialist.Validators[0].(func(string) error)
 	titleFields := schema.Title{}.Fields()
 	_ = titleFields
 	// titleDescTitle is the schema descriptor for title field.
 	titleDescTitle := titleFields[0].Descriptor()
 	// title.TitleValidator is a validator for the "title" field. It is called by the builders before save.
 	title.TitleValidator = titleDescTitle.Validators[0].(func(string) error)
+	trainingFields := schema.Training{}.Fields()
+	_ = trainingFields
+	// trainingDescBranch is the schema descriptor for branch field.
+	trainingDescBranch := trainingFields[0].Descriptor()
+	// training.BranchValidator is a validator for the "branch" field. It is called by the builders before save.
+	training.BranchValidator = trainingDescBranch.Validators[0].(func(string) error)
 }

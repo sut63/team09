@@ -14,7 +14,7 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/speacial_doctor"
+	"github.com/team09/app/ent/special_doctor"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -95,13 +95,13 @@ func (ou *OfficeUpdate) SetDepartment(d *Department) *OfficeUpdate {
 	return ou.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
 func (ou *OfficeUpdate) SetSpeacialDoctorID(id int) *OfficeUpdate {
 	ou.mutation.SetSpeacialDoctorID(id)
 	return ou
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
 func (ou *OfficeUpdate) SetNillableSpeacialDoctorID(id *int) *OfficeUpdate {
 	if id != nil {
 		ou = ou.SetSpeacialDoctorID(*id)
@@ -109,8 +109,8 @@ func (ou *OfficeUpdate) SetNillableSpeacialDoctorID(id *int) *OfficeUpdate {
 	return ou
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
-func (ou *OfficeUpdate) SetSpeacialDoctor(s *Speacial_doctor) *OfficeUpdate {
+// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
+func (ou *OfficeUpdate) SetSpeacialDoctor(s *Special_Doctor) *OfficeUpdate {
 	return ou.SetSpeacialDoctorID(s.ID)
 }
 
@@ -152,7 +152,7 @@ func (ou *OfficeUpdate) ClearDepartment() *OfficeUpdate {
 	return ou
 }
 
-// ClearSpeacialDoctor clears the speacial_doctor edge to Speacial_doctor.
+// ClearSpeacialDoctor clears the speacial_doctor edge to Special_Doctor.
 func (ou *OfficeUpdate) ClearSpeacialDoctor() *OfficeUpdate {
 	ou.mutation.ClearSpeacialDoctor()
 	return ou
@@ -370,7 +370,7 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: speacial_doctor.FieldID,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}
@@ -386,7 +386,7 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: speacial_doctor.FieldID,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}
@@ -514,13 +514,13 @@ func (ouo *OfficeUpdateOne) SetDepartment(d *Department) *OfficeUpdateOne {
 	return ouo.SetDepartmentID(d.ID)
 }
 
-// SetSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id.
+// SetSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id.
 func (ouo *OfficeUpdateOne) SetSpeacialDoctorID(id int) *OfficeUpdateOne {
 	ouo.mutation.SetSpeacialDoctorID(id)
 	return ouo
 }
 
-// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Speacial_doctor by id if the given value is not nil.
+// SetNillableSpeacialDoctorID sets the speacial_doctor edge to Special_Doctor by id if the given value is not nil.
 func (ouo *OfficeUpdateOne) SetNillableSpeacialDoctorID(id *int) *OfficeUpdateOne {
 	if id != nil {
 		ouo = ouo.SetSpeacialDoctorID(*id)
@@ -528,8 +528,8 @@ func (ouo *OfficeUpdateOne) SetNillableSpeacialDoctorID(id *int) *OfficeUpdateOn
 	return ouo
 }
 
-// SetSpeacialDoctor sets the speacial_doctor edge to Speacial_doctor.
-func (ouo *OfficeUpdateOne) SetSpeacialDoctor(s *Speacial_doctor) *OfficeUpdateOne {
+// SetSpeacialDoctor sets the speacial_doctor edge to Special_Doctor.
+func (ouo *OfficeUpdateOne) SetSpeacialDoctor(s *Special_Doctor) *OfficeUpdateOne {
 	return ouo.SetSpeacialDoctorID(s.ID)
 }
 
@@ -571,7 +571,7 @@ func (ouo *OfficeUpdateOne) ClearDepartment() *OfficeUpdateOne {
 	return ouo
 }
 
-// ClearSpeacialDoctor clears the speacial_doctor edge to Speacial_doctor.
+// ClearSpeacialDoctor clears the speacial_doctor edge to Special_Doctor.
 func (ouo *OfficeUpdateOne) ClearSpeacialDoctor() *OfficeUpdateOne {
 	ouo.mutation.ClearSpeacialDoctor()
 	return ouo
@@ -787,7 +787,7 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: speacial_doctor.FieldID,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}
@@ -803,7 +803,7 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: speacial_doctor.FieldID,
+					Column: special_doctor.FieldID,
 				},
 			},
 		}

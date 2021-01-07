@@ -458,7 +458,7 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Schedule)
 		for i := range nodes {
-			if fk := nodes[i].schedule_id; fk != nil {
+			if fk := nodes[i].department_id; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -471,7 +471,7 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.Department = n
@@ -483,7 +483,7 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Schedule)
 		for i := range nodes {
-			if fk := nodes[i].schedule_id; fk != nil {
+			if fk := nodes[i].office_id; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -496,7 +496,7 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "office_id" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.Office = n

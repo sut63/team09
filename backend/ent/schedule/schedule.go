@@ -34,14 +34,14 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "department" package.
 	DepartmentInverseTable = "departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
-	DepartmentColumn = "schedule_id"
+	DepartmentColumn = "department_id"
 	// OfficeTable is the table the holds the office relation/edge.
 	OfficeTable = "schedules"
 	// OfficeInverseTable is the table name for the Office entity.
 	// It exists in this package in order to avoid circular dependency with the "office" package.
 	OfficeInverseTable = "offices"
 	// OfficeColumn is the table column denoting the office relation/edge.
-	OfficeColumn = "schedule_id"
+	OfficeColumn = "office_id"
 )
 
 // Columns holds all SQL columns for schedule fields.
@@ -53,7 +53,9 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Schedule type.
 var ForeignKeys = []string{
+	"department_id",
 	"schedule_id",
+	"office_id",
 }
 
 var (

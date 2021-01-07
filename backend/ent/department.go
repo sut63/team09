@@ -17,8 +17,8 @@ type Department struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// DepartmentType holds the value of the "DepartmentType" field.
-	DepartmentType string `json:"DepartmentType,omitempty"`
+	// Detail holds the value of the "Detail" field.
+	Detail string `json:"Detail,omitempty"`
 	// Name holds the value of the "Name" field.
 	Name string `json:"Name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -38,9 +38,13 @@ type DepartmentEdges struct {
 	Offices []*Office
 	// Schedules holds the value of the schedules edge.
 	Schedules []*Schedule
+	// Trainings holds the value of the trainings edge.
+	Trainings []*Training
+	// SpecialDoctors holds the value of the special_doctors edge.
+	SpecialDoctors []*Special_Doctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [6]bool
 }
 
 // MissionOrErr returns the Mission value or an error if the edge
@@ -89,11 +93,29 @@ func (e DepartmentEdges) SchedulesOrErr() ([]*Schedule, error) {
 	return nil, &NotLoadedError{edge: "schedules"}
 }
 
+// TrainingsOrErr returns the Trainings value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) TrainingsOrErr() ([]*Training, error) {
+	if e.loadedTypes[4] {
+		return e.Trainings, nil
+	}
+	return nil, &NotLoadedError{edge: "trainings"}
+}
+
+// SpecialDoctorsOrErr returns the SpecialDoctors value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) SpecialDoctorsOrErr() ([]*Special_Doctor, error) {
+	if e.loadedTypes[5] {
+		return e.SpecialDoctors, nil
+	}
+	return nil, &NotLoadedError{edge: "special_doctors"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Department) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // DepartmentType
+		&sql.NullString{}, // Detail
 		&sql.NullString{}, // Name
 	}
 }
@@ -119,9 +141,9 @@ func (d *Department) assignValues(values ...interface{}) error {
 	d.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field DepartmentType", values[0])
+		return fmt.Errorf("unexpected type %T for field Detail", values[0])
 	} else if value.Valid {
-		d.DepartmentType = value.String
+		d.Detail = value.String
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field Name", values[1])
@@ -166,6 +188,16 @@ func (d *Department) QuerySchedules() *ScheduleQuery {
 	return (&DepartmentClient{config: d.config}).QuerySchedules(d)
 }
 
+// QueryTrainings queries the trainings edge of the Department.
+func (d *Department) QueryTrainings() *TrainingQuery {
+	return (&DepartmentClient{config: d.config}).QueryTrainings(d)
+}
+
+// QuerySpecialDoctors queries the special_doctors edge of the Department.
+func (d *Department) QuerySpecialDoctors() *Special_DoctorQuery {
+	return (&DepartmentClient{config: d.config}).QuerySpecialDoctors(d)
+}
+
 // Update returns a builder for updating this Department.
 // Note that, you need to call Department.Unwrap() before calling this method, if this Department
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -189,8 +221,8 @@ func (d *Department) String() string {
 	var builder strings.Builder
 	builder.WriteString("Department(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
-	builder.WriteString(", DepartmentType=")
-	builder.WriteString(d.DepartmentType)
+	builder.WriteString(", Detail=")
+	builder.WriteString(d.Detail)
 	builder.WriteString(", Name=")
 	builder.WriteString(d.Name)
 	builder.WriteByte(')')

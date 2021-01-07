@@ -16,8 +16,10 @@ type Workingtime struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// AddedTime holds the value of the "added_time" field.
-	AddedTime time.Time `json:"added_time,omitempty"`
+	// AddedTime1 holds the value of the "added_time1" field.
+	AddedTime1 time.Time `json:"added_time1,omitempty"`
+	// AddedTime2 holds the value of the "added_time2" field.
+	AddedTime2 time.Time `json:"added_time2,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WorkingtimeQuery when eager-loading is set.
 	Edges WorkingtimeEdges `json:"edges"`
@@ -45,7 +47,8 @@ func (e WorkingtimeEdges) OfficesOrErr() ([]*Office, error) {
 func (*Workingtime) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // id
-		&sql.NullTime{},  // added_time
+		&sql.NullTime{},  // added_time1
+		&sql.NullTime{},  // added_time2
 	}
 }
 
@@ -62,9 +65,14 @@ func (w *Workingtime) assignValues(values ...interface{}) error {
 	w.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time", values[0])
+		return fmt.Errorf("unexpected type %T for field added_time1", values[0])
 	} else if value.Valid {
-		w.AddedTime = value.Time
+		w.AddedTime1 = value.Time
+	}
+	if value, ok := values[1].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time2", values[1])
+	} else if value.Valid {
+		w.AddedTime2 = value.Time
 	}
 	return nil
 }
@@ -97,8 +105,10 @@ func (w *Workingtime) String() string {
 	var builder strings.Builder
 	builder.WriteString("Workingtime(")
 	builder.WriteString(fmt.Sprintf("id=%v", w.ID))
-	builder.WriteString(", added_time=")
-	builder.WriteString(w.AddedTime.Format(time.ANSIC))
+	builder.WriteString(", added_time1=")
+	builder.WriteString(w.AddedTime1.Format(time.ANSIC))
+	builder.WriteString(", added_time2=")
+	builder.WriteString(w.AddedTime2.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }
