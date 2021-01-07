@@ -14,7 +14,7 @@ import (
 	"github.com/team09/app/ent"
 )
 
-type Doctor struct {
+type Doctors struct {
 	Doctor []Doctor
 }
 type Doctor struct {
@@ -25,35 +25,35 @@ type Doctor struct {
 	Address     string
 	Educational string
 }
-type Gender struct {
+type Genders struct {
 	Gender []Gender
 }
 
 type Gender struct {
 	Gender string
 }
-type Position struct {
+type Positions struct {
 	Position []Position
 }
 
 type Position struct {
 	Position string
 }
-type Title struct {
+type Titles struct {
 	Title []Title
 }
 
 type Title struct {
 	Title string
 }
-type Disease struct {
+type Diseases struct {
 	Disease []Disease
 }
 
 type Disease struct {
 	Disease string
 }
-type Course struct {
+type Courses struct {
 	Course []Course
 }
 
