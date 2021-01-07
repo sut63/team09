@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/team09/app/ent"
 	"github.com/team09/app/ent/workingtime"
-	"github.com/gin-gonic/gin"
 )
 
 // WorkingtimeController defines the struct for the office controller
@@ -17,7 +17,8 @@ type WorkingtimeController struct {
 	router gin.IRouter
 }
 type Workingtime struct {
-	Added string
+	Added1 string
+	Added2 string
 }
 
 // CreateWorkingtime handles POST requests for adding workingtime entities
@@ -39,10 +40,13 @@ func (ctl *WorkingtimeController) CreateWorkingtime(c *gin.Context) {
 		})
 		return
 	}
-	time, err := time.Parse(time.RFC3339, obj.Added)
+
+	time1, err := time.Parse(time.RFC3339, obj.Added1)
+	time2, err := time.Parse(time.RFC3339, obj.Added2)
 	wt, err := ctl.client.Workingtime.
 		Create().
-		SetAddedTime(time).
+		SetAddedTime1(time1).
+		SetAddedTime2(time2).
 		Save(context.Background())
 
 	if err != nil {
