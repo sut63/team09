@@ -22,7 +22,7 @@ type SpecialdoctorController struct {
 // @ID create-specialdoctor
 // @Accept   json
 // @Produce  json
-// @Param special_doctor body ent.Specialdoctor true "Specialdoctor entity"
+// @Param specialdoctor body ent.Specialdoctor true "Specialdoctor entity"
 // @Success 200 {object} ent.Specialdoctor
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -87,7 +87,7 @@ func (ctl *SpecialdoctorController) GetSpecialdoctor(c *gin.Context) {
 // ListSpecialdoctor handles request to get a list of specialdoctor entities
 // @Summary List specialdoctor entities
 // @Description list specialdoctor entities
-// @ID list-special_doctor
+// @ID list-specialdoctor
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
@@ -125,7 +125,7 @@ func (ctl *SpecialdoctorController) ListSpecialdoctor(c *gin.Context) {
  
 // DeleteSpecialdoctor handles DELETE requests to delete a specialdoctor entity
 // @Summary Delete a specialdoctor entity by ID
-// @Description get special_doctor by ID
+// @Description get specialdoctor by ID
 // @ID delete-specialdoctor
 // @Produce  json
 // @Param id path int true "Specialdoctor ID"
