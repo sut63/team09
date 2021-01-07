@@ -23,8 +23,8 @@ type Training struct {
     Department int
     Doctor     int
     Branch     string
-    Dateone    time
-    Datetwo    time
+    Dateone    string
+    Datetwo    string
 }
 
 // CreateTrainings handles POST requests for adding training entities
@@ -83,15 +83,17 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 		})
 		return
     }
-    
+	
+	time1, err := time.Parse(time.RFC3339, obj.Dateone)
+	time2, err := time.Parse(time.RFC3339, obj.Datetwo)
     t, err := ctl.client.Training.
         Create().
         SetCourse(c).
         SetDepartment(de).
         SetDoctor(d).
         SetBranch(obj.Branch).
-        SetDateone(time.Dateone).
-        SetDatetwo(time.Datetwo).
+        SetDateoneTime(time).
+        SetDatetwoTime(time).
         Save(context.Background())
     
     if err != nil {
