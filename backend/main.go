@@ -14,6 +14,45 @@ import (
 	"github.com/team09/app/ent"
 )
 
+type Doctor struct {
+	Doctor []Doctor
+}
+type Doctor struct {
+	Name        string
+	Age         int
+	Email       string
+	Pnumber     int
+	Address     string
+	Educational string
+}
+type Gender struct {
+	Gender []Gender
+}
+
+type Gender struct {
+	Gender string
+}
+type Position struct {
+	Position []Position
+}
+
+type Position struct {
+	Position string
+}
+type Title struct {
+	Title []Title
+}
+
+type Title struct {
+	Title string
+}
+type Disease struct {
+	Disease []Disease
+}
+
+type Disease struct {
+	Disease string
+}
 type Course struct {
 	Course []Course
 }
@@ -83,6 +122,10 @@ func main() {
 	controllers.NewTrainingController(v1, client)
 	controllers.NewCourseController(v1, client)
 	controllers.NewScheduleController(v1, client)
+	controllers.NewDiseaseController(v1, client)
+	controllers.NewTitleController(v1, client)
+	controllers.NewGenderController(v1, client)
+	controllers.NewPositionController(v1, client)
 
 	//setcourse
 	courses := Courses{
@@ -100,6 +143,75 @@ func main() {
 			Save(context.Background())
 	}
 
+	// Set Titles Data
+	titles := Titles{
+		Title: []Title{
+			Title{"นายแพทย์"},
+			Title{"แพทย์หญิง"},
+		},
+	}
+
+	for _, t := range titles.Title {
+		client.Title.
+			Create().
+			SetTitle(t.Title).
+			Save(context.Background())
+	}
+
+	// Set Genders Data
+	genders := Genders{
+		Gender: []Gender{
+			Gender{"ชาย"},
+			Gender{"หญิง"},
+		},
+	}
+
+	for _, g := range genders.Gender {
+		client.Gender.
+			Create().
+			SetGender(g.Gender).
+			Save(context.Background())
+	}
+
+	// Set Positions Data
+	positions := Positions{
+		Position: []Position{
+			Position{"นายแพทย์ปฏิบัติการ"},
+			Position{"นายแพทย์ชำนาญการ"},
+			Position{"นายแพทย์ชำนาญการพิเศษ"},
+			Position{"นายแพทย์เชี่ยวชาญ"},
+			Position{"นายแพทย์ทรงคุณวุฒิ"},
+			Position{"อื่นๆ"},
+		},
+	}
+
+	for _, p := range positions.Position {
+		client.Position.
+			Create().
+			SetPosition(p.Position).
+			Save(context.Background())
+	}
+
+	// Set Diseases Data
+	diseases := Diseases{
+		Disease: []Disease{
+			Disease{"โรคมะเร็ง"},
+			Disease{"โรคหลอดเลือดหัวใจ"},
+			Disease{"โรคเบาหวาน"},
+			Disease{"โรคความดันโลหิตสูง"},
+			Disease{"วัณโรคที่มากับอากาศ"},
+			Disease{"โรคปอดเรื้อรัง"},
+			Disease{"โรคภูมิแพ้"},
+			Disease{"อื่นๆ"},
+		},
+	}
+
+	for _, d := range diseases.Disease {
+		client.Disease.
+			Create().
+			SetDisease(d.Disease).
+			Save(context.Background())
+	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()
 }
