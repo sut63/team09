@@ -129,12 +129,12 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          <Button color="inherit" component={RouterLink} to="/">ระบบบันทึกประวัติการทำงานของแพทย์</Button>
-          <Button color="inherit" component={RouterLink} to="/">ระบบบันทึกข้อมูลการฝึกอบรม</Button>
-          <Button color="inherit" component={RouterLink} to="/"> ระบบบันทึกข้อมูลแผนกแพทย์</Button>
-          <Button color="inherit" component={RouterLink} to="/">ระบบบันทึกข้อมูลส่วนตัวแพทย์</Button>
-          <Button color="inherit" component={RouterLink} to="/">ระบบบันทึกเวลาของแพทย์</Button>
-          <Button color="inherit" component={RouterLink} to="/user">ระบบบันทึกข้อมูลแพทย์เฉพาะทาง</Button>
+          <Button color="inherit" component={RouterLink} to="/history">บันทึกประวัติการทำงานของแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/">บันทึกข้อมูลการฝึกอบรม</Button>
+          <Button color="inherit" component={RouterLink} to="/">บันทึกข้อมูลแผนกแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/">บันทึกข้อมูลส่วนตัวแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/">บันทึกเวลาของแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/user">บันทึกข้อมูลแพทย์เฉพาะทาง</Button>
         </List>
       </Drawer>
     </div>
