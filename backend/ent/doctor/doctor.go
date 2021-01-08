@@ -28,6 +28,8 @@ const (
 	EdgePosition = "position"
 	// EdgeDisease holds the string denoting the disease edge name in mutations.
 	EdgeDisease = "disease"
+	// EdgeSpecialist holds the string denoting the specialist edge name in mutations.
+	EdgeSpecialist = "specialist"
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
@@ -67,6 +69,13 @@ const (
 	DiseaseInverseTable = "diseases"
 	// DiseaseColumn is the table column denoting the disease relation/edge.
 	DiseaseColumn = "disease_id"
+	// SpecialistTable is the table the holds the specialist relation/edge.
+	SpecialistTable = "doctors"
+	// SpecialistInverseTable is the table name for the Specialist entity.
+	// It exists in this package in order to avoid circular dependency with the "specialist" package.
+	SpecialistInverseTable = "specialists"
+	// SpecialistColumn is the table column denoting the specialist relation/edge.
+	SpecialistColumn = "specialist_id"
 	// OfficesTable is the table the holds the offices relation/edge.
 	OfficesTable = "offices"
 	// OfficesInverseTable is the table name for the Office entity.
@@ -113,7 +122,7 @@ var ForeignKeys = []string{
 	"disease_id",
 	"gender_id",
 	"position_id",
-	"specialdoctor_id",
+	"specialist_id",
 	"title_id",
 }
 

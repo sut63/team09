@@ -42,6 +42,9 @@ func (Doctor) Edges() []ent.Edge {
 		edge.From("disease", Disease.Type).
 			Ref("doctors").
 			Unique(),
+		
+		edge.From("specialist", Specialist.Type).
+			Ref("doctors").Unique(),
 
 		edge.To("offices", Office.Type).
 			StorageKey(edge.Column("doctor_id")),
@@ -54,5 +57,7 @@ func (Doctor) Edges() []ent.Edge {
 
 		edge.To("trainings",Training.Type).
 			StorageKey(edge.Column("doctor_id")),
+		
+		
 	}
 }

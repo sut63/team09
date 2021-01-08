@@ -12,8 +12,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
-	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 )
 
@@ -26,7 +28,9 @@ type SpecialistQuery struct {
 	unique     []string
 	predicates []predicate.Specialist
 	// eager-loading edges.
-	withSpecialdoctors *SpecialdoctorQuery
+	withDoctors     *DoctorQuery
+	withDepartments *DepartmentQuery
+	withOffices     *OfficeQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,17 +60,53 @@ func (sq *SpecialistQuery) Order(o ...OrderFunc) *SpecialistQuery {
 	return sq
 }
 
-// QuerySpecialdoctors chains the current query on the specialdoctors edge.
-func (sq *SpecialistQuery) QuerySpecialdoctors() *SpecialdoctorQuery {
-	query := &SpecialdoctorQuery{config: sq.config}
+// QueryDoctors chains the current query on the doctors edge.
+func (sq *SpecialistQuery) QueryDoctors() *DoctorQuery {
+	query := &DoctorQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
-			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialist.SpecialdoctorsTable, specialist.SpecialdoctorsColumn),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, specialist.DoctorsTable, specialist.DoctorsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDepartments chains the current query on the departments edge.
+func (sq *SpecialistQuery) QueryDepartments() *DepartmentQuery {
+	query := &DepartmentQuery{config: sq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := sq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, specialist.DepartmentsTable, specialist.DepartmentsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryOffices chains the current query on the offices edge.
+func (sq *SpecialistQuery) QueryOffices() *OfficeQuery {
+	query := &OfficeQuery{config: sq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := sq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, specialist.OfficesTable, specialist.OfficesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -253,14 +293,36 @@ func (sq *SpecialistQuery) Clone() *SpecialistQuery {
 	}
 }
 
-//  WithSpecialdoctors tells the query-builder to eager-loads the nodes that are connected to
-// the "specialdoctors" edge. The optional arguments used to configure the query builder of the edge.
-func (sq *SpecialistQuery) WithSpecialdoctors(opts ...func(*SpecialdoctorQuery)) *SpecialistQuery {
-	query := &SpecialdoctorQuery{config: sq.config}
+//  WithDoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "doctors" edge. The optional arguments used to configure the query builder of the edge.
+func (sq *SpecialistQuery) WithDoctors(opts ...func(*DoctorQuery)) *SpecialistQuery {
+	query := &DoctorQuery{config: sq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	sq.withSpecialdoctors = query
+	sq.withDoctors = query
+	return sq
+}
+
+//  WithDepartments tells the query-builder to eager-loads the nodes that are connected to
+// the "departments" edge. The optional arguments used to configure the query builder of the edge.
+func (sq *SpecialistQuery) WithDepartments(opts ...func(*DepartmentQuery)) *SpecialistQuery {
+	query := &DepartmentQuery{config: sq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	sq.withDepartments = query
+	return sq
+}
+
+//  WithOffices tells the query-builder to eager-loads the nodes that are connected to
+// the "offices" edge. The optional arguments used to configure the query builder of the edge.
+func (sq *SpecialistQuery) WithOffices(opts ...func(*OfficeQuery)) *SpecialistQuery {
+	query := &OfficeQuery{config: sq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	sq.withOffices = query
 	return sq
 }
 
@@ -330,8 +392,10 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 	var (
 		nodes       = []*Specialist{}
 		_spec       = sq.querySpec()
-		loadedTypes = [1]bool{
-			sq.withSpecialdoctors != nil,
+		loadedTypes = [3]bool{
+			sq.withDoctors != nil,
+			sq.withDepartments != nil,
+			sq.withOffices != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -355,7 +419,7 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 		return nodes, nil
 	}
 
-	if query := sq.withSpecialdoctors; query != nil {
+	if query := sq.withDoctors; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Specialist)
 		for i := range nodes {
@@ -363,8 +427,8 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.Specialdoctor(func(s *sql.Selector) {
-			s.Where(sql.InValues(specialist.SpecialdoctorsColumn, fks...))
+		query.Where(predicate.Doctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(specialist.DoctorsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -379,7 +443,63 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Specialdoctors = append(node.Edges.Specialdoctors, n)
+			node.Edges.Doctors = append(node.Edges.Doctors, n)
+		}
+	}
+
+	if query := sq.withDepartments; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Specialist)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Department(func(s *sql.Selector) {
+			s.Where(sql.InValues(specialist.DepartmentsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.specialist_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "specialist_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Departments = append(node.Edges.Departments, n)
+		}
+	}
+
+	if query := sq.withOffices; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Specialist)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Office(func(s *sql.Selector) {
+			s.Where(sql.InValues(specialist.OfficesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.specialist_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "specialist_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Offices = append(node.Edges.Offices, n)
 		}
 	}
 

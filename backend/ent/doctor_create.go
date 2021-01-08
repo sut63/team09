@@ -16,6 +16,7 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -137,6 +138,25 @@ func (dc *DoctorCreate) SetNillableDiseaseID(id *int) *DoctorCreate {
 // SetDisease sets the disease edge to Disease.
 func (dc *DoctorCreate) SetDisease(d *Disease) *DoctorCreate {
 	return dc.SetDiseaseID(d.ID)
+}
+
+// SetSpecialistID sets the specialist edge to Specialist by id.
+func (dc *DoctorCreate) SetSpecialistID(id int) *DoctorCreate {
+	dc.mutation.SetSpecialistID(id)
+	return dc
+}
+
+// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
+func (dc *DoctorCreate) SetNillableSpecialistID(id *int) *DoctorCreate {
+	if id != nil {
+		dc = dc.SetSpecialistID(*id)
+	}
+	return dc
+}
+
+// SetSpecialist sets the specialist edge to Specialist.
+func (dc *DoctorCreate) SetSpecialist(s *Specialist) *DoctorCreate {
+	return dc.SetSpecialistID(s.ID)
 }
 
 // AddOfficeIDs adds the offices edge to Office by ids.
@@ -430,6 +450,25 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: disease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.SpecialistIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   doctor.SpecialistTable,
+			Columns: []string{doctor.SpecialistColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
 				},
 			},
 		}

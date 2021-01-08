@@ -10,18 +10,36 @@ const (
 	// FieldSpecialist holds the string denoting the specialist field in the database.
 	FieldSpecialist = "specialist"
 
-	// EdgeSpecialdoctors holds the string denoting the specialdoctors edge name in mutations.
-	EdgeSpecialdoctors = "specialdoctors"
+	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
+	EdgeDoctors = "doctors"
+	// EdgeDepartments holds the string denoting the departments edge name in mutations.
+	EdgeDepartments = "departments"
+	// EdgeOffices holds the string denoting the offices edge name in mutations.
+	EdgeOffices = "offices"
 
 	// Table holds the table name of the specialist in the database.
 	Table = "specialists"
-	// SpecialdoctorsTable is the table the holds the specialdoctors relation/edge.
-	SpecialdoctorsTable = "specialdoctors"
-	// SpecialdoctorsInverseTable is the table name for the Specialdoctor entity.
-	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
-	SpecialdoctorsInverseTable = "specialdoctors"
-	// SpecialdoctorsColumn is the table column denoting the specialdoctors relation/edge.
-	SpecialdoctorsColumn = "specialist_id"
+	// DoctorsTable is the table the holds the doctors relation/edge.
+	DoctorsTable = "doctors"
+	// DoctorsInverseTable is the table name for the Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "doctor" package.
+	DoctorsInverseTable = "doctors"
+	// DoctorsColumn is the table column denoting the doctors relation/edge.
+	DoctorsColumn = "specialist_id"
+	// DepartmentsTable is the table the holds the departments relation/edge.
+	DepartmentsTable = "departments"
+	// DepartmentsInverseTable is the table name for the Department entity.
+	// It exists in this package in order to avoid circular dependency with the "department" package.
+	DepartmentsInverseTable = "departments"
+	// DepartmentsColumn is the table column denoting the departments relation/edge.
+	DepartmentsColumn = "specialist_id"
+	// OfficesTable is the table the holds the offices relation/edge.
+	OfficesTable = "offices"
+	// OfficesInverseTable is the table name for the Office entity.
+	// It exists in this package in order to avoid circular dependency with the "office" package.
+	OfficesInverseTable = "offices"
+	// OfficesColumn is the table column denoting the offices relation/edge.
+	OfficesColumn = "specialist_id"
 )
 
 // Columns holds all SQL columns for specialist fields.

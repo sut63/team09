@@ -22,8 +22,8 @@ const (
 	EdgeSchedules = "schedules"
 	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
 	EdgeTrainings = "trainings"
-	// EdgeSpecialdoctors holds the string denoting the specialdoctors edge name in mutations.
-	EdgeSpecialdoctors = "specialdoctors"
+	// EdgeSpecialist holds the string denoting the specialist edge name in mutations.
+	EdgeSpecialist = "specialist"
 
 	// Table holds the table name of the department in the database.
 	Table = "departments"
@@ -62,13 +62,13 @@ const (
 	TrainingsInverseTable = "trainings"
 	// TrainingsColumn is the table column denoting the trainings relation/edge.
 	TrainingsColumn = "department_id"
-	// SpecialdoctorsTable is the table the holds the specialdoctors relation/edge.
-	SpecialdoctorsTable = "specialdoctors"
-	// SpecialdoctorsInverseTable is the table name for the Specialdoctor entity.
-	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
-	SpecialdoctorsInverseTable = "specialdoctors"
-	// SpecialdoctorsColumn is the table column denoting the specialdoctors relation/edge.
-	SpecialdoctorsColumn = "department_id"
+	// SpecialistTable is the table the holds the specialist relation/edge.
+	SpecialistTable = "departments"
+	// SpecialistInverseTable is the table name for the Specialist entity.
+	// It exists in this package in order to avoid circular dependency with the "specialist" package.
+	SpecialistInverseTable = "specialists"
+	// SpecialistColumn is the table column denoting the specialist relation/edge.
+	SpecialistColumn = "specialist_id"
 )
 
 // Columns holds all SQL columns for department fields.
@@ -82,6 +82,7 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"doctor_id",
 	"mission_id",
+	"specialist_id",
 }
 
 var (
