@@ -9,7 +9,9 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/team09/app/ent/specialdoctor"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/specialist"
 )
 
@@ -26,19 +28,49 @@ func (sc *SpecialistCreate) SetSpecialist(s string) *SpecialistCreate {
 	return sc
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (sc *SpecialistCreate) AddSpecialdoctorIDs(ids ...int) *SpecialistCreate {
-	sc.mutation.AddSpecialdoctorIDs(ids...)
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (sc *SpecialistCreate) AddDoctorIDs(ids ...int) *SpecialistCreate {
+	sc.mutation.AddDoctorIDs(ids...)
 	return sc
 }
 
-// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
-func (sc *SpecialistCreate) AddSpecialdoctors(s ...*Specialdoctor) *SpecialistCreate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// AddDoctors adds the doctors edges to Doctor.
+func (sc *SpecialistCreate) AddDoctors(d ...*Doctor) *SpecialistCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return sc.AddSpecialdoctorIDs(ids...)
+	return sc.AddDoctorIDs(ids...)
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (sc *SpecialistCreate) AddDepartmentIDs(ids ...int) *SpecialistCreate {
+	sc.mutation.AddDepartmentIDs(ids...)
+	return sc
+}
+
+// AddDepartments adds the departments edges to Department.
+func (sc *SpecialistCreate) AddDepartments(d ...*Department) *SpecialistCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return sc.AddDepartmentIDs(ids...)
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (sc *SpecialistCreate) AddOfficeIDs(ids ...int) *SpecialistCreate {
+	sc.mutation.AddOfficeIDs(ids...)
+	return sc
+}
+
+// AddOffices adds the offices edges to Office.
+func (sc *SpecialistCreate) AddOffices(o ...*Office) *SpecialistCreate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return sc.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the SpecialistMutation object of the builder.
@@ -124,17 +156,55 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		})
 		s.Specialist = value
 	}
-	if nodes := sc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.DoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialdoctorsTable,
-			Columns: []string{specialist.SpecialdoctorsColumn},
+			Table:   specialist.DoctorsTable,
+			Columns: []string{specialist.DoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := sc.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.DepartmentsTable,
+			Columns: []string{specialist.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := sc.mutation.OfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
 				},
 			},
 		}

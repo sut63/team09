@@ -9,8 +9,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
-	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 )
 
@@ -34,19 +36,49 @@ func (su *SpecialistUpdate) SetSpecialist(s string) *SpecialistUpdate {
 	return su
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (su *SpecialistUpdate) AddSpecialdoctorIDs(ids ...int) *SpecialistUpdate {
-	su.mutation.AddSpecialdoctorIDs(ids...)
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (su *SpecialistUpdate) AddDoctorIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.AddDoctorIDs(ids...)
 	return su
 }
 
-// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
-func (su *SpecialistUpdate) AddSpecialdoctors(s ...*Specialdoctor) *SpecialistUpdate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// AddDoctors adds the doctors edges to Doctor.
+func (su *SpecialistUpdate) AddDoctors(d ...*Doctor) *SpecialistUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return su.AddSpecialdoctorIDs(ids...)
+	return su.AddDoctorIDs(ids...)
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (su *SpecialistUpdate) AddDepartmentIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.AddDepartmentIDs(ids...)
+	return su
+}
+
+// AddDepartments adds the departments edges to Department.
+func (su *SpecialistUpdate) AddDepartments(d ...*Department) *SpecialistUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return su.AddDepartmentIDs(ids...)
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (su *SpecialistUpdate) AddOfficeIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.AddOfficeIDs(ids...)
+	return su
+}
+
+// AddOffices adds the offices edges to Office.
+func (su *SpecialistUpdate) AddOffices(o ...*Office) *SpecialistUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return su.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the SpecialistMutation object of the builder.
@@ -54,19 +86,49 @@ func (su *SpecialistUpdate) Mutation() *SpecialistMutation {
 	return su.mutation
 }
 
-// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
-func (su *SpecialistUpdate) RemoveSpecialdoctorIDs(ids ...int) *SpecialistUpdate {
-	su.mutation.RemoveSpecialdoctorIDs(ids...)
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (su *SpecialistUpdate) RemoveDoctorIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.RemoveDoctorIDs(ids...)
 	return su
 }
 
-// RemoveSpecialdoctors removes specialdoctors edges to Specialdoctor.
-func (su *SpecialistUpdate) RemoveSpecialdoctors(s ...*Specialdoctor) *SpecialistUpdate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// RemoveDoctors removes doctors edges to Doctor.
+func (su *SpecialistUpdate) RemoveDoctors(d ...*Doctor) *SpecialistUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return su.RemoveSpecialdoctorIDs(ids...)
+	return su.RemoveDoctorIDs(ids...)
+}
+
+// RemoveDepartmentIDs removes the departments edge to Department by ids.
+func (su *SpecialistUpdate) RemoveDepartmentIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.RemoveDepartmentIDs(ids...)
+	return su
+}
+
+// RemoveDepartments removes departments edges to Department.
+func (su *SpecialistUpdate) RemoveDepartments(d ...*Department) *SpecialistUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return su.RemoveDepartmentIDs(ids...)
+}
+
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (su *SpecialistUpdate) RemoveOfficeIDs(ids ...int) *SpecialistUpdate {
+	su.mutation.RemoveOfficeIDs(ids...)
+	return su
+}
+
+// RemoveOffices removes offices edges to Office.
+func (su *SpecialistUpdate) RemoveOffices(o ...*Office) *SpecialistUpdate {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return su.RemoveOfficeIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -151,17 +213,17 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: specialist.FieldSpecialist,
 		})
 	}
-	if nodes := su.mutation.RemovedSpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := su.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialdoctorsTable,
-			Columns: []string{specialist.SpecialdoctorsColumn},
+			Table:   specialist.DoctorsTable,
+			Columns: []string{specialist.DoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: doctor.FieldID,
 				},
 			},
 		}
@@ -170,17 +232,93 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := su.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := su.mutation.DoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialdoctorsTable,
-			Columns: []string{specialist.SpecialdoctorsColumn},
+			Table:   specialist.DoctorsTable,
+			Columns: []string{specialist.DoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := su.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.DepartmentsTable,
+			Columns: []string{specialist.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := su.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.DepartmentsTable,
+			Columns: []string{specialist.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := su.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := su.mutation.OfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
 				},
 			},
 		}
@@ -213,19 +351,49 @@ func (suo *SpecialistUpdateOne) SetSpecialist(s string) *SpecialistUpdateOne {
 	return suo
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (suo *SpecialistUpdateOne) AddSpecialdoctorIDs(ids ...int) *SpecialistUpdateOne {
-	suo.mutation.AddSpecialdoctorIDs(ids...)
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (suo *SpecialistUpdateOne) AddDoctorIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.AddDoctorIDs(ids...)
 	return suo
 }
 
-// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
-func (suo *SpecialistUpdateOne) AddSpecialdoctors(s ...*Specialdoctor) *SpecialistUpdateOne {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// AddDoctors adds the doctors edges to Doctor.
+func (suo *SpecialistUpdateOne) AddDoctors(d ...*Doctor) *SpecialistUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return suo.AddSpecialdoctorIDs(ids...)
+	return suo.AddDoctorIDs(ids...)
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (suo *SpecialistUpdateOne) AddDepartmentIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.AddDepartmentIDs(ids...)
+	return suo
+}
+
+// AddDepartments adds the departments edges to Department.
+func (suo *SpecialistUpdateOne) AddDepartments(d ...*Department) *SpecialistUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return suo.AddDepartmentIDs(ids...)
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (suo *SpecialistUpdateOne) AddOfficeIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.AddOfficeIDs(ids...)
+	return suo
+}
+
+// AddOffices adds the offices edges to Office.
+func (suo *SpecialistUpdateOne) AddOffices(o ...*Office) *SpecialistUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return suo.AddOfficeIDs(ids...)
 }
 
 // Mutation returns the SpecialistMutation object of the builder.
@@ -233,19 +401,49 @@ func (suo *SpecialistUpdateOne) Mutation() *SpecialistMutation {
 	return suo.mutation
 }
 
-// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
-func (suo *SpecialistUpdateOne) RemoveSpecialdoctorIDs(ids ...int) *SpecialistUpdateOne {
-	suo.mutation.RemoveSpecialdoctorIDs(ids...)
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (suo *SpecialistUpdateOne) RemoveDoctorIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.RemoveDoctorIDs(ids...)
 	return suo
 }
 
-// RemoveSpecialdoctors removes specialdoctors edges to Specialdoctor.
-func (suo *SpecialistUpdateOne) RemoveSpecialdoctors(s ...*Specialdoctor) *SpecialistUpdateOne {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// RemoveDoctors removes doctors edges to Doctor.
+func (suo *SpecialistUpdateOne) RemoveDoctors(d ...*Doctor) *SpecialistUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return suo.RemoveSpecialdoctorIDs(ids...)
+	return suo.RemoveDoctorIDs(ids...)
+}
+
+// RemoveDepartmentIDs removes the departments edge to Department by ids.
+func (suo *SpecialistUpdateOne) RemoveDepartmentIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.RemoveDepartmentIDs(ids...)
+	return suo
+}
+
+// RemoveDepartments removes departments edges to Department.
+func (suo *SpecialistUpdateOne) RemoveDepartments(d ...*Department) *SpecialistUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return suo.RemoveDepartmentIDs(ids...)
+}
+
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (suo *SpecialistUpdateOne) RemoveOfficeIDs(ids ...int) *SpecialistUpdateOne {
+	suo.mutation.RemoveOfficeIDs(ids...)
+	return suo
+}
+
+// RemoveOffices removes offices edges to Office.
+func (suo *SpecialistUpdateOne) RemoveOffices(o ...*Office) *SpecialistUpdateOne {
+	ids := make([]int, len(o))
+	for i := range o {
+		ids[i] = o[i].ID
+	}
+	return suo.RemoveOfficeIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -328,17 +526,17 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 			Column: specialist.FieldSpecialist,
 		})
 	}
-	if nodes := suo.mutation.RemovedSpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := suo.mutation.RemovedDoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialdoctorsTable,
-			Columns: []string{specialist.SpecialdoctorsColumn},
+			Table:   specialist.DoctorsTable,
+			Columns: []string{specialist.DoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: doctor.FieldID,
 				},
 			},
 		}
@@ -347,17 +545,93 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := suo.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := suo.mutation.DoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.SpecialdoctorsTable,
-			Columns: []string{specialist.SpecialdoctorsColumn},
+			Table:   specialist.DoctorsTable,
+			Columns: []string{specialist.DoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: doctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := suo.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.DepartmentsTable,
+			Columns: []string{specialist.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := suo.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.DepartmentsTable,
+			Columns: []string{specialist.DepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := suo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := suo.mutation.OfficesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
 				},
 			},
 		}

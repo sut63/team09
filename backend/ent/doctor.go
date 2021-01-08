@@ -11,6 +11,7 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/gender"
 	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 )
 
@@ -33,12 +34,12 @@ type Doctor struct {
 	Educational string `json:"educational,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DoctorQuery when eager-loading is set.
-	Edges            DoctorEdges `json:"edges"`
-	disease_id       *int
-	gender_id        *int
-	position_id      *int
-	specialdoctor_id *int
-	title_id         *int
+	Edges         DoctorEdges `json:"edges"`
+	disease_id    *int
+	gender_id     *int
+	position_id   *int
+	specialist_id *int
+	title_id      *int
 }
 
 // DoctorEdges holds the relations/edges for other nodes in the graph.
@@ -51,6 +52,8 @@ type DoctorEdges struct {
 	Position *Position
 	// Disease holds the value of the disease edge.
 	Disease *Disease
+	// Specialist holds the value of the specialist edge.
+	Specialist *Specialist
 	// Offices holds the value of the offices edge.
 	Offices []*Office
 	// Departments holds the value of the departments edge.
@@ -61,7 +64,7 @@ type DoctorEdges struct {
 	Trainings []*Training
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [8]bool
+	loadedTypes [9]bool
 }
 
 // TitleOrErr returns the Title value or an error if the edge
@@ -120,10 +123,24 @@ func (e DoctorEdges) DiseaseOrErr() (*Disease, error) {
 	return nil, &NotLoadedError{edge: "disease"}
 }
 
+// SpecialistOrErr returns the Specialist value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DoctorEdges) SpecialistOrErr() (*Specialist, error) {
+	if e.loadedTypes[4] {
+		if e.Specialist == nil {
+			// The edge specialist was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: specialist.Label}
+		}
+		return e.Specialist, nil
+	}
+	return nil, &NotLoadedError{edge: "specialist"}
+}
+
 // OfficesOrErr returns the Offices value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) OfficesOrErr() ([]*Office, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		return e.Offices, nil
 	}
 	return nil, &NotLoadedError{edge: "offices"}
@@ -132,7 +149,7 @@ func (e DoctorEdges) OfficesOrErr() ([]*Office, error) {
 // DepartmentsOrErr returns the Departments value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[6] {
 		return e.Departments, nil
 	}
 	return nil, &NotLoadedError{edge: "departments"}
@@ -141,7 +158,7 @@ func (e DoctorEdges) DepartmentsOrErr() ([]*Department, error) {
 // SchedulesOrErr returns the Schedules value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) SchedulesOrErr() ([]*Schedule, error) {
-	if e.loadedTypes[6] {
+	if e.loadedTypes[7] {
 		return e.Schedules, nil
 	}
 	return nil, &NotLoadedError{edge: "schedules"}
@@ -150,7 +167,7 @@ func (e DoctorEdges) SchedulesOrErr() ([]*Schedule, error) {
 // TrainingsOrErr returns the Trainings value or an error if the edge
 // was not loaded in eager-loading.
 func (e DoctorEdges) TrainingsOrErr() ([]*Training, error) {
-	if e.loadedTypes[7] {
+	if e.loadedTypes[8] {
 		return e.Trainings, nil
 	}
 	return nil, &NotLoadedError{edge: "trainings"}
@@ -175,7 +192,7 @@ func (*Doctor) fkValues() []interface{} {
 		&sql.NullInt64{}, // disease_id
 		&sql.NullInt64{}, // gender_id
 		&sql.NullInt64{}, // position_id
-		&sql.NullInt64{}, // specialdoctor_id
+		&sql.NullInt64{}, // specialist_id
 		&sql.NullInt64{}, // title_id
 	}
 }
@@ -243,10 +260,10 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 			*d.position_id = int(value.Int64)
 		}
 		if value, ok := values[3].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field specialdoctor_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field specialist_id", value)
 		} else if value.Valid {
-			d.specialdoctor_id = new(int)
-			*d.specialdoctor_id = int(value.Int64)
+			d.specialist_id = new(int)
+			*d.specialist_id = int(value.Int64)
 		}
 		if value, ok := values[4].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field title_id", value)
@@ -276,6 +293,11 @@ func (d *Doctor) QueryPosition() *PositionQuery {
 // QueryDisease queries the disease edge of the Doctor.
 func (d *Doctor) QueryDisease() *DiseaseQuery {
 	return (&DoctorClient{config: d.config}).QueryDisease(d)
+}
+
+// QuerySpecialist queries the specialist edge of the Doctor.
+func (d *Doctor) QuerySpecialist() *SpecialistQuery {
+	return (&DoctorClient{config: d.config}).QuerySpecialist(d)
 }
 
 // QueryOffices queries the offices edge of the Doctor.

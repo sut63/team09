@@ -17,7 +17,6 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
@@ -35,20 +34,19 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCourse        = "Course"
-	TypeDepartment    = "Department"
-	TypeDisease       = "Disease"
-	TypeDoctor        = "Doctor"
-	TypeGender        = "Gender"
-	TypeMission       = "Mission"
-	TypeOffice        = "Office"
-	TypePosition      = "Position"
-	TypeSchedule      = "Schedule"
-	TypeSpecialdoctor = "Specialdoctor"
-	TypeSpecialist    = "Specialist"
-	TypeTitle         = "Title"
-	TypeTraining      = "Training"
-	TypeWorkingtime   = "Workingtime"
+	TypeCourse      = "Course"
+	TypeDepartment  = "Department"
+	TypeDisease     = "Disease"
+	TypeDoctor      = "Doctor"
+	TypeGender      = "Gender"
+	TypeMission     = "Mission"
+	TypeOffice      = "Office"
+	TypePosition    = "Position"
+	TypeSchedule    = "Schedule"
+	TypeSpecialist  = "Specialist"
+	TypeTitle       = "Title"
+	TypeTraining    = "Training"
+	TypeWorkingtime = "Workingtime"
 )
 
 // CourseMutation represents an operation that mutate the Courses
@@ -423,26 +421,26 @@ func (m *CourseMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type DepartmentMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	_Detail               *string
-	_Name                 *string
-	clearedFields         map[string]struct{}
-	mission               *int
-	clearedmission        bool
-	doctor                *int
-	cleareddoctor         bool
-	offices               map[int]struct{}
-	removedoffices        map[int]struct{}
-	schedules             map[int]struct{}
-	removedschedules      map[int]struct{}
-	trainings             map[int]struct{}
-	removedtrainings      map[int]struct{}
-	specialdoctors        map[int]struct{}
-	removedspecialdoctors map[int]struct{}
-	done                  bool
-	oldValue              func(context.Context) (*Department, error)
+	op                Op
+	typ               string
+	id                *int
+	_Detail           *string
+	_Name             *string
+	clearedFields     map[string]struct{}
+	mission           *int
+	clearedmission    bool
+	doctor            *int
+	cleareddoctor     bool
+	offices           map[int]struct{}
+	removedoffices    map[int]struct{}
+	schedules         map[int]struct{}
+	removedschedules  map[int]struct{}
+	trainings         map[int]struct{}
+	removedtrainings  map[int]struct{}
+	specialist        *int
+	clearedspecialist bool
+	done              bool
+	oldValue          func(context.Context) (*Department, error)
 }
 
 var _ ent.Mutation = (*DepartmentMutation)(nil)
@@ -802,46 +800,43 @@ func (m *DepartmentMutation) ResetTrainings() {
 	m.removedtrainings = nil
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (m *DepartmentMutation) AddSpecialdoctorIDs(ids ...int) {
-	if m.specialdoctors == nil {
-		m.specialdoctors = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.specialdoctors[ids[i]] = struct{}{}
-	}
+// SetSpecialistID sets the specialist edge to Specialist by id.
+func (m *DepartmentMutation) SetSpecialistID(id int) {
+	m.specialist = &id
 }
 
-// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
-func (m *DepartmentMutation) RemoveSpecialdoctorIDs(ids ...int) {
-	if m.removedspecialdoctors == nil {
-		m.removedspecialdoctors = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedspecialdoctors[ids[i]] = struct{}{}
-	}
+// ClearSpecialist clears the specialist edge to Specialist.
+func (m *DepartmentMutation) ClearSpecialist() {
+	m.clearedspecialist = true
 }
 
-// RemovedSpecialdoctors returns the removed ids of specialdoctors.
-func (m *DepartmentMutation) RemovedSpecialdoctorsIDs() (ids []int) {
-	for id := range m.removedspecialdoctors {
-		ids = append(ids, id)
+// SpecialistCleared returns if the edge specialist was cleared.
+func (m *DepartmentMutation) SpecialistCleared() bool {
+	return m.clearedspecialist
+}
+
+// SpecialistID returns the specialist id in the mutation.
+func (m *DepartmentMutation) SpecialistID() (id int, exists bool) {
+	if m.specialist != nil {
+		return *m.specialist, true
 	}
 	return
 }
 
-// SpecialdoctorsIDs returns the specialdoctors ids in the mutation.
-func (m *DepartmentMutation) SpecialdoctorsIDs() (ids []int) {
-	for id := range m.specialdoctors {
-		ids = append(ids, id)
+// SpecialistIDs returns the specialist ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// SpecialistID instead. It exists only for internal usage by the builders.
+func (m *DepartmentMutation) SpecialistIDs() (ids []int) {
+	if id := m.specialist; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetSpecialdoctors reset all changes of the "specialdoctors" edge.
-func (m *DepartmentMutation) ResetSpecialdoctors() {
-	m.specialdoctors = nil
-	m.removedspecialdoctors = nil
+// ResetSpecialist reset all changes of the "specialist" edge.
+func (m *DepartmentMutation) ResetSpecialist() {
+	m.specialist = nil
+	m.clearedspecialist = false
 }
 
 // Op returns the operation name.
@@ -992,8 +987,8 @@ func (m *DepartmentMutation) AddedEdges() []string {
 	if m.trainings != nil {
 		edges = append(edges, department.EdgeTrainings)
 	}
-	if m.specialdoctors != nil {
-		edges = append(edges, department.EdgeSpecialdoctors)
+	if m.specialist != nil {
+		edges = append(edges, department.EdgeSpecialist)
 	}
 	return edges
 }
@@ -1028,12 +1023,10 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case department.EdgeSpecialdoctors:
-		ids := make([]ent.Value, 0, len(m.specialdoctors))
-		for id := range m.specialdoctors {
-			ids = append(ids, id)
+	case department.EdgeSpecialist:
+		if id := m.specialist; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	}
 	return nil
 }
@@ -1050,9 +1043,6 @@ func (m *DepartmentMutation) RemovedEdges() []string {
 	}
 	if m.removedtrainings != nil {
 		edges = append(edges, department.EdgeTrainings)
-	}
-	if m.removedspecialdoctors != nil {
-		edges = append(edges, department.EdgeSpecialdoctors)
 	}
 	return edges
 }
@@ -1079,12 +1069,6 @@ func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case department.EdgeSpecialdoctors:
-		ids := make([]ent.Value, 0, len(m.removedspecialdoctors))
-		for id := range m.removedspecialdoctors {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -1099,6 +1083,9 @@ func (m *DepartmentMutation) ClearedEdges() []string {
 	if m.cleareddoctor {
 		edges = append(edges, department.EdgeDoctor)
 	}
+	if m.clearedspecialist {
+		edges = append(edges, department.EdgeSpecialist)
+	}
 	return edges
 }
 
@@ -1110,6 +1097,8 @@ func (m *DepartmentMutation) EdgeCleared(name string) bool {
 		return m.clearedmission
 	case department.EdgeDoctor:
 		return m.cleareddoctor
+	case department.EdgeSpecialist:
+		return m.clearedspecialist
 	}
 	return false
 }
@@ -1123,6 +1112,9 @@ func (m *DepartmentMutation) ClearEdge(name string) error {
 		return nil
 	case department.EdgeDoctor:
 		m.ClearDoctor()
+		return nil
+	case department.EdgeSpecialist:
+		m.ClearSpecialist()
 		return nil
 	}
 	return fmt.Errorf("unknown Department unique edge %s", name)
@@ -1148,8 +1140,8 @@ func (m *DepartmentMutation) ResetEdge(name string) error {
 	case department.EdgeTrainings:
 		m.ResetTrainings()
 		return nil
-	case department.EdgeSpecialdoctors:
-		m.ResetSpecialdoctors()
+	case department.EdgeSpecialist:
+		m.ResetSpecialist()
 		return nil
 	}
 	return fmt.Errorf("unknown Department edge %s", name)
@@ -1547,6 +1539,8 @@ type DoctorMutation struct {
 	clearedposition    bool
 	disease            *int
 	cleareddisease     bool
+	specialist         *int
+	clearedspecialist  bool
 	offices            map[int]struct{}
 	removedoffices     map[int]struct{}
 	departments        map[int]struct{}
@@ -2056,6 +2050,45 @@ func (m *DoctorMutation) ResetDisease() {
 	m.cleareddisease = false
 }
 
+// SetSpecialistID sets the specialist edge to Specialist by id.
+func (m *DoctorMutation) SetSpecialistID(id int) {
+	m.specialist = &id
+}
+
+// ClearSpecialist clears the specialist edge to Specialist.
+func (m *DoctorMutation) ClearSpecialist() {
+	m.clearedspecialist = true
+}
+
+// SpecialistCleared returns if the edge specialist was cleared.
+func (m *DoctorMutation) SpecialistCleared() bool {
+	return m.clearedspecialist
+}
+
+// SpecialistID returns the specialist id in the mutation.
+func (m *DoctorMutation) SpecialistID() (id int, exists bool) {
+	if m.specialist != nil {
+		return *m.specialist, true
+	}
+	return
+}
+
+// SpecialistIDs returns the specialist ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// SpecialistID instead. It exists only for internal usage by the builders.
+func (m *DoctorMutation) SpecialistIDs() (ids []int) {
+	if id := m.specialist; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetSpecialist reset all changes of the "specialist" edge.
+func (m *DoctorMutation) ResetSpecialist() {
+	m.specialist = nil
+	m.clearedspecialist = false
+}
+
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (m *DoctorMutation) AddOfficeIDs(ids ...int) {
 	if m.offices == nil {
@@ -2451,7 +2484,7 @@ func (m *DoctorMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *DoctorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 8)
+	edges := make([]string, 0, 9)
 	if m.title != nil {
 		edges = append(edges, doctor.EdgeTitle)
 	}
@@ -2463,6 +2496,9 @@ func (m *DoctorMutation) AddedEdges() []string {
 	}
 	if m.disease != nil {
 		edges = append(edges, doctor.EdgeDisease)
+	}
+	if m.specialist != nil {
+		edges = append(edges, doctor.EdgeSpecialist)
 	}
 	if m.offices != nil {
 		edges = append(edges, doctor.EdgeOffices)
@@ -2499,6 +2535,10 @@ func (m *DoctorMutation) AddedIDs(name string) []ent.Value {
 		if id := m.disease; id != nil {
 			return []ent.Value{*id}
 		}
+	case doctor.EdgeSpecialist:
+		if id := m.specialist; id != nil {
+			return []ent.Value{*id}
+		}
 	case doctor.EdgeOffices:
 		ids := make([]ent.Value, 0, len(m.offices))
 		for id := range m.offices {
@@ -2530,7 +2570,7 @@ func (m *DoctorMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *DoctorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 8)
+	edges := make([]string, 0, 9)
 	if m.removedoffices != nil {
 		edges = append(edges, doctor.EdgeOffices)
 	}
@@ -2581,7 +2621,7 @@ func (m *DoctorMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *DoctorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 8)
+	edges := make([]string, 0, 9)
 	if m.clearedtitle {
 		edges = append(edges, doctor.EdgeTitle)
 	}
@@ -2593,6 +2633,9 @@ func (m *DoctorMutation) ClearedEdges() []string {
 	}
 	if m.cleareddisease {
 		edges = append(edges, doctor.EdgeDisease)
+	}
+	if m.clearedspecialist {
+		edges = append(edges, doctor.EdgeSpecialist)
 	}
 	return edges
 }
@@ -2609,6 +2652,8 @@ func (m *DoctorMutation) EdgeCleared(name string) bool {
 		return m.clearedposition
 	case doctor.EdgeDisease:
 		return m.cleareddisease
+	case doctor.EdgeSpecialist:
+		return m.clearedspecialist
 	}
 	return false
 }
@@ -2628,6 +2673,9 @@ func (m *DoctorMutation) ClearEdge(name string) error {
 		return nil
 	case doctor.EdgeDisease:
 		m.ClearDisease()
+		return nil
+	case doctor.EdgeSpecialist:
+		m.ClearSpecialist()
 		return nil
 	}
 	return fmt.Errorf("unknown Doctor unique edge %s", name)
@@ -2649,6 +2697,9 @@ func (m *DoctorMutation) ResetEdge(name string) error {
 		return nil
 	case doctor.EdgeDisease:
 		m.ResetDisease()
+		return nil
+	case doctor.EdgeSpecialist:
+		m.ResetSpecialist()
 		return nil
 	case doctor.EdgeOffices:
 		m.ResetOffices()
@@ -3406,23 +3457,23 @@ func (m *MissionMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type OfficeMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	officename            *string
-	clearedFields         map[string]struct{}
-	doctor                *int
-	cleareddoctor         bool
-	workingtime           *int
-	clearedworkingtime    bool
-	department            *int
-	cleareddepartment     bool
-	speacialdoctor        *int
-	clearedspeacialdoctor bool
-	schedules             map[int]struct{}
-	removedschedules      map[int]struct{}
-	done                  bool
-	oldValue              func(context.Context) (*Office, error)
+	op                 Op
+	typ                string
+	id                 *int
+	officename         *string
+	clearedFields      map[string]struct{}
+	doctor             *int
+	cleareddoctor      bool
+	workingtime        *int
+	clearedworkingtime bool
+	department         *int
+	cleareddepartment  bool
+	specialist         *int
+	clearedspecialist  bool
+	schedules          map[int]struct{}
+	removedschedules   map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Office, error)
 }
 
 var _ ent.Mutation = (*OfficeMutation)(nil)
@@ -3658,43 +3709,43 @@ func (m *OfficeMutation) ResetDepartment() {
 	m.cleareddepartment = false
 }
 
-// SetSpeacialdoctorID sets the speacialdoctor edge to Specialdoctor by id.
-func (m *OfficeMutation) SetSpeacialdoctorID(id int) {
-	m.speacialdoctor = &id
+// SetSpecialistID sets the specialist edge to Specialist by id.
+func (m *OfficeMutation) SetSpecialistID(id int) {
+	m.specialist = &id
 }
 
-// ClearSpeacialdoctor clears the speacialdoctor edge to Specialdoctor.
-func (m *OfficeMutation) ClearSpeacialdoctor() {
-	m.clearedspeacialdoctor = true
+// ClearSpecialist clears the specialist edge to Specialist.
+func (m *OfficeMutation) ClearSpecialist() {
+	m.clearedspecialist = true
 }
 
-// SpeacialdoctorCleared returns if the edge speacialdoctor was cleared.
-func (m *OfficeMutation) SpeacialdoctorCleared() bool {
-	return m.clearedspeacialdoctor
+// SpecialistCleared returns if the edge specialist was cleared.
+func (m *OfficeMutation) SpecialistCleared() bool {
+	return m.clearedspecialist
 }
 
-// SpeacialdoctorID returns the speacialdoctor id in the mutation.
-func (m *OfficeMutation) SpeacialdoctorID() (id int, exists bool) {
-	if m.speacialdoctor != nil {
-		return *m.speacialdoctor, true
+// SpecialistID returns the specialist id in the mutation.
+func (m *OfficeMutation) SpecialistID() (id int, exists bool) {
+	if m.specialist != nil {
+		return *m.specialist, true
 	}
 	return
 }
 
-// SpeacialdoctorIDs returns the speacialdoctor ids in the mutation.
+// SpecialistIDs returns the specialist ids in the mutation.
 // Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// SpeacialdoctorID instead. It exists only for internal usage by the builders.
-func (m *OfficeMutation) SpeacialdoctorIDs() (ids []int) {
-	if id := m.speacialdoctor; id != nil {
+// SpecialistID instead. It exists only for internal usage by the builders.
+func (m *OfficeMutation) SpecialistIDs() (ids []int) {
+	if id := m.specialist; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetSpeacialdoctor reset all changes of the "speacialdoctor" edge.
-func (m *OfficeMutation) ResetSpeacialdoctor() {
-	m.speacialdoctor = nil
-	m.clearedspeacialdoctor = false
+// ResetSpecialist reset all changes of the "specialist" edge.
+func (m *OfficeMutation) ResetSpecialist() {
+	m.specialist = nil
+	m.clearedspecialist = false
 }
 
 // AddScheduleIDs adds the schedules edge to Schedule by ids.
@@ -3864,8 +3915,8 @@ func (m *OfficeMutation) AddedEdges() []string {
 	if m.department != nil {
 		edges = append(edges, office.EdgeDepartment)
 	}
-	if m.speacialdoctor != nil {
-		edges = append(edges, office.EdgeSpeacialdoctor)
+	if m.specialist != nil {
+		edges = append(edges, office.EdgeSpecialist)
 	}
 	if m.schedules != nil {
 		edges = append(edges, office.EdgeSchedules)
@@ -3889,8 +3940,8 @@ func (m *OfficeMutation) AddedIDs(name string) []ent.Value {
 		if id := m.department; id != nil {
 			return []ent.Value{*id}
 		}
-	case office.EdgeSpeacialdoctor:
-		if id := m.speacialdoctor; id != nil {
+	case office.EdgeSpecialist:
+		if id := m.specialist; id != nil {
 			return []ent.Value{*id}
 		}
 	case office.EdgeSchedules:
@@ -3940,8 +3991,8 @@ func (m *OfficeMutation) ClearedEdges() []string {
 	if m.cleareddepartment {
 		edges = append(edges, office.EdgeDepartment)
 	}
-	if m.clearedspeacialdoctor {
-		edges = append(edges, office.EdgeSpeacialdoctor)
+	if m.clearedspecialist {
+		edges = append(edges, office.EdgeSpecialist)
 	}
 	return edges
 }
@@ -3956,8 +4007,8 @@ func (m *OfficeMutation) EdgeCleared(name string) bool {
 		return m.clearedworkingtime
 	case office.EdgeDepartment:
 		return m.cleareddepartment
-	case office.EdgeSpeacialdoctor:
-		return m.clearedspeacialdoctor
+	case office.EdgeSpecialist:
+		return m.clearedspecialist
 	}
 	return false
 }
@@ -3975,8 +4026,8 @@ func (m *OfficeMutation) ClearEdge(name string) error {
 	case office.EdgeDepartment:
 		m.ClearDepartment()
 		return nil
-	case office.EdgeSpeacialdoctor:
-		m.ClearSpeacialdoctor()
+	case office.EdgeSpecialist:
+		m.ClearSpecialist()
 		return nil
 	}
 	return fmt.Errorf("unknown Office unique edge %s", name)
@@ -3996,8 +4047,8 @@ func (m *OfficeMutation) ResetEdge(name string) error {
 	case office.EdgeDepartment:
 		m.ResetDepartment()
 		return nil
-	case office.EdgeSpeacialdoctor:
-		m.ResetSpeacialdoctor()
+	case office.EdgeSpecialist:
+		m.ResetSpecialist()
 		return nil
 	case office.EdgeSchedules:
 		m.ResetSchedules()
@@ -4909,570 +4960,23 @@ func (m *ScheduleMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Schedule edge %s", name)
 }
 
-// SpecialdoctorMutation represents an operation that mutate the Specialdoctors
-// nodes in the graph.
-type SpecialdoctorMutation struct {
-	config
-	op                Op
-	typ               string
-	id                *int
-	_Other            *string
-	clearedFields     map[string]struct{}
-	doctor            map[int]struct{}
-	removeddoctor     map[int]struct{}
-	department        *int
-	cleareddepartment bool
-	specialist        *int
-	clearedspecialist bool
-	offices           map[int]struct{}
-	removedoffices    map[int]struct{}
-	done              bool
-	oldValue          func(context.Context) (*Specialdoctor, error)
-}
-
-var _ ent.Mutation = (*SpecialdoctorMutation)(nil)
-
-// specialdoctorOption allows to manage the mutation configuration using functional options.
-type specialdoctorOption func(*SpecialdoctorMutation)
-
-// newSpecialdoctorMutation creates new mutation for $n.Name.
-func newSpecialdoctorMutation(c config, op Op, opts ...specialdoctorOption) *SpecialdoctorMutation {
-	m := &SpecialdoctorMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeSpecialdoctor,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withSpecialdoctorID sets the id field of the mutation.
-func withSpecialdoctorID(id int) specialdoctorOption {
-	return func(m *SpecialdoctorMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Specialdoctor
-		)
-		m.oldValue = func(ctx context.Context) (*Specialdoctor, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Specialdoctor.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withSpecialdoctor sets the old Specialdoctor of the mutation.
-func withSpecialdoctor(node *Specialdoctor) specialdoctorOption {
-	return func(m *SpecialdoctorMutation) {
-		m.oldValue = func(context.Context) (*Specialdoctor, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m SpecialdoctorMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m SpecialdoctorMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the id value in the mutation. Note that, the id
-// is available only if it was provided to the builder.
-func (m *SpecialdoctorMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetOther sets the Other field.
-func (m *SpecialdoctorMutation) SetOther(s string) {
-	m._Other = &s
-}
-
-// Other returns the Other value in the mutation.
-func (m *SpecialdoctorMutation) Other() (r string, exists bool) {
-	v := m._Other
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOther returns the old Other value of the Specialdoctor.
-// If the Specialdoctor object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *SpecialdoctorMutation) OldOther(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldOther is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldOther requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOther: %w", err)
-	}
-	return oldValue.Other, nil
-}
-
-// ResetOther reset all changes of the "Other" field.
-func (m *SpecialdoctorMutation) ResetOther() {
-	m._Other = nil
-}
-
-// AddDoctorIDs adds the doctor edge to Doctor by ids.
-func (m *SpecialdoctorMutation) AddDoctorIDs(ids ...int) {
-	if m.doctor == nil {
-		m.doctor = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.doctor[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveDoctorIDs removes the doctor edge to Doctor by ids.
-func (m *SpecialdoctorMutation) RemoveDoctorIDs(ids ...int) {
-	if m.removeddoctor == nil {
-		m.removeddoctor = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removeddoctor[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedDoctor returns the removed ids of doctor.
-func (m *SpecialdoctorMutation) RemovedDoctorIDs() (ids []int) {
-	for id := range m.removeddoctor {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// DoctorIDs returns the doctor ids in the mutation.
-func (m *SpecialdoctorMutation) DoctorIDs() (ids []int) {
-	for id := range m.doctor {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetDoctor reset all changes of the "doctor" edge.
-func (m *SpecialdoctorMutation) ResetDoctor() {
-	m.doctor = nil
-	m.removeddoctor = nil
-}
-
-// SetDepartmentID sets the department edge to Department by id.
-func (m *SpecialdoctorMutation) SetDepartmentID(id int) {
-	m.department = &id
-}
-
-// ClearDepartment clears the department edge to Department.
-func (m *SpecialdoctorMutation) ClearDepartment() {
-	m.cleareddepartment = true
-}
-
-// DepartmentCleared returns if the edge department was cleared.
-func (m *SpecialdoctorMutation) DepartmentCleared() bool {
-	return m.cleareddepartment
-}
-
-// DepartmentID returns the department id in the mutation.
-func (m *SpecialdoctorMutation) DepartmentID() (id int, exists bool) {
-	if m.department != nil {
-		return *m.department, true
-	}
-	return
-}
-
-// DepartmentIDs returns the department ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// DepartmentID instead. It exists only for internal usage by the builders.
-func (m *SpecialdoctorMutation) DepartmentIDs() (ids []int) {
-	if id := m.department; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetDepartment reset all changes of the "department" edge.
-func (m *SpecialdoctorMutation) ResetDepartment() {
-	m.department = nil
-	m.cleareddepartment = false
-}
-
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (m *SpecialdoctorMutation) SetSpecialistID(id int) {
-	m.specialist = &id
-}
-
-// ClearSpecialist clears the specialist edge to Specialist.
-func (m *SpecialdoctorMutation) ClearSpecialist() {
-	m.clearedspecialist = true
-}
-
-// SpecialistCleared returns if the edge specialist was cleared.
-func (m *SpecialdoctorMutation) SpecialistCleared() bool {
-	return m.clearedspecialist
-}
-
-// SpecialistID returns the specialist id in the mutation.
-func (m *SpecialdoctorMutation) SpecialistID() (id int, exists bool) {
-	if m.specialist != nil {
-		return *m.specialist, true
-	}
-	return
-}
-
-// SpecialistIDs returns the specialist ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// SpecialistID instead. It exists only for internal usage by the builders.
-func (m *SpecialdoctorMutation) SpecialistIDs() (ids []int) {
-	if id := m.specialist; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetSpecialist reset all changes of the "specialist" edge.
-func (m *SpecialdoctorMutation) ResetSpecialist() {
-	m.specialist = nil
-	m.clearedspecialist = false
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (m *SpecialdoctorMutation) AddOfficeIDs(ids ...int) {
-	if m.offices == nil {
-		m.offices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.offices[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveOfficeIDs removes the offices edge to Office by ids.
-func (m *SpecialdoctorMutation) RemoveOfficeIDs(ids ...int) {
-	if m.removedoffices == nil {
-		m.removedoffices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedoffices[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedOffices returns the removed ids of offices.
-func (m *SpecialdoctorMutation) RemovedOfficesIDs() (ids []int) {
-	for id := range m.removedoffices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// OfficesIDs returns the offices ids in the mutation.
-func (m *SpecialdoctorMutation) OfficesIDs() (ids []int) {
-	for id := range m.offices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetOffices reset all changes of the "offices" edge.
-func (m *SpecialdoctorMutation) ResetOffices() {
-	m.offices = nil
-	m.removedoffices = nil
-}
-
-// Op returns the operation name.
-func (m *SpecialdoctorMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Specialdoctor).
-func (m *SpecialdoctorMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during
-// this mutation. Note that, in order to get all numeric
-// fields that were in/decremented, call AddedFields().
-func (m *SpecialdoctorMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m._Other != nil {
-		fields = append(fields, specialdoctor.FieldOther)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name.
-// The second boolean value indicates that this field was
-// not set, or was not define in the schema.
-func (m *SpecialdoctorMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case specialdoctor.FieldOther:
-		return m.Other()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database.
-// An error is returned if the mutation operation is not UpdateOne,
-// or the query to the database was failed.
-func (m *SpecialdoctorMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case specialdoctor.FieldOther:
-		return m.OldOther(ctx)
-	}
-	return nil, fmt.Errorf("unknown Specialdoctor field %s", name)
-}
-
-// SetField sets the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *SpecialdoctorMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case specialdoctor.FieldOther:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOther(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Specialdoctor field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented
-// or decremented during this mutation.
-func (m *SpecialdoctorMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was in/decremented
-// from a field with the given name. The second value indicates
-// that this field was not set, or was not define in the schema.
-func (m *SpecialdoctorMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *SpecialdoctorMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Specialdoctor numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared
-// during this mutation.
-func (m *SpecialdoctorMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicates if this field was
-// cleared in this mutation.
-func (m *SpecialdoctorMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value for the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *SpecialdoctorMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Specialdoctor nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation regarding the
-// given field name. It returns an error if the field is not
-// defined in the schema.
-func (m *SpecialdoctorMutation) ResetField(name string) error {
-	switch name {
-	case specialdoctor.FieldOther:
-		m.ResetOther()
-		return nil
-	}
-	return fmt.Errorf("unknown Specialdoctor field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this
-// mutation.
-func (m *SpecialdoctorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.doctor != nil {
-		edges = append(edges, specialdoctor.EdgeDoctor)
-	}
-	if m.department != nil {
-		edges = append(edges, specialdoctor.EdgeDepartment)
-	}
-	if m.specialist != nil {
-		edges = append(edges, specialdoctor.EdgeSpecialist)
-	}
-	if m.offices != nil {
-		edges = append(edges, specialdoctor.EdgeOffices)
-	}
-	return edges
-}
-
-// AddedIDs returns all ids (to other nodes) that were added for
-// the given edge name.
-func (m *SpecialdoctorMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case specialdoctor.EdgeDoctor:
-		ids := make([]ent.Value, 0, len(m.doctor))
-		for id := range m.doctor {
-			ids = append(ids, id)
-		}
-		return ids
-	case specialdoctor.EdgeDepartment:
-		if id := m.department; id != nil {
-			return []ent.Value{*id}
-		}
-	case specialdoctor.EdgeSpecialist:
-		if id := m.specialist; id != nil {
-			return []ent.Value{*id}
-		}
-	case specialdoctor.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.offices))
-		for id := range m.offices {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this
-// mutation.
-func (m *SpecialdoctorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.removeddoctor != nil {
-		edges = append(edges, specialdoctor.EdgeDoctor)
-	}
-	if m.removedoffices != nil {
-		edges = append(edges, specialdoctor.EdgeOffices)
-	}
-	return edges
-}
-
-// RemovedIDs returns all ids (to other nodes) that were removed for
-// the given edge name.
-func (m *SpecialdoctorMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case specialdoctor.EdgeDoctor:
-		ids := make([]ent.Value, 0, len(m.removeddoctor))
-		for id := range m.removeddoctor {
-			ids = append(ids, id)
-		}
-		return ids
-	case specialdoctor.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.removedoffices))
-		for id := range m.removedoffices {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this
-// mutation.
-func (m *SpecialdoctorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.cleareddepartment {
-		edges = append(edges, specialdoctor.EdgeDepartment)
-	}
-	if m.clearedspecialist {
-		edges = append(edges, specialdoctor.EdgeSpecialist)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean indicates if this edge was
-// cleared in this mutation.
-func (m *SpecialdoctorMutation) EdgeCleared(name string) bool {
-	switch name {
-	case specialdoctor.EdgeDepartment:
-		return m.cleareddepartment
-	case specialdoctor.EdgeSpecialist:
-		return m.clearedspecialist
-	}
-	return false
-}
-
-// ClearEdge clears the value for the given name. It returns an
-// error if the edge name is not defined in the schema.
-func (m *SpecialdoctorMutation) ClearEdge(name string) error {
-	switch name {
-	case specialdoctor.EdgeDepartment:
-		m.ClearDepartment()
-		return nil
-	case specialdoctor.EdgeSpecialist:
-		m.ClearSpecialist()
-		return nil
-	}
-	return fmt.Errorf("unknown Specialdoctor unique edge %s", name)
-}
-
-// ResetEdge resets all changes in the mutation regarding the
-// given edge name. It returns an error if the edge is not
-// defined in the schema.
-func (m *SpecialdoctorMutation) ResetEdge(name string) error {
-	switch name {
-	case specialdoctor.EdgeDoctor:
-		m.ResetDoctor()
-		return nil
-	case specialdoctor.EdgeDepartment:
-		m.ResetDepartment()
-		return nil
-	case specialdoctor.EdgeSpecialist:
-		m.ResetSpecialist()
-		return nil
-	case specialdoctor.EdgeOffices:
-		m.ResetOffices()
-		return nil
-	}
-	return fmt.Errorf("unknown Specialdoctor edge %s", name)
-}
-
 // SpecialistMutation represents an operation that mutate the Specialists
 // nodes in the graph.
 type SpecialistMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int
-	specialist            *string
-	clearedFields         map[string]struct{}
-	specialdoctors        map[int]struct{}
-	removedspecialdoctors map[int]struct{}
-	done                  bool
-	oldValue              func(context.Context) (*Specialist, error)
+	op                 Op
+	typ                string
+	id                 *int
+	specialist         *string
+	clearedFields      map[string]struct{}
+	doctors            map[int]struct{}
+	removeddoctors     map[int]struct{}
+	departments        map[int]struct{}
+	removeddepartments map[int]struct{}
+	offices            map[int]struct{}
+	removedoffices     map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Specialist, error)
 }
 
 var _ ent.Mutation = (*SpecialistMutation)(nil)
@@ -5591,46 +5095,130 @@ func (m *SpecialistMutation) ResetSpecialist() {
 	m.specialist = nil
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (m *SpecialistMutation) AddSpecialdoctorIDs(ids ...int) {
-	if m.specialdoctors == nil {
-		m.specialdoctors = make(map[int]struct{})
+// AddDoctorIDs adds the doctors edge to Doctor by ids.
+func (m *SpecialistMutation) AddDoctorIDs(ids ...int) {
+	if m.doctors == nil {
+		m.doctors = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.specialdoctors[ids[i]] = struct{}{}
+		m.doctors[ids[i]] = struct{}{}
 	}
 }
 
-// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
-func (m *SpecialistMutation) RemoveSpecialdoctorIDs(ids ...int) {
-	if m.removedspecialdoctors == nil {
-		m.removedspecialdoctors = make(map[int]struct{})
+// RemoveDoctorIDs removes the doctors edge to Doctor by ids.
+func (m *SpecialistMutation) RemoveDoctorIDs(ids ...int) {
+	if m.removeddoctors == nil {
+		m.removeddoctors = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.removedspecialdoctors[ids[i]] = struct{}{}
+		m.removeddoctors[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedSpecialdoctors returns the removed ids of specialdoctors.
-func (m *SpecialistMutation) RemovedSpecialdoctorsIDs() (ids []int) {
-	for id := range m.removedspecialdoctors {
+// RemovedDoctors returns the removed ids of doctors.
+func (m *SpecialistMutation) RemovedDoctorsIDs() (ids []int) {
+	for id := range m.removeddoctors {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// SpecialdoctorsIDs returns the specialdoctors ids in the mutation.
-func (m *SpecialistMutation) SpecialdoctorsIDs() (ids []int) {
-	for id := range m.specialdoctors {
+// DoctorsIDs returns the doctors ids in the mutation.
+func (m *SpecialistMutation) DoctorsIDs() (ids []int) {
+	for id := range m.doctors {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetSpecialdoctors reset all changes of the "specialdoctors" edge.
-func (m *SpecialistMutation) ResetSpecialdoctors() {
-	m.specialdoctors = nil
-	m.removedspecialdoctors = nil
+// ResetDoctors reset all changes of the "doctors" edge.
+func (m *SpecialistMutation) ResetDoctors() {
+	m.doctors = nil
+	m.removeddoctors = nil
+}
+
+// AddDepartmentIDs adds the departments edge to Department by ids.
+func (m *SpecialistMutation) AddDepartmentIDs(ids ...int) {
+	if m.departments == nil {
+		m.departments = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.departments[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveDepartmentIDs removes the departments edge to Department by ids.
+func (m *SpecialistMutation) RemoveDepartmentIDs(ids ...int) {
+	if m.removeddepartments == nil {
+		m.removeddepartments = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removeddepartments[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDepartments returns the removed ids of departments.
+func (m *SpecialistMutation) RemovedDepartmentsIDs() (ids []int) {
+	for id := range m.removeddepartments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// DepartmentsIDs returns the departments ids in the mutation.
+func (m *SpecialistMutation) DepartmentsIDs() (ids []int) {
+	for id := range m.departments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetDepartments reset all changes of the "departments" edge.
+func (m *SpecialistMutation) ResetDepartments() {
+	m.departments = nil
+	m.removeddepartments = nil
+}
+
+// AddOfficeIDs adds the offices edge to Office by ids.
+func (m *SpecialistMutation) AddOfficeIDs(ids ...int) {
+	if m.offices == nil {
+		m.offices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.offices[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveOfficeIDs removes the offices edge to Office by ids.
+func (m *SpecialistMutation) RemoveOfficeIDs(ids ...int) {
+	if m.removedoffices == nil {
+		m.removedoffices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedoffices[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedOffices returns the removed ids of offices.
+func (m *SpecialistMutation) RemovedOfficesIDs() (ids []int) {
+	for id := range m.removedoffices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// OfficesIDs returns the offices ids in the mutation.
+func (m *SpecialistMutation) OfficesIDs() (ids []int) {
+	for id := range m.offices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetOffices reset all changes of the "offices" edge.
+func (m *SpecialistMutation) ResetOffices() {
+	m.offices = nil
+	m.removedoffices = nil
 }
 
 // Op returns the operation name.
@@ -5748,9 +5336,15 @@ func (m *SpecialistMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *SpecialistMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.specialdoctors != nil {
-		edges = append(edges, specialist.EdgeSpecialdoctors)
+	edges := make([]string, 0, 3)
+	if m.doctors != nil {
+		edges = append(edges, specialist.EdgeDoctors)
+	}
+	if m.departments != nil {
+		edges = append(edges, specialist.EdgeDepartments)
+	}
+	if m.offices != nil {
+		edges = append(edges, specialist.EdgeOffices)
 	}
 	return edges
 }
@@ -5759,9 +5353,21 @@ func (m *SpecialistMutation) AddedEdges() []string {
 // the given edge name.
 func (m *SpecialistMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case specialist.EdgeSpecialdoctors:
-		ids := make([]ent.Value, 0, len(m.specialdoctors))
-		for id := range m.specialdoctors {
+	case specialist.EdgeDoctors:
+		ids := make([]ent.Value, 0, len(m.doctors))
+		for id := range m.doctors {
+			ids = append(ids, id)
+		}
+		return ids
+	case specialist.EdgeDepartments:
+		ids := make([]ent.Value, 0, len(m.departments))
+		for id := range m.departments {
+			ids = append(ids, id)
+		}
+		return ids
+	case specialist.EdgeOffices:
+		ids := make([]ent.Value, 0, len(m.offices))
+		for id := range m.offices {
 			ids = append(ids, id)
 		}
 		return ids
@@ -5772,9 +5378,15 @@ func (m *SpecialistMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *SpecialistMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedspecialdoctors != nil {
-		edges = append(edges, specialist.EdgeSpecialdoctors)
+	edges := make([]string, 0, 3)
+	if m.removeddoctors != nil {
+		edges = append(edges, specialist.EdgeDoctors)
+	}
+	if m.removeddepartments != nil {
+		edges = append(edges, specialist.EdgeDepartments)
+	}
+	if m.removedoffices != nil {
+		edges = append(edges, specialist.EdgeOffices)
 	}
 	return edges
 }
@@ -5783,9 +5395,21 @@ func (m *SpecialistMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *SpecialistMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case specialist.EdgeSpecialdoctors:
-		ids := make([]ent.Value, 0, len(m.removedspecialdoctors))
-		for id := range m.removedspecialdoctors {
+	case specialist.EdgeDoctors:
+		ids := make([]ent.Value, 0, len(m.removeddoctors))
+		for id := range m.removeddoctors {
+			ids = append(ids, id)
+		}
+		return ids
+	case specialist.EdgeDepartments:
+		ids := make([]ent.Value, 0, len(m.removeddepartments))
+		for id := range m.removeddepartments {
+			ids = append(ids, id)
+		}
+		return ids
+	case specialist.EdgeOffices:
+		ids := make([]ent.Value, 0, len(m.removedoffices))
+		for id := range m.removedoffices {
 			ids = append(ids, id)
 		}
 		return ids
@@ -5796,7 +5420,7 @@ func (m *SpecialistMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *SpecialistMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -5821,8 +5445,14 @@ func (m *SpecialistMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *SpecialistMutation) ResetEdge(name string) error {
 	switch name {
-	case specialist.EdgeSpecialdoctors:
-		m.ResetSpecialdoctors()
+	case specialist.EdgeDoctors:
+		m.ResetDoctors()
+		return nil
+	case specialist.EdgeDepartments:
+		m.ResetDepartments()
+		return nil
+	case specialist.EdgeOffices:
+		m.ResetOffices()
 		return nil
 	}
 	return fmt.Errorf("unknown Specialist edge %s", name)

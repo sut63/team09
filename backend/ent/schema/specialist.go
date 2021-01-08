@@ -21,7 +21,15 @@ func (Specialist) Fields() []ent.Field {
 // Edges of the Specialist.
 func (Specialist) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("specialdoctors",Specialdoctor.Type).
-		StorageKey(edge.Column("specialist_id")),
+
+		edge.To("doctors", Doctor.Type).
+			StorageKey(edge.Column("specialist_id")),
+		
+		edge.To("departments", Department.Type).
+			StorageKey(edge.Column("specialist_id")),
+
+		edge.To("offices", Office.Type).
+			StorageKey(edge.Column("specialist_id")),
+		
 	}
 }

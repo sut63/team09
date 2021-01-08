@@ -14,7 +14,7 @@ import (
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialdoctor"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/training"
 )
 
@@ -120,19 +120,23 @@ func (dc *DepartmentCreate) AddTrainings(t ...*Training) *DepartmentCreate {
 	return dc.AddTrainingIDs(ids...)
 }
 
-// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
-func (dc *DepartmentCreate) AddSpecialdoctorIDs(ids ...int) *DepartmentCreate {
-	dc.mutation.AddSpecialdoctorIDs(ids...)
+// SetSpecialistID sets the specialist edge to Specialist by id.
+func (dc *DepartmentCreate) SetSpecialistID(id int) *DepartmentCreate {
+	dc.mutation.SetSpecialistID(id)
 	return dc
 }
 
-// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
-func (dc *DepartmentCreate) AddSpecialdoctors(s ...*Specialdoctor) *DepartmentCreate {
-	ids := make([]int, len(s))
-	for i := range s {
-		ids[i] = s[i].ID
+// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableSpecialistID(id *int) *DepartmentCreate {
+	if id != nil {
+		dc = dc.SetSpecialistID(*id)
 	}
-	return dc.AddSpecialdoctorIDs(ids...)
+	return dc
+}
+
+// SetSpecialist sets the specialist edge to Specialist.
+func (dc *DepartmentCreate) SetSpecialist(s *Specialist) *DepartmentCreate {
+	return dc.SetSpecialistID(s.ID)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -329,17 +333,17 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.SpecialistIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.SpecialdoctorsTable,
-			Columns: []string{department.SpecialdoctorsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   department.SpecialistTable,
+			Columns: []string{department.SpecialistColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialdoctor.FieldID,
+					Column: specialist.FieldID,
 				},
 			},
 		}

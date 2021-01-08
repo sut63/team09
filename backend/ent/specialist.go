@@ -24,20 +24,42 @@ type Specialist struct {
 
 // SpecialistEdges holds the relations/edges for other nodes in the graph.
 type SpecialistEdges struct {
-	// Specialdoctors holds the value of the specialdoctors edge.
-	Specialdoctors []*Specialdoctor
+	// Doctors holds the value of the doctors edge.
+	Doctors []*Doctor
+	// Departments holds the value of the departments edge.
+	Departments []*Department
+	// Offices holds the value of the offices edge.
+	Offices []*Office
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [3]bool
 }
 
-// SpecialdoctorsOrErr returns the Specialdoctors value or an error if the edge
+// DoctorsOrErr returns the Doctors value or an error if the edge
 // was not loaded in eager-loading.
-func (e SpecialistEdges) SpecialdoctorsOrErr() ([]*Specialdoctor, error) {
+func (e SpecialistEdges) DoctorsOrErr() ([]*Doctor, error) {
 	if e.loadedTypes[0] {
-		return e.Specialdoctors, nil
+		return e.Doctors, nil
 	}
-	return nil, &NotLoadedError{edge: "specialdoctors"}
+	return nil, &NotLoadedError{edge: "doctors"}
+}
+
+// DepartmentsOrErr returns the Departments value or an error if the edge
+// was not loaded in eager-loading.
+func (e SpecialistEdges) DepartmentsOrErr() ([]*Department, error) {
+	if e.loadedTypes[1] {
+		return e.Departments, nil
+	}
+	return nil, &NotLoadedError{edge: "departments"}
+}
+
+// OfficesOrErr returns the Offices value or an error if the edge
+// was not loaded in eager-loading.
+func (e SpecialistEdges) OfficesOrErr() ([]*Office, error) {
+	if e.loadedTypes[2] {
+		return e.Offices, nil
+	}
+	return nil, &NotLoadedError{edge: "offices"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -68,9 +90,19 @@ func (s *Specialist) assignValues(values ...interface{}) error {
 	return nil
 }
 
-// QuerySpecialdoctors queries the specialdoctors edge of the Specialist.
-func (s *Specialist) QuerySpecialdoctors() *SpecialdoctorQuery {
-	return (&SpecialistClient{config: s.config}).QuerySpecialdoctors(s)
+// QueryDoctors queries the doctors edge of the Specialist.
+func (s *Specialist) QueryDoctors() *DoctorQuery {
+	return (&SpecialistClient{config: s.config}).QueryDoctors(s)
+}
+
+// QueryDepartments queries the departments edge of the Specialist.
+func (s *Specialist) QueryDepartments() *DepartmentQuery {
+	return (&SpecialistClient{config: s.config}).QueryDepartments(s)
+}
+
+// QueryOffices queries the offices edge of the Specialist.
+func (s *Specialist) QueryOffices() *OfficeQuery {
+	return (&SpecialistClient{config: s.config}).QueryOffices(s)
 }
 
 // Update returns a builder for updating this Specialist.

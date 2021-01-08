@@ -20,6 +20,7 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -37,6 +38,7 @@ type DoctorQuery struct {
 	withGender      *GenderQuery
 	withPosition    *PositionQuery
 	withDisease     *DiseaseQuery
+	withSpecialist  *SpecialistQuery
 	withOffices     *OfficeQuery
 	withDepartments *DepartmentQuery
 	withSchedules   *ScheduleQuery
@@ -136,6 +138,24 @@ func (dq *DoctorQuery) QueryDisease() *DiseaseQuery {
 			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
 			sqlgraph.To(disease.Table, disease.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, doctor.DiseaseTable, doctor.DiseaseColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySpecialist chains the current query on the specialist edge.
+func (dq *DoctorQuery) QuerySpecialist() *SpecialistQuery {
+	query := &SpecialistQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(specialist.Table, specialist.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, doctor.SpecialistTable, doctor.SpecialistColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -438,6 +458,17 @@ func (dq *DoctorQuery) WithDisease(opts ...func(*DiseaseQuery)) *DoctorQuery {
 	return dq
 }
 
+//  WithSpecialist tells the query-builder to eager-loads the nodes that are connected to
+// the "specialist" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithSpecialist(opts ...func(*SpecialistQuery)) *DoctorQuery {
+	query := &SpecialistQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withSpecialist = query
+	return dq
+}
+
 //  WithOffices tells the query-builder to eager-loads the nodes that are connected to
 // the "offices" edge. The optional arguments used to configure the query builder of the edge.
 func (dq *DoctorQuery) WithOffices(opts ...func(*OfficeQuery)) *DoctorQuery {
@@ -549,18 +580,19 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 		nodes       = []*Doctor{}
 		withFKs     = dq.withFKs
 		_spec       = dq.querySpec()
-		loadedTypes = [8]bool{
+		loadedTypes = [9]bool{
 			dq.withTitle != nil,
 			dq.withGender != nil,
 			dq.withPosition != nil,
 			dq.withDisease != nil,
+			dq.withSpecialist != nil,
 			dq.withOffices != nil,
 			dq.withDepartments != nil,
 			dq.withSchedules != nil,
 			dq.withTrainings != nil,
 		}
 	)
-	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil {
+	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil || dq.withSpecialist != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -686,6 +718,31 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Disease = n
+			}
+		}
+	}
+
+	if query := dq.withSpecialist; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Doctor)
+		for i := range nodes {
+			if fk := nodes[i].specialist_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(specialist.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Specialist = n
 			}
 		}
 	}
