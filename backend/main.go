@@ -78,6 +78,14 @@ type Mission struct {
 	MissionType string
 }
 
+type Offices struct {
+	Office []Office
+}
+
+type Office struct {
+	Officename string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -288,6 +296,29 @@ func main() {
 			SetMissionType(m.MissionType).
 			Save(context.Background())
 	}
+
+	// Set Officename
+	offices := Offices{
+		Office: []Office{
+			Office{"โรงพยาบาลกรุงเทพ"},
+			Office{"โรงพยาบาลบำเน็จ"},
+			Office{"โรงพยาบาลมหาราช"},
+			Office{"โรงพยาบาลเซนแมรี่"},
+			Office{"โรงพยาบาลหนองคาย"},
+			Office{"ศิริราชพยาบาล มหาวิทยาลัยมหิดล"},
+			Office{"โรงพยาบาลเจ้าพระยา"},
+			Office{"โรงพยาบาลยันฮี"},
+			Office{"โรงพยาบาลบำราศนราดูร"},
+		},
+	}
+
+	for _, of := range offices.Office {
+		client.Mission.
+			Create().
+			SetMissionType(of.Officename).
+			Save(context.Background())
+	}
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()
 }
