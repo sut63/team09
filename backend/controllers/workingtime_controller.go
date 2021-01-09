@@ -167,7 +167,7 @@ func (ctl *WorkingtimeController) DeleteWokingtime(c *gin.Context) {
 }
 
 // NewWoringtimeController creates and registers handles for the workingtime controller
-func NewWoringtimeController(router gin.IRouter, client *ent.Client) *WorkingtimeController {
+func NewWorkingtimeController(router gin.IRouter, client *ent.Client) *WorkingtimeController {
 	wt := &WorkingtimeController{
 		client: client,
 		router: router,
