@@ -38,11 +38,11 @@ type DoctorQuery struct {
 	withGender      *GenderQuery
 	withPosition    *PositionQuery
 	withDisease     *DiseaseQuery
-	withSpecialist  *SpecialistQuery
 	withOffices     *OfficeQuery
 	withDepartments *DepartmentQuery
 	withSchedules   *ScheduleQuery
 	withTrainings   *TrainingQuery
+	withSpecialists *SpecialistQuery
 	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -145,24 +145,6 @@ func (dq *DoctorQuery) QueryDisease() *DiseaseQuery {
 	return query
 }
 
-// QuerySpecialist chains the current query on the specialist edge.
-func (dq *DoctorQuery) QuerySpecialist() *SpecialistQuery {
-	query := &SpecialistQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.SpecialistTable, doctor.SpecialistColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
 // QueryOffices chains the current query on the offices edge.
 func (dq *DoctorQuery) QueryOffices() *OfficeQuery {
 	query := &OfficeQuery{config: dq.config}
@@ -228,6 +210,24 @@ func (dq *DoctorQuery) QueryTrainings() *TrainingQuery {
 			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
 			sqlgraph.To(training.Table, training.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, doctor.TrainingsTable, doctor.TrainingsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySpecialists chains the current query on the specialists edge.
+func (dq *DoctorQuery) QuerySpecialists() *SpecialistQuery {
+	query := &SpecialistQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
+			sqlgraph.To(specialist.Table, specialist.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialistsTable, doctor.SpecialistsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -458,17 +458,6 @@ func (dq *DoctorQuery) WithDisease(opts ...func(*DiseaseQuery)) *DoctorQuery {
 	return dq
 }
 
-//  WithSpecialist tells the query-builder to eager-loads the nodes that are connected to
-// the "specialist" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DoctorQuery) WithSpecialist(opts ...func(*SpecialistQuery)) *DoctorQuery {
-	query := &SpecialistQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withSpecialist = query
-	return dq
-}
-
 //  WithOffices tells the query-builder to eager-loads the nodes that are connected to
 // the "offices" edge. The optional arguments used to configure the query builder of the edge.
 func (dq *DoctorQuery) WithOffices(opts ...func(*OfficeQuery)) *DoctorQuery {
@@ -510,6 +499,17 @@ func (dq *DoctorQuery) WithTrainings(opts ...func(*TrainingQuery)) *DoctorQuery 
 		opt(query)
 	}
 	dq.withTrainings = query
+	return dq
+}
+
+//  WithSpecialists tells the query-builder to eager-loads the nodes that are connected to
+// the "specialists" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithSpecialists(opts ...func(*SpecialistQuery)) *DoctorQuery {
+	query := &SpecialistQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withSpecialists = query
 	return dq
 }
 
@@ -585,14 +585,14 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			dq.withGender != nil,
 			dq.withPosition != nil,
 			dq.withDisease != nil,
-			dq.withSpecialist != nil,
 			dq.withOffices != nil,
 			dq.withDepartments != nil,
 			dq.withSchedules != nil,
 			dq.withTrainings != nil,
+			dq.withSpecialists != nil,
 		}
 	)
-	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil || dq.withSpecialist != nil {
+	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -722,31 +722,6 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 		}
 	}
 
-	if query := dq.withSpecialist; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Doctor)
-		for i := range nodes {
-			if fk := nodes[i].specialist_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(specialist.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Specialist = n
-			}
-		}
-	}
-
 	if query := dq.withOffices; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Doctor)
@@ -856,6 +831,34 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Trainings = append(node.Edges.Trainings, n)
+		}
+	}
+
+	if query := dq.withSpecialists; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Doctor)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Specialist(func(s *sql.Selector) {
+			s.Where(sql.InValues(doctor.SpecialistsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.doctor_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Specialists = append(node.Edges.Specialists, n)
 		}
 	}
 

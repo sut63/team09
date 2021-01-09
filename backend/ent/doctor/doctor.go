@@ -28,8 +28,6 @@ const (
 	EdgePosition = "position"
 	// EdgeDisease holds the string denoting the disease edge name in mutations.
 	EdgeDisease = "disease"
-	// EdgeSpecialist holds the string denoting the specialist edge name in mutations.
-	EdgeSpecialist = "specialist"
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
@@ -38,6 +36,8 @@ const (
 	EdgeSchedules = "schedules"
 	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
 	EdgeTrainings = "trainings"
+	// EdgeSpecialists holds the string denoting the specialists edge name in mutations.
+	EdgeSpecialists = "specialists"
 
 	// Table holds the table name of the doctor in the database.
 	Table = "doctors"
@@ -69,13 +69,6 @@ const (
 	DiseaseInverseTable = "diseases"
 	// DiseaseColumn is the table column denoting the disease relation/edge.
 	DiseaseColumn = "disease_id"
-	// SpecialistTable is the table the holds the specialist relation/edge.
-	SpecialistTable = "doctors"
-	// SpecialistInverseTable is the table name for the Specialist entity.
-	// It exists in this package in order to avoid circular dependency with the "specialist" package.
-	SpecialistInverseTable = "specialists"
-	// SpecialistColumn is the table column denoting the specialist relation/edge.
-	SpecialistColumn = "specialist_id"
 	// OfficesTable is the table the holds the offices relation/edge.
 	OfficesTable = "offices"
 	// OfficesInverseTable is the table name for the Office entity.
@@ -104,6 +97,13 @@ const (
 	TrainingsInverseTable = "trainings"
 	// TrainingsColumn is the table column denoting the trainings relation/edge.
 	TrainingsColumn = "doctor_id"
+	// SpecialistsTable is the table the holds the specialists relation/edge.
+	SpecialistsTable = "specialists"
+	// SpecialistsInverseTable is the table name for the Specialist entity.
+	// It exists in this package in order to avoid circular dependency with the "specialist" package.
+	SpecialistsInverseTable = "specialists"
+	// SpecialistsColumn is the table column denoting the specialists relation/edge.
+	SpecialistsColumn = "doctor_id"
 )
 
 // Columns holds all SQL columns for doctor fields.
@@ -122,7 +122,6 @@ var ForeignKeys = []string{
 	"disease_id",
 	"gender_id",
 	"position_id",
-	"specialist_id",
 	"title_id",
 }
 

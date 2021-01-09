@@ -27,7 +27,6 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "mission_id", Type: field.TypeInt, Nullable: true},
-		{Name: "specialist_id", Type: field.TypeInt, Nullable: true},
 	}
 	// DepartmentsTable holds the schema information for the "departments" table.
 	DepartmentsTable = &schema.Table{
@@ -47,13 +46,6 @@ var (
 				Columns: []*schema.Column{DepartmentsColumns[4]},
 
 				RefColumns: []*schema.Column{MissionsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "departments_specialists_departments",
-				Columns: []*schema.Column{DepartmentsColumns[5]},
-
-				RefColumns: []*schema.Column{SpecialistsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -82,7 +74,6 @@ var (
 		{Name: "disease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "position_id", Type: field.TypeInt, Nullable: true},
-		{Name: "specialist_id", Type: field.TypeInt, Nullable: true},
 		{Name: "title_id", Type: field.TypeInt, Nullable: true},
 	}
 	// DoctorsTable holds the schema information for the "doctors" table.
@@ -113,15 +104,8 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "doctors_specialists_doctors",
-				Columns: []*schema.Column{DoctorsColumns[10]},
-
-				RefColumns: []*schema.Column{SpecialistsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
 				Symbol:  "doctors_titles_doctors",
-				Columns: []*schema.Column{DoctorsColumns[11]},
+				Columns: []*schema.Column{DoctorsColumns[10]},
 
 				RefColumns: []*schema.Column{TitlesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -251,13 +235,30 @@ var (
 	SpecialistsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "specialist", Type: field.TypeString},
+		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 	}
 	// SpecialistsTable holds the schema information for the "specialists" table.
 	SpecialistsTable = &schema.Table{
-		Name:        "specialists",
-		Columns:     SpecialistsColumns,
-		PrimaryKey:  []*schema.Column{SpecialistsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "specialists",
+		Columns:    SpecialistsColumns,
+		PrimaryKey: []*schema.Column{SpecialistsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "specialists_departments_specialists",
+				Columns: []*schema.Column{SpecialistsColumns[2]},
+
+				RefColumns: []*schema.Column{DepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "specialists_doctors_specialists",
+				Columns: []*schema.Column{SpecialistsColumns[3]},
+
+				RefColumns: []*schema.Column{DoctorsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// TitlesColumns holds the columns for the "titles" table.
 	TitlesColumns = []*schema.Column{
@@ -344,12 +345,10 @@ var (
 func init() {
 	DepartmentsTable.ForeignKeys[0].RefTable = DoctorsTable
 	DepartmentsTable.ForeignKeys[1].RefTable = MissionsTable
-	DepartmentsTable.ForeignKeys[2].RefTable = SpecialistsTable
 	DoctorsTable.ForeignKeys[0].RefTable = DiseasesTable
 	DoctorsTable.ForeignKeys[1].RefTable = GendersTable
 	DoctorsTable.ForeignKeys[2].RefTable = PositionsTable
-	DoctorsTable.ForeignKeys[3].RefTable = SpecialistsTable
-	DoctorsTable.ForeignKeys[4].RefTable = TitlesTable
+	DoctorsTable.ForeignKeys[3].RefTable = TitlesTable
 	OfficesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	OfficesTable.ForeignKeys[1].RefTable = DoctorsTable
 	OfficesTable.ForeignKeys[2].RefTable = SpecialistsTable
@@ -357,6 +356,8 @@ func init() {
 	SchedulesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	SchedulesTable.ForeignKeys[1].RefTable = DoctorsTable
 	SchedulesTable.ForeignKeys[2].RefTable = OfficesTable
+	SpecialistsTable.ForeignKeys[0].RefTable = DepartmentsTable
+	SpecialistsTable.ForeignKeys[1].RefTable = DoctorsTable
 	TrainingsTable.ForeignKeys[0].RefTable = CoursesTable
 	TrainingsTable.ForeignKeys[1].RefTable = DepartmentsTable
 	TrainingsTable.ForeignKeys[2].RefTable = DoctorsTable

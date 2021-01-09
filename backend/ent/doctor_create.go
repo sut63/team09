@@ -140,25 +140,6 @@ func (dc *DoctorCreate) SetDisease(d *Disease) *DoctorCreate {
 	return dc.SetDiseaseID(d.ID)
 }
 
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (dc *DoctorCreate) SetSpecialistID(id int) *DoctorCreate {
-	dc.mutation.SetSpecialistID(id)
-	return dc
-}
-
-// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
-func (dc *DoctorCreate) SetNillableSpecialistID(id *int) *DoctorCreate {
-	if id != nil {
-		dc = dc.SetSpecialistID(*id)
-	}
-	return dc
-}
-
-// SetSpecialist sets the specialist edge to Specialist.
-func (dc *DoctorCreate) SetSpecialist(s *Specialist) *DoctorCreate {
-	return dc.SetSpecialistID(s.ID)
-}
-
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (dc *DoctorCreate) AddOfficeIDs(ids ...int) *DoctorCreate {
 	dc.mutation.AddOfficeIDs(ids...)
@@ -217,6 +198,21 @@ func (dc *DoctorCreate) AddTrainings(t ...*Training) *DoctorCreate {
 		ids[i] = t[i].ID
 	}
 	return dc.AddTrainingIDs(ids...)
+}
+
+// AddSpecialistIDs adds the specialists edge to Specialist by ids.
+func (dc *DoctorCreate) AddSpecialistIDs(ids ...int) *DoctorCreate {
+	dc.mutation.AddSpecialistIDs(ids...)
+	return dc
+}
+
+// AddSpecialists adds the specialists edges to Specialist.
+func (dc *DoctorCreate) AddSpecialists(s ...*Specialist) *DoctorCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return dc.AddSpecialistIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -458,25 +454,6 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialistIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.SpecialistTable,
-			Columns: []string{doctor.SpecialistColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: specialist.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := dc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -545,6 +522,25 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.SpecialistsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.SpecialistsTable,
+			Columns: []string{doctor.SpecialistsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
 				},
 			},
 		}

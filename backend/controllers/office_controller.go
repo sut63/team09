@@ -10,7 +10,7 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
-	"github.com/team09/app/ent/specialdoctor"
+	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/workingtime"
 )
 
@@ -21,11 +21,11 @@ type OfficeController struct {
 }
 
 type Office struct {
-	Officename     	string
-	Doctor         	int
-	Department     	int
-	Workingtime    	int
-	Specialdoctor 	int
+	Officename  string
+	Doctor      int
+	Department  int
+	Workingtime int
+	Specialist  int
 }
 
 // CreateOffice handles POST requests for adding office entities
@@ -47,10 +47,10 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		})
 		return
 	}
-	
-	sd, err := ctl.client.Specialdoctor.
+
+	sl, err := ctl.client.Specialist.
 		Query().
-		Where(specialdoctor.IDEQ(int(obj.Specialdoctor))).
+		Where(specialist.IDEQ(int(obj.Specialist))).
 		Only(context.Background())
 
 	if err != nil {
@@ -59,7 +59,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	wt, err := ctl.client.Workingtime.
 		Query().
 		Where(workingtime.IDEQ(int(obj.Workingtime))).
@@ -102,7 +102,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		SetDoctor(d).
 		SetDepartment(de).
 		SetWorkingtime(wt).
-		SetSpeacialdoctor(sd).
+		SetSpecialist(sl).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -180,7 +180,7 @@ func (ctl *OfficeController) ListOffice(c *gin.Context) {
 		WithDoctor().
 		WithWorkingtime().
 		WithDepartment().
-		WithSpeacialdoctor().
+		WithSpecialist().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

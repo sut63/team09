@@ -467,25 +467,25 @@ func HasTrainingsWith(preds ...predicate.Training) predicate.Department {
 	})
 }
 
-// HasSpecialist applies the HasEdge predicate on the "specialist" edge.
-func HasSpecialist() predicate.Department {
+// HasSpecialists applies the HasEdge predicate on the "specialists" edge.
+func HasSpecialists() predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, SpecialistTable, SpecialistColumn),
+			sqlgraph.To(SpecialistsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasSpecialistWith applies the HasEdge predicate on the "specialist" edge with a given conditions (other predicates).
-func HasSpecialistWith(preds ...predicate.Specialist) predicate.Department {
+// HasSpecialistsWith applies the HasEdge predicate on the "specialists" edge with a given conditions (other predicates).
+func HasSpecialistsWith(preds ...predicate.Specialist) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, SpecialistTable, SpecialistColumn),
+			sqlgraph.To(SpecialistsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

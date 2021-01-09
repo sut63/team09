@@ -458,15 +458,15 @@ func (c *DepartmentClient) QueryTrainings(d *Department) *TrainingQuery {
 	return query
 }
 
-// QuerySpecialist queries the specialist edge of a Department.
-func (c *DepartmentClient) QuerySpecialist(d *Department) *SpecialistQuery {
+// QuerySpecialists queries the specialists edge of a Department.
+func (c *DepartmentClient) QuerySpecialists(d *Department) *SpecialistQuery {
 	query := &SpecialistQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := d.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, id),
 			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, department.SpecialistTable, department.SpecialistColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialistsTable, department.SpecialistsColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -720,22 +720,6 @@ func (c *DoctorClient) QueryDisease(d *Doctor) *DiseaseQuery {
 	return query
 }
 
-// QuerySpecialist queries the specialist edge of a Doctor.
-func (c *DoctorClient) QuerySpecialist(d *Doctor) *SpecialistQuery {
-	query := &SpecialistQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(doctor.Table, doctor.FieldID, id),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, doctor.SpecialistTable, doctor.SpecialistColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryOffices queries the offices edge of a Doctor.
 func (c *DoctorClient) QueryOffices(d *Doctor) *OfficeQuery {
 	query := &OfficeQuery{config: c.config}
@@ -793,6 +777,22 @@ func (c *DoctorClient) QueryTrainings(d *Doctor) *TrainingQuery {
 			sqlgraph.From(doctor.Table, doctor.FieldID, id),
 			sqlgraph.To(training.Table, training.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, doctor.TrainingsTable, doctor.TrainingsColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySpecialists queries the specialists edge of a Doctor.
+func (c *DoctorClient) QuerySpecialists(d *Doctor) *SpecialistQuery {
+	query := &SpecialistQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(doctor.Table, doctor.FieldID, id),
+			sqlgraph.To(specialist.Table, specialist.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialistsTable, doctor.SpecialistsColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -1474,38 +1474,6 @@ func (c *SpecialistClient) GetX(ctx context.Context, id int) *Specialist {
 	return s
 }
 
-// QueryDoctors queries the doctors edge of a Specialist.
-func (c *SpecialistClient) QueryDoctors(s *Specialist) *DoctorQuery {
-	query := &DoctorQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, id),
-			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialist.DoctorsTable, specialist.DoctorsColumn),
-		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryDepartments queries the departments edge of a Specialist.
-func (c *SpecialistClient) QueryDepartments(s *Specialist) *DepartmentQuery {
-	query := &DepartmentQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, id),
-			sqlgraph.To(department.Table, department.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialist.DepartmentsTable, specialist.DepartmentsColumn),
-		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryOffices queries the offices edge of a Specialist.
 func (c *SpecialistClient) QueryOffices(s *Specialist) *OfficeQuery {
 	query := &OfficeQuery{config: c.config}
@@ -1515,6 +1483,38 @@ func (c *SpecialistClient) QueryOffices(s *Specialist) *OfficeQuery {
 			sqlgraph.From(specialist.Table, specialist.FieldID, id),
 			sqlgraph.To(office.Table, office.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, specialist.OfficesTable, specialist.OfficesColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDoctor queries the doctor edge of a Specialist.
+func (c *SpecialistClient) QueryDoctor(s *Specialist) *DoctorQuery {
+	query := &DoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialist.Table, specialist.FieldID, id),
+			sqlgraph.To(doctor.Table, doctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DoctorTable, specialist.DoctorColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartment queries the department edge of a Specialist.
+func (c *SpecialistClient) QueryDepartment(s *Specialist) *DepartmentQuery {
+	query := &DepartmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialist.Table, specialist.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DepartmentTable, specialist.DepartmentColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil

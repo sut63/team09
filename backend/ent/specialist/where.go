@@ -209,62 +209,6 @@ func SpecialistContainsFold(v string) predicate.Specialist {
 	})
 }
 
-// HasDoctors applies the HasEdge predicate on the "doctors" edge.
-func HasDoctors() predicate.Specialist {
-	return predicate.Specialist(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DoctorsTable, DoctorsColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasDoctorsWith applies the HasEdge predicate on the "doctors" edge with a given conditions (other predicates).
-func HasDoctorsWith(preds ...predicate.Doctor) predicate.Specialist {
-	return predicate.Specialist(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DoctorsTable, DoctorsColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasDepartments applies the HasEdge predicate on the "departments" edge.
-func HasDepartments() predicate.Specialist {
-	return predicate.Specialist(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DepartmentsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DepartmentsTable, DepartmentsColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasDepartmentsWith applies the HasEdge predicate on the "departments" edge with a given conditions (other predicates).
-func HasDepartmentsWith(preds ...predicate.Department) predicate.Specialist {
-	return predicate.Specialist(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DepartmentsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DepartmentsTable, DepartmentsColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasOffices applies the HasEdge predicate on the "offices" edge.
 func HasOffices() predicate.Specialist {
 	return predicate.Specialist(func(s *sql.Selector) {
@@ -284,6 +228,62 @@ func HasOfficesWith(preds ...predicate.Office) predicate.Specialist {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(OfficesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, OfficesTable, OfficesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDoctor applies the HasEdge predicate on the "doctor" edge.
+func HasDoctor() predicate.Specialist {
+	return predicate.Specialist(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DoctorTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDoctorWith applies the HasEdge predicate on the "doctor" edge with a given conditions (other predicates).
+func HasDoctorWith(preds ...predicate.Doctor) predicate.Specialist {
+	return predicate.Specialist(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DoctorInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDepartment applies the HasEdge predicate on the "department" edge.
+func HasDepartment() predicate.Specialist {
+	return predicate.Specialist(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DepartmentTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DepartmentTable, DepartmentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDepartmentWith applies the HasEdge predicate on the "department" edge with a given conditions (other predicates).
+func HasDepartmentWith(preds ...predicate.Department) predicate.Specialist {
+	return predicate.Specialist(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DepartmentInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DepartmentTable, DepartmentColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

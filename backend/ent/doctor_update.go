@@ -162,25 +162,6 @@ func (du *DoctorUpdate) SetDisease(d *Disease) *DoctorUpdate {
 	return du.SetDiseaseID(d.ID)
 }
 
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (du *DoctorUpdate) SetSpecialistID(id int) *DoctorUpdate {
-	du.mutation.SetSpecialistID(id)
-	return du
-}
-
-// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
-func (du *DoctorUpdate) SetNillableSpecialistID(id *int) *DoctorUpdate {
-	if id != nil {
-		du = du.SetSpecialistID(*id)
-	}
-	return du
-}
-
-// SetSpecialist sets the specialist edge to Specialist.
-func (du *DoctorUpdate) SetSpecialist(s *Specialist) *DoctorUpdate {
-	return du.SetSpecialistID(s.ID)
-}
-
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (du *DoctorUpdate) AddOfficeIDs(ids ...int) *DoctorUpdate {
 	du.mutation.AddOfficeIDs(ids...)
@@ -241,6 +222,21 @@ func (du *DoctorUpdate) AddTrainings(t ...*Training) *DoctorUpdate {
 	return du.AddTrainingIDs(ids...)
 }
 
+// AddSpecialistIDs adds the specialists edge to Specialist by ids.
+func (du *DoctorUpdate) AddSpecialistIDs(ids ...int) *DoctorUpdate {
+	du.mutation.AddSpecialistIDs(ids...)
+	return du
+}
+
+// AddSpecialists adds the specialists edges to Specialist.
+func (du *DoctorUpdate) AddSpecialists(s ...*Specialist) *DoctorUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return du.AddSpecialistIDs(ids...)
+}
+
 // Mutation returns the DoctorMutation object of the builder.
 func (du *DoctorUpdate) Mutation() *DoctorMutation {
 	return du.mutation
@@ -267,12 +263,6 @@ func (du *DoctorUpdate) ClearPosition() *DoctorUpdate {
 // ClearDisease clears the disease edge to Disease.
 func (du *DoctorUpdate) ClearDisease() *DoctorUpdate {
 	du.mutation.ClearDisease()
-	return du
-}
-
-// ClearSpecialist clears the specialist edge to Specialist.
-func (du *DoctorUpdate) ClearSpecialist() *DoctorUpdate {
-	du.mutation.ClearSpecialist()
 	return du
 }
 
@@ -334,6 +324,21 @@ func (du *DoctorUpdate) RemoveTrainings(t ...*Training) *DoctorUpdate {
 		ids[i] = t[i].ID
 	}
 	return du.RemoveTrainingIDs(ids...)
+}
+
+// RemoveSpecialistIDs removes the specialists edge to Specialist by ids.
+func (du *DoctorUpdate) RemoveSpecialistIDs(ids ...int) *DoctorUpdate {
+	du.mutation.RemoveSpecialistIDs(ids...)
+	return du
+}
+
+// RemoveSpecialists removes specialists edges to Specialist.
+func (du *DoctorUpdate) RemoveSpecialists(s ...*Specialist) *DoctorUpdate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return du.RemoveSpecialistIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -632,41 +637,6 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if du.mutation.SpecialistCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.SpecialistTable,
-			Columns: []string{doctor.SpecialistColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: specialist.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.SpecialistIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.SpecialistTable,
-			Columns: []string{doctor.SpecialistColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: specialist.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if nodes := du.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -819,6 +789,44 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := du.mutation.RemovedSpecialistsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.SpecialistsTable,
+			Columns: []string{doctor.SpecialistsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.SpecialistsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.SpecialistsTable,
+			Columns: []string{doctor.SpecialistsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{doctor.Label}
@@ -963,25 +971,6 @@ func (duo *DoctorUpdateOne) SetDisease(d *Disease) *DoctorUpdateOne {
 	return duo.SetDiseaseID(d.ID)
 }
 
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (duo *DoctorUpdateOne) SetSpecialistID(id int) *DoctorUpdateOne {
-	duo.mutation.SetSpecialistID(id)
-	return duo
-}
-
-// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
-func (duo *DoctorUpdateOne) SetNillableSpecialistID(id *int) *DoctorUpdateOne {
-	if id != nil {
-		duo = duo.SetSpecialistID(*id)
-	}
-	return duo
-}
-
-// SetSpecialist sets the specialist edge to Specialist.
-func (duo *DoctorUpdateOne) SetSpecialist(s *Specialist) *DoctorUpdateOne {
-	return duo.SetSpecialistID(s.ID)
-}
-
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (duo *DoctorUpdateOne) AddOfficeIDs(ids ...int) *DoctorUpdateOne {
 	duo.mutation.AddOfficeIDs(ids...)
@@ -1042,6 +1031,21 @@ func (duo *DoctorUpdateOne) AddTrainings(t ...*Training) *DoctorUpdateOne {
 	return duo.AddTrainingIDs(ids...)
 }
 
+// AddSpecialistIDs adds the specialists edge to Specialist by ids.
+func (duo *DoctorUpdateOne) AddSpecialistIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.AddSpecialistIDs(ids...)
+	return duo
+}
+
+// AddSpecialists adds the specialists edges to Specialist.
+func (duo *DoctorUpdateOne) AddSpecialists(s ...*Specialist) *DoctorUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return duo.AddSpecialistIDs(ids...)
+}
+
 // Mutation returns the DoctorMutation object of the builder.
 func (duo *DoctorUpdateOne) Mutation() *DoctorMutation {
 	return duo.mutation
@@ -1068,12 +1072,6 @@ func (duo *DoctorUpdateOne) ClearPosition() *DoctorUpdateOne {
 // ClearDisease clears the disease edge to Disease.
 func (duo *DoctorUpdateOne) ClearDisease() *DoctorUpdateOne {
 	duo.mutation.ClearDisease()
-	return duo
-}
-
-// ClearSpecialist clears the specialist edge to Specialist.
-func (duo *DoctorUpdateOne) ClearSpecialist() *DoctorUpdateOne {
-	duo.mutation.ClearSpecialist()
 	return duo
 }
 
@@ -1135,6 +1133,21 @@ func (duo *DoctorUpdateOne) RemoveTrainings(t ...*Training) *DoctorUpdateOne {
 		ids[i] = t[i].ID
 	}
 	return duo.RemoveTrainingIDs(ids...)
+}
+
+// RemoveSpecialistIDs removes the specialists edge to Specialist by ids.
+func (duo *DoctorUpdateOne) RemoveSpecialistIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.RemoveSpecialistIDs(ids...)
+	return duo
+}
+
+// RemoveSpecialists removes specialists edges to Specialist.
+func (duo *DoctorUpdateOne) RemoveSpecialists(s ...*Specialist) *DoctorUpdateOne {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
+	}
+	return duo.RemoveSpecialistIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1431,41 +1444,6 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if duo.mutation.SpecialistCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.SpecialistTable,
-			Columns: []string{doctor.SpecialistColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: specialist.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.SpecialistIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   doctor.SpecialistTable,
-			Columns: []string{doctor.SpecialistColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: specialist.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if nodes := duo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -1610,6 +1588,44 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedSpecialistsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.SpecialistsTable,
+			Columns: []string{doctor.SpecialistsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.SpecialistsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   doctor.SpecialistsTable,
+			Columns: []string{doctor.SpecialistsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: specialist.FieldID,
 				},
 			},
 		}

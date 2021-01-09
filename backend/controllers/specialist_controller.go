@@ -15,6 +15,11 @@ type SpecialistController struct {
 	client *ent.Client
 	router gin.IRouter
 }
+type Specialist struct {
+	Specialist	string
+	Doctor 		int
+	Department 	int
+}
 
 // CreateSpecialist handles POST requests for adding specialist entities
 // @Summary Create specialist
@@ -28,7 +33,7 @@ type SpecialistController struct {
 // @Failure 500 {object} gin.H
 // @Router /specialists [post]
 func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
-	obj := ent.Specialist{}
+	obj := Specialist{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "specialist binding failed",
@@ -36,9 +41,10 @@ func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
 		return
 	}
 
-	d, err := ctl.client.Specialist.
+	sl, err := ctl.client.Specialist.
 		Create().
 		SetSpecialist(obj.Specialist).
+		
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -47,7 +53,7 @@ func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, d)
+	c.JSON(200, sl)
 }
 
 // GetSpecialist handles GET requests to retrieve a specialist entity
@@ -70,7 +76,7 @@ func (ctl *SpecialistController) GetSpecialist(c *gin.Context) {
 		return
 	}
 
-	d, err := ctl.client.Specialist.
+	sl, err := ctl.client.Specialist.
 		Query().
 		Where(specialist.IDEQ(int(id))).
 		Only(context.Background())
@@ -81,7 +87,7 @@ func (ctl *SpecialistController) GetSpecialist(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, d)
+	c.JSON(200, sl)
 }
 
 // ListSpecialist handles request to get a list of specialist entities
@@ -162,12 +168,12 @@ func (ctl *SpecialistController) DeleteSpecialist(c *gin.Context) {
 
 // NewSpecialistController creates and registers handles for the specialist controller
 func NewSpecialistController(router gin.IRouter, client *ent.Client) *SpecialistController {
-	uc := &SpecialistController{
+	sc := &SpecialistController{
 		client: client,
 		router: router,
 	}
-	uc.register()
-	return uc
+	sc.register()
+	return sc
 }
 
 // InitSpecialistController registers routes to the main engine
