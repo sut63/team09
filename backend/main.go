@@ -86,6 +86,14 @@ type Office struct {
 	Officename string
 }
 
+type Specialists struct {
+	Specialist []Specialist
+}
+
+type Specialist struct {
+	Specialist string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -243,9 +251,6 @@ func main() {
 	// Set Department Data
 	departments := Departments{
 		Department: []Department{
-			Department{"แผนกผู้ป่วยนอก"},
-			Department{"แผนกผู้ป่วยใน"},
-			Department{"แผนกผู้ป่วยหนัก"},
 			Department{"แผนกรังสี"},
 			Department{"แผนกห้องปฏิบัติการทางการแพทย์"},
 			Department{"แผนกศัลยกรรม"},
@@ -256,7 +261,6 @@ func main() {
 			Department{"แผนกอายุรกรรม"},
 			Department{"แผนกจักษุ"},
 			Department{"แผนกหู คอ จมูก"},
-			Department{"แผนกเภสัชกรรม"},
 			Department{"แผนกจิตเวช"},
 		},
 	}
@@ -321,4 +325,59 @@ func main() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()
+
+	// Set Specialist Data
+	specialists := Specialists{
+		Specialist: []Specialist{
+			//Specialist{"แผนกรังสี"},
+			Specialist{"รังสีร่วมรักษาระบบประสาท"},
+			Specialist{"รังสีรักษาและมะเร็งวิทยา"},
+			Specialist{"รังสีวิทยาวินิจฉัย"},
+			//Specialist{"แผนกห้องปฏิบัติการทางการแพทย์"},
+			Specialist{"จุลกายวิภาคศาสตร์"},
+			Specialist{"ปรสิตวิทยา"},
+			Specialist{"เวชศาสตร์การบริการโลหิต"},
+			//Specialist{"แผนกศัลยกรรม"},
+			Specialist{"ศัลยศาสตร์ตกแต่งและเสริมสร้าง"},
+			Specialist{"ศัลยศาสตร์หลอดเลือด"},
+			Specialist{"ศัลยศาสตร์ลำไส้ใหญ่และทวารหนัก"},
+			//Specialist{"แผนกวิสัญญี"},
+			Specialist{"วิสัญญีวิทยาเพื่อการผ่าตัดหัวใจ หลอดเลือดใหญ่และทรวงอก"},
+			Specialist{"วิสัญญีวิทยาสำหรับผู้ป่วยโรคทางระบบประสาท"},
+			Specialist{"วิสัญญีวิทยาเพื่อการระงับปวด"},
+			//Specialist{"แผนกกุมารเวช"},
+			Specialist{"กุมารเวชศาสตร์โรคติดเชื้อ"},
+			Specialist{"กุมารเวชศาสตร์พัฒนาการและพฤติกรรม"},
+			Specialist{"กุมารเวชศาสตร์โรคภูมิแพ้และภูมิคุ้มกัน"},
+			//Specialist{"แผนกสูตินรีเวช"},
+			Specialist{"เวชศาสตร์มารดาและทารกในครรภ์"},
+			Specialist{"มะเร็งนรีเวชวิทยา"},
+			Specialist{"เวชศาสตร์การเจริญพันธุ์"},
+			//Specialist{"แผนกเวชศาสตร์ป้องกัน"},
+			Specialist{"ระบาดวิทยา"},
+			Specialist{"อาชีวเวชศาสตร์"},
+			Specialist{"เวชศาสตร์การบิน"},
+			//Specialist{"แผนกอายุรกรรม"},
+			Specialist{"อายุรศาสตร์โรคข้อและรูมาติสซั่ม"},
+			Specialist{"อายุรศาสตร์โรคภูมิแพ้และอิมมูโนวิทยาคลินิก"},
+			Specialist{"อายุรศาสตร์โรคระบบทางเดินอาหาร"},
+			//Specialist{"แผนกจักษุ"},
+			Specialist{"จักษุวิทยาโรคต้อหิน"},
+			Specialist{"จักษุวิทยาการตรวจคลื่นไฟฟ้า"},
+			Specialist{"ศัลยกรรมจักษุตกแต่งและเสริมสร้าง"},
+			//Specialist{"แผนกหู คอ จมูก"},
+			Specialist{"โสต ศอ นาสิกวิทยา"},
+			Specialist{"ศัลยศาสตร์ตกแต่งและเสริมสร้างใบหน้า"},
+			//Specialist{"แผนกจิตเวช"},
+			Specialist{"จิตเวชศาสตร์ทั่วไป"},
+			Specialist{"จิตเวชศาสตร์เด็กและวัยรุ่น"},
+		},
+	}
+
+	for _, sl := range specialists.Specialist {
+		client.Specialist.
+			Create().
+			SetSpecialist(sl.Specialist).
+			Save(context.Background())
+	}
 }
