@@ -149,7 +149,7 @@ func main() {
 	}
 
 	v1 := router.Group("/api/v1")
-	controllers.NewWoringtimeController(v1, client)
+	controllers.NewWorkingtimeController(v1, client)
 	controllers.NewOfficeController(v1, client)
 	controllers.NewDoctorController(v1, client)
 	controllers.NewTrainingController(v1, client)
@@ -161,6 +161,8 @@ func main() {
 	controllers.NewPositionController(v1, client)
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewMissionController(v1, client)
+	controllers.NewSpecialistController(v1, client)
+
 
 	//setcourse
 	courses := Courses{
@@ -323,9 +325,6 @@ func main() {
 			Save(context.Background())
 	}
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Run()
-
 	// Set Specialist Data
 	specialists := Specialists{
 		Specialist: []Specialist{
@@ -380,4 +379,8 @@ func main() {
 			SetSpecialist(sl.Specialist).
 			Save(context.Background())
 	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.Run()
+
 }
