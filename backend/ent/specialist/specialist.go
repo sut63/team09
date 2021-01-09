@@ -10,29 +10,15 @@ const (
 	// FieldSpecialist holds the string denoting the specialist field in the database.
 	FieldSpecialist = "specialist"
 
-	// EdgeDoctors holds the string denoting the doctors edge name in mutations.
-	EdgeDoctors = "doctors"
-	// EdgeDepartments holds the string denoting the departments edge name in mutations.
-	EdgeDepartments = "departments"
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
+	// EdgeDoctor holds the string denoting the doctor edge name in mutations.
+	EdgeDoctor = "doctor"
+	// EdgeDepartment holds the string denoting the department edge name in mutations.
+	EdgeDepartment = "department"
 
 	// Table holds the table name of the specialist in the database.
 	Table = "specialists"
-	// DoctorsTable is the table the holds the doctors relation/edge.
-	DoctorsTable = "doctors"
-	// DoctorsInverseTable is the table name for the Doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "doctor" package.
-	DoctorsInverseTable = "doctors"
-	// DoctorsColumn is the table column denoting the doctors relation/edge.
-	DoctorsColumn = "specialist_id"
-	// DepartmentsTable is the table the holds the departments relation/edge.
-	DepartmentsTable = "departments"
-	// DepartmentsInverseTable is the table name for the Department entity.
-	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentsInverseTable = "departments"
-	// DepartmentsColumn is the table column denoting the departments relation/edge.
-	DepartmentsColumn = "specialist_id"
 	// OfficesTable is the table the holds the offices relation/edge.
 	OfficesTable = "offices"
 	// OfficesInverseTable is the table name for the Office entity.
@@ -40,12 +26,32 @@ const (
 	OfficesInverseTable = "offices"
 	// OfficesColumn is the table column denoting the offices relation/edge.
 	OfficesColumn = "specialist_id"
+	// DoctorTable is the table the holds the doctor relation/edge.
+	DoctorTable = "specialists"
+	// DoctorInverseTable is the table name for the Doctor entity.
+	// It exists in this package in order to avoid circular dependency with the "doctor" package.
+	DoctorInverseTable = "doctors"
+	// DoctorColumn is the table column denoting the doctor relation/edge.
+	DoctorColumn = "doctor_id"
+	// DepartmentTable is the table the holds the department relation/edge.
+	DepartmentTable = "specialists"
+	// DepartmentInverseTable is the table name for the Department entity.
+	// It exists in this package in order to avoid circular dependency with the "department" package.
+	DepartmentInverseTable = "departments"
+	// DepartmentColumn is the table column denoting the department relation/edge.
+	DepartmentColumn = "department_id"
 )
 
 // Columns holds all SQL columns for specialist fields.
 var Columns = []string{
 	FieldID,
 	FieldSpecialist,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the Specialist type.
+var ForeignKeys = []string{
+	"department_id",
+	"doctor_id",
 }
 
 var (

@@ -28,36 +28,6 @@ func (sc *SpecialistCreate) SetSpecialist(s string) *SpecialistCreate {
 	return sc
 }
 
-// AddDoctorIDs adds the doctors edge to Doctor by ids.
-func (sc *SpecialistCreate) AddDoctorIDs(ids ...int) *SpecialistCreate {
-	sc.mutation.AddDoctorIDs(ids...)
-	return sc
-}
-
-// AddDoctors adds the doctors edges to Doctor.
-func (sc *SpecialistCreate) AddDoctors(d ...*Doctor) *SpecialistCreate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return sc.AddDoctorIDs(ids...)
-}
-
-// AddDepartmentIDs adds the departments edge to Department by ids.
-func (sc *SpecialistCreate) AddDepartmentIDs(ids ...int) *SpecialistCreate {
-	sc.mutation.AddDepartmentIDs(ids...)
-	return sc
-}
-
-// AddDepartments adds the departments edges to Department.
-func (sc *SpecialistCreate) AddDepartments(d ...*Department) *SpecialistCreate {
-	ids := make([]int, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return sc.AddDepartmentIDs(ids...)
-}
-
 // AddOfficeIDs adds the offices edge to Office by ids.
 func (sc *SpecialistCreate) AddOfficeIDs(ids ...int) *SpecialistCreate {
 	sc.mutation.AddOfficeIDs(ids...)
@@ -71,6 +41,44 @@ func (sc *SpecialistCreate) AddOffices(o ...*Office) *SpecialistCreate {
 		ids[i] = o[i].ID
 	}
 	return sc.AddOfficeIDs(ids...)
+}
+
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (sc *SpecialistCreate) SetDoctorID(id int) *SpecialistCreate {
+	sc.mutation.SetDoctorID(id)
+	return sc
+}
+
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (sc *SpecialistCreate) SetNillableDoctorID(id *int) *SpecialistCreate {
+	if id != nil {
+		sc = sc.SetDoctorID(*id)
+	}
+	return sc
+}
+
+// SetDoctor sets the doctor edge to Doctor.
+func (sc *SpecialistCreate) SetDoctor(d *Doctor) *SpecialistCreate {
+	return sc.SetDoctorID(d.ID)
+}
+
+// SetDepartmentID sets the department edge to Department by id.
+func (sc *SpecialistCreate) SetDepartmentID(id int) *SpecialistCreate {
+	sc.mutation.SetDepartmentID(id)
+	return sc
+}
+
+// SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
+func (sc *SpecialistCreate) SetNillableDepartmentID(id *int) *SpecialistCreate {
+	if id != nil {
+		sc = sc.SetDepartmentID(*id)
+	}
+	return sc
+}
+
+// SetDepartment sets the department edge to Department.
+func (sc *SpecialistCreate) SetDepartment(d *Department) *SpecialistCreate {
+	return sc.SetDepartmentID(d.ID)
 }
 
 // Mutation returns the SpecialistMutation object of the builder.
@@ -156,12 +164,31 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		})
 		s.Specialist = value
 	}
-	if nodes := sc.mutation.DoctorsIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.DoctorsTable,
-			Columns: []string{specialist.DoctorsColumn},
+			Table:   specialist.OfficesTable,
+			Columns: []string{specialist.OfficesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: office.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := sc.mutation.DoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialist.DoctorTable,
+			Columns: []string{specialist.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -175,36 +202,17 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := sc.mutation.DepartmentsIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialist.DepartmentsTable,
-			Columns: []string{specialist.DepartmentsColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialist.DepartmentTable,
+			Columns: []string{specialist.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: department.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := sc.mutation.OfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
 				},
 			},
 		}

@@ -120,23 +120,19 @@ func (dc *DepartmentCreate) AddTrainings(t ...*Training) *DepartmentCreate {
 	return dc.AddTrainingIDs(ids...)
 }
 
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (dc *DepartmentCreate) SetSpecialistID(id int) *DepartmentCreate {
-	dc.mutation.SetSpecialistID(id)
+// AddSpecialistIDs adds the specialists edge to Specialist by ids.
+func (dc *DepartmentCreate) AddSpecialistIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddSpecialistIDs(ids...)
 	return dc
 }
 
-// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableSpecialistID(id *int) *DepartmentCreate {
-	if id != nil {
-		dc = dc.SetSpecialistID(*id)
+// AddSpecialists adds the specialists edges to Specialist.
+func (dc *DepartmentCreate) AddSpecialists(s ...*Specialist) *DepartmentCreate {
+	ids := make([]int, len(s))
+	for i := range s {
+		ids[i] = s[i].ID
 	}
-	return dc
-}
-
-// SetSpecialist sets the specialist edge to Specialist.
-func (dc *DepartmentCreate) SetSpecialist(s *Specialist) *DepartmentCreate {
-	return dc.SetSpecialistID(s.ID)
+	return dc.AddSpecialistIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -333,12 +329,12 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialistIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.SpecialistsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   department.SpecialistTable,
-			Columns: []string{department.SpecialistColumn},
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.SpecialistsTable,
+			Columns: []string{department.SpecialistsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
