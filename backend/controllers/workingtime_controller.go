@@ -11,7 +11,7 @@ import (
 	"github.com/team09/app/ent/workingtime"
 )
 
-// WorkingtimeController defines the struct for the office controller
+// WorkingtimeController defines the struct for the workingtime controller
 type WorkingtimeController struct {
 	client *ent.Client
 	router gin.IRouter
@@ -58,7 +58,7 @@ func (ctl *WorkingtimeController) CreateWorkingtime(c *gin.Context) {
 	c.JSON(200, wt)
 }
 
-// GetWorkingtime handles GET requests to retrieve a Workingtime entity
+// GetWorkingtime handles GET requests to retrieve a workingtime entity
 // @Summary Get a workingtime entity by ID
 // @Description get workingtime by ID
 // @ID get-workingtime
@@ -93,7 +93,7 @@ func (ctl *WorkingtimeController) GetWorkingtime(c *gin.Context) {
 // ListWorkingtime handles request to get a list of workingtime entities
 // @Summary List workingtime entities
 // @Description list workingtime entities
-// @ID list-office
+// @ID list-workingtime
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
@@ -154,7 +154,7 @@ func (ctl *WorkingtimeController) DeleteWokingtime(c *gin.Context) {
 		})
 		return
 	}
-	err = ctl.client.Office.
+	err = ctl.client.Workingtime.
 		DeleteOneID(int(id)).
 		Exec(context.Background())
 	if err != nil {
@@ -166,7 +166,7 @@ func (ctl *WorkingtimeController) DeleteWokingtime(c *gin.Context) {
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
 }
 
-// NewWoringtimeController creates and registers handles for the workingtime controller
+// NewWorkingtimeController creates and registers handles for the workingtime controller
 func NewWorkingtimeController(router gin.IRouter, client *ent.Client) *WorkingtimeController {
 	wt := &WorkingtimeController{
 		client: client,
