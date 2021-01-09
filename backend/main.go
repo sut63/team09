@@ -61,6 +61,23 @@ type Course struct {
 	Namecourse string
 }
 
+type Departments struct {
+	Department []Department
+}
+
+type Department struct {
+	Name string
+	// Detail	string
+}
+
+type Missions struct {
+	Mission []Mission
+}
+
+type Mission struct {
+	MissionType string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -126,6 +143,8 @@ func main() {
 	controllers.NewTitleController(v1, client)
 	controllers.NewGenderController(v1, client)
 	controllers.NewPositionController(v1, client)
+	controllers.NewDepartmentController(v1, client)
+	controllers.NewMissionController(v1, client)
 
 	//setcourse
 	courses := Courses{
@@ -210,6 +229,63 @@ func main() {
 		client.Disease.
 			Create().
 			SetDisease(d.Disease).
+			Save(context.Background())
+	}
+
+	// Set Department Data
+	departments := Departments{
+		Department: []Department{
+			Department{"แผนกผู้ป่วยนอก"},
+			Department{"แผนกผู้ป่วยใน"},
+			Department{"แผนกผู้ป่วยหนัก"},
+			Department{"แผนกรังสี"},
+			Department{"แผนกห้องปฏิบัติการทางการแพทย์"},
+			Department{"แผนกศัลยกรรม"},
+			Department{"แผนกวิสัญญี"},
+			Department{"แผนกกุมารเวช"},
+			Department{"แผนกสูตินรีเวช"},
+			Department{"แผนกเวชศาสตร์ฟื้นฟู"},
+			Department{"แผนกอายุรกรรม"},
+			Department{"แผนกจักษุ"},
+			Department{"แผนกหู คอ จมูก"},
+			Department{"แผนกเภสัชกรรม"},
+			Department{"แผนกจิตเวช"},
+		},
+	}
+
+	for _, de := range departments.Department {
+		client.Department.
+			Create().
+			SetName(de.Name).
+			// SetDetail(de.Detail).
+			Save(context.Background())
+	}
+
+	// Set Mission Data
+	missions := Missions{
+		Mission: []Mission{
+			Mission{"หัวหน้าแผนก"},
+			Mission{"รองหัวหน้าแผนก"},
+			// Mission{"แผนกผู้ป่วยหนัก"},
+			// Mission{"แผนกรังสี"},
+			// Mission{"แผนกห้องปฏิบัติการทางการแพทย์"},
+			// Mission{"แผนกศัลยกรรม"},
+			// Mission{"แผนกวิสัญญี"},
+			// Mission{"แผนกกุมารเวช"},
+			// Mission{"แผนกสูตินรีเวช"},
+			// Mission{"แผนกเวชศาสตร์ฟื้นฟู"},
+			// Mission{"แผนกอายุรกรรม"},
+			// Mission{"แผนกจักษุ"},
+			// Mission{"แผนกหู คอ จมูก"},
+			// Mission{"แผนกเภสัชกรรม"},
+			// Mission{"แผนกจิตเวช"},
+		},
+	}
+
+	for _, m := range missions.Mission {
+		client.Mission.
+			Create().
+			SetMissionType(m.MissionType).
 			Save(context.Background())
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
