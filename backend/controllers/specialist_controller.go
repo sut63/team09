@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/team09/app/ent"
 	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/department"
 )
 
 // SpecialistController defines the struct for the specialist controller
@@ -41,10 +43,35 @@ func (ctl *SpecialistController) CreateSpecialist(c *gin.Context) {
 		return
 	}
 
+	de, err := ctl.client.Department.
+		Query().
+		Where(department.IDEQ(int(obj.Department))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Department not found",
+		})
+		return
+	}
+
+	d, err := ctl.client.Doctor.
+		Query().
+		Where(doctor.IDEQ(int(obj.Doctor))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Doctor not found",
+		})
+		return
+	}
+
 	sl, err := ctl.client.Specialist.
 		Create().
 		SetSpecialist(obj.Specialist).
-		
+		SetDepartment(de).
+		SetDoctor(d).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -124,6 +151,8 @@ func (ctl *SpecialistController) ListSpecialist(c *gin.Context) {
 		Query().
 		Limit(limit).
 		Offset(offset).
+		WithDepartment().
+		WithDoctor().
 		All(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
