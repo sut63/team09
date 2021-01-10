@@ -15,6 +15,8 @@ type Office struct {
 func (Office) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("officename").NotEmpty(),
+		field.Time("added_time1"),
+		field.Time("added_time2"),
 	}
 }
 
@@ -25,8 +27,8 @@ func (Office) Edges() []ent.Edge {
 		edge.From("doctor", Doctor.Type).
 			Ref("offices").Unique(),
 
-		edge.From("workingtime", Workingtime.Type).
-			Ref("offices").Unique(),
+		// edge.From("workingtime", Workingtime.Type).
+		// 	Ref("offices").Unique(),
 
 		edge.From("department", Department.Type).
 			Ref("offices").Unique(),
