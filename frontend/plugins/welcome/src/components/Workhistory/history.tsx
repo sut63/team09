@@ -12,12 +12,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import { InputLabel, MenuItem } from '@material-ui/core';
-import { EntTitle } from '../../api/models/EntTitle';
-import { EntPosition } from '../../api/models/EntPosition';
-import { EntGender } from '../../api/models/EntGender';
+import { EntDoctor } from '../../api/models/EntDoctor';
+import { EntDepartment } from '../../api/models/EntDepartment';
+import { EntSpecialist } from '../../api/models/EntSpecialist';
+// import { EntWorkingtime } from '../../api/models/EntWorkingtime';
 import Swal from 'sweetalert2';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,20 +45,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface office {
   officename: string;
-  name: number;
+  doctor: number;
   department: number;
-  specialdoctor: number;
-  added1: string;
-  added2: string;
+  specialist: number;
+  added1: String;
+  added2: String;
 }
 
 const Office: FC<{}> = () => {
   const classes = useStyles();
   const http = new DefaultApi();
   const [office, setOffice] = React.useState<Partial<office>>({});
-  const [titles, setTitles] = React.useState<EntTitle[]>([]);
-  const [positions, setPositions] = React.useState<EntPosition[]>([]);
-  const [genders, setGenders] = React.useState<EntGender[]>([]);
+  const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
+  const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
+  const [specialists, setSpecialist] = React.useState<EntSpecialist[]>([]);
+  // const [workingtimes, setWorkingtime] = React.useState<EntWorkingtime[]>([]);
+
   // const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date('2014-08-18T21:11:54'),);
   // const [selectedDate1, setSelectedDate1] = React.useState<Date | null>(new Date('2014-08-18T21:11:54'),);
   // const handleDateChange = (date: Date | null) => { setSelectedDate(date); };
@@ -83,24 +87,26 @@ const Office: FC<{}> = () => {
     setOffice({ ...office, [name]: value });
   };
 
-  const getTitles = async () => {
-    const res = await http.listTitle({ limit: 10, offset: 0 });
-    setTitles(res);
+  const getDoctors = async () => {
+    const res = await http.listDoctor({ limit: 10, offset: 0 });
+    setDoctor(res);
   };
-  const getGenders = async () => {
-    const res = await http.listGender({ limit: 10, offset: 0 });
-    setGenders(res);
+  const getDepartments = async () => {
+    const res = await http.listDepartment({ limit: 10, offset: 0 });
+    setDepartment(res);
   };
-  const getPositions = async () => {
-    const res = await http.listPosition({ limit: 10, offset: 0 });
-    setPositions(res);
+  const getSpecialists = async () => {
+    const res = await http.listSpecialist({ limit: 10, offset: 0 });
+    setSpecialist(res);
   };
+ 
+
 
   // Lifecycle Hooks
   useEffect(() => {
-    getGenders();
-    getPositions();
-    getTitles();
+    getDoctors();
+    getDepartments();
+    getSpecialists();
   }, []);
 
   function clear() {
@@ -108,6 +114,8 @@ const Office: FC<{}> = () => {
   }
 
   function save() {
+    office.added1 += ":00+07:00";
+    office.added2 += ":00+07:00";
     const apiUrl = 'http://localhost:8080/api/v1/offices';
     const requestOptions = {
       method: 'POST',
@@ -156,12 +164,13 @@ const Office: FC<{}> = () => {
                 <Select
                   name="name"
                   label="ชื่อ-นามสกุล"
-                  value={office.name || ''}
+                  type="string"
+                  value={office.doctor || ''}
                   onChange={handleChange}
                 >
-                  {titles.map(item => {
+                  {doctors.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                     );
                   })}
                 </Select>
@@ -177,9 +186,9 @@ const Office: FC<{}> = () => {
                   value={office.department || ''}
                   onChange={handleChange}
                 >
-                  {positions.map(item => {
+                  {departments.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{item.position}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                     );
                   })}
                 </Select>
@@ -189,15 +198,15 @@ const Office: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>แพทย์เฉพาะทาง</InputLabel>
                 <Select
-                  name="specialist doctor"
+                  name="specialist"
                   label="แพทย์เฉพาะทาง"
                   type="string"
-                  value={office.specialdoctor || ''}
+                  value={office.specialist || ''}
                   onChange={handleChange}
                 >
-                  {genders.map(item => {
+                  {specialists.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{item.gender}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{item.specialist}</MenuItem>
                     );
                   })}
                 </Select>
@@ -208,12 +217,12 @@ const Office: FC<{}> = () => {
                 fullWidth
                 className={classes.formControl}
                 style={{ marginLeft: 100 }}
-                variant="outlined">
+              >
                 <TextField
                   name="office"
                   label="สถานที่ทำงาน"
+                  type="string"
                   variant="outlined"
-                  size="medium"
                   value={office.officename || ''}
                   onChange={handleChange}
                 />
@@ -224,14 +233,20 @@ const Office: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined"
                 className={classes.formControl}
-                >
+              >
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    label="ระยะเวลาในการทำงาน"
+                    disableToolbar
+                    variant="inline"
                     format="MM/dd/yyyy"
+                    margin="normal"
+                    label="ระยะเวลาในการทำงาน"
                     value={office.added1 || ''}
                     onChange={handleDateChange}
-                    KeyboardButtonProps={{ 'aria-label': 'change date', }} />
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
                 </MuiPickersUtilsProvider>
               </FormControl>
             </Grid>
@@ -240,7 +255,7 @@ const Office: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined"
                 className={classes.formControl}
-                >
+              >
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     label="ระยะเวลาในการทำงาน"

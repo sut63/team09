@@ -41,6 +41,3 @@ type Title func(*sql.Selector)
 
 // Training is the predicate function for training builders.
 type Training func(*sql.Selector)
-
-// Workingtime is the predicate function for workingtime builders.
-type Workingtime func(*sql.Selector)

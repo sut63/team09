@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { DefaultApi } from '../../api/apis';
-import { EntUser } from '../../api/models/EntUser';
+import { EntOffice } from '../../api/models/EntOffice';
 import { Content, ContentHeader, Header, Page } from '@backstage/core';
 import { pageTheme } from '@backstage/core';
 import { Link } from '@material-ui/core';
@@ -31,20 +31,20 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ComponentsTableUser() {
   const classes = useStyles();
   const http = new DefaultApi();
-  const [users, setUsers] = useState<EntUser[]>([]);
+  const [offices, setOffice] = useState<EntOffice[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const res = await http.listUser({ limit: 10, offset: 0 });
+    const getOffice = async () => {
+      const res = await http.listOffice({ limit: 10, offset: 0 });
       setLoading(false);
-      setUsers(res);
+      setOffice(res);
     };
-    getUsers();
+    getOffice();
   }, [loading]);
 
-  const deleteUsers = async (id: number) => {
-    const res = await http.deleteUser({ id: id });
+  const deleteOffices = async (id: number) => {
+    const res = await http.deleteOffice({ id: id });
     setLoading(true);
   };
 
@@ -57,7 +57,7 @@ export default function ComponentsTableUser() {
       ></Header>
       <Content>
       <ContentHeader title="ประวัติการทำงานของแพทย์">
-         <Link component={RouterLink} to="/user">
+        <Link component={RouterLink} to="/user">
            <Button variant="contained" color="primary">
            บันทึกประวัติการทำงานของแพทย์
            </Button>
@@ -70,29 +70,27 @@ export default function ComponentsTableUser() {
                 <TableCell align="center">No.</TableCell>
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Department</TableCell>
-                <TableCell align="center">Specialist Doctor</TableCell>
+                <TableCell align="center">Specialist</TableCell>
                 <TableCell align="center">Office</TableCell>
                 <TableCell align="center">Time Period</TableCell>
 
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map(item => (
+              {offices.map(item => (
                 <TableRow key={item.id}>
                   <TableCell align="center">{item.id}</TableCell>
                   <TableCell align="center">{item.edges?.title?.title}</TableCell>
                   <TableCell align="center">{item.name}</TableCell>
                   <TableCell align="center">{item.edges?.position?.position}</TableCell>
                   <TableCell align="center">{item.edges?.gender?.gender}</TableCell>
-                  <TableCell align="center">{item.email}</TableCell>
-                  <TableCell align="center">{item.password}</TableCell>
                   <TableCell align="center">
                     <Button
                       onClick={() => {
                        if (item.id === undefined) {
                           return;
                         }
-                        deleteUsers(item.id);
+                        deleteOffices(item.id);
                       }}
                       style={{ marginLeft: 10 }}
                       variant="contained"

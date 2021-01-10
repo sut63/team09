@@ -20,7 +20,6 @@ import (
 	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
-	"github.com/team09/app/ent/workingtime"
 
 	"github.com/facebookincubator/ent"
 )
@@ -34,19 +33,18 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeCourse      = "Course"
-	TypeDepartment  = "Department"
-	TypeDisease     = "Disease"
-	TypeDoctor      = "Doctor"
-	TypeGender      = "Gender"
-	TypeMission     = "Mission"
-	TypeOffice      = "Office"
-	TypePosition    = "Position"
-	TypeSchedule    = "Schedule"
-	TypeSpecialist  = "Specialist"
-	TypeTitle       = "Title"
-	TypeTraining    = "Training"
-	TypeWorkingtime = "Workingtime"
+	TypeCourse     = "Course"
+	TypeDepartment = "Department"
+	TypeDisease    = "Disease"
+	TypeDoctor     = "Doctor"
+	TypeGender     = "Gender"
+	TypeMission    = "Mission"
+	TypeOffice     = "Office"
+	TypePosition   = "Position"
+	TypeSchedule   = "Schedule"
+	TypeSpecialist = "Specialist"
+	TypeTitle      = "Title"
+	TypeTraining   = "Training"
 )
 
 // CourseMutation represents an operation that mutate the Courses
@@ -3469,23 +3467,23 @@ func (m *MissionMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type OfficeMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	officename         *string
-	clearedFields      map[string]struct{}
-	doctor             *int
-	cleareddoctor      bool
-	workingtime        *int
-	clearedworkingtime bool
-	department         *int
-	cleareddepartment  bool
-	specialist         *int
-	clearedspecialist  bool
-	schedules          map[int]struct{}
-	removedschedules   map[int]struct{}
-	done               bool
-	oldValue           func(context.Context) (*Office, error)
+	op                Op
+	typ               string
+	id                *int
+	officename        *string
+	added_time1       *time.Time
+	added_time2       *time.Time
+	clearedFields     map[string]struct{}
+	doctor            *int
+	cleareddoctor     bool
+	department        *int
+	cleareddepartment bool
+	specialist        *int
+	clearedspecialist bool
+	schedules         map[int]struct{}
+	removedschedules  map[int]struct{}
+	done              bool
+	oldValue          func(context.Context) (*Office, error)
 }
 
 var _ ent.Mutation = (*OfficeMutation)(nil)
@@ -3604,6 +3602,80 @@ func (m *OfficeMutation) ResetOfficename() {
 	m.officename = nil
 }
 
+// SetAddedTime1 sets the added_time1 field.
+func (m *OfficeMutation) SetAddedTime1(t time.Time) {
+	m.added_time1 = &t
+}
+
+// AddedTime1 returns the added_time1 value in the mutation.
+func (m *OfficeMutation) AddedTime1() (r time.Time, exists bool) {
+	v := m.added_time1
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddedTime1 returns the old added_time1 value of the Office.
+// If the Office object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *OfficeMutation) OldAddedTime1(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddedTime1 is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddedTime1 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddedTime1: %w", err)
+	}
+	return oldValue.AddedTime1, nil
+}
+
+// ResetAddedTime1 reset all changes of the "added_time1" field.
+func (m *OfficeMutation) ResetAddedTime1() {
+	m.added_time1 = nil
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (m *OfficeMutation) SetAddedTime2(t time.Time) {
+	m.added_time2 = &t
+}
+
+// AddedTime2 returns the added_time2 value in the mutation.
+func (m *OfficeMutation) AddedTime2() (r time.Time, exists bool) {
+	v := m.added_time2
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddedTime2 returns the old added_time2 value of the Office.
+// If the Office object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *OfficeMutation) OldAddedTime2(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddedTime2 is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddedTime2 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddedTime2: %w", err)
+	}
+	return oldValue.AddedTime2, nil
+}
+
+// ResetAddedTime2 reset all changes of the "added_time2" field.
+func (m *OfficeMutation) ResetAddedTime2() {
+	m.added_time2 = nil
+}
+
 // SetDoctorID sets the doctor edge to Doctor by id.
 func (m *OfficeMutation) SetDoctorID(id int) {
 	m.doctor = &id
@@ -3641,45 +3713,6 @@ func (m *OfficeMutation) DoctorIDs() (ids []int) {
 func (m *OfficeMutation) ResetDoctor() {
 	m.doctor = nil
 	m.cleareddoctor = false
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (m *OfficeMutation) SetWorkingtimeID(id int) {
-	m.workingtime = &id
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (m *OfficeMutation) ClearWorkingtime() {
-	m.clearedworkingtime = true
-}
-
-// WorkingtimeCleared returns if the edge workingtime was cleared.
-func (m *OfficeMutation) WorkingtimeCleared() bool {
-	return m.clearedworkingtime
-}
-
-// WorkingtimeID returns the workingtime id in the mutation.
-func (m *OfficeMutation) WorkingtimeID() (id int, exists bool) {
-	if m.workingtime != nil {
-		return *m.workingtime, true
-	}
-	return
-}
-
-// WorkingtimeIDs returns the workingtime ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// WorkingtimeID instead. It exists only for internal usage by the builders.
-func (m *OfficeMutation) WorkingtimeIDs() (ids []int) {
-	if id := m.workingtime; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetWorkingtime reset all changes of the "workingtime" edge.
-func (m *OfficeMutation) ResetWorkingtime() {
-	m.workingtime = nil
-	m.clearedworkingtime = false
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -3816,9 +3849,15 @@ func (m *OfficeMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *OfficeMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 3)
 	if m.officename != nil {
 		fields = append(fields, office.FieldOfficename)
+	}
+	if m.added_time1 != nil {
+		fields = append(fields, office.FieldAddedTime1)
+	}
+	if m.added_time2 != nil {
+		fields = append(fields, office.FieldAddedTime2)
 	}
 	return fields
 }
@@ -3830,6 +3869,10 @@ func (m *OfficeMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case office.FieldOfficename:
 		return m.Officename()
+	case office.FieldAddedTime1:
+		return m.AddedTime1()
+	case office.FieldAddedTime2:
+		return m.AddedTime2()
 	}
 	return nil, false
 }
@@ -3841,6 +3884,10 @@ func (m *OfficeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 	switch name {
 	case office.FieldOfficename:
 		return m.OldOfficename(ctx)
+	case office.FieldAddedTime1:
+		return m.OldAddedTime1(ctx)
+	case office.FieldAddedTime2:
+		return m.OldAddedTime2(ctx)
 	}
 	return nil, fmt.Errorf("unknown Office field %s", name)
 }
@@ -3856,6 +3903,20 @@ func (m *OfficeMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOfficename(v)
+		return nil
+	case office.FieldAddedTime1:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddedTime1(v)
+		return nil
+	case office.FieldAddedTime2:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddedTime2(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)
@@ -3910,6 +3971,12 @@ func (m *OfficeMutation) ResetField(name string) error {
 	case office.FieldOfficename:
 		m.ResetOfficename()
 		return nil
+	case office.FieldAddedTime1:
+		m.ResetAddedTime1()
+		return nil
+	case office.FieldAddedTime2:
+		m.ResetAddedTime2()
+		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)
 }
@@ -3917,12 +3984,9 @@ func (m *OfficeMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *OfficeMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 4)
 	if m.doctor != nil {
 		edges = append(edges, office.EdgeDoctor)
-	}
-	if m.workingtime != nil {
-		edges = append(edges, office.EdgeWorkingtime)
 	}
 	if m.department != nil {
 		edges = append(edges, office.EdgeDepartment)
@@ -3942,10 +4006,6 @@ func (m *OfficeMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case office.EdgeDoctor:
 		if id := m.doctor; id != nil {
-			return []ent.Value{*id}
-		}
-	case office.EdgeWorkingtime:
-		if id := m.workingtime; id != nil {
 			return []ent.Value{*id}
 		}
 	case office.EdgeDepartment:
@@ -3969,7 +4029,7 @@ func (m *OfficeMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *OfficeMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 4)
 	if m.removedschedules != nil {
 		edges = append(edges, office.EdgeSchedules)
 	}
@@ -3993,12 +4053,9 @@ func (m *OfficeMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *OfficeMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 4)
 	if m.cleareddoctor {
 		edges = append(edges, office.EdgeDoctor)
-	}
-	if m.clearedworkingtime {
-		edges = append(edges, office.EdgeWorkingtime)
 	}
 	if m.cleareddepartment {
 		edges = append(edges, office.EdgeDepartment)
@@ -4015,8 +4072,6 @@ func (m *OfficeMutation) EdgeCleared(name string) bool {
 	switch name {
 	case office.EdgeDoctor:
 		return m.cleareddoctor
-	case office.EdgeWorkingtime:
-		return m.clearedworkingtime
 	case office.EdgeDepartment:
 		return m.cleareddepartment
 	case office.EdgeSpecialist:
@@ -4031,9 +4086,6 @@ func (m *OfficeMutation) ClearEdge(name string) error {
 	switch name {
 	case office.EdgeDoctor:
 		m.ClearDoctor()
-		return nil
-	case office.EdgeWorkingtime:
-		m.ClearWorkingtime()
 		return nil
 	case office.EdgeDepartment:
 		m.ClearDepartment()
@@ -4052,9 +4104,6 @@ func (m *OfficeMutation) ResetEdge(name string) error {
 	switch name {
 	case office.EdgeDoctor:
 		m.ResetDoctor()
-		return nil
-	case office.EdgeWorkingtime:
-		m.ResetWorkingtime()
 		return nil
 	case office.EdgeDepartment:
 		m.ResetDepartment()
@@ -6414,427 +6463,4 @@ func (m *TrainingMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Training edge %s", name)
-}
-
-// WorkingtimeMutation represents an operation that mutate the Workingtimes
-// nodes in the graph.
-type WorkingtimeMutation struct {
-	config
-	op             Op
-	typ            string
-	id             *int
-	added_time1    *time.Time
-	added_time2    *time.Time
-	clearedFields  map[string]struct{}
-	offices        map[int]struct{}
-	removedoffices map[int]struct{}
-	done           bool
-	oldValue       func(context.Context) (*Workingtime, error)
-}
-
-var _ ent.Mutation = (*WorkingtimeMutation)(nil)
-
-// workingtimeOption allows to manage the mutation configuration using functional options.
-type workingtimeOption func(*WorkingtimeMutation)
-
-// newWorkingtimeMutation creates new mutation for $n.Name.
-func newWorkingtimeMutation(c config, op Op, opts ...workingtimeOption) *WorkingtimeMutation {
-	m := &WorkingtimeMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeWorkingtime,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withWorkingtimeID sets the id field of the mutation.
-func withWorkingtimeID(id int) workingtimeOption {
-	return func(m *WorkingtimeMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Workingtime
-		)
-		m.oldValue = func(ctx context.Context) (*Workingtime, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Workingtime.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withWorkingtime sets the old Workingtime of the mutation.
-func withWorkingtime(node *Workingtime) workingtimeOption {
-	return func(m *WorkingtimeMutation) {
-		m.oldValue = func(context.Context) (*Workingtime, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m WorkingtimeMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m WorkingtimeMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the id value in the mutation. Note that, the id
-// is available only if it was provided to the builder.
-func (m *WorkingtimeMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetAddedTime1 sets the added_time1 field.
-func (m *WorkingtimeMutation) SetAddedTime1(t time.Time) {
-	m.added_time1 = &t
-}
-
-// AddedTime1 returns the added_time1 value in the mutation.
-func (m *WorkingtimeMutation) AddedTime1() (r time.Time, exists bool) {
-	v := m.added_time1
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAddedTime1 returns the old added_time1 value of the Workingtime.
-// If the Workingtime object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *WorkingtimeMutation) OldAddedTime1(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime1 is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime1 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime1: %w", err)
-	}
-	return oldValue.AddedTime1, nil
-}
-
-// ResetAddedTime1 reset all changes of the "added_time1" field.
-func (m *WorkingtimeMutation) ResetAddedTime1() {
-	m.added_time1 = nil
-}
-
-// SetAddedTime2 sets the added_time2 field.
-func (m *WorkingtimeMutation) SetAddedTime2(t time.Time) {
-	m.added_time2 = &t
-}
-
-// AddedTime2 returns the added_time2 value in the mutation.
-func (m *WorkingtimeMutation) AddedTime2() (r time.Time, exists bool) {
-	v := m.added_time2
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAddedTime2 returns the old added_time2 value of the Workingtime.
-// If the Workingtime object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *WorkingtimeMutation) OldAddedTime2(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime2 is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime2 requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime2: %w", err)
-	}
-	return oldValue.AddedTime2, nil
-}
-
-// ResetAddedTime2 reset all changes of the "added_time2" field.
-func (m *WorkingtimeMutation) ResetAddedTime2() {
-	m.added_time2 = nil
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (m *WorkingtimeMutation) AddOfficeIDs(ids ...int) {
-	if m.offices == nil {
-		m.offices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.offices[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveOfficeIDs removes the offices edge to Office by ids.
-func (m *WorkingtimeMutation) RemoveOfficeIDs(ids ...int) {
-	if m.removedoffices == nil {
-		m.removedoffices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedoffices[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedOffices returns the removed ids of offices.
-func (m *WorkingtimeMutation) RemovedOfficesIDs() (ids []int) {
-	for id := range m.removedoffices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// OfficesIDs returns the offices ids in the mutation.
-func (m *WorkingtimeMutation) OfficesIDs() (ids []int) {
-	for id := range m.offices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetOffices reset all changes of the "offices" edge.
-func (m *WorkingtimeMutation) ResetOffices() {
-	m.offices = nil
-	m.removedoffices = nil
-}
-
-// Op returns the operation name.
-func (m *WorkingtimeMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Workingtime).
-func (m *WorkingtimeMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during
-// this mutation. Note that, in order to get all numeric
-// fields that were in/decremented, call AddedFields().
-func (m *WorkingtimeMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m.added_time1 != nil {
-		fields = append(fields, workingtime.FieldAddedTime1)
-	}
-	if m.added_time2 != nil {
-		fields = append(fields, workingtime.FieldAddedTime2)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name.
-// The second boolean value indicates that this field was
-// not set, or was not define in the schema.
-func (m *WorkingtimeMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case workingtime.FieldAddedTime1:
-		return m.AddedTime1()
-	case workingtime.FieldAddedTime2:
-		return m.AddedTime2()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database.
-// An error is returned if the mutation operation is not UpdateOne,
-// or the query to the database was failed.
-func (m *WorkingtimeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case workingtime.FieldAddedTime1:
-		return m.OldAddedTime1(ctx)
-	case workingtime.FieldAddedTime2:
-		return m.OldAddedTime2(ctx)
-	}
-	return nil, fmt.Errorf("unknown Workingtime field %s", name)
-}
-
-// SetField sets the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *WorkingtimeMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case workingtime.FieldAddedTime1:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAddedTime1(v)
-		return nil
-	case workingtime.FieldAddedTime2:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAddedTime2(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Workingtime field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented
-// or decremented during this mutation.
-func (m *WorkingtimeMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was in/decremented
-// from a field with the given name. The second value indicates
-// that this field was not set, or was not define in the schema.
-func (m *WorkingtimeMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *WorkingtimeMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Workingtime numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared
-// during this mutation.
-func (m *WorkingtimeMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicates if this field was
-// cleared in this mutation.
-func (m *WorkingtimeMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value for the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *WorkingtimeMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Workingtime nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation regarding the
-// given field name. It returns an error if the field is not
-// defined in the schema.
-func (m *WorkingtimeMutation) ResetField(name string) error {
-	switch name {
-	case workingtime.FieldAddedTime1:
-		m.ResetAddedTime1()
-		return nil
-	case workingtime.FieldAddedTime2:
-		m.ResetAddedTime2()
-		return nil
-	}
-	return fmt.Errorf("unknown Workingtime field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this
-// mutation.
-func (m *WorkingtimeMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.offices != nil {
-		edges = append(edges, workingtime.EdgeOffices)
-	}
-	return edges
-}
-
-// AddedIDs returns all ids (to other nodes) that were added for
-// the given edge name.
-func (m *WorkingtimeMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case workingtime.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.offices))
-		for id := range m.offices {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this
-// mutation.
-func (m *WorkingtimeMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedoffices != nil {
-		edges = append(edges, workingtime.EdgeOffices)
-	}
-	return edges
-}
-
-// RemovedIDs returns all ids (to other nodes) that were removed for
-// the given edge name.
-func (m *WorkingtimeMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case workingtime.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.removedoffices))
-		for id := range m.removedoffices {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this
-// mutation.
-func (m *WorkingtimeMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	return edges
-}
-
-// EdgeCleared returns a boolean indicates if this edge was
-// cleared in this mutation.
-func (m *WorkingtimeMutation) EdgeCleared(name string) bool {
-	switch name {
-	}
-	return false
-}
-
-// ClearEdge clears the value for the given name. It returns an
-// error if the edge name is not defined in the schema.
-func (m *WorkingtimeMutation) ClearEdge(name string) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Workingtime unique edge %s", name)
-}
-
-// ResetEdge resets all changes in the mutation regarding the
-// given edge name. It returns an error if the edge is not
-// defined in the schema.
-func (m *WorkingtimeMutation) ResetEdge(name string) error {
-	switch name {
-	case workingtime.EdgeOffices:
-		m.ResetOffices()
-		return nil
-	}
-	return fmt.Errorf("unknown Workingtime edge %s", name)
 }

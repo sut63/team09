@@ -36,8 +36,6 @@ type Tx struct {
 	Title *TitleClient
 	// Training is the client for interacting with the Training builders.
 	Training *TrainingClient
-	// Workingtime is the client for interacting with the Workingtime builders.
-	Workingtime *WorkingtimeClient
 
 	// lazily loaded.
 	client     *Client
@@ -185,7 +183,6 @@ func (tx *Tx) init() {
 	tx.Specialist = NewSpecialistClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
 	tx.Training = NewTrainingClient(tx.config)
-	tx.Workingtime = NewWorkingtimeClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

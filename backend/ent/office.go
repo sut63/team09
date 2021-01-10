@@ -5,13 +5,13 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/specialist"
-	"github.com/team09/app/ent/workingtime"
 )
 
 // Office is the model entity for the Office schema.
@@ -21,21 +21,22 @@ type Office struct {
 	ID int `json:"id,omitempty"`
 	// Officename holds the value of the "officename" field.
 	Officename string `json:"officename,omitempty"`
+	// AddedTime1 holds the value of the "added_time1" field.
+	AddedTime1 time.Time `json:"added_time1,omitempty"`
+	// AddedTime2 holds the value of the "added_time2" field.
+	AddedTime2 time.Time `json:"added_time2,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
-	Edges          OfficeEdges `json:"edges"`
-	department_id  *int
-	doctor_id      *int
-	specialist_id  *int
-	workingtime_id *int
+	Edges         OfficeEdges `json:"edges"`
+	department_id *int
+	doctor_id     *int
+	specialist_id *int
 }
 
 // OfficeEdges holds the relations/edges for other nodes in the graph.
 type OfficeEdges struct {
 	// Doctor holds the value of the doctor edge.
 	Doctor *Doctor
-	// Workingtime holds the value of the workingtime edge.
-	Workingtime *Workingtime
 	// Department holds the value of the department edge.
 	Department *Department
 	// Specialist holds the value of the specialist edge.
@@ -44,7 +45,7 @@ type OfficeEdges struct {
 	Schedules []*Schedule
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [4]bool
 }
 
 // DoctorOrErr returns the Doctor value or an error if the edge
@@ -61,24 +62,10 @@ func (e OfficeEdges) DoctorOrErr() (*Doctor, error) {
 	return nil, &NotLoadedError{edge: "doctor"}
 }
 
-// WorkingtimeOrErr returns the Workingtime value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e OfficeEdges) WorkingtimeOrErr() (*Workingtime, error) {
-	if e.loadedTypes[1] {
-		if e.Workingtime == nil {
-			// The edge workingtime was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: workingtime.Label}
-		}
-		return e.Workingtime, nil
-	}
-	return nil, &NotLoadedError{edge: "workingtime"}
-}
-
 // DepartmentOrErr returns the Department value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e OfficeEdges) DepartmentOrErr() (*Department, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		if e.Department == nil {
 			// The edge department was loaded in eager-loading,
 			// but was not found.
@@ -92,7 +79,7 @@ func (e OfficeEdges) DepartmentOrErr() (*Department, error) {
 // SpecialistOrErr returns the Specialist value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e OfficeEdges) SpecialistOrErr() (*Specialist, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		if e.Specialist == nil {
 			// The edge specialist was loaded in eager-loading,
 			// but was not found.
@@ -106,7 +93,7 @@ func (e OfficeEdges) SpecialistOrErr() (*Specialist, error) {
 // SchedulesOrErr returns the Schedules value or an error if the edge
 // was not loaded in eager-loading.
 func (e OfficeEdges) SchedulesOrErr() ([]*Schedule, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.Schedules, nil
 	}
 	return nil, &NotLoadedError{edge: "schedules"}
@@ -117,6 +104,8 @@ func (*Office) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // officename
+		&sql.NullTime{},   // added_time1
+		&sql.NullTime{},   // added_time2
 	}
 }
 
@@ -126,7 +115,6 @@ func (*Office) fkValues() []interface{} {
 		&sql.NullInt64{}, // department_id
 		&sql.NullInt64{}, // doctor_id
 		&sql.NullInt64{}, // specialist_id
-		&sql.NullInt64{}, // workingtime_id
 	}
 }
 
@@ -147,7 +135,17 @@ func (o *Office) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		o.Officename = value.String
 	}
-	values = values[1:]
+	if value, ok := values[1].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time1", values[1])
+	} else if value.Valid {
+		o.AddedTime1 = value.Time
+	}
+	if value, ok := values[2].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time2", values[2])
+	} else if value.Valid {
+		o.AddedTime2 = value.Time
+	}
+	values = values[3:]
 	if len(values) == len(office.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
@@ -167,12 +165,6 @@ func (o *Office) assignValues(values ...interface{}) error {
 			o.specialist_id = new(int)
 			*o.specialist_id = int(value.Int64)
 		}
-		if value, ok := values[3].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field workingtime_id", value)
-		} else if value.Valid {
-			o.workingtime_id = new(int)
-			*o.workingtime_id = int(value.Int64)
-		}
 	}
 	return nil
 }
@@ -180,11 +172,6 @@ func (o *Office) assignValues(values ...interface{}) error {
 // QueryDoctor queries the doctor edge of the Office.
 func (o *Office) QueryDoctor() *DoctorQuery {
 	return (&OfficeClient{config: o.config}).QueryDoctor(o)
-}
-
-// QueryWorkingtime queries the workingtime edge of the Office.
-func (o *Office) QueryWorkingtime() *WorkingtimeQuery {
-	return (&OfficeClient{config: o.config}).QueryWorkingtime(o)
 }
 
 // QueryDepartment queries the department edge of the Office.
@@ -227,6 +214,10 @@ func (o *Office) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", o.ID))
 	builder.WriteString(", officename=")
 	builder.WriteString(o.Officename)
+	builder.WriteString(", added_time1=")
+	builder.WriteString(o.AddedTime1.Format(time.ANSIC))
+	builder.WriteString(", added_time2=")
+	builder.WriteString(o.AddedTime2.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

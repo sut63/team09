@@ -14,55 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntTitleEdges,
-    EntTitleEdgesFromJSON,
-    EntTitleEdgesFromJSONTyped,
-    EntTitleEdgesToJSON,
+    EntOfficeEdges,
+    EntOfficeEdgesFromJSON,
+    EntOfficeEdgesFromJSONTyped,
+    EntOfficeEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntTitle
+ * @interface EntOffice
  */
-export interface EntTitle {
+export interface EntOffice {
     /**
      * 
-     * @type {EntTitleEdges}
-     * @memberof EntTitle
+     * @type {EntOfficeEdges}
+     * @memberof EntOffice
      */
-    edges?: EntTitleEdges;
+    edges?: EntOfficeEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntTitle
+     * @memberof EntOffice
      */
     id?: number;
     /**
-     * Title holds the value of the "title" field.
+     * Officename holds the value of the "officename" field.
      * @type {string}
-     * @memberof EntTitle
+     * @memberof EntOffice
      */
-    title?: string;
+    officename?: string;
 }
 
-export function EntTitleFromJSON(json: any): EntTitle {
-    return EntTitleFromJSONTyped(json, false);
+export function EntOfficeFromJSON(json: any): EntOffice {
+    return EntOfficeFromJSONTyped(json, false);
 }
 
-export function EntTitleFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntTitle {
+export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntOffice {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'edges': !exists(json, 'edges') ? undefined : EntTitleEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
+        'officename': !exists(json, 'officename') ? undefined : json['officename'],
     };
 }
 
-export function EntTitleToJSON(value?: EntTitle | null): any {
+export function EntOfficeToJSON(value?: EntOffice | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,9 +71,9 @@ export function EntTitleToJSON(value?: EntTitle | null): any {
     }
     return {
         
-        'edges': EntTitleEdgesToJSON(value.edges),
+        'edges': EntOfficeEdgesToJSON(value.edges),
         'id': value.id,
-        'title': value.title,
+        'officename': value.officename,
     };
 }
 

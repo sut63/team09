@@ -497,27 +497,3 @@ func (f TrainingMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TrainingMutation", m)
 }
-
-// The WorkingtimeQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type WorkingtimeQueryRuleFunc func(context.Context, *ent.WorkingtimeQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f WorkingtimeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.WorkingtimeQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.WorkingtimeQuery", q)
-}
-
-// The WorkingtimeMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type WorkingtimeMutationRuleFunc func(context.Context, *ent.WorkingtimeMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f WorkingtimeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.WorkingtimeMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.WorkingtimeMutation", m)
-}

@@ -5,6 +5,7 @@ package ent
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -15,7 +16,6 @@ import (
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/specialist"
-	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeUpdate is the builder for updating Office entities.
@@ -38,6 +38,18 @@ func (ou *OfficeUpdate) SetOfficename(s string) *OfficeUpdate {
 	return ou
 }
 
+// SetAddedTime1 sets the added_time1 field.
+func (ou *OfficeUpdate) SetAddedTime1(t time.Time) *OfficeUpdate {
+	ou.mutation.SetAddedTime1(t)
+	return ou
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (ou *OfficeUpdate) SetAddedTime2(t time.Time) *OfficeUpdate {
+	ou.mutation.SetAddedTime2(t)
+	return ou
+}
+
 // SetDoctorID sets the doctor edge to Doctor by id.
 func (ou *OfficeUpdate) SetDoctorID(id int) *OfficeUpdate {
 	ou.mutation.SetDoctorID(id)
@@ -55,25 +67,6 @@ func (ou *OfficeUpdate) SetNillableDoctorID(id *int) *OfficeUpdate {
 // SetDoctor sets the doctor edge to Doctor.
 func (ou *OfficeUpdate) SetDoctor(d *Doctor) *OfficeUpdate {
 	return ou.SetDoctorID(d.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (ou *OfficeUpdate) SetWorkingtimeID(id int) *OfficeUpdate {
-	ou.mutation.SetWorkingtimeID(id)
-	return ou
-}
-
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (ou *OfficeUpdate) SetNillableWorkingtimeID(id *int) *OfficeUpdate {
-	if id != nil {
-		ou = ou.SetWorkingtimeID(*id)
-	}
-	return ou
-}
-
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (ou *OfficeUpdate) SetWorkingtime(w *Workingtime) *OfficeUpdate {
-	return ou.SetWorkingtimeID(w.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -137,12 +130,6 @@ func (ou *OfficeUpdate) Mutation() *OfficeMutation {
 // ClearDoctor clears the doctor edge to Doctor.
 func (ou *OfficeUpdate) ClearDoctor() *OfficeUpdate {
 	ou.mutation.ClearDoctor()
-	return ou
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (ou *OfficeUpdate) ClearWorkingtime() *OfficeUpdate {
-	ou.mutation.ClearWorkingtime()
 	return ou
 }
 
@@ -255,6 +242,20 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: office.FieldOfficename,
 		})
 	}
+	if value, ok := ou.mutation.AddedTime1(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime1,
+		})
+	}
+	if value, ok := ou.mutation.AddedTime2(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime2,
+		})
+	}
 	if ou.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -282,41 +283,6 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: doctor.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ou.mutation.WorkingtimeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   office.WorkingtimeTable,
-			Columns: []string{office.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ou.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   office.WorkingtimeTable,
-			Columns: []string{office.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
 				},
 			},
 		}
@@ -457,6 +423,18 @@ func (ouo *OfficeUpdateOne) SetOfficename(s string) *OfficeUpdateOne {
 	return ouo
 }
 
+// SetAddedTime1 sets the added_time1 field.
+func (ouo *OfficeUpdateOne) SetAddedTime1(t time.Time) *OfficeUpdateOne {
+	ouo.mutation.SetAddedTime1(t)
+	return ouo
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (ouo *OfficeUpdateOne) SetAddedTime2(t time.Time) *OfficeUpdateOne {
+	ouo.mutation.SetAddedTime2(t)
+	return ouo
+}
+
 // SetDoctorID sets the doctor edge to Doctor by id.
 func (ouo *OfficeUpdateOne) SetDoctorID(id int) *OfficeUpdateOne {
 	ouo.mutation.SetDoctorID(id)
@@ -474,25 +452,6 @@ func (ouo *OfficeUpdateOne) SetNillableDoctorID(id *int) *OfficeUpdateOne {
 // SetDoctor sets the doctor edge to Doctor.
 func (ouo *OfficeUpdateOne) SetDoctor(d *Doctor) *OfficeUpdateOne {
 	return ouo.SetDoctorID(d.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (ouo *OfficeUpdateOne) SetWorkingtimeID(id int) *OfficeUpdateOne {
-	ouo.mutation.SetWorkingtimeID(id)
-	return ouo
-}
-
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (ouo *OfficeUpdateOne) SetNillableWorkingtimeID(id *int) *OfficeUpdateOne {
-	if id != nil {
-		ouo = ouo.SetWorkingtimeID(*id)
-	}
-	return ouo
-}
-
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (ouo *OfficeUpdateOne) SetWorkingtime(w *Workingtime) *OfficeUpdateOne {
-	return ouo.SetWorkingtimeID(w.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -556,12 +515,6 @@ func (ouo *OfficeUpdateOne) Mutation() *OfficeMutation {
 // ClearDoctor clears the doctor edge to Doctor.
 func (ouo *OfficeUpdateOne) ClearDoctor() *OfficeUpdateOne {
 	ouo.mutation.ClearDoctor()
-	return ouo
-}
-
-// ClearWorkingtime clears the workingtime edge to Workingtime.
-func (ouo *OfficeUpdateOne) ClearWorkingtime() *OfficeUpdateOne {
-	ouo.mutation.ClearWorkingtime()
 	return ouo
 }
 
@@ -672,6 +625,20 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Column: office.FieldOfficename,
 		})
 	}
+	if value, ok := ouo.mutation.AddedTime1(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime1,
+		})
+	}
+	if value, ok := ouo.mutation.AddedTime2(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime2,
+		})
+	}
 	if ouo.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -699,41 +666,6 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: doctor.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ouo.mutation.WorkingtimeCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   office.WorkingtimeTable,
-			Columns: []string{office.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ouo.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   office.WorkingtimeTable,
-			Columns: []string{office.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
 				},
 			},
 		}

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * SUT SA Example API Playlist Vidoe
+ * SUT SA Example API
  * This is a sample server for SUT SE 2563
  *
  * The version of the OpenAPI document: 1.0
@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntUser,
-    EntUserFromJSON,
-    EntUserFromJSONTyped,
-    EntUserToJSON,
+    EntDoctor,
+    EntDoctorFromJSON,
+    EntDoctorFromJSONTyped,
+    EntDoctorToJSON,
 } from './';
 
 /**
@@ -27,11 +27,11 @@ import {
  */
 export interface EntGenderEdges {
     /**
-     * Users holds the value of the users edge.
-     * @type {Array<EntUser>}
+     * Doctors holds the value of the doctors edge.
+     * @type {Array<EntDoctor>}
      * @memberof EntGenderEdges
      */
-    users?: Array<EntUser>;
+    doctors?: Array<EntDoctor>;
 }
 
 export function EntGenderEdgesFromJSON(json: any): EntGenderEdges {
@@ -44,7 +44,7 @@ export function EntGenderEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'users': !exists(json, 'users') ? undefined : ((json['users'] as Array<any>).map(EntUserFromJSON)),
+        'doctors': !exists(json, 'doctors') ? undefined : ((json['doctors'] as Array<any>).map(EntDoctorFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function EntGenderEdgesToJSON(value?: EntGenderEdges | null): any {
     }
     return {
         
-        'users': value.users === undefined ? undefined : ((value.users as Array<any>).map(EntUserToJSON)),
+        'doctors': value.doctors === undefined ? undefined : ((value.doctors as Array<any>).map(EntDoctorToJSON)),
     };
 }
 

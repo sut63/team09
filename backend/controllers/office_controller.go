@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/team09/app/ent"
@@ -11,7 +12,6 @@ import (
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/specialist"
-	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeController defines the struct for the office controller
@@ -24,7 +24,8 @@ type Office struct {
 	Officename  string
 	Doctor      int
 	Department  int
-	Workingtime int
+	Added1		string
+	Added2 		string
 	Specialist  int
 }
 
@@ -60,18 +61,6 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		return
 	}
 
-	wt, err := ctl.client.Workingtime.
-		Query().
-		Where(workingtime.IDEQ(int(obj.Workingtime))).
-		Only(context.Background())
-
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "Workingtime not found",
-		})
-		return
-	}
-
 	de, err := ctl.client.Department.
 		Query().
 		Where(department.IDEQ(int(obj.Department))).
@@ -95,14 +84,16 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		})
 		return
 	}
-
+	time1, err := time.Parse(time.RFC3339, obj.Added1)
+	time2, err := time.Parse(time.RFC3339, obj.Added2)
 	of, err := ctl.client.Office.
 		Create().
 		SetOfficename(obj.Officename).
 		SetDoctor(d).
 		SetDepartment(de).
-		SetWorkingtime(wt).
 		SetSpecialist(sl).
+		SetAddedTime1(time1).
+		SetAddedTime2(time2).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -110,7 +101,11 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, of)
+	
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   of,
+	})
 }
 
 // GetOffice handles GET requests to retrieve a office entity
@@ -178,7 +173,6 @@ func (ctl *OfficeController) ListOffice(c *gin.Context) {
 	offices, err := ctl.client.Office.
 		Query().
 		WithDoctor().
-		WithWorkingtime().
 		WithDepartment().
 		WithSpecialist().
 		Limit(limit).

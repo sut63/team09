@@ -23,22 +23,22 @@ import {
 /**
  * 
  * @export
- * @interface EntTitleEdges
+ * @interface EntDiseaseEdges
  */
-export interface EntTitleEdges {
+export interface EntDiseaseEdges {
     /**
      * Doctors holds the value of the doctors edge.
      * @type {Array<EntDoctor>}
-     * @memberof EntTitleEdges
+     * @memberof EntDiseaseEdges
      */
     doctors?: Array<EntDoctor>;
 }
 
-export function EntTitleEdgesFromJSON(json: any): EntTitleEdges {
-    return EntTitleEdgesFromJSONTyped(json, false);
+export function EntDiseaseEdgesFromJSON(json: any): EntDiseaseEdges {
+    return EntDiseaseEdgesFromJSONTyped(json, false);
 }
 
-export function EntTitleEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntTitleEdges {
+export function EntDiseaseEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntDiseaseEdges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function EntTitleEdgesFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function EntTitleEdgesToJSON(value?: EntTitleEdges | null): any {
+export function EntDiseaseEdgesToJSON(value?: EntDiseaseEdges | null): any {
     if (value === undefined) {
         return undefined;
     }
