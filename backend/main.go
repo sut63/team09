@@ -149,7 +149,6 @@ func main() {
 	}
 
 	v1 := router.Group("/api/v1")
-	controllers.NewWorkingtimeController(v1, client)
 	controllers.NewOfficeController(v1, client)
 	controllers.NewDoctorController(v1, client)
 	controllers.NewTrainingController(v1, client)
@@ -307,7 +306,7 @@ func main() {
 	offices := Offices{
 		Office: []Office{
 			Office{"โรงพยาบาลกรุงเทพ"},
-			Office{"โรงพยาบาลบำเน็จ"},
+			Office{"โรงพยาบาลบำเน็จนราดูล"},
 			Office{"โรงพยาบาลมหาราช"},
 			Office{"โรงพยาบาลเซนแมรี่"},
 			Office{"โรงพยาบาลหนองคาย"},
