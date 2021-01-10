@@ -51,9 +51,6 @@ import {
     EntTraining,
     EntTrainingFromJSON,
     EntTrainingToJSON,
-    EntWorkingtime,
-    EntWorkingtimeFromJSON,
-    EntWorkingtimeToJSON,
 } from '../models';
 
 export interface CreateCourseRequest {
@@ -104,10 +101,6 @@ export interface CreateTrainingRequest {
     training: EntTraining;
 }
 
-export interface CreateWorkingtimeRequest {
-    doctor: EntWorkingtime;
-}
-
 export interface DeleteDepartmentRequest {
     id: number;
 }
@@ -145,10 +138,6 @@ export interface DeleteSpecialistRequest {
 }
 
 export interface DeleteTitleRequest {
-    id: number;
-}
-
-export interface DeleteWorkingtimeRequest {
     id: number;
 }
 
@@ -193,10 +182,6 @@ export interface GetSpecialistRequest {
 }
 
 export interface GetTitleRequest {
-    id: number;
-}
-
-export interface GetWorkingtimeRequest {
     id: number;
 }
 
@@ -256,11 +241,6 @@ export interface ListTitleRequest {
 }
 
 export interface ListTrainingRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListWorkingtimeRequest {
     limit?: number;
     offset?: number;
 }
@@ -696,41 +676,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create workingtime
-     * Create workingtime
-     */
-    async createWorkingtimeRaw(requestParameters: CreateWorkingtimeRequest): Promise<runtime.ApiResponse<EntWorkingtime>> {
-        if (requestParameters.doctor === null || requestParameters.doctor === undefined) {
-            throw new runtime.RequiredError('doctor','Required parameter requestParameters.doctor was null or undefined when calling createWorkingtime.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/workingtimes`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: EntWorkingtimeToJSON(requestParameters.doctor),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntWorkingtimeFromJSON(jsonValue));
-    }
-
-    /**
-     * Create workingtime
-     * Create workingtime
-     */
-    async createWorkingtime(requestParameters: CreateWorkingtimeRequest): Promise<EntWorkingtime> {
-        const response = await this.createWorkingtimeRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
      * get department by ID
      * Delete a department entity by ID
      */
@@ -1047,38 +992,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteTitle(requestParameters: DeleteTitleRequest): Promise<object> {
         const response = await this.deleteTitleRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get workingtime by ID
-     * Delete a workingtime entity by ID
-     */
-    async deleteWorkingtimeRaw(requestParameters: DeleteWorkingtimeRequest): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteWorkingtime.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/workingtimes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * get workingtime by ID
-     * Delete a workingtime entity by ID
-     */
-    async deleteWorkingtime(requestParameters: DeleteWorkingtimeRequest): Promise<object> {
-        const response = await this.deleteWorkingtimeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1431,38 +1344,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getTitle(requestParameters: GetTitleRequest): Promise<EntTitle> {
         const response = await this.getTitleRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get workingtime by ID
-     * Get a workingtime entity by ID
-     */
-    async getWorkingtimeRaw(requestParameters: GetWorkingtimeRequest): Promise<runtime.ApiResponse<EntWorkingtime>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getWorkingtime.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/workingtimes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntWorkingtimeFromJSON(jsonValue));
-    }
-
-    /**
-     * get workingtime by ID
-     * Get a workingtime entity by ID
-     */
-    async getWorkingtime(requestParameters: GetWorkingtimeRequest): Promise<EntWorkingtime> {
-        const response = await this.getWorkingtimeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1895,42 +1776,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listTraining(requestParameters: ListTrainingRequest): Promise<Array<EntTraining>> {
         const response = await this.listTrainingRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * list workingtime entities
-     * List workingtime entities
-     */
-    async listWorkingtimeRaw(requestParameters: ListWorkingtimeRequest): Promise<runtime.ApiResponse<Array<EntWorkingtime>>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/workingtimes`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntWorkingtimeFromJSON));
-    }
-
-    /**
-     * list workingtime entities
-     * List workingtime entities
-     */
-    async listWorkingtime(requestParameters: ListWorkingtimeRequest): Promise<Array<EntWorkingtime>> {
-        const response = await this.listWorkingtimeRaw(requestParameters);
         return await response.value();
     }
 

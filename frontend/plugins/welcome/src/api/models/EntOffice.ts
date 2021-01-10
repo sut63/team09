@@ -27,6 +27,18 @@ import {
  */
 export interface EntOffice {
     /**
+     * AddedTime1 holds the value of the "added_time1" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    addedTime1?: string;
+    /**
+     * AddedTime2 holds the value of the "added_time2" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    addedTime2?: string;
+    /**
      * 
      * @type {EntOfficeEdges}
      * @memberof EntOffice
@@ -56,6 +68,8 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
+        'addedTime1': !exists(json, 'added_time1') ? undefined : json['added_time1'],
+        'addedTime2': !exists(json, 'added_time2') ? undefined : json['added_time2'],
         'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
@@ -71,6 +85,8 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
     }
     return {
         
+        'added_time1': value.addedTime1,
+        'added_time2': value.addedTime2,
         'edges': EntOfficeEdgesToJSON(value.edges),
         'id': value.id,
         'officename': value.officename,

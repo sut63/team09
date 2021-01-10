@@ -30,10 +30,6 @@ import {
     EntSpecialistFromJSON,
     EntSpecialistFromJSONTyped,
     EntSpecialistToJSON,
-    EntWorkingtime,
-    EntWorkingtimeFromJSON,
-    EntWorkingtimeFromJSONTyped,
-    EntWorkingtimeToJSON,
 } from './';
 
 /**
@@ -66,12 +62,6 @@ export interface EntOfficeEdges {
      * @memberof EntOfficeEdges
      */
     specialist?: EntSpecialist;
-    /**
-     * 
-     * @type {EntWorkingtime}
-     * @memberof EntOfficeEdges
-     */
-    workingtime?: EntWorkingtime;
 }
 
 export function EntOfficeEdgesFromJSON(json: any): EntOfficeEdges {
@@ -88,7 +78,6 @@ export function EntOfficeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
         'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
         'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
         'specialist': !exists(json, 'specialist') ? undefined : EntSpecialistFromJSON(json['specialist']),
-        'workingtime': !exists(json, 'workingtime') ? undefined : EntWorkingtimeFromJSON(json['workingtime']),
     };
 }
 
@@ -105,7 +94,6 @@ export function EntOfficeEdgesToJSON(value?: EntOfficeEdges | null): any {
         'doctor': EntDoctorToJSON(value.doctor),
         'schedules': value.schedules === undefined ? undefined : ((value.schedules as Array<any>).map(EntScheduleToJSON)),
         'specialist': EntSpecialistToJSON(value.specialist),
-        'workingtime': EntWorkingtimeToJSON(value.workingtime),
     };
 }
 
