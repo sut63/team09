@@ -21,7 +21,6 @@ import (
 	"github.com/team09/app/ent/specialist"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
-	"github.com/team09/app/ent/workingtime"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -57,8 +56,6 @@ type Client struct {
 	Title *TitleClient
 	// Training is the client for interacting with the Training builders.
 	Training *TrainingClient
-	// Workingtime is the client for interacting with the Workingtime builders.
-	Workingtime *WorkingtimeClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -84,7 +81,6 @@ func (c *Client) init() {
 	c.Specialist = NewSpecialistClient(c.config)
 	c.Title = NewTitleClient(c.config)
 	c.Training = NewTrainingClient(c.config)
-	c.Workingtime = NewWorkingtimeClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -115,21 +111,20 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		Course:      NewCourseClient(cfg),
-		Department:  NewDepartmentClient(cfg),
-		Disease:     NewDiseaseClient(cfg),
-		Doctor:      NewDoctorClient(cfg),
-		Gender:      NewGenderClient(cfg),
-		Mission:     NewMissionClient(cfg),
-		Office:      NewOfficeClient(cfg),
-		Position:    NewPositionClient(cfg),
-		Schedule:    NewScheduleClient(cfg),
-		Specialist:  NewSpecialistClient(cfg),
-		Title:       NewTitleClient(cfg),
-		Training:    NewTrainingClient(cfg),
-		Workingtime: NewWorkingtimeClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		Course:     NewCourseClient(cfg),
+		Department: NewDepartmentClient(cfg),
+		Disease:    NewDiseaseClient(cfg),
+		Doctor:     NewDoctorClient(cfg),
+		Gender:     NewGenderClient(cfg),
+		Mission:    NewMissionClient(cfg),
+		Office:     NewOfficeClient(cfg),
+		Position:   NewPositionClient(cfg),
+		Schedule:   NewScheduleClient(cfg),
+		Specialist: NewSpecialistClient(cfg),
+		Title:      NewTitleClient(cfg),
+		Training:   NewTrainingClient(cfg),
 	}, nil
 }
 
@@ -144,20 +139,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:      cfg,
-		Course:      NewCourseClient(cfg),
-		Department:  NewDepartmentClient(cfg),
-		Disease:     NewDiseaseClient(cfg),
-		Doctor:      NewDoctorClient(cfg),
-		Gender:      NewGenderClient(cfg),
-		Mission:     NewMissionClient(cfg),
-		Office:      NewOfficeClient(cfg),
-		Position:    NewPositionClient(cfg),
-		Schedule:    NewScheduleClient(cfg),
-		Specialist:  NewSpecialistClient(cfg),
-		Title:       NewTitleClient(cfg),
-		Training:    NewTrainingClient(cfg),
-		Workingtime: NewWorkingtimeClient(cfg),
+		config:     cfg,
+		Course:     NewCourseClient(cfg),
+		Department: NewDepartmentClient(cfg),
+		Disease:    NewDiseaseClient(cfg),
+		Doctor:     NewDoctorClient(cfg),
+		Gender:     NewGenderClient(cfg),
+		Mission:    NewMissionClient(cfg),
+		Office:     NewOfficeClient(cfg),
+		Position:   NewPositionClient(cfg),
+		Schedule:   NewScheduleClient(cfg),
+		Specialist: NewSpecialistClient(cfg),
+		Title:      NewTitleClient(cfg),
+		Training:   NewTrainingClient(cfg),
 	}, nil
 }
 
@@ -198,7 +192,6 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Specialist.Use(hooks...)
 	c.Title.Use(hooks...)
 	c.Training.Use(hooks...)
-	c.Workingtime.Use(hooks...)
 }
 
 // CourseClient is a client for the Course schema.
@@ -1097,22 +1090,6 @@ func (c *OfficeClient) QueryDoctor(o *Office) *DoctorQuery {
 	return query
 }
 
-// QueryWorkingtime queries the workingtime edge of a Office.
-func (c *OfficeClient) QueryWorkingtime(o *Office) *WorkingtimeQuery {
-	query := &WorkingtimeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := o.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(office.Table, office.FieldID, id),
-			sqlgraph.To(workingtime.Table, workingtime.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, office.WorkingtimeTable, office.WorkingtimeColumn),
-		)
-		fromV = sqlgraph.Neighbors(o.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryDepartment queries the department edge of a Office.
 func (c *OfficeClient) QueryDepartment(o *Office) *DepartmentQuery {
 	query := &DepartmentQuery{config: c.config}
@@ -1755,103 +1732,4 @@ func (c *TrainingClient) QueryDepartment(t *Training) *DepartmentQuery {
 // Hooks returns the client hooks.
 func (c *TrainingClient) Hooks() []Hook {
 	return c.hooks.Training
-}
-
-// WorkingtimeClient is a client for the Workingtime schema.
-type WorkingtimeClient struct {
-	config
-}
-
-// NewWorkingtimeClient returns a client for the Workingtime from the given config.
-func NewWorkingtimeClient(c config) *WorkingtimeClient {
-	return &WorkingtimeClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `workingtime.Hooks(f(g(h())))`.
-func (c *WorkingtimeClient) Use(hooks ...Hook) {
-	c.hooks.Workingtime = append(c.hooks.Workingtime, hooks...)
-}
-
-// Create returns a create builder for Workingtime.
-func (c *WorkingtimeClient) Create() *WorkingtimeCreate {
-	mutation := newWorkingtimeMutation(c.config, OpCreate)
-	return &WorkingtimeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Workingtime.
-func (c *WorkingtimeClient) Update() *WorkingtimeUpdate {
-	mutation := newWorkingtimeMutation(c.config, OpUpdate)
-	return &WorkingtimeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *WorkingtimeClient) UpdateOne(w *Workingtime) *WorkingtimeUpdateOne {
-	mutation := newWorkingtimeMutation(c.config, OpUpdateOne, withWorkingtime(w))
-	return &WorkingtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *WorkingtimeClient) UpdateOneID(id int) *WorkingtimeUpdateOne {
-	mutation := newWorkingtimeMutation(c.config, OpUpdateOne, withWorkingtimeID(id))
-	return &WorkingtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Workingtime.
-func (c *WorkingtimeClient) Delete() *WorkingtimeDelete {
-	mutation := newWorkingtimeMutation(c.config, OpDelete)
-	return &WorkingtimeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *WorkingtimeClient) DeleteOne(w *Workingtime) *WorkingtimeDeleteOne {
-	return c.DeleteOneID(w.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *WorkingtimeClient) DeleteOneID(id int) *WorkingtimeDeleteOne {
-	builder := c.Delete().Where(workingtime.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &WorkingtimeDeleteOne{builder}
-}
-
-// Create returns a query builder for Workingtime.
-func (c *WorkingtimeClient) Query() *WorkingtimeQuery {
-	return &WorkingtimeQuery{config: c.config}
-}
-
-// Get returns a Workingtime entity by its id.
-func (c *WorkingtimeClient) Get(ctx context.Context, id int) (*Workingtime, error) {
-	return c.Query().Where(workingtime.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *WorkingtimeClient) GetX(ctx context.Context, id int) *Workingtime {
-	w, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return w
-}
-
-// QueryOffices queries the offices edge of a Workingtime.
-func (c *WorkingtimeClient) QueryOffices(w *Workingtime) *OfficeQuery {
-	query := &OfficeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := w.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(workingtime.Table, workingtime.FieldID, id),
-			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, workingtime.OfficesTable, workingtime.OfficesColumn),
-		)
-		fromV = sqlgraph.Neighbors(w.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *WorkingtimeClient) Hooks() []Hook {
-	return c.hooks.Workingtime
 }

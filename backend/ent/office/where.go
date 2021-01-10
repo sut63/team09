@@ -3,6 +3,8 @@
 package office
 
 import (
+	"time"
+
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/team09/app/ent/predicate"
@@ -95,6 +97,20 @@ func IDLTE(id int) predicate.Office {
 func Officename(v string) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOfficename), v))
+	})
+}
+
+// AddedTime1 applies equality check predicate on the "added_time1" field. It's identical to AddedTime1EQ.
+func AddedTime1(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime2 applies equality check predicate on the "added_time2" field. It's identical to AddedTime2EQ.
+func AddedTime2(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddedTime2), v))
 	})
 }
 
@@ -209,6 +225,158 @@ func OfficenameContainsFold(v string) predicate.Office {
 	})
 }
 
+// AddedTime1EQ applies the EQ predicate on the "added_time1" field.
+func AddedTime1EQ(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime1NEQ applies the NEQ predicate on the "added_time1" field.
+func AddedTime1NEQ(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime1In applies the In predicate on the "added_time1" field.
+func AddedTime1In(vs ...time.Time) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAddedTime1), v...))
+	})
+}
+
+// AddedTime1NotIn applies the NotIn predicate on the "added_time1" field.
+func AddedTime1NotIn(vs ...time.Time) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAddedTime1), v...))
+	})
+}
+
+// AddedTime1GT applies the GT predicate on the "added_time1" field.
+func AddedTime1GT(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime1GTE applies the GTE predicate on the "added_time1" field.
+func AddedTime1GTE(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime1LT applies the LT predicate on the "added_time1" field.
+func AddedTime1LT(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime1LTE applies the LTE predicate on the "added_time1" field.
+func AddedTime1LTE(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAddedTime1), v))
+	})
+}
+
+// AddedTime2EQ applies the EQ predicate on the "added_time2" field.
+func AddedTime2EQ(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddedTime2), v))
+	})
+}
+
+// AddedTime2NEQ applies the NEQ predicate on the "added_time2" field.
+func AddedTime2NEQ(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAddedTime2), v))
+	})
+}
+
+// AddedTime2In applies the In predicate on the "added_time2" field.
+func AddedTime2In(vs ...time.Time) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAddedTime2), v...))
+	})
+}
+
+// AddedTime2NotIn applies the NotIn predicate on the "added_time2" field.
+func AddedTime2NotIn(vs ...time.Time) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAddedTime2), v...))
+	})
+}
+
+// AddedTime2GT applies the GT predicate on the "added_time2" field.
+func AddedTime2GT(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAddedTime2), v))
+	})
+}
+
+// AddedTime2GTE applies the GTE predicate on the "added_time2" field.
+func AddedTime2GTE(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAddedTime2), v))
+	})
+}
+
+// AddedTime2LT applies the LT predicate on the "added_time2" field.
+func AddedTime2LT(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAddedTime2), v))
+	})
+}
+
+// AddedTime2LTE applies the LTE predicate on the "added_time2" field.
+func AddedTime2LTE(v time.Time) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAddedTime2), v))
+	})
+}
+
 // HasDoctor applies the HasEdge predicate on the "doctor" edge.
 func HasDoctor() predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
@@ -228,34 +396,6 @@ func HasDoctorWith(preds ...predicate.Doctor) predicate.Office {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(DoctorInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasWorkingtime applies the HasEdge predicate on the "workingtime" edge.
-func HasWorkingtime() predicate.Office {
-	return predicate.Office(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkingtimeTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasWorkingtimeWith applies the HasEdge predicate on the "workingtime" edge with a given conditions (other predicates).
-func HasWorkingtimeWith(preds ...predicate.Workingtime) predicate.Office {
-	return predicate.Office(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(WorkingtimeInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, WorkingtimeTable, WorkingtimeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

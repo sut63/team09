@@ -140,10 +140,11 @@ var (
 	OfficesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "officename", Type: field.TypeString},
+		{Name: "added_time1", Type: field.TypeTime},
+		{Name: "added_time2", Type: field.TypeTime},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "specialist_id", Type: field.TypeInt, Nullable: true},
-		{Name: "workingtime_id", Type: field.TypeInt, Nullable: true},
 	}
 	// OfficesTable holds the schema information for the "offices" table.
 	OfficesTable = &schema.Table{
@@ -153,30 +154,23 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "offices_departments_offices",
-				Columns: []*schema.Column{OfficesColumns[2]},
+				Columns: []*schema.Column{OfficesColumns[4]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "offices_doctors_offices",
-				Columns: []*schema.Column{OfficesColumns[3]},
+				Columns: []*schema.Column{OfficesColumns[5]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "offices_specialists_offices",
-				Columns: []*schema.Column{OfficesColumns[4]},
+				Columns: []*schema.Column{OfficesColumns[6]},
 
 				RefColumns: []*schema.Column{SpecialistsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "offices_workingtimes_offices",
-				Columns: []*schema.Column{OfficesColumns[5]},
-
-				RefColumns: []*schema.Column{WorkingtimesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -311,19 +305,6 @@ var (
 			},
 		},
 	}
-	// WorkingtimesColumns holds the columns for the "workingtimes" table.
-	WorkingtimesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "added_time1", Type: field.TypeTime},
-		{Name: "added_time2", Type: field.TypeTime},
-	}
-	// WorkingtimesTable holds the schema information for the "workingtimes" table.
-	WorkingtimesTable = &schema.Table{
-		Name:        "workingtimes",
-		Columns:     WorkingtimesColumns,
-		PrimaryKey:  []*schema.Column{WorkingtimesColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CoursesTable,
@@ -338,7 +319,6 @@ var (
 		SpecialistsTable,
 		TitlesTable,
 		TrainingsTable,
-		WorkingtimesTable,
 	}
 )
 
@@ -352,7 +332,6 @@ func init() {
 	OfficesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	OfficesTable.ForeignKeys[1].RefTable = DoctorsTable
 	OfficesTable.ForeignKeys[2].RefTable = SpecialistsTable
-	OfficesTable.ForeignKeys[3].RefTable = WorkingtimesTable
 	SchedulesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	SchedulesTable.ForeignKeys[1].RefTable = DoctorsTable
 	SchedulesTable.ForeignKeys[2].RefTable = OfficesTable

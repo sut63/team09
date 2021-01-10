@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -14,7 +15,6 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/specialist"
-	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeCreate is the builder for creating a Office entity.
@@ -27,6 +27,18 @@ type OfficeCreate struct {
 // SetOfficename sets the officename field.
 func (oc *OfficeCreate) SetOfficename(s string) *OfficeCreate {
 	oc.mutation.SetOfficename(s)
+	return oc
+}
+
+// SetAddedTime1 sets the added_time1 field.
+func (oc *OfficeCreate) SetAddedTime1(t time.Time) *OfficeCreate {
+	oc.mutation.SetAddedTime1(t)
+	return oc
+}
+
+// SetAddedTime2 sets the added_time2 field.
+func (oc *OfficeCreate) SetAddedTime2(t time.Time) *OfficeCreate {
+	oc.mutation.SetAddedTime2(t)
 	return oc
 }
 
@@ -47,25 +59,6 @@ func (oc *OfficeCreate) SetNillableDoctorID(id *int) *OfficeCreate {
 // SetDoctor sets the doctor edge to Doctor.
 func (oc *OfficeCreate) SetDoctor(d *Doctor) *OfficeCreate {
 	return oc.SetDoctorID(d.ID)
-}
-
-// SetWorkingtimeID sets the workingtime edge to Workingtime by id.
-func (oc *OfficeCreate) SetWorkingtimeID(id int) *OfficeCreate {
-	oc.mutation.SetWorkingtimeID(id)
-	return oc
-}
-
-// SetNillableWorkingtimeID sets the workingtime edge to Workingtime by id if the given value is not nil.
-func (oc *OfficeCreate) SetNillableWorkingtimeID(id *int) *OfficeCreate {
-	if id != nil {
-		oc = oc.SetWorkingtimeID(*id)
-	}
-	return oc
-}
-
-// SetWorkingtime sets the workingtime edge to Workingtime.
-func (oc *OfficeCreate) SetWorkingtime(w *Workingtime) *OfficeCreate {
-	return oc.SetWorkingtimeID(w.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -136,6 +129,12 @@ func (oc *OfficeCreate) Save(ctx context.Context) (*Office, error) {
 			return nil, &ValidationError{Name: "officename", err: fmt.Errorf("ent: validator failed for field \"officename\": %w", err)}
 		}
 	}
+	if _, ok := oc.mutation.AddedTime1(); !ok {
+		return nil, &ValidationError{Name: "added_time1", err: errors.New("ent: missing required field \"added_time1\"")}
+	}
+	if _, ok := oc.mutation.AddedTime2(); !ok {
+		return nil, &ValidationError{Name: "added_time2", err: errors.New("ent: missing required field \"added_time2\"")}
+	}
 	var (
 		err  error
 		node *Office
@@ -204,6 +203,22 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		})
 		o.Officename = value
 	}
+	if value, ok := oc.mutation.AddedTime1(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime1,
+		})
+		o.AddedTime1 = value
+	}
+	if value, ok := oc.mutation.AddedTime2(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: office.FieldAddedTime2,
+		})
+		o.AddedTime2 = value
+	}
 	if nodes := oc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -215,25 +230,6 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: doctor.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := oc.mutation.WorkingtimeIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   office.WorkingtimeTable,
-			Columns: []string{office.WorkingtimeColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: workingtime.FieldID,
 				},
 			},
 		}

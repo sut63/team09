@@ -9,11 +9,13 @@ const (
 	FieldID = "id"
 	// FieldOfficename holds the string denoting the officename field in the database.
 	FieldOfficename = "officename"
+	// FieldAddedTime1 holds the string denoting the added_time1 field in the database.
+	FieldAddedTime1 = "added_time1"
+	// FieldAddedTime2 holds the string denoting the added_time2 field in the database.
+	FieldAddedTime2 = "added_time2"
 
 	// EdgeDoctor holds the string denoting the doctor edge name in mutations.
 	EdgeDoctor = "doctor"
-	// EdgeWorkingtime holds the string denoting the workingtime edge name in mutations.
-	EdgeWorkingtime = "workingtime"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
 	EdgeDepartment = "department"
 	// EdgeSpecialist holds the string denoting the specialist edge name in mutations.
@@ -30,13 +32,6 @@ const (
 	DoctorInverseTable = "doctors"
 	// DoctorColumn is the table column denoting the doctor relation/edge.
 	DoctorColumn = "doctor_id"
-	// WorkingtimeTable is the table the holds the workingtime relation/edge.
-	WorkingtimeTable = "offices"
-	// WorkingtimeInverseTable is the table name for the Workingtime entity.
-	// It exists in this package in order to avoid circular dependency with the "workingtime" package.
-	WorkingtimeInverseTable = "workingtimes"
-	// WorkingtimeColumn is the table column denoting the workingtime relation/edge.
-	WorkingtimeColumn = "workingtime_id"
 	// DepartmentTable is the table the holds the department relation/edge.
 	DepartmentTable = "offices"
 	// DepartmentInverseTable is the table name for the Department entity.
@@ -64,6 +59,8 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldOfficename,
+	FieldAddedTime1,
+	FieldAddedTime2,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Office type.
@@ -71,7 +68,6 @@ var ForeignKeys = []string{
 	"department_id",
 	"doctor_id",
 	"specialist_id",
-	"workingtime_id",
 }
 
 var (

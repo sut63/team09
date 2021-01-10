@@ -18,7 +18,6 @@ import (
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/specialist"
-	"github.com/team09/app/ent/workingtime"
 )
 
 // OfficeQuery is the builder for querying Office entities.
@@ -30,12 +29,11 @@ type OfficeQuery struct {
 	unique     []string
 	predicates []predicate.Office
 	// eager-loading edges.
-	withDoctor      *DoctorQuery
-	withWorkingtime *WorkingtimeQuery
-	withDepartment  *DepartmentQuery
-	withSpecialist  *SpecialistQuery
-	withSchedules   *ScheduleQuery
-	withFKs         bool
+	withDoctor     *DoctorQuery
+	withDepartment *DepartmentQuery
+	withSpecialist *SpecialistQuery
+	withSchedules  *ScheduleQuery
+	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -76,24 +74,6 @@ func (oq *OfficeQuery) QueryDoctor() *DoctorQuery {
 			sqlgraph.From(office.Table, office.FieldID, oq.sqlQuery()),
 			sqlgraph.To(doctor.Table, doctor.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, office.DoctorTable, office.DoctorColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryWorkingtime chains the current query on the workingtime edge.
-func (oq *OfficeQuery) QueryWorkingtime() *WorkingtimeQuery {
-	query := &WorkingtimeQuery{config: oq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := oq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(office.Table, office.FieldID, oq.sqlQuery()),
-			sqlgraph.To(workingtime.Table, workingtime.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, office.WorkingtimeTable, office.WorkingtimeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
 		return fromU, nil
@@ -345,17 +325,6 @@ func (oq *OfficeQuery) WithDoctor(opts ...func(*DoctorQuery)) *OfficeQuery {
 	return oq
 }
 
-//  WithWorkingtime tells the query-builder to eager-loads the nodes that are connected to
-// the "workingtime" edge. The optional arguments used to configure the query builder of the edge.
-func (oq *OfficeQuery) WithWorkingtime(opts ...func(*WorkingtimeQuery)) *OfficeQuery {
-	query := &WorkingtimeQuery{config: oq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	oq.withWorkingtime = query
-	return oq
-}
-
 //  WithDepartment tells the query-builder to eager-loads the nodes that are connected to
 // the "department" edge. The optional arguments used to configure the query builder of the edge.
 func (oq *OfficeQuery) WithDepartment(opts ...func(*DepartmentQuery)) *OfficeQuery {
@@ -456,15 +425,14 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 		nodes       = []*Office{}
 		withFKs     = oq.withFKs
 		_spec       = oq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [4]bool{
 			oq.withDoctor != nil,
-			oq.withWorkingtime != nil,
 			oq.withDepartment != nil,
 			oq.withSpecialist != nil,
 			oq.withSchedules != nil,
 		}
 	)
-	if oq.withDoctor != nil || oq.withWorkingtime != nil || oq.withDepartment != nil || oq.withSpecialist != nil {
+	if oq.withDoctor != nil || oq.withDepartment != nil || oq.withSpecialist != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -515,31 +483,6 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Doctor = n
-			}
-		}
-	}
-
-	if query := oq.withWorkingtime; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Office)
-		for i := range nodes {
-			if fk := nodes[i].workingtime_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(workingtime.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "workingtime_id" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Workingtime = n
 			}
 		}
 	}
