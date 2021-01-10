@@ -22,5 +22,3 @@ export * from './EntTitle';
 export * from './EntTitleEdges';
 export * from './EntTraining';
 export * from './EntTrainingEdges';
-export * from './EntWorkingtime';
-export * from './EntWorkingtimeEdges';
