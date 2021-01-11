@@ -26,6 +26,7 @@ import {
  * @interface EntDoctor
  */
 export interface EntDoctor {
+    title: ReactNode;
     /**
      * Address holds the value of the "address" field.
      * @type {string}
