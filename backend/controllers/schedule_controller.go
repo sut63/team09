@@ -84,7 +84,7 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 		return
 	}
 
-	time, err := time.Parse(time.RFC3339, obj.Added)
+	time, err := time.Parse(time.RFC3339, obj.Added+"T00:00:002")
 	sh, err := ctl.client.Schedule.
 		Create().
 		SetDepartment(d).
