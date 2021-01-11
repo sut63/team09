@@ -83,8 +83,8 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 		return
     }
 	
-	time1, err := time.Parse(time.RFC3339, obj.Dateone)
-	time2, err := time.Parse(time.RFC3339, obj.Datetwo)
+	time1, err := time.Parse(time.RFC3339, obj.Dateone+ "T00:00:00Z")
+	time2, err := time.Parse(time.RFC3339, obj.Datetwo+ "T00:00:00Z")
     t, err := ctl.client.Training.
         Create().
         SetCourse(co).
@@ -102,7 +102,10 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
         return
     }
     
-    c.JSON(200, t)
+    c.JSON(200, gin.H{
+        "status": true,
+        "data":   t,
+    })
 }
 
 // ListTraining handles request to get a list of training entities
