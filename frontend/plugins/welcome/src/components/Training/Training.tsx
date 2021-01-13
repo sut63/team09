@@ -19,6 +19,7 @@ import { DefaultApi } from '../../api/apis';
 import { EntCourse } from '../../api/models/EntCourse';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import Swal from 'sweetalert2'; // alert
 
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1), //ขนาดของบล็อก
       minWidth: 350,
       maxWidth: 300,
-      marginTop: '1.5%',
+      marginTop: '-1%',
     },
     withoutLabel: {
       marginTop: theme.spacing(3),
@@ -108,7 +109,7 @@ const Training: FC<{}> = () => {
     const Toast = Swal.mixin({
         position: 'center',
         showConfirmButton: true,
-        timer: 1500
+        timer: 5000
       });
 
     // clear input form
@@ -150,12 +151,12 @@ const Training: FC<{}> = () => {
      <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            ระบบบันทึกข้อมูลการฝึกอบรม
+            ระบบข้อมูลแพทย์
             </Typography>
-            <Button color="inherit" href="/" >Logout</Button>
+            <Button color="inherit" href="/" startIcon={<ExitToAppRoundedIcon />}>Logout</Button>
         </Toolbar>
       </AppBar>
-
+    
       <Content>
       <Typography variant="h4" className={classes.title2}>
           บันทึกข้อมูลการฝึกอบรม
@@ -253,7 +254,7 @@ const Training: FC<{}> = () => {
 
       <Button variant="contained" color="primary"  onClick={save}  style={{ marginRight: 70 }}>SAVE</Button>
       <Button variant="contained" color="secondary" onClick={clear}  style={{ marginRight: 70 }}>CLEAR</Button>
-      <Button variant="contained">BACK</Button>
+      <Button variant="contained" href="/home" >BACK</Button>
       </Content>
 
    </div>
