@@ -133,7 +133,7 @@ export default function PersistentDrawerLeft() {
           <Button color="inherit" component={RouterLink} to="/training">บันทึกข้อมูลการฝึกอบรม</Button>
           <Button color="inherit" component={RouterLink} to="/">บันทึกข้อมูลแผนกแพทย์</Button>
           <Button color="inherit" component={RouterLink} to="/user">บันทึกข้อมูลส่วนตัวแพทย์</Button>
-          <Button color="inherit" component={RouterLink} to="/">บันทึกเวลาของแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/schedule">บันทึกเวลาของแพทย์</Button>
           <Button color="inherit" component={RouterLink} to="/">บันทึกข้อมูลแพทย์เฉพาะทาง</Button>
         </List>
       </Drawer>
