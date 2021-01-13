@@ -17,9 +17,11 @@ func (Doctor) Fields() []ent.Field {
 		field.String("name").NotEmpty(),
 		field.Int("age").Positive(),
 		field.String("email").NotEmpty(),
-		field.Int("pnumber").Positive(),
+		field.String("password").NotEmpty(),
 		field.String("address").NotEmpty(),
 		field.String("educational").NotEmpty(),
+		field.Int("phone").Positive(),
+
 	}
 }
 
