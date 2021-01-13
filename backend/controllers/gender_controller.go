@@ -35,7 +35,7 @@ func (ctl *GenderController) CreateGender(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Gender.
+	g, err := ctl.client.Gender.
 		Create().
 		SetGender(obj.Gender).
 		Save(context.Background())
@@ -45,7 +45,7 @@ func (ctl *GenderController) CreateGender(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, g)
 }
 
 // GetGender handles GET requests to retrieve a gender entity
@@ -67,7 +67,7 @@ func (ctl *GenderController) GetGender(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Gender.
+	g, err := ctl.client.Gender.
 		Query().
 		Where(gender.IDEQ(int(id))).
 		Only(context.Background())
@@ -77,7 +77,7 @@ func (ctl *GenderController) GetGender(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, g)
 }
 
 // ListGender handles request to get a list of gender entities
@@ -149,15 +149,15 @@ func (ctl *GenderController) DeleteGender(c *gin.Context) {
 
 // NewGenderController creates and registers handles for the gender controller
 func NewGenderController(router gin.IRouter, client *ent.Client) *GenderController {
-	dc := &GenderController{
+	gc := &GenderController{
 		client: client,
 		router: router,
 	}
-	dc.register()
-	return dc
+	gc.register()
+	return gc
  }
   
- // InitUserController registers routes to the main engine
+ // InitGenderController registers routes to the main engine
  func (ctl *GenderController) register() {
 	genders := ctl.router.Group("/genders")
 	genders.GET("", ctl.ListGender)

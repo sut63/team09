@@ -22,10 +22,10 @@ type OfficeController struct {
 
 type Office struct {
 	Officename  string
-	Doctor      int
-	Department  int
 	Added1		string
 	Added2 		string
+	Doctor      int
+	Department  int
 	Specialist  int
 }
 
@@ -35,7 +35,7 @@ type Office struct {
 // @ID create-office
 // @Accept   json
 // @Produce  json
-// @Param doctor body ent.Office true "Office entity"
+// @Param office body ent.Office true "Office entity"
 // @Success 200 {object} ent.Office
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -56,7 +56,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "specialdoctor not found",
+			"error": "specialist not found",
 		})
 		return
 	}
@@ -68,7 +68,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Department not found",
+			"error": "department not found",
 		})
 		return
 	}
@@ -80,17 +80,18 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Doctor not found",
+			"error": "doctor not found",
 		})
 		return
 	}
-	time1, err := time.Parse(time.RFC3339, obj.Added1)
-	time2, err := time.Parse(time.RFC3339, obj.Added2)
+
+	time1, err := time.Parse(time.RFC3339, obj.Added1+"T00:00:00Z")
+	time2, err := time.Parse(time.RFC3339, obj.Added2+"T00:00:00Z")
 	of, err := ctl.client.Office.
 		Create().
 		SetOfficename(obj.Officename).
 		SetDoctor(d).
-		SetDepartment(de).
+		SetDepartment(de). 
 		SetSpecialist(sl).
 		SetAddedTime1(time1).
 		SetAddedTime2(time2).
@@ -221,12 +222,12 @@ func (ctl *OfficeController) DeleteOffice(c *gin.Context) {
 
 // NewOfficeController creates and registers handles for the office controller
 func NewOfficeController(router gin.IRouter, client *ent.Client) *OfficeController {
-	oc := &OfficeController{
+	ofc := &OfficeController{
 		client: client,
 		router: router,
 	}
-	oc.register()
-	return oc
+	ofc.register()
+	return ofc
 }
 
 // InitOfficeController registers routes to the main engine

@@ -35,7 +35,7 @@ func (ctl *TitleController) CreateTitle(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Title.
+	t, err := ctl.client.Title.
 		Create().
 		SetTitle(obj.Title).
 		Save(context.Background())
@@ -45,7 +45,7 @@ func (ctl *TitleController) CreateTitle(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, t)
 }
 
 // GetTitle handles GET requests to retrieve a title entity
@@ -67,7 +67,7 @@ func (ctl *TitleController) GetTitle(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Title.
+	t, err := ctl.client.Title.
 		Query().
 		Where(title.IDEQ(int(id))).
 		Only(context.Background())
@@ -77,7 +77,7 @@ func (ctl *TitleController) GetTitle(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, t)
 }
 
 // ListTitle handles request to get a list of title entities
@@ -149,15 +149,15 @@ func (ctl *TitleController) DeleteTitle(c *gin.Context) {
 
 // NewTitleController creates and registers handles for the title controller
 func NewTitleController(router gin.IRouter, client *ent.Client) *TitleController {
-	dc := &TitleController{
+	tc := &TitleController{
 		client: client,
 		router: router,
 	}
-	dc.register()
-	return dc
+	tc.register()
+	return tc
  }
   
- // InitUserController registers routes to the main engine
+ // InitGenderController registers routes to the main engine
  func (ctl *TitleController) register() {
 	titles := ctl.router.Group("/titles")
 	titles.GET("", ctl.ListTitle)
