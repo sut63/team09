@@ -25,12 +25,14 @@ type Doctor struct {
 	Age int `json:"age,omitempty"`
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
-	// Pnumber holds the value of the "pnumber" field.
-	Pnumber int `json:"pnumber,omitempty"`
+	// Password holds the value of the "password" field.
+	Password string `json:"password,omitempty"`
 	// Address holds the value of the "address" field.
 	Address string `json:"address,omitempty"`
 	// Educational holds the value of the "educational" field.
 	Educational string `json:"educational,omitempty"`
+	// Phone holds the value of the "phone" field.
+	Phone int `json:"phone,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DoctorQuery when eager-loading is set.
 	Edges       DoctorEdges `json:"edges"`
@@ -173,9 +175,10 @@ func (*Doctor) scanValues() []interface{} {
 		&sql.NullString{}, // name
 		&sql.NullInt64{},  // age
 		&sql.NullString{}, // email
-		&sql.NullInt64{},  // pnumber
+		&sql.NullString{}, // password
 		&sql.NullString{}, // address
 		&sql.NullString{}, // educational
+		&sql.NullInt64{},  // phone
 	}
 }
 
@@ -216,10 +219,10 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Email = value.String
 	}
-	if value, ok := values[3].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field pnumber", values[3])
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field password", values[3])
 	} else if value.Valid {
-		d.Pnumber = int(value.Int64)
+		d.Password = value.String
 	}
 	if value, ok := values[4].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field address", values[4])
@@ -231,7 +234,12 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Educational = value.String
 	}
-	values = values[6:]
+	if value, ok := values[6].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field phone", values[6])
+	} else if value.Valid {
+		d.Phone = int(value.Int64)
+	}
+	values = values[7:]
 	if len(values) == len(doctor.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field disease_id", value)
@@ -335,12 +343,14 @@ func (d *Doctor) String() string {
 	builder.WriteString(fmt.Sprintf("%v", d.Age))
 	builder.WriteString(", email=")
 	builder.WriteString(d.Email)
-	builder.WriteString(", pnumber=")
-	builder.WriteString(fmt.Sprintf("%v", d.Pnumber))
+	builder.WriteString(", password=")
+	builder.WriteString(d.Password)
 	builder.WriteString(", address=")
 	builder.WriteString(d.Address)
 	builder.WriteString(", educational=")
 	builder.WriteString(d.Educational)
+	builder.WriteString(", phone=")
+	builder.WriteString(fmt.Sprintf("%v", d.Phone))
 	builder.WriteByte(')')
 	return builder.String()
 }
