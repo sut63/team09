@@ -35,7 +35,7 @@ func (ctl *PositionController) CreatePosition(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Position.
+	p, err := ctl.client.Position.
 		Create().
 		SetPosition(obj.Position).
 		Save(context.Background())
@@ -45,7 +45,7 @@ func (ctl *PositionController) CreatePosition(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, p)
 }
 
 // GetPosition handles GET requests to retrieve a position entity
@@ -67,7 +67,7 @@ func (ctl *PositionController) GetPosition(c *gin.Context) {
 		})
 		return
 	}
-	d, err := ctl.client.Position.
+	p, err := ctl.client.Position.
 		Query().
 		Where(position.IDEQ(int(id))).
 		Only(context.Background())
@@ -77,7 +77,7 @@ func (ctl *PositionController) GetPosition(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	c.JSON(200, p)
 }
 
 // ListPosition handles request to get a list of position entities
@@ -149,15 +149,15 @@ func (ctl *PositionController) DeletePosition(c *gin.Context) {
 
 // NewPositionController creates and registers handles for the position controller
 func NewPositionController(router gin.IRouter, client *ent.Client) *PositionController {
-	dc := &PositionController{
+	pc := &PositionController{
 		client: client,
 		router: router,
 	}
-	dc.register()
-	return dc
+	pc.register()
+	return pc
  }
   
- // InitUserController registers routes to the main engine
+ // InitPositionController registers routes to the main engine
  func (ctl *PositionController) register() {
 	positions := ctl.router.Group("/positions")
 	positions.GET("", ctl.ListPosition)

@@ -7,7 +7,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/gender"
+	"github.com/team09/app/ent/position"
+	"github.com/team09/app/ent/title"
 )
 
 // DoctorController defines the struct for the doctor controller
@@ -16,12 +20,17 @@ type DoctorController struct {
 	router gin.IRouter
 }
 type Doctor struct {
-	Name        string
-	Age         int
-	Email       string
-	Pnumber     int
-	Address     string
+	Name 		string
+	Age			int
+	Email		string
+	Password 	string
+	Address  	string
 	Educational string
+	Phone 		int
+	Title   	int
+	Position 	int
+	Gender 		int 
+	Disease 	int
 }
 
 // CreateDoctor handles POST requests for adding doctor entities
@@ -36,21 +45,75 @@ type Doctor struct {
 // @Failure 500 {object} gin.H
 // @Router /doctors [post]
 func (ctl *DoctorController) CreateDoctor(c *gin.Context) {
-	obj := ent.Doctor{}
+	obj := Doctor{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "doctor binding failed",
 		})
 		return
 	}
+
+	t, err := ctl.client.Title.
+		Query().
+		Where(title.IDEQ(int(obj.Title))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "title not found",
+		})
+		return
+	}
+
+	p, err := ctl.client.Position.
+		Query().
+		Where(position.IDEQ(int(obj.Position))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "position not found",
+		})
+		return
+	}
+
+	di, err := ctl.client.Disease.
+		Query().
+		Where(disease.IDEQ(int(obj.Disease))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "disease not found",
+		})
+		return
+	}
+
+	g, err := ctl.client.Gender.
+		Query().
+		Where(gender.IDEQ(int(obj.Gender))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "gender not found",
+		})
+		return
+	}
+
 	d, err := ctl.client.Doctor.
 		Create().
 		SetName(obj.Name).
-		SetAge(obj.Age).
-		SetEmail(obj.Email).
-		SetPnumber(obj.Pnumber).
 		SetAddress(obj.Address).
 		SetEducational(obj.Educational).
+		SetPassword(obj.Password).
+		SetAge(obj.Age).
+		SetPhone(obj.Phone).
+		SetEmail(obj.Email).
+		SetTitle(t).
+		SetPosition(p).
+		SetGender(g).
+		SetDisease(di).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -58,7 +121,11 @@ func (ctl *DoctorController) CreateDoctor(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, d)
+	
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   d,
+	})
 }
 
 // GetDoctor handles GET requests to retrieve a doctor entity
@@ -113,6 +180,7 @@ func (ctl *DoctorController) ListDoctor(c *gin.Context) {
 			limit = int(limit64)
 		}
 	}
+
 	offsetQuery := c.Query("offset")
 	offset := 0
 	if offsetQuery != "" {
@@ -121,13 +189,21 @@ func (ctl *DoctorController) ListDoctor(c *gin.Context) {
 			offset = int(offset64)
 		}
 	}
+
 	doctors, err := ctl.client.Doctor.
 		Query().
+		WithTitle().
+		WithGender().
+		WithPosition().
+		WithDisease().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
+
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	c.JSON(200, doctors)
@@ -174,7 +250,7 @@ func NewDoctorController(router gin.IRouter, client *ent.Client) *DoctorControll
 	return dc
 }
 
-// InitUserController registers routes to the main engine
+// InitDoctorController registers routes to the main engine
 func (ctl *DoctorController) register() {
 	doctors := ctl.router.Group("/doctors")
 	doctors.GET("", ctl.ListDoctor)
