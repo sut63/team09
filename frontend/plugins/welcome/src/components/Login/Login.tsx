@@ -1,19 +1,11 @@
-import React, { FC, useEffect, useReducer } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
+import React, { FC, useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Swal from 'sweetalert2';
-import {
-  // Content,
-  Header,
-  Page,
-  pageTheme,
-  // ContentHeader,
-} from '@backstage/core';
-// import { DefaultApi } from '../../api';
-// import Swal from 'sweetalert2'; // alert
+import {Header,Page,pageTheme,} from '@backstage/core';
+import {TextField,Button,Grid,Link,} from '@material-ui/core';
+import { Alert } from '@material-ui/lab'; // alert
+import { DefaultApi } from '../../api/apis';
+import { EntDoctor } from '../../api/models/EntDoctor';
 
 const HeaderCustom = {
   minHeight: '120px',
@@ -35,126 +27,74 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type State = {
-  email: string
-  password: string
-  isButtonDisabled: boolean
-  helperText: string
-  isError: boolean
-};
 
-const initialState: State = {
-  email: '',
-  password: '',
-  isButtonDisabled: true,
-  helperText: '',
-  isError: false
-};
-
-type Action = { type: 'setEmail', payload: string }
-  | { type: 'setPassword', payload: string }
-  | { type: 'setIsButtonDisabled', payload: boolean }
-  | { type: 'loginSuccess', payload: string }
-  | { type: 'loginFailed', payload: string }
-  | { type: 'setIsError', payload: boolean };
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'setEmail':
-      return {
-        ...state,
-        email: action.payload
-      };
-    case 'setPassword':
-      return {
-        ...state,
-        password: action.payload
-      };
-    case 'setIsButtonDisabled':
-      return {
-        ...state,
-        isButtonDisabled: action.payload
-      };
-    case 'loginSuccess':
-      return {
-        ...state,
-        helperText: action.payload,
-        isError: false
-      };
-    case 'loginFailed':
-      return {
-        ...state,
-        helperText: action.payload,
-        isError: true
-      };
-    case 'setIsError':
-      return {
-        ...state,
-        isError: action.payload
-      };
-  }
-}
-
-const Login = () => {
+const Login: FC<{}> = () => {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [status, setStatus] = useState(false);
+  const [alert, setAlert] = useState(Boolean);
+  const api = new DefaultApi();
+  const [doctors, setDoctor] = useState<EntDoctor[]>([]);
+  const [emails, setEmail] = React.useState(String);
+  const [password, setPassword] = React.useState(String);
 
+
+  const emailHandleChange = (event: any) => {
+    setEmail(event.target.value as string);
+  };
+  const passwordHandleChange = (event: any) => {
+    setPassword(event.target.value as string);
+  };
+
+  const getDoctor = async () => {
+    const res: any = await api.listDoctor({ limit: 0, offset: 0 });
+    setDoctor(res);
+  };
+
+  const resetData = async () => {
+    localStorage.clear();
+  };
   useEffect(() => {
-    if (state.email.trim() && state.password.trim()) {
-      dispatch({
-        type: 'setIsButtonDisabled',
-        payload: false
-      });
-    } else {
-      dispatch({
-        type: 'setIsButtonDisabled',
-        payload: true
-      });
-    }
-  }, [state.email, state.password]);
+    getDoctor();
+    resetData();
+  }, []);
 
-  const handleLogin = () => {
-    if ((state.email == "somchai@gmail.com" && state.password == "12345") ||
-    (state.email == "wanee@gmail.com" && state.password == "123456")
-  ) {
-      dispatch({
-        type: 'loginSuccess',
-        payload: 'Login Successfully'
-      });
-    } else {
-      dispatch({
-        type: 'loginFailed',
-        payload: 'Incorrect username or password'
-      });
-    }
+  const SigninCheck = async () => {
+    var checkDoctor = false;
+
+    doctors.map((item: any) => {
+      console.log(item.email);
+      if (item.email == emails && item.password == password) {
+        setAlert(true);
+        checkDoctor = true;
+        localStorage.setItem('doctor-id', JSON.stringify(item.id));
+        localStorage.setItem('doctor-name', JSON.stringify(item.name));
+        history.pushState('', '', '/home'); /////////มาแก้ที่หลังไปยังหน้ารวมเภสัชกร
+        window.location.reload(false);
+      }
+    });
+
+    setStatus(true);
+    const timer = setTimeout(() => {
+      setStatus(false);
+    }, 1000);
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.keyCode === 13 || event.which === 13) {
-      state.isButtonDisabled || handleLogin();
-    }
-  };
-
-  const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> =
-    (event) => {
-      dispatch({
-        type: 'setEmail',
-        payload: event.target.value
-      });
-    };
-
-  const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> =
-    (event) => {
-      dispatch({
-        type: 'setPassword',
-        payload: event.target.value
-      });
-    }
   return (
     <div className={classes.paper}>
       <Page theme={pageTheme.website}>
         <Header style={HeaderCustom} title={`Doctor Information`}
           subtitle="กรุณาบันทึกข้อมูลก่อนเข้าสู่ระบบ">
+            {status ? (
+            <div>
+              {alert ? (
+                <Alert severity="success">เข้าสู่ระบบสำเร็จ</Alert>
+              ) : (
+                  <Alert severity="warning" style={{ marginTop: 20 }}>
+                    ไม่พบข้อมูลในระบบ
+                  </Alert>
+                )}
+            </div>
+          ) : null}
         </Header>
         <form className={classes.submit} noValidate>
           <TextField
@@ -167,9 +107,7 @@ const Login = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={handleUsernameChange}
-            onKeyPress={handleKeyPress}
-
+            onChange={emailHandleChange}
           />
           <TextField
             variant="outlined"
@@ -180,21 +118,17 @@ const Login = () => {
             label="Password"
             type="password"
             id="password"
+            onChange={passwordHandleChange}
             autoComplete="current-password"
-            helperText={state.helperText}
-            onChange={handlePasswordChange}
-            onKeyPress={handleKeyPress}
+            
           />
           <Button
-
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleLogin}
-            disabled={state.isButtonDisabled}
-            href="/home"   
+            onClick={SigninCheck}
             >
             Sign In
           </Button>
