@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import { InputLabel, MenuItem } from '@material-ui/core';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
-import { EntSpecialist } from '../../api/models/EntSpecialist';
+import { EntSpecialdoctor } from '../../api/models/EntSpecialdoctor';
 import Swal from 'sweetalert2';
 // import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
@@ -46,7 +46,7 @@ interface office {
   officename: string;
   doctor: number;
   department: number;
-  specialist: number;
+  specialdoctor: number;
   added1: Date;
   added2: Date;
 }
@@ -57,7 +57,7 @@ const Office: FC<{}> = () => {
   const [office, setOffice] = React.useState<Partial<office>>({});
   const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
-  const [specialists, setSpecialist] = React.useState<EntSpecialist[]>([]);
+  const [specialdoctors, setSpecialdoctor] = React.useState<EntSpecialdoctor[]>([]);
 
 
   // const [workingtimes, setWorkingtime] = React.useState<EntWorkingtime[]>([]);
@@ -96,16 +96,16 @@ const Office: FC<{}> = () => {
     const res = await http.listDepartment({ limit: 10, offset: 0 });
     setDepartment(res);
   };
-  const getSpecialists = async () => {
-    const res = await http.listSpecialist({ limit: 10, offset: 0 });
-    setSpecialist(res);
+  const getSpecialdoctor = async () => {
+    const res = await http.listSpecialdoctor({ limit: 10, offset: 0 });
+    setSpecialdoctor(res);
   };
   
   // Lifecycle Hooks
   useEffect(() => {
     getDoctors();
     getDepartments();
-    getSpecialists();
+    getSpecialdoctor();
   }, []);
 
   function clear() {
@@ -198,12 +198,12 @@ const Office: FC<{}> = () => {
                   name="specialist"
                   label="แพทย์เฉพาะทาง"
                   type="string"
-                  value={office.specialist || ''}
+                  value={office.specialdoctor || ''}
                   onChange={handleChange}
                 >
-                  {specialists.map(item => {
+                  {specialdoctors.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{item.specialist}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{"item.extradoctor.specialname"}</MenuItem>
                     );
                   })}
                 </Select>
