@@ -17,9 +17,10 @@ func (Doctor) Fields() []ent.Field {
 		field.String("name").NotEmpty(),
 		field.Int("age").Positive(),
 		field.String("email").NotEmpty(),
-		field.Int("pnumber").Positive(),
+		field.String("password").NotEmpty(),
 		field.String("address").NotEmpty(),
 		field.String("educational").NotEmpty(),
+		field.String("phone").NotEmpty(),
 	}
 }
 
@@ -52,11 +53,10 @@ func (Doctor) Edges() []ent.Edge {
 		edge.To("schedules", Schedule.Type).
 			StorageKey(edge.Column("schedule_id")),
 
-		edge.To("trainings",Training.Type).
+		edge.To("trainings", Training.Type).
 			StorageKey(edge.Column("doctor_id")),
-		
-		edge.To("specialists",Specialist.Type).
+
+		edge.To("specialists", Specialist.Type).
 			StorageKey(edge.Column("doctor_id")),
-		
 	}
 }
