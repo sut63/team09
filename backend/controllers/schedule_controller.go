@@ -48,7 +48,7 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 		return
 	}
 
-	d, err := ctl.client.Department.
+	de, err := ctl.client.Department.
 		Query().
 		Where(department.IDEQ(int(obj.Department))).
 		Only(context.Background())
@@ -72,7 +72,7 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 		return
 	}
 
-	dt, err := ctl.client.Doctor.
+	d, err := ctl.client.Doctor.
 		Query().
 		Where(doctor.IDEQ(int(obj.Doctor))).
 		Only(context.Background())
@@ -87,9 +87,9 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 	time, err := time.Parse(time.RFC3339, obj.Added+":00+07:00")
 	sh, err := ctl.client.Schedule.
 		Create().
-		SetDepartment(d).
+		SetDepartment(de).
 		SetOffice(of).
-		SetDocter(dt).
+		SetDocter(d).
 		SetActivity(obj.Activity).
 		SetAddedTime(time).
 		Save(context.Background())
