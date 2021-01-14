@@ -24,7 +24,7 @@ type Doctor struct {
 	Password    string
 	Address     string
 	Educational string
-	Phone		string
+	Phone       string
 }
 type Genders struct {
 	Gender []Gender
@@ -137,18 +137,18 @@ type Specialist struct {
 // @authorizationUrl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 func main() {
-    router := gin.Default()
-    router.Use(cors.Default())
+	router := gin.Default()
+	router.Use(cors.Default())
 
-    client, err := ent.Open("sqlite3", "file:doctor.db?cache=shared&_fk=1")
-    if err != nil {
-        log.Fatalf("fail to open sqlite3: %v", err)
-    }
-    defer client.Close()
+	client, err := ent.Open("sqlite3", "file:doctor.db?cache=shared&_fk=1")
+	if err != nil {
+		log.Fatalf("fail to open sqlite3: %v", err)
+	}
+	defer client.Close()
 
-    if err := client.Schema.Create(context.Background()); err != nil {
-        log.Fatalf("failed creating schema resources: %v", err)
-    }
+	if err := client.Schema.Create(context.Background()); err != nil {
+		log.Fatalf("failed creating schema resources: %v", err)
+	}
 
 	v1 := router.Group("/api/v1")
 	controllers.NewOfficeController(v1, client)
@@ -163,7 +163,6 @@ func main() {
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewMissionController(v1, client)
 	controllers.NewSpecialistController(v1, client)
-
 
 	//setcourse
 	courses := Courses{
@@ -232,7 +231,7 @@ func main() {
 
 	// Set Diseases Data
 	diseases := Diseases{
-		Disease: []Disease{			
+		Disease: []Disease{
 			Disease{"โรคหลอดเลือดหัวใจ"},
 			Disease{"โรคเบาหวาน"},
 			Disease{"โรคความดันโลหิตสูง"},
@@ -247,7 +246,7 @@ func main() {
 	for _, di := range diseases.Disease {
 		client.Disease.
 			Create().
-			SetDisease(d.Disease).
+			SetDisease(di.Disease).
 			Save(context.Background())
 	}
 
