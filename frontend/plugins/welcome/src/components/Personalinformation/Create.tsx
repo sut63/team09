@@ -156,14 +156,17 @@ const Doctor: FC<{}> = () => {
           <Button color="inherit" component={RouterLink} to="/"> Login </Button>
         </Toolbar>
       </AppBar>
+
       <Content className={classes.withoutLabel}>
         <Typography variant="h3"
-          className={classes.formControl} style={{ marginLeft: 120 }}>
+          className={classes.formControl} style={{ marginLeft: 350 }}>
           บันทึกข้อมูลส่วนตัวแพทย์
         </Typography>
+
         <div className={classes.root}>
           <form noValidate autoComplete="off">
-            <Grid item xs={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>คำนำหน้าชื่อ</InputLabel>
                 <Select
@@ -179,9 +182,7 @@ const Doctor: FC<{}> = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={3}>
-
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <FormControl
                   fullWidth
                   className={classes.formControl}
@@ -196,7 +197,10 @@ const Doctor: FC<{}> = () => {
                     onChange={handleChange}
                   />
                 </FormControl>
-              </Grid>           
+              </Grid>  
+              </Grid>   
+              <Grid container spacing={3}>
+              <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>ตำแหน่ง</InputLabel>
                 <Select
@@ -232,7 +236,8 @@ const Doctor: FC<{}> = () => {
                 </Select>
               </FormControl>
             </Grid>
-
+            </Grid>
+            <Grid container spacing={3}>
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -249,7 +254,6 @@ const Doctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-
             <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>โรคประจำตัว</InputLabel>
@@ -268,7 +272,8 @@ const Doctor: FC<{}> = () => {
                 </Select>
               </FormControl>
             </Grid>
-
+            </Grid>
+            <Grid container spacing={3}>
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -285,7 +290,6 @@ const Doctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -302,7 +306,8 @@ const Doctor: FC<{}> = () => {
                   onChange={handleChange} />
               </FormControl>
             </Grid>
-
+            </Grid>
+            <Grid container spacing={3}>
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -319,7 +324,6 @@ const Doctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -336,7 +340,8 @@ const Doctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-
+            </Grid>
+            <Grid container spacing={3}>
             <Grid item xs={6}>
               <FormControl
                 fullWidth
@@ -353,8 +358,8 @@ const Doctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-
-            <div className={classes.formControl} style={{ marginLeft: 180 }}>
+            </Grid>
+            <div className={classes.formControl} style={{ marginLeft: 450 }}>
               <Button
                 onClick={save}
                 variant="contained"
