@@ -21,10 +21,9 @@ type Doctor struct {
 	Name        string
 	Age         int
 	Email       string
-	Password    string
+	Pnumber     int
 	Address     string
 	Educational string
-	Phone		string
 }
 type Genders struct {
 	Gender []Gender
@@ -87,15 +86,15 @@ type Office struct {
 	Officename string
 }
 
-type Specialists struct {
-	Specialist []Specialist
+type Specials struct {
+	Special []Special
 }
 
-type Specialist struct {
-	Specialist string
+type Special struct {
+	Specialname string
 }
 
-// @title SUT SA Example API Playlist Vidoe
+// @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
 // @termsOfService http://swagger.io/terms/
@@ -103,7 +102,6 @@ type Specialist struct {
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
-
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -137,18 +135,18 @@ type Specialist struct {
 // @authorizationUrl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 func main() {
-    router := gin.Default()
-    router.Use(cors.Default())
+	router := gin.Default()
+	router.Use(cors.Default())
 
-    client, err := ent.Open("sqlite3", "file:doctor.db?cache=shared&_fk=1")
-    if err != nil {
-        log.Fatalf("fail to open sqlite3: %v", err)
-    }
-    defer client.Close()
+	client, err := ent.Open("sqlite3", "file:ent.db?cache=shared&_fk=1")
+	if err != nil {
+		log.Fatalf("fail to open sqlite3: %v", err)
+	}
+	defer client.Close()
 
-    if err := client.Schema.Create(context.Background()); err != nil {
-        log.Fatalf("failed creating schema resources: %v", err)
-    }
+	if err := client.Schema.Create(context.Background()); err != nil {
+		log.Fatalf("failed creating schema resources: %v", err)
+	}
 
 	v1 := router.Group("/api/v1")
 	controllers.NewOfficeController(v1, client)
@@ -162,7 +160,7 @@ func main() {
 	controllers.NewPositionController(v1, client)
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewMissionController(v1, client)
-	controllers.NewSpecialistController(v1, client)
+	controllers.NewExtradoctorController(v1, client)
 
 
 	//setcourse
@@ -214,11 +212,11 @@ func main() {
 	// Set Positions Data
 	positions := Positions{
 		Position: []Position{
-			Position{"แพทย์ปฏิบัติการ"},
-			Position{"แพทย์ชำนาญการ"},
-			Position{"แพทย์ชำนาญการพิเศษ"},
-			Position{"แพทย์เชี่ยวชาญ"},
-			Position{"แพทย์ทรงคุณวุฒิ"},
+			Position{"นายแพทย์ปฏิบัติการ"},
+			Position{"นายแพทย์ชำนาญการ"},
+			Position{"นายแพทย์ชำนาญการพิเศษ"},
+			Position{"นายแพทย์เชี่ยวชาญ"},
+			Position{"นายแพทย์ทรงคุณวุฒิ"},
 			Position{"อื่นๆ"},
 		},
 	}
@@ -240,7 +238,6 @@ func main() {
 			Disease{"วัณโรคที่มากับอากาศ"},
 			Disease{"โรคปอดเรื้อรัง"},
 			Disease{"โรคภูมิแพ้"},
-			Disease{"ไม่มีโรคประจำตัว"},
 			Disease{"อื่นๆ"},
 		},
 	}
@@ -327,58 +324,58 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Specialist Data
-	specialists := Specialists{
-		Specialist: []Specialist{
-			//Specialist{"แผนกรังสี"},
-			Specialist{"รังสีร่วมรักษาระบบประสาท"},
-			Specialist{"รังสีรักษาและมะเร็งวิทยา"},
-			Specialist{"รังสีวิทยาวินิจฉัย"},
-			//Specialist{"แผนกห้องปฏิบัติการทางการแพทย์"},
-			Specialist{"จุลกายวิภาคศาสตร์"},
-			Specialist{"ปรสิตวิทยา"},
-			Specialist{"เวชศาสตร์การบริการโลหิต"},
-			//Specialist{"แผนกศัลยกรรม"},
-			Specialist{"ศัลยศาสตร์ตกแต่งและเสริมสร้าง"},
-			Specialist{"ศัลยศาสตร์หลอดเลือด"},
-			Specialist{"ศัลยศาสตร์ลำไส้ใหญ่และทวารหนัก"},
-			//Specialist{"แผนกวิสัญญี"},
-			Specialist{"วิสัญญีวิทยาเพื่อการผ่าตัดหัวใจ หลอดเลือดใหญ่และทรวงอก"},
-			Specialist{"วิสัญญีวิทยาสำหรับผู้ป่วยโรคทางระบบประสาท"},
-			Specialist{"วิสัญญีวิทยาเพื่อการระงับปวด"},
-			//Specialist{"แผนกกุมารเวช"},
-			Specialist{"กุมารเวชศาสตร์โรคติดเชื้อ"},
-			Specialist{"กุมารเวชศาสตร์พัฒนาการและพฤติกรรม"},
-			Specialist{"กุมารเวชศาสตร์โรคภูมิแพ้และภูมิคุ้มกัน"},
-			//Specialist{"แผนกสูตินรีเวช"},
-			Specialist{"เวชศาสตร์มารดาและทารกในครรภ์"},
-			Specialist{"มะเร็งนรีเวชวิทยา"},
-			Specialist{"เวชศาสตร์การเจริญพันธุ์"},
-			//Specialist{"แผนกเวชศาสตร์ป้องกัน"},
-			Specialist{"ระบาดวิทยา"},
-			Specialist{"อาชีวเวชศาสตร์"},
-			Specialist{"เวชศาสตร์การบิน"},
-			//Specialist{"แผนกอายุรกรรม"},
-			Specialist{"อายุรศาสตร์โรคข้อและรูมาติสซั่ม"},
-			Specialist{"อายุรศาสตร์โรคภูมิแพ้และอิมมูโนวิทยาคลินิก"},
-			Specialist{"อายุรศาสตร์โรคระบบทางเดินอาหาร"},
-			//Specialist{"แผนกจักษุ"},
-			Specialist{"จักษุวิทยาโรคต้อหิน"},
-			Specialist{"จักษุวิทยาการตรวจคลื่นไฟฟ้า"},
-			Specialist{"ศัลยกรรมจักษุตกแต่งและเสริมสร้าง"},
+	// Set Special Data
+	specials := Specials{
+		Special: []Special{
+			//Special{"แผนกรังสี"},
+			Special{"รังสีร่วมรักษาระบบประสาท"},
+			Special{"รังสีรักษาและมะเร็งวิทยา"},
+			Special{"รังสีวิทยาวินิจฉัย"},
+			//Special{"แผนกห้องปฏิบัติการทางการแพทย์"},
+			Special{"จุลกายวิภาคศาสตร์"},
+			Special{"ปรสิตวิทยา"},
+			Special{"เวชศาสตร์การบริการโลหิต"},
+			//Special{"แผนกศัลยกรรม"},
+			Special{"ศัลยศาสตร์ตกแต่งและเสริมสร้าง"},
+			Special{"ศัลยศาสตร์หลอดเลือด"},
+			Special{"ศัลยศาสตร์ลำไส้ใหญ่และทวารหนัก"},
+			//Special{"แผนกวิสัญญี"},
+			Special{"วิสัญญีวิทยาเพื่อการผ่าตัดหัวใจ หลอดเลือดใหญ่และทรวงอก"},
+			Special{"วิสัญญีวิทยาสำหรับผู้ป่วยโรคทางระบบประสาท"},
+			Special{"วิสัญญีวิทยาเพื่อการระงับปวด"},
+			//Special{"แผนกกุมารเวช"},
+			Special{"กุมารเวชศาสตร์โรคติดเชื้อ"},
+			Special{"กุมารเวชศาสตร์พัฒนาการและพฤติกรรม"},
+			Special{"กุมารเวชศาสตร์โรคภูมิแพ้และภูมิคุ้มกัน"},
+			//Special{"แผนกสูตินรีเวช"},
+			Special{"เวชศาสตร์มารดาและทารกในครรภ์"},
+			Special{"มะเร็งนรีเวชวิทยา"},
+			Special{"เวชศาสตร์การเจริญพันธุ์"},
+			//Special{"แผนกเวชศาสตร์ป้องกัน"},
+			Special{"ระบาดวิทยา"},
+			Special{"อาชีวเวชศาสตร์"},
+			Special{"เวชศาสตร์การบิน"},
+			//Special{"แผนกอายุรกรรม"},
+			Special{"อายุรศาสตร์โรคข้อและรูมาติสซั่ม"},
+			Special{"อายุรศาสตร์โรคภูมิแพ้และอิมมูโนวิทยาคลินิก"},
+			Special{"อายุรศาสตร์โรคระบบทางเดินอาหาร"},
+			//Special{"แผนกจักษุ"},
+			Special{"จักษุวิทยาโรคต้อหิน"},
+			Special{"จักษุวิทยาการตรวจคลื่นไฟฟ้า"},
+			Special{"ศัลยกรรมจักษุตกแต่งและเสริมสร้าง"},
 			//Specialist{"แผนกหู คอ จมูก"},
-			Specialist{"โสต ศอ นาสิกวิทยา"},
-			Specialist{"ศัลยศาสตร์ตกแต่งและเสริมสร้างใบหน้า"},
-			//Specialist{"แผนกจิตเวช"},
-			Specialist{"จิตเวชศาสตร์ทั่วไป"},
-			Specialist{"จิตเวชศาสตร์เด็กและวัยรุ่น"},
+			Special{"โสต ศอ นาสิกวิทยา"},
+			Special{"ศัลยศาสตร์ตกแต่งและเสริมสร้างใบหน้า"},
+			//Special{"แผนกจิตเวช"},
+			Special{"จิตเวชศาสตร์ทั่วไป"},
+			Special{"จิตเวชศาสตร์เด็กและวัยรุ่น"},
 		},
 	}
 
-	for _, sl := range specialists.Specialist {
-		client.Specialist.
+	for _, s := range specials.Special {
+		client.Extradoctor.
 			Create().
-			SetSpecialist(sl.Specialist).
+			SetSpecialname(s.Specialname).
 			Save(context.Background())
 	}
 
