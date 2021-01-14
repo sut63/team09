@@ -232,8 +232,7 @@ func main() {
 
 	// Set Diseases Data
 	diseases := Diseases{
-		Disease: []Disease{
-			Disease{"โรคมะเร็ง"},
+		Disease: []Disease{			
 			Disease{"โรคหลอดเลือดหัวใจ"},
 			Disease{"โรคเบาหวาน"},
 			Disease{"โรคความดันโลหิตสูง"},
