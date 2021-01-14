@@ -20,6 +20,7 @@ import { EntOffice } from '../../api/models/EntOffice';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { DefaultApi } from '../../api/apis';
 import Swal from 'sweetalert2';
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -203,7 +204,7 @@ const Schedule: FC<{}> = () => {
                         ระบบบันทึกเวลาของแพทย์
               </Typography>
                     <Grid item xs> </Grid>
-                    <Button variant="contained" color="secondary" onClick={LogOut} >logout</Button>
+                    <Button color="inherit" href="/" startIcon={<ExitToAppRoundedIcon />}>Logout</Button>
                 </Toolbar>
             </AppBar>
 
