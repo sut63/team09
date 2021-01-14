@@ -83,7 +83,7 @@ const Homepage: FC<{}> = () => {
 
             <Link 
             color="textPrimary" 
-            href="/" >
+            href="/specialdoctor" >
                 บันทึกข้อมูลแพทย์เฉพาะทาง
             </Link>
 
