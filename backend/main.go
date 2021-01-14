@@ -245,7 +245,7 @@ func main() {
 		},
 	}
 
-	for _, d := range diseases.Disease {
+	for _, di := range diseases.Disease {
 		client.Disease.
 			Create().
 			SetDisease(d.Disease).
