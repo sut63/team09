@@ -21,9 +21,10 @@ type Doctor struct {
 	Name        string
 	Age         int
 	Email       string
-	Pnumber     int
+	Password    string
 	Address     string
 	Educational string
+	Phone		string
 }
 type Genders struct {
 	Gender []Gender
@@ -94,7 +95,7 @@ type Specialist struct {
 	Specialist string
 }
 
-// @title SUT SA Example API
+// @title SUT SA Example API Playlist Vidoe
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
 // @termsOfService http://swagger.io/terms/
@@ -102,6 +103,7 @@ type Specialist struct {
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
+
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -135,18 +137,18 @@ type Specialist struct {
 // @authorizationUrl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 func main() {
-	router := gin.Default()
-	router.Use(cors.Default())
+    router := gin.Default()
+    router.Use(cors.Default())
 
-	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-	if err != nil {
-		log.Fatalf("fail to open sqlite3: %v", err)
-	}
-	defer client.Close()
+    client, err := ent.Open("sqlite3", "file:doctor.db?cache=shared&_fk=1")
+    if err != nil {
+        log.Fatalf("fail to open sqlite3: %v", err)
+    }
+    defer client.Close()
 
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
+    if err := client.Schema.Create(context.Background()); err != nil {
+        log.Fatalf("failed creating schema resources: %v", err)
+    }
 
 	v1 := router.Group("/api/v1")
 	controllers.NewOfficeController(v1, client)
@@ -212,11 +214,11 @@ func main() {
 	// Set Positions Data
 	positions := Positions{
 		Position: []Position{
-			Position{"นายแพทย์ปฏิบัติการ"},
-			Position{"นายแพทย์ชำนาญการ"},
-			Position{"นายแพทย์ชำนาญการพิเศษ"},
-			Position{"นายแพทย์เชี่ยวชาญ"},
-			Position{"นายแพทย์ทรงคุณวุฒิ"},
+			Position{"แพทย์ปฏิบัติการ"},
+			Position{"แพทย์ชำนาญการ"},
+			Position{"แพทย์ชำนาญการพิเศษ"},
+			Position{"แพทย์เชี่ยวชาญ"},
+			Position{"แพทย์ทรงคุณวุฒิ"},
 			Position{"อื่นๆ"},
 		},
 	}
@@ -238,6 +240,7 @@ func main() {
 			Disease{"วัณโรคที่มากับอากาศ"},
 			Disease{"โรคปอดเรื้อรัง"},
 			Disease{"โรคภูมิแพ้"},
+			Disease{"ไม่มีโรคประจำตัว"},
 			Disease{"อื่นๆ"},
 		},
 	}
