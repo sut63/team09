@@ -6,6 +6,7 @@ import Login  from './components/Login';
 import Home  from './components/Home';
 import Table from './components/Table';
 import Training from './components/Training';
+import Specialdoctor from './components/Specialdoctor';
 
 export const plugin = createPlugin({
   id: 'welcome',
@@ -17,6 +18,7 @@ export const plugin = createPlugin({
     router.registerRoute('/home', Home);
     router.registerRoute('/table', Table);
     router.registerRoute('/training', Training);
+    router.registerRoute('/specialdoctor', Specialdoctor);
 
   },
 });
