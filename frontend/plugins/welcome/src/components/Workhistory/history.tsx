@@ -15,6 +15,7 @@ import { InputLabel, MenuItem } from '@material-ui/core';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
 import { EntSpecialdoctor } from '../../api/models/EntSpecialdoctor';
+import { EntExtradoctor } from '../../api/models/EntExtradoctor';
 import Swal from 'sweetalert2';
 // import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
@@ -47,6 +48,7 @@ interface office {
   doctor: number;
   department: number;
   specialdoctor: number;
+  extradoctor: number;
   added1: Date;
   added2: Date;
 }
@@ -57,7 +59,8 @@ const Office: FC<{}> = () => {
   const [office, setOffice] = React.useState<Partial<office>>({});
   const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
-  const [specialdoctors, setSpecialdoctor] = React.useState<EntSpecialdoctor[]>([]);
+  // const [specialdoctors, setSpecialdoctor] = React.useState<EntSpecialdoctor[]>([]);
+  const [extradoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
 
 
   // const [workingtimes, setWorkingtime] = React.useState<EntWorkingtime[]>([]);
@@ -96,16 +99,21 @@ const Office: FC<{}> = () => {
     const res = await http.listDepartment({ limit: 10, offset: 0 });
     setDepartment(res);
   };
-  const getSpecialdoctor = async () => {
-    const res = await http.listSpecialdoctor({ limit: 10, offset: 0 });
-    setSpecialdoctor(res);
+  // const getSpecialdoctors = async () => {
+  //   const res = await http.listSpecialdoctor({ limit: 10, offset: 0 });
+  //   setSpecialdoctor(res);
+  // };
+  const getExtradoctors = async () => {
+    const res = await http.listExtradoctor({ limit: 10, offset: 0 });
+    setExtradoctor(res);
   };
   
   // Lifecycle Hooks
   useEffect(() => {
     getDoctors();
     getDepartments();
-    getSpecialdoctor();
+    // getSpecialdoctors();
+    getExtradoctors();
   }, []);
 
   function clear() {
@@ -198,12 +206,12 @@ const Office: FC<{}> = () => {
                   name="specialist"
                   label="แพทย์เฉพาะทาง"
                   type="string"
-                  value={office.specialdoctor || ''}
+                  value={office.extradoctor || ''}
                   onChange={handleChange}
                 >
-                  {specialdoctors.map(item => {
+                  {extradoctors.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{"item.extradoctor.specialname"}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{item.specialname}</MenuItem>
                     );
                   })}
                 </Select>
