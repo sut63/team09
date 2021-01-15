@@ -329,6 +329,183 @@
                 }
             }
         },
+        "/details": {
+            "get": {
+                "description": "list detail entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List detail entities",
+                "operationId": "list-detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Detail"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create detail",
+                "operationId": "create-detail",
+                "parameters": [
+                    {
+                        "description": "Detail entity",
+                        "name": "Detail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Detail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Detail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/details/{id}": {
+            "get": {
+                "description": "get detail by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a detail entity by ID",
+                "operationId": "get-detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "detail ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Detail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get detail by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a detail entity by ID",
+                "operationId": "delete-detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "detail ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/diseases": {
             "get": {
                 "description": "list disease entities",
@@ -660,6 +837,98 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/extradoctors": {
+            "get": {
+                "description": "list extradoctor entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Listextradoctor entities",
+                "operationId": "list-extradoctor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Extradoctor"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/extradoctors/{id}": {
+            "get": {
+                "description": "get extradoctor by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a extradoctor entity by ID",
+                "operationId": "get-extradoctor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Special ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Extradoctor"
                         }
                     },
                     "400": {
@@ -1096,7 +1365,7 @@
                 "parameters": [
                     {
                         "description": "Office entity",
-                        "name": "doctor",
+                        "name": "office",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1617,14 +1886,14 @@
                 }
             }
         },
-        "/specialists": {
+        "/specialdoctors": {
             "get": {
-                "description": "list specialist entities",
+                "description": "list specialdoctor entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List specialist entities",
-                "operationId": "list-specialist",
+                "summary": "List specialdoctor entities",
+                "operationId": "list-specialdoctor",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1645,7 +1914,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Specialist"
+                                "$ref": "#/definitions/ent.Specialdoctor"
                             }
                         }
                     },
@@ -1664,23 +1933,23 @@
                 }
             },
             "post": {
-                "description": "Create specialist",
+                "description": "Create specialdoctor",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create specialist",
-                "operationId": "create-specialist",
+                "summary": "Create specialdoctor",
+                "operationId": "create-specialdoctor",
                 "parameters": [
                     {
-                        "description": "Specialist entity",
-                        "name": "specialist",
+                        "description": "Specialdoctor entity",
+                        "name": "specialdoctor",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Specialist"
+                            "$ref": "#/definitions/ent.Specialdoctor"
                         }
                     }
                 ],
@@ -1688,7 +1957,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Specialist"
+                            "$ref": "#/definitions/ent.Specialdoctor"
                         }
                     },
                     "400": {
@@ -1706,18 +1975,18 @@
                 }
             }
         },
-        "/specialists/{id}": {
+        "/specialdoctors/{id}": {
             "get": {
-                "description": "get specialist by ID",
+                "description": "get specialdoctor by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a specialist entity by ID",
-                "operationId": "get-specialist",
+                "summary": "Get a specialdoctor entity by ID",
+                "operationId": "get-specialdoctor",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Specialist ID",
+                        "description": "Specialdoctor ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1727,7 +1996,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Specialist"
+                            "$ref": "#/definitions/ent.Specialdoctor"
                         }
                     },
                     "400": {
@@ -1751,16 +2020,16 @@
                 }
             },
             "delete": {
-                "description": "get specialist by ID",
+                "description": "get specialdoctor by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a specialist entity by ID",
-                "operationId": "delete-specialist",
+                "summary": "Delete a specialdoctor entity by ID",
+                "operationId": "delete-specialdoctor",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Specialist ID",
+                        "description": "Specialdoctor ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2083,6 +2352,13 @@
         "ent.CourseEdges": {
             "type": "object",
             "properties": {
+                "details": {
+                    "description": "Details holds the value of the details edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Detail"
+                    }
+                },
                 "trainings": {
                     "description": "Trainings holds the value of the trainings edge.",
                     "type": "array",
@@ -2095,10 +2371,6 @@
         "ent.Department": {
             "type": "object",
             "properties": {
-                "Detail": {
-                    "description": "Detail holds the value of the \"Detail\" field.",
-                    "type": "string"
-                },
                 "Name": {
                     "description": "Name holds the value of the \"Name\" field.",
                     "type": "string"
@@ -2117,15 +2389,12 @@
         "ent.DepartmentEdges": {
             "type": "object",
             "properties": {
-                "doctor": {
-                    "description": "Doctor holds the value of the doctor edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Doctor"
-                },
-                "mission": {
-                    "description": "Mission holds the value of the mission edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Mission"
+                "details": {
+                    "description": "Details holds the value of the details edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Detail"
+                    }
                 },
                 "offices": {
                     "description": "Offices holds the value of the offices edge.",
@@ -2141,11 +2410,11 @@
                         "$ref": "#/definitions/ent.Schedule"
                     }
                 },
-                "specialists": {
-                    "description": "Specialists holds the value of the specialists edge.",
+                "specialdoctors": {
+                    "description": "Specialdoctors holds the value of the specialdoctors edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Specialist"
+                        "$ref": "#/definitions/ent.Specialdoctor"
                     }
                 },
                 "trainings": {
@@ -2154,6 +2423,44 @@
                     "items": {
                         "$ref": "#/definitions/ent.Training"
                     }
+                }
+            }
+        },
+        "ent.Detail": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the DetailQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.DetailEdges"
+                },
+                "explain": {
+                    "description": "Explain holds the value of the \"explain\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.DetailEdges": {
+            "type": "object",
+            "properties": {
+                "course": {
+                    "description": "Course holds the value of the course edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Course"
+                },
+                "department": {
+                    "description": "Department holds the value of the department edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Department"
+                },
+                "mission": {
+                    "description": "Mission holds the value of the mission edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Mission"
                 }
             }
         },
@@ -2219,9 +2526,13 @@
                     "description": "Name holds the value of the \"name\" field.",
                     "type": "string"
                 },
-                "pnumber": {
-                    "description": "Pnumber holds the value of the \"pnumber\" field.",
-                    "type": "integer"
+                "password": {
+                    "description": "Password holds the value of the \"password\" field.",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "Phone holds the value of the \"phone\" field.",
+                    "type": "string"
                 }
             }
         },
@@ -2264,11 +2575,11 @@
                         "$ref": "#/definitions/ent.Schedule"
                     }
                 },
-                "specialists": {
-                    "description": "Specialists holds the value of the specialists edge.",
+                "specialdoctors": {
+                    "description": "Specialdoctors holds the value of the specialdoctors edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Specialist"
+                        "$ref": "#/definitions/ent.Specialdoctor"
                     }
                 },
                 "title": {
@@ -2281,6 +2592,43 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Training"
+                    }
+                }
+            }
+        },
+        "ent.Extradoctor": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the ExtradoctorQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.ExtradoctorEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "specialname": {
+                    "description": "Specialname holds the value of the \"specialname\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.ExtradoctorEdges": {
+            "type": "object",
+            "properties": {
+                "offices": {
+                    "description": "Offices holds the value of the offices edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Office"
+                    }
+                },
+                "specialdoctors": {
+                    "description": "Specialdoctors holds the value of the specialdoctors edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Specialdoctor"
                     }
                 }
             }
@@ -2318,10 +2666,6 @@
         "ent.Mission": {
             "type": "object",
             "properties": {
-                "MissionType": {
-                    "description": "MissionType holds the value of the \"MissionType\" field.",
-                    "type": "string"
-                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the MissionQuery when eager-loading is set.",
                     "type": "object",
@@ -2330,6 +2674,10 @@
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "mission": {
+                    "description": "Mission holds the value of the \"mission\" field.",
+                    "type": "string"
                 }
             }
         },
@@ -2341,6 +2689,13 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Department"
+                    }
+                },
+                "details": {
+                    "description": "Details holds the value of the details edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Detail"
                     }
                 }
             }
@@ -2368,6 +2723,9 @@
                 "officename": {
                     "description": "Officename holds the value of the \"officename\" field.",
                     "type": "string"
+                },
+                "specialdoctor_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2384,17 +2742,17 @@
                     "type": "object",
                     "$ref": "#/definitions/ent.Doctor"
                 },
+                "extradoctor": {
+                    "description": "Extradoctor holds the value of the extradoctor edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Extradoctor"
+                },
                 "schedules": {
                     "description": "Schedules holds the value of the schedules edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Schedule"
                     }
-                },
-                "specialist": {
-                    "description": "Specialist holds the value of the specialist edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Specialist"
                 }
             }
         },
@@ -2470,25 +2828,25 @@
                 }
             }
         },
-        "ent.Specialist": {
+        "ent.Specialdoctor": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the SpecialistQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the SpecialdoctorQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.SpecialistEdges"
+                    "$ref": "#/definitions/ent.SpecialdoctorEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "specialist": {
-                    "description": "Specialist holds the value of the \"specialist\" field.",
+                "other": {
+                    "description": "Other holds the value of the \"other\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.SpecialistEdges": {
+        "ent.SpecialdoctorEdges": {
             "type": "object",
             "properties": {
                 "department": {
@@ -2500,6 +2858,11 @@
                     "description": "Doctor holds the value of the doctor edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Doctor"
+                },
+                "extradoctor": {
+                    "description": "Extradoctor holds the value of the extradoctor edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Extradoctor"
                 },
                 "offices": {
                     "description": "Offices holds the value of the offices edge.",

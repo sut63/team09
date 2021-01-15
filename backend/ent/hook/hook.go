@@ -35,6 +35,19 @@ func (f DepartmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The DetailFunc type is an adapter to allow the use of ordinary
+// function as Detail mutator.
+type DetailFunc func(context.Context, *ent.DetailMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DetailFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DetailMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DetailMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DiseaseFunc type is an adapter to allow the use of ordinary
 // function as Disease mutator.
 type DiseaseFunc func(context.Context, *ent.DiseaseMutation) (ent.Value, error)
@@ -57,6 +70,19 @@ func (f DoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	mv, ok := m.(*ent.DoctorMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DoctorMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The ExtradoctorFunc type is an adapter to allow the use of ordinary
+// function as Extradoctor mutator.
+type ExtradoctorFunc func(context.Context, *ent.ExtradoctorMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ExtradoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ExtradoctorMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ExtradoctorMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -126,15 +152,15 @@ func (f ScheduleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
-// The SpecialistFunc type is an adapter to allow the use of ordinary
-// function as Specialist mutator.
-type SpecialistFunc func(context.Context, *ent.SpecialistMutation) (ent.Value, error)
+// The SpecialdoctorFunc type is an adapter to allow the use of ordinary
+// function as Specialdoctor mutator.
+type SpecialdoctorFunc func(context.Context, *ent.SpecialdoctorMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f SpecialistFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SpecialistMutation)
+func (f SpecialdoctorFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SpecialdoctorMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialistMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SpecialdoctorMutation", m)
 	}
 	return f(ctx, mv)
 }

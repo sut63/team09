@@ -112,10 +112,10 @@ func Email(v string) predicate.Doctor {
 	})
 }
 
-// Pnumber applies equality check predicate on the "pnumber" field. It's identical to PnumberEQ.
-func Pnumber(v int) predicate.Doctor {
+// Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
+func Password(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPnumber), v))
+		s.Where(sql.EQ(s.C(FieldPassword), v))
 	})
 }
 
@@ -130,6 +130,13 @@ func Address(v string) predicate.Doctor {
 func Educational(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEducational), v))
+	})
+}
+
+// Phone applies equality check predicate on the "phone" field. It's identical to PhoneEQ.
+func Phone(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhone), v))
 	})
 }
 
@@ -431,22 +438,22 @@ func EmailContainsFold(v string) predicate.Doctor {
 	})
 }
 
-// PnumberEQ applies the EQ predicate on the "pnumber" field.
-func PnumberEQ(v int) predicate.Doctor {
+// PasswordEQ applies the EQ predicate on the "password" field.
+func PasswordEQ(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPnumber), v))
+		s.Where(sql.EQ(s.C(FieldPassword), v))
 	})
 }
 
-// PnumberNEQ applies the NEQ predicate on the "pnumber" field.
-func PnumberNEQ(v int) predicate.Doctor {
+// PasswordNEQ applies the NEQ predicate on the "password" field.
+func PasswordNEQ(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPnumber), v))
+		s.Where(sql.NEQ(s.C(FieldPassword), v))
 	})
 }
 
-// PnumberIn applies the In predicate on the "pnumber" field.
-func PnumberIn(vs ...int) predicate.Doctor {
+// PasswordIn applies the In predicate on the "password" field.
+func PasswordIn(vs ...string) predicate.Doctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -458,12 +465,12 @@ func PnumberIn(vs ...int) predicate.Doctor {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldPnumber), v...))
+		s.Where(sql.In(s.C(FieldPassword), v...))
 	})
 }
 
-// PnumberNotIn applies the NotIn predicate on the "pnumber" field.
-func PnumberNotIn(vs ...int) predicate.Doctor {
+// PasswordNotIn applies the NotIn predicate on the "password" field.
+func PasswordNotIn(vs ...string) predicate.Doctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -475,35 +482,70 @@ func PnumberNotIn(vs ...int) predicate.Doctor {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldPnumber), v...))
+		s.Where(sql.NotIn(s.C(FieldPassword), v...))
 	})
 }
 
-// PnumberGT applies the GT predicate on the "pnumber" field.
-func PnumberGT(v int) predicate.Doctor {
+// PasswordGT applies the GT predicate on the "password" field.
+func PasswordGT(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPnumber), v))
+		s.Where(sql.GT(s.C(FieldPassword), v))
 	})
 }
 
-// PnumberGTE applies the GTE predicate on the "pnumber" field.
-func PnumberGTE(v int) predicate.Doctor {
+// PasswordGTE applies the GTE predicate on the "password" field.
+func PasswordGTE(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPnumber), v))
+		s.Where(sql.GTE(s.C(FieldPassword), v))
 	})
 }
 
-// PnumberLT applies the LT predicate on the "pnumber" field.
-func PnumberLT(v int) predicate.Doctor {
+// PasswordLT applies the LT predicate on the "password" field.
+func PasswordLT(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPnumber), v))
+		s.Where(sql.LT(s.C(FieldPassword), v))
 	})
 }
 
-// PnumberLTE applies the LTE predicate on the "pnumber" field.
-func PnumberLTE(v int) predicate.Doctor {
+// PasswordLTE applies the LTE predicate on the "password" field.
+func PasswordLTE(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPnumber), v))
+		s.Where(sql.LTE(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContains applies the Contains predicate on the "password" field.
+func PasswordContains(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasPrefix applies the HasPrefix predicate on the "password" field.
+func PasswordHasPrefix(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasSuffix applies the HasSuffix predicate on the "password" field.
+func PasswordHasSuffix(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordEqualFold applies the EqualFold predicate on the "password" field.
+func PasswordEqualFold(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContainsFold applies the ContainsFold predicate on the "password" field.
+func PasswordContainsFold(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPassword), v))
 	})
 }
 
@@ -726,6 +768,117 @@ func EducationalEqualFold(v string) predicate.Doctor {
 func EducationalContainsFold(v string) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEducational), v))
+	})
+}
+
+// PhoneEQ applies the EQ predicate on the "phone" field.
+func PhoneEQ(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneNEQ applies the NEQ predicate on the "phone" field.
+func PhoneNEQ(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneIn applies the In predicate on the "phone" field.
+func PhoneIn(vs ...string) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPhone), v...))
+	})
+}
+
+// PhoneNotIn applies the NotIn predicate on the "phone" field.
+func PhoneNotIn(vs ...string) predicate.Doctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Doctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPhone), v...))
+	})
+}
+
+// PhoneGT applies the GT predicate on the "phone" field.
+func PhoneGT(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneGTE applies the GTE predicate on the "phone" field.
+func PhoneGTE(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneLT applies the LT predicate on the "phone" field.
+func PhoneLT(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneLTE applies the LTE predicate on the "phone" field.
+func PhoneLTE(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneContains applies the Contains predicate on the "phone" field.
+func PhoneContains(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneHasPrefix applies the HasPrefix predicate on the "phone" field.
+func PhoneHasPrefix(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneHasSuffix applies the HasSuffix predicate on the "phone" field.
+func PhoneHasSuffix(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneEqualFold applies the EqualFold predicate on the "phone" field.
+func PhoneEqualFold(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneContainsFold applies the ContainsFold predicate on the "phone" field.
+func PhoneContainsFold(v string) predicate.Doctor {
+	return predicate.Doctor(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPhone), v))
 	})
 }
 
@@ -953,25 +1106,25 @@ func HasTrainingsWith(preds ...predicate.Training) predicate.Doctor {
 	})
 }
 
-// HasSpecialists applies the HasEdge predicate on the "specialists" edge.
-func HasSpecialists() predicate.Doctor {
+// HasSpecialdoctors applies the HasEdge predicate on the "specialdoctors" edge.
+func HasSpecialdoctors() predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
+			sqlgraph.To(SpecialdoctorsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialdoctorsTable, SpecialdoctorsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasSpecialistsWith applies the HasEdge predicate on the "specialists" edge with a given conditions (other predicates).
-func HasSpecialistsWith(preds ...predicate.Specialist) predicate.Doctor {
+// HasSpecialdoctorsWith applies the HasEdge predicate on the "specialdoctors" edge with a given conditions (other predicates).
+func HasSpecialdoctorsWith(preds ...predicate.Specialdoctor) predicate.Doctor {
 	return predicate.Doctor(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
+			sqlgraph.To(SpecialdoctorsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialdoctorsTable, SpecialdoctorsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

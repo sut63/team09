@@ -27,12 +27,6 @@ import {
  */
 export interface EntMission {
     /**
-     * MissionType holds the value of the "MissionType" field.
-     * @type {string}
-     * @memberof EntMission
-     */
-    missionType?: string;
-    /**
      * 
      * @type {EntMissionEdges}
      * @memberof EntMission
@@ -44,6 +38,12 @@ export interface EntMission {
      * @memberof EntMission
      */
     id?: number;
+    /**
+     * Mission holds the value of the "mission" field.
+     * @type {string}
+     * @memberof EntMission
+     */
+    mission?: string;
 }
 
 export function EntMissionFromJSON(json: any): EntMission {
@@ -56,9 +56,9 @@ export function EntMissionFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'missionType': !exists(json, 'MissionType') ? undefined : json['MissionType'],
         'edges': !exists(json, 'edges') ? undefined : EntMissionEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'mission': !exists(json, 'mission') ? undefined : json['mission'],
     };
 }
 
@@ -71,9 +71,9 @@ export function EntMissionToJSON(value?: EntMission | null): any {
     }
     return {
         
-        'MissionType': value.missionType,
         'edges': EntMissionEdgesToJSON(value.edges),
         'id': value.id,
+        'mission': value.mission,
     };
 }
 

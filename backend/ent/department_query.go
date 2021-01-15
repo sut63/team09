@@ -13,12 +13,11 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
-	"github.com/team09/app/ent/doctor"
-	"github.com/team09/app/ent/mission"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/training"
 )
 
@@ -31,13 +30,12 @@ type DepartmentQuery struct {
 	unique     []string
 	predicates []predicate.Department
 	// eager-loading edges.
-	withMission     *MissionQuery
-	withDoctor      *DoctorQuery
-	withOffices     *OfficeQuery
-	withSchedules   *ScheduleQuery
-	withTrainings   *TrainingQuery
-	withSpecialists *SpecialistQuery
-	withFKs         bool
+	withDetails        *DetailQuery
+	withOffices        *OfficeQuery
+	withSchedules      *ScheduleQuery
+	withTrainings      *TrainingQuery
+	withSpecialdoctors *SpecialdoctorQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,35 +65,17 @@ func (dq *DepartmentQuery) Order(o ...OrderFunc) *DepartmentQuery {
 	return dq
 }
 
-// QueryMission chains the current query on the mission edge.
-func (dq *DepartmentQuery) QueryMission() *MissionQuery {
-	query := &MissionQuery{config: dq.config}
+// QueryDetails chains the current query on the details edge.
+func (dq *DepartmentQuery) QueryDetails() *DetailQuery {
+	query := &DetailQuery{config: dq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
-			sqlgraph.To(mission.Table, mission.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, department.MissionTable, department.MissionColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryDoctor chains the current query on the doctor edge.
-func (dq *DepartmentQuery) QueryDoctor() *DoctorQuery {
-	query := &DoctorQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
-			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, department.DoctorTable, department.DoctorColumn),
+			sqlgraph.To(detail.Table, detail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.DetailsTable, department.DetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -157,17 +137,17 @@ func (dq *DepartmentQuery) QueryTrainings() *TrainingQuery {
 	return query
 }
 
-// QuerySpecialists chains the current query on the specialists edge.
-func (dq *DepartmentQuery) QuerySpecialists() *SpecialistQuery {
-	query := &SpecialistQuery{config: dq.config}
+// QuerySpecialdoctors chains the current query on the specialdoctors edge.
+func (dq *DepartmentQuery) QuerySpecialdoctors() *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialistsTable, department.SpecialistsColumn),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialdoctorsTable, department.SpecialdoctorsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -354,25 +334,14 @@ func (dq *DepartmentQuery) Clone() *DepartmentQuery {
 	}
 }
 
-//  WithMission tells the query-builder to eager-loads the nodes that are connected to
-// the "mission" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DepartmentQuery) WithMission(opts ...func(*MissionQuery)) *DepartmentQuery {
-	query := &MissionQuery{config: dq.config}
+//  WithDetails tells the query-builder to eager-loads the nodes that are connected to
+// the "details" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithDetails(opts ...func(*DetailQuery)) *DepartmentQuery {
+	query := &DetailQuery{config: dq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	dq.withMission = query
-	return dq
-}
-
-//  WithDoctor tells the query-builder to eager-loads the nodes that are connected to
-// the "doctor" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DepartmentQuery) WithDoctor(opts ...func(*DoctorQuery)) *DepartmentQuery {
-	query := &DoctorQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withDoctor = query
+	dq.withDetails = query
 	return dq
 }
 
@@ -409,14 +378,14 @@ func (dq *DepartmentQuery) WithTrainings(opts ...func(*TrainingQuery)) *Departme
 	return dq
 }
 
-//  WithSpecialists tells the query-builder to eager-loads the nodes that are connected to
-// the "specialists" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DepartmentQuery) WithSpecialists(opts ...func(*SpecialistQuery)) *DepartmentQuery {
-	query := &SpecialistQuery{config: dq.config}
+//  WithSpecialdoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "specialdoctors" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithSpecialdoctors(opts ...func(*SpecialdoctorQuery)) *DepartmentQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	dq.withSpecialists = query
+	dq.withSpecialdoctors = query
 	return dq
 }
 
@@ -426,12 +395,12 @@ func (dq *DepartmentQuery) WithSpecialists(opts ...func(*SpecialistQuery)) *Depa
 // Example:
 //
 //	var v []struct {
-//		Detail string `json:"Detail,omitempty"`
+//		Name string `json:"Name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		GroupBy(department.FieldDetail).
+//		GroupBy(department.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -452,11 +421,11 @@ func (dq *DepartmentQuery) GroupBy(field string, fields ...string) *DepartmentGr
 // Example:
 //
 //	var v []struct {
-//		Detail string `json:"Detail,omitempty"`
+//		Name string `json:"Name,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		Select(department.FieldDetail).
+//		Select(department.FieldName).
 //		Scan(ctx, &v)
 //
 func (dq *DepartmentQuery) Select(field string, fields ...string) *DepartmentSelect {
@@ -487,18 +456,14 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		nodes       = []*Department{}
 		withFKs     = dq.withFKs
 		_spec       = dq.querySpec()
-		loadedTypes = [6]bool{
-			dq.withMission != nil,
-			dq.withDoctor != nil,
+		loadedTypes = [5]bool{
+			dq.withDetails != nil,
 			dq.withOffices != nil,
 			dq.withSchedules != nil,
 			dq.withTrainings != nil,
-			dq.withSpecialists != nil,
+			dq.withSpecialdoctors != nil,
 		}
 	)
-	if dq.withMission != nil || dq.withDoctor != nil {
-		withFKs = true
-	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, department.ForeignKeys...)
 	}
@@ -526,53 +491,31 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		return nodes, nil
 	}
 
-	if query := dq.withMission; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Department)
+	if query := dq.withDetails; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Department)
 		for i := range nodes {
-			if fk := nodes[i].mission_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
 		}
-		query.Where(mission.IDIn(ids...))
+		query.withFKs = true
+		query.Where(predicate.Detail(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.DetailsColumn, fks...))
+		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
+			fk := n.department_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "department_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "mission_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
-			for i := range nodes {
-				nodes[i].Edges.Mission = n
-			}
-		}
-	}
-
-	if query := dq.withDoctor; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Department)
-		for i := range nodes {
-			if fk := nodes[i].doctor_id; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(doctor.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Doctor = n
-			}
+			node.Edges.Details = append(node.Edges.Details, n)
 		}
 	}
 
@@ -660,7 +603,7 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 		}
 	}
 
-	if query := dq.withSpecialists; query != nil {
+	if query := dq.withSpecialdoctors; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Department)
 		for i := range nodes {
@@ -668,8 +611,8 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.Specialist(func(s *sql.Selector) {
-			s.Where(sql.InValues(department.SpecialistsColumn, fks...))
+		query.Where(predicate.Specialdoctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(department.SpecialdoctorsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -684,7 +627,7 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Specialists = append(node.Edges.Specialists, n)
+			node.Edges.Specialdoctors = append(node.Edges.Specialdoctors, n)
 		}
 	}
 

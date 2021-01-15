@@ -16,10 +16,14 @@ type Tx struct {
 	Course *CourseClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
+	// Detail is the client for interacting with the Detail builders.
+	Detail *DetailClient
 	// Disease is the client for interacting with the Disease builders.
 	Disease *DiseaseClient
 	// Doctor is the client for interacting with the Doctor builders.
 	Doctor *DoctorClient
+	// Extradoctor is the client for interacting with the Extradoctor builders.
+	Extradoctor *ExtradoctorClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
 	// Mission is the client for interacting with the Mission builders.
@@ -30,8 +34,8 @@ type Tx struct {
 	Position *PositionClient
 	// Schedule is the client for interacting with the Schedule builders.
 	Schedule *ScheduleClient
-	// Specialist is the client for interacting with the Specialist builders.
-	Specialist *SpecialistClient
+	// Specialdoctor is the client for interacting with the Specialdoctor builders.
+	Specialdoctor *SpecialdoctorClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
 	// Training is the client for interacting with the Training builders.
@@ -173,14 +177,16 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Course = NewCourseClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
+	tx.Detail = NewDetailClient(tx.config)
 	tx.Disease = NewDiseaseClient(tx.config)
 	tx.Doctor = NewDoctorClient(tx.config)
+	tx.Extradoctor = NewExtradoctorClient(tx.config)
 	tx.Gender = NewGenderClient(tx.config)
 	tx.Mission = NewMissionClient(tx.config)
 	tx.Office = NewOfficeClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Schedule = NewScheduleClient(tx.config)
-	tx.Specialist = NewSpecialistClient(tx.config)
+	tx.Specialdoctor = NewSpecialdoctorClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
 	tx.Training = NewTrainingClient(tx.config)
 }

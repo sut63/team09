@@ -26,7 +26,7 @@ type Doctor struct {
 	Password 	string
 	Address  	string
 	Educational string
-	Phone 		int
+	Phone 		string
 	Title   	int
 	Position 	int
 	Gender 		int 

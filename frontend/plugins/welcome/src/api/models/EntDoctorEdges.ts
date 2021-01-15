@@ -38,10 +38,10 @@ import {
     EntScheduleFromJSON,
     EntScheduleFromJSONTyped,
     EntScheduleToJSON,
-    EntSpecialist,
-    EntSpecialistFromJSON,
-    EntSpecialistFromJSONTyped,
-    EntSpecialistToJSON,
+    EntSpecialdoctor,
+    EntSpecialdoctorFromJSON,
+    EntSpecialdoctorFromJSONTyped,
+    EntSpecialdoctorToJSON,
     EntTitle,
     EntTitleFromJSON,
     EntTitleFromJSONTyped,
@@ -95,11 +95,11 @@ export interface EntDoctorEdges {
      */
     schedules?: Array<EntSchedule>;
     /**
-     * Specialists holds the value of the specialists edge.
-     * @type {Array<EntSpecialist>}
+     * Specialdoctors holds the value of the specialdoctors edge.
+     * @type {Array<EntSpecialdoctor>}
      * @memberof EntDoctorEdges
      */
-    specialists?: Array<EntSpecialist>;
+    specialdoctors?: Array<EntSpecialdoctor>;
     /**
      * 
      * @type {EntTitle}
@@ -130,7 +130,7 @@ export function EntDoctorEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
         'offices': !exists(json, 'offices') ? undefined : ((json['offices'] as Array<any>).map(EntOfficeFromJSON)),
         'position': !exists(json, 'position') ? undefined : EntPositionFromJSON(json['position']),
         'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
-        'specialists': !exists(json, 'specialists') ? undefined : ((json['specialists'] as Array<any>).map(EntSpecialistFromJSON)),
+        'specialdoctors': !exists(json, 'specialdoctors') ? undefined : ((json['specialdoctors'] as Array<any>).map(EntSpecialdoctorFromJSON)),
         'title': !exists(json, 'title') ? undefined : EntTitleFromJSON(json['title']),
         'trainings': !exists(json, 'trainings') ? undefined : ((json['trainings'] as Array<any>).map(EntTrainingFromJSON)),
     };
@@ -151,7 +151,7 @@ export function EntDoctorEdgesToJSON(value?: EntDoctorEdges | null): any {
         'offices': value.offices === undefined ? undefined : ((value.offices as Array<any>).map(EntOfficeToJSON)),
         'position': EntPositionToJSON(value.position),
         'schedules': value.schedules === undefined ? undefined : ((value.schedules as Array<any>).map(EntScheduleToJSON)),
-        'specialists': value.specialists === undefined ? undefined : ((value.specialists as Array<any>).map(EntSpecialistToJSON)),
+        'specialdoctors': value.specialdoctors === undefined ? undefined : ((value.specialdoctors as Array<any>).map(EntSpecialdoctorToJSON)),
         'title': EntTitleToJSON(value.title),
         'trainings': value.trainings === undefined ? undefined : ((value.trainings as Array<any>).map(EntTrainingToJSON)),
     };

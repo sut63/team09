@@ -14,64 +14,66 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 )
 
-// SpecialistQuery is the builder for querying Specialist entities.
-type SpecialistQuery struct {
+// SpecialdoctorQuery is the builder for querying Specialdoctor entities.
+type SpecialdoctorQuery struct {
 	config
 	limit      *int
 	offset     *int
 	order      []OrderFunc
 	unique     []string
-	predicates []predicate.Specialist
+	predicates []predicate.Specialdoctor
 	// eager-loading edges.
-	withOffices    *OfficeQuery
-	withDoctor     *DoctorQuery
-	withDepartment *DepartmentQuery
-	withFKs        bool
+	withOffices     *OfficeQuery
+	withDoctor      *DoctorQuery
+	withDepartment  *DepartmentQuery
+	withExtradoctor *ExtradoctorQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
 // Where adds a new predicate for the builder.
-func (sq *SpecialistQuery) Where(ps ...predicate.Specialist) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) Where(ps ...predicate.Specialdoctor) *SpecialdoctorQuery {
 	sq.predicates = append(sq.predicates, ps...)
 	return sq
 }
 
 // Limit adds a limit step to the query.
-func (sq *SpecialistQuery) Limit(limit int) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) Limit(limit int) *SpecialdoctorQuery {
 	sq.limit = &limit
 	return sq
 }
 
 // Offset adds an offset step to the query.
-func (sq *SpecialistQuery) Offset(offset int) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) Offset(offset int) *SpecialdoctorQuery {
 	sq.offset = &offset
 	return sq
 }
 
 // Order adds an order step to the query.
-func (sq *SpecialistQuery) Order(o ...OrderFunc) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) Order(o ...OrderFunc) *SpecialdoctorQuery {
 	sq.order = append(sq.order, o...)
 	return sq
 }
 
 // QueryOffices chains the current query on the offices edge.
-func (sq *SpecialistQuery) QueryOffices() *OfficeQuery {
+func (sq *SpecialdoctorQuery) QueryOffices() *OfficeQuery {
 	query := &OfficeQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, sq.sqlQuery()),
 			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialist.OfficesTable, specialist.OfficesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, specialdoctor.OfficesTable, specialdoctor.OfficesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -80,16 +82,16 @@ func (sq *SpecialistQuery) QueryOffices() *OfficeQuery {
 }
 
 // QueryDoctor chains the current query on the doctor edge.
-func (sq *SpecialistQuery) QueryDoctor() *DoctorQuery {
+func (sq *SpecialdoctorQuery) QueryDoctor() *DoctorQuery {
 	query := &DoctorQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, sq.sqlQuery()),
 			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DoctorTable, specialist.DoctorColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.DoctorTable, specialdoctor.DoctorColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -98,16 +100,16 @@ func (sq *SpecialistQuery) QueryDoctor() *DoctorQuery {
 }
 
 // QueryDepartment chains the current query on the department edge.
-func (sq *SpecialistQuery) QueryDepartment() *DepartmentQuery {
+func (sq *SpecialdoctorQuery) QueryDepartment() *DepartmentQuery {
 	query := &DepartmentQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, sq.sqlQuery()),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, sq.sqlQuery()),
 			sqlgraph.To(department.Table, department.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DepartmentTable, specialist.DepartmentColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.DepartmentTable, specialdoctor.DepartmentColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -115,20 +117,38 @@ func (sq *SpecialistQuery) QueryDepartment() *DepartmentQuery {
 	return query
 }
 
-// First returns the first Specialist entity in the query. Returns *NotFoundError when no specialist was found.
-func (sq *SpecialistQuery) First(ctx context.Context) (*Specialist, error) {
+// QueryExtradoctor chains the current query on the extradoctor edge.
+func (sq *SpecialdoctorQuery) QueryExtradoctor() *ExtradoctorQuery {
+	query := &ExtradoctorQuery{config: sq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := sq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, sq.sqlQuery()),
+			sqlgraph.To(extradoctor.Table, extradoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.ExtradoctorTable, specialdoctor.ExtradoctorColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// First returns the first Specialdoctor entity in the query. Returns *NotFoundError when no specialdoctor was found.
+func (sq *SpecialdoctorQuery) First(ctx context.Context) (*Specialdoctor, error) {
 	sSlice, err := sq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if len(sSlice) == 0 {
-		return nil, &NotFoundError{specialist.Label}
+		return nil, &NotFoundError{specialdoctor.Label}
 	}
 	return sSlice[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (sq *SpecialistQuery) FirstX(ctx context.Context) *Specialist {
+func (sq *SpecialdoctorQuery) FirstX(ctx context.Context) *Specialdoctor {
 	s, err := sq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -136,21 +156,21 @@ func (sq *SpecialistQuery) FirstX(ctx context.Context) *Specialist {
 	return s
 }
 
-// FirstID returns the first Specialist id in the query. Returns *NotFoundError when no id was found.
-func (sq *SpecialistQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Specialdoctor id in the query. Returns *NotFoundError when no id was found.
+func (sq *SpecialdoctorQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = sq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (sq *SpecialistQuery) FirstXID(ctx context.Context) int {
+func (sq *SpecialdoctorQuery) FirstXID(ctx context.Context) int {
 	id, err := sq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -158,8 +178,8 @@ func (sq *SpecialistQuery) FirstXID(ctx context.Context) int {
 	return id
 }
 
-// Only returns the only Specialist entity in the query, returns an error if not exactly one entity was returned.
-func (sq *SpecialistQuery) Only(ctx context.Context) (*Specialist, error) {
+// Only returns the only Specialdoctor entity in the query, returns an error if not exactly one entity was returned.
+func (sq *SpecialdoctorQuery) Only(ctx context.Context) (*Specialdoctor, error) {
 	sSlice, err := sq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
@@ -168,14 +188,14 @@ func (sq *SpecialistQuery) Only(ctx context.Context) (*Specialist, error) {
 	case 1:
 		return sSlice[0], nil
 	case 0:
-		return nil, &NotFoundError{specialist.Label}
+		return nil, &NotFoundError{specialdoctor.Label}
 	default:
-		return nil, &NotSingularError{specialist.Label}
+		return nil, &NotSingularError{specialdoctor.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (sq *SpecialistQuery) OnlyX(ctx context.Context) *Specialist {
+func (sq *SpecialdoctorQuery) OnlyX(ctx context.Context) *Specialdoctor {
 	s, err := sq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -183,8 +203,8 @@ func (sq *SpecialistQuery) OnlyX(ctx context.Context) *Specialist {
 	return s
 }
 
-// OnlyID returns the only Specialist id in the query, returns an error if not exactly one id was returned.
-func (sq *SpecialistQuery) OnlyID(ctx context.Context) (id int, err error) {
+// OnlyID returns the only Specialdoctor id in the query, returns an error if not exactly one id was returned.
+func (sq *SpecialdoctorQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = sq.Limit(2).IDs(ctx); err != nil {
 		return
@@ -193,15 +213,15 @@ func (sq *SpecialistQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = &NotSingularError{specialist.Label}
+		err = &NotSingularError{specialdoctor.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (sq *SpecialistQuery) OnlyIDX(ctx context.Context) int {
+func (sq *SpecialdoctorQuery) OnlyIDX(ctx context.Context) int {
 	id, err := sq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -209,8 +229,8 @@ func (sq *SpecialistQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Specialists.
-func (sq *SpecialistQuery) All(ctx context.Context) ([]*Specialist, error) {
+// All executes the query and returns a list of Specialdoctors.
+func (sq *SpecialdoctorQuery) All(ctx context.Context) ([]*Specialdoctor, error) {
 	if err := sq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -218,7 +238,7 @@ func (sq *SpecialistQuery) All(ctx context.Context) ([]*Specialist, error) {
 }
 
 // AllX is like All, but panics if an error occurs.
-func (sq *SpecialistQuery) AllX(ctx context.Context) []*Specialist {
+func (sq *SpecialdoctorQuery) AllX(ctx context.Context) []*Specialdoctor {
 	sSlice, err := sq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -226,17 +246,17 @@ func (sq *SpecialistQuery) AllX(ctx context.Context) []*Specialist {
 	return sSlice
 }
 
-// IDs executes the query and returns a list of Specialist ids.
-func (sq *SpecialistQuery) IDs(ctx context.Context) ([]int, error) {
+// IDs executes the query and returns a list of Specialdoctor ids.
+func (sq *SpecialdoctorQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := sq.Select(specialist.FieldID).Scan(ctx, &ids); err != nil {
+	if err := sq.Select(specialdoctor.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (sq *SpecialistQuery) IDsX(ctx context.Context) []int {
+func (sq *SpecialdoctorQuery) IDsX(ctx context.Context) []int {
 	ids, err := sq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -245,7 +265,7 @@ func (sq *SpecialistQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (sq *SpecialistQuery) Count(ctx context.Context) (int, error) {
+func (sq *SpecialdoctorQuery) Count(ctx context.Context) (int, error) {
 	if err := sq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -253,7 +273,7 @@ func (sq *SpecialistQuery) Count(ctx context.Context) (int, error) {
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (sq *SpecialistQuery) CountX(ctx context.Context) int {
+func (sq *SpecialdoctorQuery) CountX(ctx context.Context) int {
 	count, err := sq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -262,7 +282,7 @@ func (sq *SpecialistQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (sq *SpecialistQuery) Exist(ctx context.Context) (bool, error) {
+func (sq *SpecialdoctorQuery) Exist(ctx context.Context) (bool, error) {
 	if err := sq.prepareQuery(ctx); err != nil {
 		return false, err
 	}
@@ -270,7 +290,7 @@ func (sq *SpecialistQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (sq *SpecialistQuery) ExistX(ctx context.Context) bool {
+func (sq *SpecialdoctorQuery) ExistX(ctx context.Context) bool {
 	exist, err := sq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -280,14 +300,14 @@ func (sq *SpecialistQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the query builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (sq *SpecialistQuery) Clone() *SpecialistQuery {
-	return &SpecialistQuery{
+func (sq *SpecialdoctorQuery) Clone() *SpecialdoctorQuery {
+	return &SpecialdoctorQuery{
 		config:     sq.config,
 		limit:      sq.limit,
 		offset:     sq.offset,
 		order:      append([]OrderFunc{}, sq.order...),
 		unique:     append([]string{}, sq.unique...),
-		predicates: append([]predicate.Specialist{}, sq.predicates...),
+		predicates: append([]predicate.Specialdoctor{}, sq.predicates...),
 		// clone intermediate query.
 		sql:  sq.sql.Clone(),
 		path: sq.path,
@@ -296,7 +316,7 @@ func (sq *SpecialistQuery) Clone() *SpecialistQuery {
 
 //  WithOffices tells the query-builder to eager-loads the nodes that are connected to
 // the "offices" edge. The optional arguments used to configure the query builder of the edge.
-func (sq *SpecialistQuery) WithOffices(opts ...func(*OfficeQuery)) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) WithOffices(opts ...func(*OfficeQuery)) *SpecialdoctorQuery {
 	query := &OfficeQuery{config: sq.config}
 	for _, opt := range opts {
 		opt(query)
@@ -307,7 +327,7 @@ func (sq *SpecialistQuery) WithOffices(opts ...func(*OfficeQuery)) *SpecialistQu
 
 //  WithDoctor tells the query-builder to eager-loads the nodes that are connected to
 // the "doctor" edge. The optional arguments used to configure the query builder of the edge.
-func (sq *SpecialistQuery) WithDoctor(opts ...func(*DoctorQuery)) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) WithDoctor(opts ...func(*DoctorQuery)) *SpecialdoctorQuery {
 	query := &DoctorQuery{config: sq.config}
 	for _, opt := range opts {
 		opt(query)
@@ -318,12 +338,23 @@ func (sq *SpecialistQuery) WithDoctor(opts ...func(*DoctorQuery)) *SpecialistQue
 
 //  WithDepartment tells the query-builder to eager-loads the nodes that are connected to
 // the "department" edge. The optional arguments used to configure the query builder of the edge.
-func (sq *SpecialistQuery) WithDepartment(opts ...func(*DepartmentQuery)) *SpecialistQuery {
+func (sq *SpecialdoctorQuery) WithDepartment(opts ...func(*DepartmentQuery)) *SpecialdoctorQuery {
 	query := &DepartmentQuery{config: sq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
 	sq.withDepartment = query
+	return sq
+}
+
+//  WithExtradoctor tells the query-builder to eager-loads the nodes that are connected to
+// the "extradoctor" edge. The optional arguments used to configure the query builder of the edge.
+func (sq *SpecialdoctorQuery) WithExtradoctor(opts ...func(*ExtradoctorQuery)) *SpecialdoctorQuery {
+	query := &ExtradoctorQuery{config: sq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	sq.withExtradoctor = query
 	return sq
 }
 
@@ -333,17 +364,17 @@ func (sq *SpecialistQuery) WithDepartment(opts ...func(*DepartmentQuery)) *Speci
 // Example:
 //
 //	var v []struct {
-//		Specialist string `json:"specialist,omitempty"`
+//		Other string `json:"other,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Specialist.Query().
-//		GroupBy(specialist.FieldSpecialist).
+//	client.Specialdoctor.Query().
+//		GroupBy(specialdoctor.FieldOther).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
-func (sq *SpecialistQuery) GroupBy(field string, fields ...string) *SpecialistGroupBy {
-	group := &SpecialistGroupBy{config: sq.config}
+func (sq *SpecialdoctorQuery) GroupBy(field string, fields ...string) *SpecialdoctorGroupBy {
+	group := &SpecialdoctorGroupBy{config: sq.config}
 	group.fields = append([]string{field}, fields...)
 	group.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
@@ -359,15 +390,15 @@ func (sq *SpecialistQuery) GroupBy(field string, fields ...string) *SpecialistGr
 // Example:
 //
 //	var v []struct {
-//		Specialist string `json:"specialist,omitempty"`
+//		Other string `json:"other,omitempty"`
 //	}
 //
-//	client.Specialist.Query().
-//		Select(specialist.FieldSpecialist).
+//	client.Specialdoctor.Query().
+//		Select(specialdoctor.FieldOther).
 //		Scan(ctx, &v)
 //
-func (sq *SpecialistQuery) Select(field string, fields ...string) *SpecialistSelect {
-	selector := &SpecialistSelect{config: sq.config}
+func (sq *SpecialdoctorQuery) Select(field string, fields ...string) *SpecialdoctorSelect {
+	selector := &SpecialdoctorSelect{config: sq.config}
 	selector.fields = append([]string{field}, fields...)
 	selector.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
@@ -378,7 +409,7 @@ func (sq *SpecialistQuery) Select(field string, fields ...string) *SpecialistSel
 	return selector
 }
 
-func (sq *SpecialistQuery) prepareQuery(ctx context.Context) error {
+func (sq *SpecialdoctorQuery) prepareQuery(ctx context.Context) error {
 	if sq.path != nil {
 		prev, err := sq.path(ctx)
 		if err != nil {
@@ -389,25 +420,26 @@ func (sq *SpecialistQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
+func (sq *SpecialdoctorQuery) sqlAll(ctx context.Context) ([]*Specialdoctor, error) {
 	var (
-		nodes       = []*Specialist{}
+		nodes       = []*Specialdoctor{}
 		withFKs     = sq.withFKs
 		_spec       = sq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			sq.withOffices != nil,
 			sq.withDoctor != nil,
 			sq.withDepartment != nil,
+			sq.withExtradoctor != nil,
 		}
 	)
-	if sq.withDoctor != nil || sq.withDepartment != nil {
+	if sq.withDoctor != nil || sq.withDepartment != nil || sq.withExtradoctor != nil {
 		withFKs = true
 	}
 	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, specialist.ForeignKeys...)
+		_spec.Node.Columns = append(_spec.Node.Columns, specialdoctor.ForeignKeys...)
 	}
 	_spec.ScanValues = func() []interface{} {
-		node := &Specialist{config: sq.config}
+		node := &Specialdoctor{config: sq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
 		if withFKs {
@@ -432,27 +464,27 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 
 	if query := sq.withOffices; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Specialist)
+		nodeids := make(map[int]*Specialdoctor)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
 		query.Where(predicate.Office(func(s *sql.Selector) {
-			s.Where(sql.InValues(specialist.OfficesColumn, fks...))
+			s.Where(sql.InValues(specialdoctor.OfficesColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.specialist_id
+			fk := n.Specialdoctor_id
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "specialist_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "Specialdoctor_id" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "Specialdoctor_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Offices = append(node.Edges.Offices, n)
 		}
@@ -460,7 +492,7 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 
 	if query := sq.withDoctor; query != nil {
 		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Specialist)
+		nodeids := make(map[int][]*Specialdoctor)
 		for i := range nodes {
 			if fk := nodes[i].doctor_id; fk != nil {
 				ids = append(ids, *fk)
@@ -485,7 +517,7 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 
 	if query := sq.withDepartment; query != nil {
 		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Specialist)
+		nodeids := make(map[int][]*Specialdoctor)
 		for i := range nodes {
 			if fk := nodes[i].department_id; fk != nil {
 				ids = append(ids, *fk)
@@ -508,15 +540,40 @@ func (sq *SpecialistQuery) sqlAll(ctx context.Context) ([]*Specialist, error) {
 		}
 	}
 
+	if query := sq.withExtradoctor; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Specialdoctor)
+		for i := range nodes {
+			if fk := nodes[i].extradoctor_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(extradoctor.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "extradoctor_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Extradoctor = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 
-func (sq *SpecialistQuery) sqlCount(ctx context.Context) (int, error) {
+func (sq *SpecialdoctorQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := sq.querySpec()
 	return sqlgraph.CountNodes(ctx, sq.driver, _spec)
 }
 
-func (sq *SpecialistQuery) sqlExist(ctx context.Context) (bool, error) {
+func (sq *SpecialdoctorQuery) sqlExist(ctx context.Context) (bool, error) {
 	n, err := sq.sqlCount(ctx)
 	if err != nil {
 		return false, fmt.Errorf("ent: check existence: %v", err)
@@ -524,14 +581,14 @@ func (sq *SpecialistQuery) sqlExist(ctx context.Context) (bool, error) {
 	return n > 0, nil
 }
 
-func (sq *SpecialistQuery) querySpec() *sqlgraph.QuerySpec {
+func (sq *SpecialdoctorQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   specialist.Table,
-			Columns: specialist.Columns,
+			Table:   specialdoctor.Table,
+			Columns: specialdoctor.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: specialist.FieldID,
+				Column: specialdoctor.FieldID,
 			},
 		},
 		From:   sq.sql,
@@ -560,13 +617,13 @@ func (sq *SpecialistQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (sq *SpecialistQuery) sqlQuery() *sql.Selector {
+func (sq *SpecialdoctorQuery) sqlQuery() *sql.Selector {
 	builder := sql.Dialect(sq.driver.Dialect())
-	t1 := builder.Table(specialist.Table)
-	selector := builder.Select(t1.Columns(specialist.Columns...)...).From(t1)
+	t1 := builder.Table(specialdoctor.Table)
+	selector := builder.Select(t1.Columns(specialdoctor.Columns...)...).From(t1)
 	if sq.sql != nil {
 		selector = sq.sql
-		selector.Select(selector.Columns(specialist.Columns...)...)
+		selector.Select(selector.Columns(specialdoctor.Columns...)...)
 	}
 	for _, p := range sq.predicates {
 		p(selector)
@@ -585,8 +642,8 @@ func (sq *SpecialistQuery) sqlQuery() *sql.Selector {
 	return selector
 }
 
-// SpecialistGroupBy is the builder for group-by Specialist entities.
-type SpecialistGroupBy struct {
+// SpecialdoctorGroupBy is the builder for group-by Specialdoctor entities.
+type SpecialdoctorGroupBy struct {
 	config
 	fields []string
 	fns    []AggregateFunc
@@ -596,13 +653,13 @@ type SpecialistGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (sgb *SpecialistGroupBy) Aggregate(fns ...AggregateFunc) *SpecialistGroupBy {
+func (sgb *SpecialdoctorGroupBy) Aggregate(fns ...AggregateFunc) *SpecialdoctorGroupBy {
 	sgb.fns = append(sgb.fns, fns...)
 	return sgb
 }
 
 // Scan applies the group-by query and scan the result into the given value.
-func (sgb *SpecialistGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (sgb *SpecialdoctorGroupBy) Scan(ctx context.Context, v interface{}) error {
 	query, err := sgb.path(ctx)
 	if err != nil {
 		return err
@@ -612,16 +669,16 @@ func (sgb *SpecialistGroupBy) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) ScanX(ctx context.Context, v interface{}) {
+func (sgb *SpecialdoctorGroupBy) ScanX(ctx context.Context, v interface{}) {
 	if err := sgb.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Strings(ctx context.Context) ([]string, error) {
+func (sgb *SpecialdoctorGroupBy) Strings(ctx context.Context) ([]string, error) {
 	if len(sgb.fields) > 1 {
-		return nil, errors.New("ent: SpecialistGroupBy.Strings is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorGroupBy.Strings is not achievable when grouping more than 1 field")
 	}
 	var v []string
 	if err := sgb.Scan(ctx, &v); err != nil {
@@ -631,7 +688,7 @@ func (sgb *SpecialistGroupBy) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) StringsX(ctx context.Context) []string {
+func (sgb *SpecialdoctorGroupBy) StringsX(ctx context.Context) []string {
 	v, err := sgb.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -640,7 +697,7 @@ func (sgb *SpecialistGroupBy) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) String(ctx context.Context) (_ string, err error) {
+func (sgb *SpecialdoctorGroupBy) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = sgb.Strings(ctx); err != nil {
 		return
@@ -649,15 +706,15 @@ func (sgb *SpecialistGroupBy) String(ctx context.Context) (_ string, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistGroupBy.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorGroupBy.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) StringX(ctx context.Context) string {
+func (sgb *SpecialdoctorGroupBy) StringX(ctx context.Context) string {
 	v, err := sgb.String(ctx)
 	if err != nil {
 		panic(err)
@@ -666,9 +723,9 @@ func (sgb *SpecialistGroupBy) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Ints(ctx context.Context) ([]int, error) {
+func (sgb *SpecialdoctorGroupBy) Ints(ctx context.Context) ([]int, error) {
 	if len(sgb.fields) > 1 {
-		return nil, errors.New("ent: SpecialistGroupBy.Ints is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorGroupBy.Ints is not achievable when grouping more than 1 field")
 	}
 	var v []int
 	if err := sgb.Scan(ctx, &v); err != nil {
@@ -678,7 +735,7 @@ func (sgb *SpecialistGroupBy) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) IntsX(ctx context.Context) []int {
+func (sgb *SpecialdoctorGroupBy) IntsX(ctx context.Context) []int {
 	v, err := sgb.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -687,7 +744,7 @@ func (sgb *SpecialistGroupBy) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Int(ctx context.Context) (_ int, err error) {
+func (sgb *SpecialdoctorGroupBy) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = sgb.Ints(ctx); err != nil {
 		return
@@ -696,15 +753,15 @@ func (sgb *SpecialistGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistGroupBy.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorGroupBy.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) IntX(ctx context.Context) int {
+func (sgb *SpecialdoctorGroupBy) IntX(ctx context.Context) int {
 	v, err := sgb.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -713,9 +770,9 @@ func (sgb *SpecialistGroupBy) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Float64s(ctx context.Context) ([]float64, error) {
+func (sgb *SpecialdoctorGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 	if len(sgb.fields) > 1 {
-		return nil, errors.New("ent: SpecialistGroupBy.Float64s is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorGroupBy.Float64s is not achievable when grouping more than 1 field")
 	}
 	var v []float64
 	if err := sgb.Scan(ctx, &v); err != nil {
@@ -725,7 +782,7 @@ func (sgb *SpecialistGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) Float64sX(ctx context.Context) []float64 {
+func (sgb *SpecialdoctorGroupBy) Float64sX(ctx context.Context) []float64 {
 	v, err := sgb.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -734,7 +791,7 @@ func (sgb *SpecialistGroupBy) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Float64(ctx context.Context) (_ float64, err error) {
+func (sgb *SpecialdoctorGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = sgb.Float64s(ctx); err != nil {
 		return
@@ -743,15 +800,15 @@ func (sgb *SpecialistGroupBy) Float64(ctx context.Context) (_ float64, err error
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistGroupBy.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) Float64X(ctx context.Context) float64 {
+func (sgb *SpecialdoctorGroupBy) Float64X(ctx context.Context) float64 {
 	v, err := sgb.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -760,9 +817,9 @@ func (sgb *SpecialistGroupBy) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Bools(ctx context.Context) ([]bool, error) {
+func (sgb *SpecialdoctorGroupBy) Bools(ctx context.Context) ([]bool, error) {
 	if len(sgb.fields) > 1 {
-		return nil, errors.New("ent: SpecialistGroupBy.Bools is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorGroupBy.Bools is not achievable when grouping more than 1 field")
 	}
 	var v []bool
 	if err := sgb.Scan(ctx, &v); err != nil {
@@ -772,7 +829,7 @@ func (sgb *SpecialistGroupBy) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) BoolsX(ctx context.Context) []bool {
+func (sgb *SpecialdoctorGroupBy) BoolsX(ctx context.Context) []bool {
 	v, err := sgb.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -781,7 +838,7 @@ func (sgb *SpecialistGroupBy) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from group-by. It is only allowed when querying group-by with one field.
-func (sgb *SpecialistGroupBy) Bool(ctx context.Context) (_ bool, err error) {
+func (sgb *SpecialdoctorGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = sgb.Bools(ctx); err != nil {
 		return
@@ -790,15 +847,15 @@ func (sgb *SpecialistGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistGroupBy.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorGroupBy.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (sgb *SpecialistGroupBy) BoolX(ctx context.Context) bool {
+func (sgb *SpecialdoctorGroupBy) BoolX(ctx context.Context) bool {
 	v, err := sgb.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -806,7 +863,7 @@ func (sgb *SpecialistGroupBy) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (sgb *SpecialistGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (sgb *SpecialdoctorGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := sgb.sqlQuery().Query()
 	if err := sgb.driver.Query(ctx, query, args, rows); err != nil {
@@ -816,7 +873,7 @@ func (sgb *SpecialistGroupBy) sqlScan(ctx context.Context, v interface{}) error 
 	return sql.ScanSlice(rows, v)
 }
 
-func (sgb *SpecialistGroupBy) sqlQuery() *sql.Selector {
+func (sgb *SpecialdoctorGroupBy) sqlQuery() *sql.Selector {
 	selector := sgb.sql
 	columns := make([]string, 0, len(sgb.fields)+len(sgb.fns))
 	columns = append(columns, sgb.fields...)
@@ -826,8 +883,8 @@ func (sgb *SpecialistGroupBy) sqlQuery() *sql.Selector {
 	return selector.Select(columns...).GroupBy(sgb.fields...)
 }
 
-// SpecialistSelect is the builder for select fields of Specialist entities.
-type SpecialistSelect struct {
+// SpecialdoctorSelect is the builder for select fields of Specialdoctor entities.
+type SpecialdoctorSelect struct {
 	config
 	fields []string
 	// intermediate query (i.e. traversal path).
@@ -836,7 +893,7 @@ type SpecialistSelect struct {
 }
 
 // Scan applies the selector query and scan the result into the given value.
-func (ss *SpecialistSelect) Scan(ctx context.Context, v interface{}) error {
+func (ss *SpecialdoctorSelect) Scan(ctx context.Context, v interface{}) error {
 	query, err := ss.path(ctx)
 	if err != nil {
 		return err
@@ -846,16 +903,16 @@ func (ss *SpecialistSelect) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (ss *SpecialistSelect) ScanX(ctx context.Context, v interface{}) {
+func (ss *SpecialdoctorSelect) ScanX(ctx context.Context, v interface{}) {
 	if err := ss.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Strings(ctx context.Context) ([]string, error) {
+func (ss *SpecialdoctorSelect) Strings(ctx context.Context) ([]string, error) {
 	if len(ss.fields) > 1 {
-		return nil, errors.New("ent: SpecialistSelect.Strings is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorSelect.Strings is not achievable when selecting more than 1 field")
 	}
 	var v []string
 	if err := ss.Scan(ctx, &v); err != nil {
@@ -865,7 +922,7 @@ func (ss *SpecialistSelect) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (ss *SpecialistSelect) StringsX(ctx context.Context) []string {
+func (ss *SpecialdoctorSelect) StringsX(ctx context.Context) []string {
 	v, err := ss.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -874,7 +931,7 @@ func (ss *SpecialistSelect) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) String(ctx context.Context) (_ string, err error) {
+func (ss *SpecialdoctorSelect) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = ss.Strings(ctx); err != nil {
 		return
@@ -883,15 +940,15 @@ func (ss *SpecialistSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistSelect.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorSelect.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (ss *SpecialistSelect) StringX(ctx context.Context) string {
+func (ss *SpecialdoctorSelect) StringX(ctx context.Context) string {
 	v, err := ss.String(ctx)
 	if err != nil {
 		panic(err)
@@ -900,9 +957,9 @@ func (ss *SpecialistSelect) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Ints(ctx context.Context) ([]int, error) {
+func (ss *SpecialdoctorSelect) Ints(ctx context.Context) ([]int, error) {
 	if len(ss.fields) > 1 {
-		return nil, errors.New("ent: SpecialistSelect.Ints is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorSelect.Ints is not achievable when selecting more than 1 field")
 	}
 	var v []int
 	if err := ss.Scan(ctx, &v); err != nil {
@@ -912,7 +969,7 @@ func (ss *SpecialistSelect) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (ss *SpecialistSelect) IntsX(ctx context.Context) []int {
+func (ss *SpecialdoctorSelect) IntsX(ctx context.Context) []int {
 	v, err := ss.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -921,7 +978,7 @@ func (ss *SpecialistSelect) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Int(ctx context.Context) (_ int, err error) {
+func (ss *SpecialdoctorSelect) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = ss.Ints(ctx); err != nil {
 		return
@@ -930,15 +987,15 @@ func (ss *SpecialistSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistSelect.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorSelect.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (ss *SpecialistSelect) IntX(ctx context.Context) int {
+func (ss *SpecialdoctorSelect) IntX(ctx context.Context) int {
 	v, err := ss.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -947,9 +1004,9 @@ func (ss *SpecialistSelect) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Float64s(ctx context.Context) ([]float64, error) {
+func (ss *SpecialdoctorSelect) Float64s(ctx context.Context) ([]float64, error) {
 	if len(ss.fields) > 1 {
-		return nil, errors.New("ent: SpecialistSelect.Float64s is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorSelect.Float64s is not achievable when selecting more than 1 field")
 	}
 	var v []float64
 	if err := ss.Scan(ctx, &v); err != nil {
@@ -959,7 +1016,7 @@ func (ss *SpecialistSelect) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (ss *SpecialistSelect) Float64sX(ctx context.Context) []float64 {
+func (ss *SpecialdoctorSelect) Float64sX(ctx context.Context) []float64 {
 	v, err := ss.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -968,7 +1025,7 @@ func (ss *SpecialistSelect) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Float64(ctx context.Context) (_ float64, err error) {
+func (ss *SpecialdoctorSelect) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = ss.Float64s(ctx); err != nil {
 		return
@@ -977,15 +1034,15 @@ func (ss *SpecialistSelect) Float64(ctx context.Context) (_ float64, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistSelect.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorSelect.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (ss *SpecialistSelect) Float64X(ctx context.Context) float64 {
+func (ss *SpecialdoctorSelect) Float64X(ctx context.Context) float64 {
 	v, err := ss.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -994,9 +1051,9 @@ func (ss *SpecialistSelect) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Bools(ctx context.Context) ([]bool, error) {
+func (ss *SpecialdoctorSelect) Bools(ctx context.Context) ([]bool, error) {
 	if len(ss.fields) > 1 {
-		return nil, errors.New("ent: SpecialistSelect.Bools is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: SpecialdoctorSelect.Bools is not achievable when selecting more than 1 field")
 	}
 	var v []bool
 	if err := ss.Scan(ctx, &v); err != nil {
@@ -1006,7 +1063,7 @@ func (ss *SpecialistSelect) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (ss *SpecialistSelect) BoolsX(ctx context.Context) []bool {
+func (ss *SpecialdoctorSelect) BoolsX(ctx context.Context) []bool {
 	v, err := ss.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -1015,7 +1072,7 @@ func (ss *SpecialistSelect) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from selector. It is only allowed when selecting one field.
-func (ss *SpecialistSelect) Bool(ctx context.Context) (_ bool, err error) {
+func (ss *SpecialdoctorSelect) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = ss.Bools(ctx); err != nil {
 		return
@@ -1024,15 +1081,15 @@ func (ss *SpecialistSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{specialist.Label}
+		err = &NotFoundError{specialdoctor.Label}
 	default:
-		err = fmt.Errorf("ent: SpecialistSelect.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: SpecialdoctorSelect.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (ss *SpecialistSelect) BoolX(ctx context.Context) bool {
+func (ss *SpecialdoctorSelect) BoolX(ctx context.Context) bool {
 	v, err := ss.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -1040,7 +1097,7 @@ func (ss *SpecialistSelect) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (ss *SpecialistSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ss *SpecialdoctorSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := ss.sqlQuery().Query()
 	if err := ss.driver.Query(ctx, query, args, rows); err != nil {
@@ -1050,7 +1107,7 @@ func (ss *SpecialistSelect) sqlScan(ctx context.Context, v interface{}) error {
 	return sql.ScanSlice(rows, v)
 }
 
-func (ss *SpecialistSelect) sqlQuery() sql.Querier {
+func (ss *SpecialdoctorSelect) sqlQuery() sql.Querier {
 	selector := ss.sql
 	selector.Select(selector.Columns(ss.fields...)...)
 	return selector

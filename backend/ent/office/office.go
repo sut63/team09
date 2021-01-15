@@ -18,8 +18,8 @@ const (
 	EdgeDoctor = "doctor"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
 	EdgeDepartment = "department"
-	// EdgeSpecialist holds the string denoting the specialist edge name in mutations.
-	EdgeSpecialist = "specialist"
+	// EdgeExtradoctor holds the string denoting the extradoctor edge name in mutations.
+	EdgeExtradoctor = "extradoctor"
 	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
 	EdgeSchedules = "schedules"
 
@@ -39,13 +39,13 @@ const (
 	DepartmentInverseTable = "departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
-	// SpecialistTable is the table the holds the specialist relation/edge.
-	SpecialistTable = "offices"
-	// SpecialistInverseTable is the table name for the Specialist entity.
-	// It exists in this package in order to avoid circular dependency with the "specialist" package.
-	SpecialistInverseTable = "specialists"
-	// SpecialistColumn is the table column denoting the specialist relation/edge.
-	SpecialistColumn = "specialist_id"
+	// ExtradoctorTable is the table the holds the extradoctor relation/edge.
+	ExtradoctorTable = "offices"
+	// ExtradoctorInverseTable is the table name for the Extradoctor entity.
+	// It exists in this package in order to avoid circular dependency with the "extradoctor" package.
+	ExtradoctorInverseTable = "extradoctors"
+	// ExtradoctorColumn is the table column denoting the extradoctor relation/edge.
+	ExtradoctorColumn = "extradoctor_id"
 	// SchedulesTable is the table the holds the schedules relation/edge.
 	SchedulesTable = "schedules"
 	// SchedulesInverseTable is the table name for the Schedule entity.
@@ -67,7 +67,8 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"department_id",
 	"doctor_id",
-	"specialist_id",
+	"extradoctor_id",
+	"Specialdoctor_id",
 }
 
 var (

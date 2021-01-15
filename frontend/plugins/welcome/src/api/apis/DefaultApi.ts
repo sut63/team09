@@ -21,12 +21,18 @@ import {
     EntDepartment,
     EntDepartmentFromJSON,
     EntDepartmentToJSON,
+    EntDetail,
+    EntDetailFromJSON,
+    EntDetailToJSON,
     EntDisease,
     EntDiseaseFromJSON,
     EntDiseaseToJSON,
     EntDoctor,
     EntDoctorFromJSON,
     EntDoctorToJSON,
+    EntExtradoctor,
+    EntExtradoctorFromJSON,
+    EntExtradoctorToJSON,
     EntGender,
     EntGenderFromJSON,
     EntGenderToJSON,
@@ -42,9 +48,9 @@ import {
     EntSchedule,
     EntScheduleFromJSON,
     EntScheduleToJSON,
-    EntSpecialist,
-    EntSpecialistFromJSON,
-    EntSpecialistToJSON,
+    EntSpecialdoctor,
+    EntSpecialdoctorFromJSON,
+    EntSpecialdoctorToJSON,
     EntTitle,
     EntTitleFromJSON,
     EntTitleToJSON,
@@ -59,6 +65,10 @@ export interface CreateCourseRequest {
 
 export interface CreateDepartmentRequest {
     department: EntDepartment;
+}
+
+export interface CreateDetailRequest {
+    detail: EntDetail;
 }
 
 export interface CreateDiseaseRequest {
@@ -78,7 +88,7 @@ export interface CreateMissionRequest {
 }
 
 export interface CreateOfficeRequest {
-    doctor: EntOffice;
+    office: EntOffice;
 }
 
 export interface CreatePositionRequest {
@@ -89,8 +99,8 @@ export interface CreateScheduleRequest {
     schedule: EntSchedule;
 }
 
-export interface CreateSpecialistRequest {
-    specialist: EntSpecialist;
+export interface CreateSpecialdoctorRequest {
+    specialdoctor: EntSpecialdoctor;
 }
 
 export interface CreateTitleRequest {
@@ -102,6 +112,10 @@ export interface CreateTrainingRequest {
 }
 
 export interface DeleteDepartmentRequest {
+    id: number;
+}
+
+export interface DeleteDetailRequest {
     id: number;
 }
 
@@ -133,7 +147,7 @@ export interface DeleteScheduleRequest {
     id: number;
 }
 
-export interface DeleteSpecialistRequest {
+export interface DeleteSpecialdoctorRequest {
     id: number;
 }
 
@@ -149,11 +163,19 @@ export interface GetDepartmentRequest {
     id: number;
 }
 
+export interface GetDetailRequest {
+    id: number;
+}
+
 export interface GetDiseaseRequest {
     id: number;
 }
 
 export interface GetDoctorRequest {
+    id: number;
+}
+
+export interface GetExtradoctorRequest {
     id: number;
 }
 
@@ -177,7 +199,7 @@ export interface GetScheduleRequest {
     id: number;
 }
 
-export interface GetSpecialistRequest {
+export interface GetSpecialdoctorRequest {
     id: number;
 }
 
@@ -195,12 +217,22 @@ export interface ListDepartmentRequest {
     offset?: number;
 }
 
+export interface ListDetailRequest {
+    limit?: number;
+    offset?: number;
+}
+
 export interface ListDiseaseRequest {
     limit?: number;
     offset?: number;
 }
 
 export interface ListDoctorRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListExtradoctorRequest {
     limit?: number;
     offset?: number;
 }
@@ -230,7 +262,7 @@ export interface ListScheduleRequest {
     offset?: number;
 }
 
-export interface ListSpecialistRequest {
+export interface ListSpecialdoctorRequest {
     limit?: number;
     offset?: number;
 }
@@ -322,6 +354,41 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async createDepartment(requestParameters: CreateDepartmentRequest): Promise<EntDepartment> {
         const response = await this.createDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create detail
+     * Create detail
+     */
+    async createDetailRaw(requestParameters: CreateDetailRequest): Promise<runtime.ApiResponse<EntDetail>> {
+        if (requestParameters.detail === null || requestParameters.detail === undefined) {
+            throw new runtime.RequiredError('detail','Required parameter requestParameters.detail was null or undefined when calling createDetail.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/details`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntDetailToJSON(requestParameters.detail),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDetailFromJSON(jsonValue));
+    }
+
+    /**
+     * Create detail
+     * Create detail
+     */
+    async createDetail(requestParameters: CreateDetailRequest): Promise<EntDetail> {
+        const response = await this.createDetailRaw(requestParameters);
         return await response.value();
     }
 
@@ -470,8 +537,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * Create office
      */
     async createOfficeRaw(requestParameters: CreateOfficeRequest): Promise<runtime.ApiResponse<EntOffice>> {
-        if (requestParameters.doctor === null || requestParameters.doctor === undefined) {
-            throw new runtime.RequiredError('doctor','Required parameter requestParameters.doctor was null or undefined when calling createOffice.');
+        if (requestParameters.office === null || requestParameters.office === undefined) {
+            throw new runtime.RequiredError('office','Required parameter requestParameters.office was null or undefined when calling createOffice.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -485,7 +552,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntOfficeToJSON(requestParameters.doctor),
+            body: EntOfficeToJSON(requestParameters.office),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => EntOfficeFromJSON(jsonValue));
@@ -571,12 +638,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create specialist
-     * Create specialist
+     * Create specialdoctor
+     * Create specialdoctor
      */
-    async createSpecialistRaw(requestParameters: CreateSpecialistRequest): Promise<runtime.ApiResponse<EntSpecialist>> {
-        if (requestParameters.specialist === null || requestParameters.specialist === undefined) {
-            throw new runtime.RequiredError('specialist','Required parameter requestParameters.specialist was null or undefined when calling createSpecialist.');
+    async createSpecialdoctorRaw(requestParameters: CreateSpecialdoctorRequest): Promise<runtime.ApiResponse<EntSpecialdoctor>> {
+        if (requestParameters.specialdoctor === null || requestParameters.specialdoctor === undefined) {
+            throw new runtime.RequiredError('specialdoctor','Required parameter requestParameters.specialdoctor was null or undefined when calling createSpecialdoctor.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -586,22 +653,22 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/specialists`,
+            path: `/specialdoctors`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntSpecialistToJSON(requestParameters.specialist),
+            body: EntSpecialdoctorToJSON(requestParameters.specialdoctor),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntSpecialistFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntSpecialdoctorFromJSON(jsonValue));
     }
 
     /**
-     * Create specialist
-     * Create specialist
+     * Create specialdoctor
+     * Create specialdoctor
      */
-    async createSpecialist(requestParameters: CreateSpecialistRequest): Promise<EntSpecialist> {
-        const response = await this.createSpecialistRaw(requestParameters);
+    async createSpecialdoctor(requestParameters: CreateSpecialdoctorRequest): Promise<EntSpecialdoctor> {
+        const response = await this.createSpecialdoctorRaw(requestParameters);
         return await response.value();
     }
 
@@ -704,6 +771,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteDepartment(requestParameters: DeleteDepartmentRequest): Promise<object> {
         const response = await this.deleteDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get detail by ID
+     * Delete a detail entity by ID
+     */
+    async deleteDetailRaw(requestParameters: DeleteDetailRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteDetail.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/details/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get detail by ID
+     * Delete a detail entity by ID
+     */
+    async deleteDetail(requestParameters: DeleteDetailRequest): Promise<object> {
+        const response = await this.deleteDetailRaw(requestParameters);
         return await response.value();
     }
 
@@ -932,12 +1031,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get specialist by ID
-     * Delete a specialist entity by ID
+     * get specialdoctor by ID
+     * Delete a specialdoctor entity by ID
      */
-    async deleteSpecialistRaw(requestParameters: DeleteSpecialistRequest): Promise<runtime.ApiResponse<object>> {
+    async deleteSpecialdoctorRaw(requestParameters: DeleteSpecialdoctorRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteSpecialist.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteSpecialdoctor.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -945,7 +1044,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/specialists/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/specialdoctors/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -955,11 +1054,11 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get specialist by ID
-     * Delete a specialist entity by ID
+     * get specialdoctor by ID
+     * Delete a specialdoctor entity by ID
      */
-    async deleteSpecialist(requestParameters: DeleteSpecialistRequest): Promise<object> {
-        const response = await this.deleteSpecialistRaw(requestParameters);
+    async deleteSpecialdoctor(requestParameters: DeleteSpecialdoctorRequest): Promise<object> {
+        const response = await this.deleteSpecialdoctorRaw(requestParameters);
         return await response.value();
     }
 
@@ -1060,6 +1159,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get detail by ID
+     * Get a detail entity by ID
+     */
+    async getDetailRaw(requestParameters: GetDetailRequest): Promise<runtime.ApiResponse<EntDetail>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getDetail.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/details/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDetailFromJSON(jsonValue));
+    }
+
+    /**
+     * get detail by ID
+     * Get a detail entity by ID
+     */
+    async getDetail(requestParameters: GetDetailRequest): Promise<EntDetail> {
+        const response = await this.getDetailRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get disease by ID
      * Get a disease entity by ID
      */
@@ -1120,6 +1251,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getDoctor(requestParameters: GetDoctorRequest): Promise<EntDoctor> {
         const response = await this.getDoctorRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get extradoctor by ID
+     * Get a extradoctor entity by ID
+     */
+    async getExtradoctorRaw(requestParameters: GetExtradoctorRequest): Promise<runtime.ApiResponse<EntExtradoctor>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getExtradoctor.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/extradoctors/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntExtradoctorFromJSON(jsonValue));
+    }
+
+    /**
+     * get extradoctor by ID
+     * Get a extradoctor entity by ID
+     */
+    async getExtradoctor(requestParameters: GetExtradoctorRequest): Promise<EntExtradoctor> {
+        const response = await this.getExtradoctorRaw(requestParameters);
         return await response.value();
     }
 
@@ -1284,12 +1447,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get specialist by ID
-     * Get a specialist entity by ID
+     * get specialdoctor by ID
+     * Get a specialdoctor entity by ID
      */
-    async getSpecialistRaw(requestParameters: GetSpecialistRequest): Promise<runtime.ApiResponse<EntSpecialist>> {
+    async getSpecialdoctorRaw(requestParameters: GetSpecialdoctorRequest): Promise<runtime.ApiResponse<EntSpecialdoctor>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getSpecialist.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getSpecialdoctor.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -1297,21 +1460,21 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/specialists/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/specialdoctors/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntSpecialistFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntSpecialdoctorFromJSON(jsonValue));
     }
 
     /**
-     * get specialist by ID
-     * Get a specialist entity by ID
+     * get specialdoctor by ID
+     * Get a specialdoctor entity by ID
      */
-    async getSpecialist(requestParameters: GetSpecialistRequest): Promise<EntSpecialist> {
-        const response = await this.getSpecialistRaw(requestParameters);
+    async getSpecialdoctor(requestParameters: GetSpecialdoctorRequest): Promise<EntSpecialdoctor> {
+        const response = await this.getSpecialdoctorRaw(requestParameters);
         return await response.value();
     }
 
@@ -1420,6 +1583,42 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * list detail entities
+     * List detail entities
+     */
+    async listDetailRaw(requestParameters: ListDetailRequest): Promise<runtime.ApiResponse<Array<EntDetail>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/details`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntDetailFromJSON));
+    }
+
+    /**
+     * list detail entities
+     * List detail entities
+     */
+    async listDetail(requestParameters: ListDetailRequest): Promise<Array<EntDetail>> {
+        const response = await this.listDetailRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * list disease entities
      * List disease entities
      */
@@ -1488,6 +1687,42 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listDoctor(requestParameters: ListDoctorRequest): Promise<Array<EntDoctor>> {
         const response = await this.listDoctorRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list extradoctor entities
+     * Listextradoctor entities
+     */
+    async listExtradoctorRaw(requestParameters: ListExtradoctorRequest): Promise<runtime.ApiResponse<Array<EntExtradoctor>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/extradoctors`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntExtradoctorFromJSON));
+    }
+
+    /**
+     * list extradoctor entities
+     * Listextradoctor entities
+     */
+    async listExtradoctor(requestParameters: ListExtradoctorRequest): Promise<Array<EntExtradoctor>> {
+        const response = await this.listExtradoctorRaw(requestParameters);
         return await response.value();
     }
 
@@ -1672,10 +1907,10 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * list specialist entities
-     * List specialist entities
+     * list specialdoctor entities
+     * List specialdoctor entities
      */
-    async listSpecialistRaw(requestParameters: ListSpecialistRequest): Promise<runtime.ApiResponse<Array<EntSpecialist>>> {
+    async listSpecialdoctorRaw(requestParameters: ListSpecialdoctorRequest): Promise<runtime.ApiResponse<Array<EntSpecialdoctor>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1689,21 +1924,21 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/specialists`,
+            path: `/specialdoctors`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntSpecialistFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntSpecialdoctorFromJSON));
     }
 
     /**
-     * list specialist entities
-     * List specialist entities
+     * list specialdoctor entities
+     * List specialdoctor entities
      */
-    async listSpecialist(requestParameters: ListSpecialistRequest): Promise<Array<EntSpecialist>> {
-        const response = await this.listSpecialistRaw(requestParameters);
+    async listSpecialdoctor(requestParameters: ListSpecialdoctorRequest): Promise<Array<EntSpecialdoctor>> {
+        const response = await this.listSpecialdoctorRaw(requestParameters);
         return await response.value();
     }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/mission"
 )
 
@@ -20,9 +21,9 @@ type MissionCreate struct {
 	hooks    []Hook
 }
 
-// SetMissionType sets the MissionType field.
-func (mc *MissionCreate) SetMissionType(s string) *MissionCreate {
-	mc.mutation.SetMissionType(s)
+// SetMission sets the mission field.
+func (mc *MissionCreate) SetMission(s string) *MissionCreate {
+	mc.mutation.SetMission(s)
 	return mc
 }
 
@@ -41,6 +42,21 @@ func (mc *MissionCreate) AddDepartments(d ...*Department) *MissionCreate {
 	return mc.AddDepartmentIDs(ids...)
 }
 
+// AddDetailIDs adds the details edge to Detail by ids.
+func (mc *MissionCreate) AddDetailIDs(ids ...int) *MissionCreate {
+	mc.mutation.AddDetailIDs(ids...)
+	return mc
+}
+
+// AddDetails adds the details edges to Detail.
+func (mc *MissionCreate) AddDetails(d ...*Detail) *MissionCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return mc.AddDetailIDs(ids...)
+}
+
 // Mutation returns the MissionMutation object of the builder.
 func (mc *MissionCreate) Mutation() *MissionMutation {
 	return mc.mutation
@@ -48,12 +64,12 @@ func (mc *MissionCreate) Mutation() *MissionMutation {
 
 // Save creates the Mission in the database.
 func (mc *MissionCreate) Save(ctx context.Context) (*Mission, error) {
-	if _, ok := mc.mutation.MissionType(); !ok {
-		return nil, &ValidationError{Name: "MissionType", err: errors.New("ent: missing required field \"MissionType\"")}
+	if _, ok := mc.mutation.Mission(); !ok {
+		return nil, &ValidationError{Name: "mission", err: errors.New("ent: missing required field \"mission\"")}
 	}
-	if v, ok := mc.mutation.MissionType(); ok {
-		if err := mission.MissionTypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "MissionType", err: fmt.Errorf("ent: validator failed for field \"MissionType\": %w", err)}
+	if v, ok := mc.mutation.Mission(); ok {
+		if err := mission.MissionValidator(v); err != nil {
+			return nil, &ValidationError{Name: "mission", err: fmt.Errorf("ent: validator failed for field \"mission\": %w", err)}
 		}
 	}
 	var (
@@ -116,13 +132,13 @@ func (mc *MissionCreate) createSpec() (*Mission, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := mc.mutation.MissionType(); ok {
+	if value, ok := mc.mutation.Mission(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mission.FieldMissionType,
+			Column: mission.FieldMission,
 		})
-		m.MissionType = value
+		m.Mission = value
 	}
 	if nodes := mc.mutation.DepartmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -135,6 +151,25 @@ func (mc *MissionCreate) createSpec() (*Mission, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := mc.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   mission.DetailsTable,
+			Columns: []string{mission.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
 				},
 			},
 		}

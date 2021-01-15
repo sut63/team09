@@ -11,7 +11,7 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/office"
-	"github.com/team09/app/ent/specialdoctor"
+	"github.com/team09/app/ent/extradoctor"
 )
 
 // OfficeController defines the struct for the office controller
@@ -21,12 +21,12 @@ type OfficeController struct {
 }
 
 type Office struct {
-	Officename  string
-	Added1		string
-	Added2 		string
-	Doctor      int
-	Department  int
-	Specialdoctor  int
+	Officename  	string
+	Added1			string
+	Added2 			string
+	Doctor      	int
+	Department  	int
+	Extradoctor  	int
 }
 
 // CreateOffice handles POST requests for adding office entities
@@ -49,9 +49,9 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		return
 	}
 
-	sl, err := ctl.client.Specialdoctor.
+	et, err := ctl.client.Extradoctor.
 		Query().
-		Where(specialdoctor.IDEQ(int(obj.Specialdoctor))).
+		Where(extradoctor.IDEQ(int(obj.Extradoctor))).
 		Only(context.Background())
 
 	if err != nil {
@@ -92,7 +92,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		SetOfficename(obj.Officename).
 		SetDoctor(d).
 		SetDepartment(de). 
-		SetSpecialdoctor(sl).
+		SetExtradoctor(et).
 		SetAddedTime1(time1).
 		SetAddedTime2(time2).
 		Save(context.Background())
@@ -175,7 +175,7 @@ func (ctl *OfficeController) ListOffice(c *gin.Context) {
 		Query().
 		WithDoctor().
 		WithDepartment().
-		WithSpecialdoctor().
+		WithExtradoctor().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

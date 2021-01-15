@@ -14,9 +14,9 @@ import Select from '@material-ui/core/Select';
 import { InputLabel, MenuItem } from '@material-ui/core';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
-import { EntSpecialdoctor } from '../../api/models/EntSpecialdoctor';
 import { EntExtradoctor } from '../../api/models/EntExtradoctor';
 import Swal from 'sweetalert2';
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 // import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
 
@@ -153,7 +153,7 @@ const Office: FC<{}> = () => {
           <Typography variant="h6" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-          <Button color="inherit" component={RouterLink} to="/"> Login </Button>
+            <Button color="inherit" href="/" startIcon={<ExitToAppRoundedIcon />}>Logout</Button>
         </Toolbar>
       </AppBar>
       <Content className={classes.withoutLabel}>
@@ -203,7 +203,7 @@ const Office: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>แพทย์เฉพาะทาง</InputLabel>
                 <Select
-                  name="specialist"
+                  name="extradoctor"
                   label="แพทย์เฉพาะทาง"
                   type="string"
                   value={office.extradoctor || ''}
@@ -284,7 +284,7 @@ const Office: FC<{}> = () => {
                 CLEAR
              </Button>
               <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/table"
+                component={RouterLink} to="/home"
                 variant="contained"
                 color="secondary">
                 BACK

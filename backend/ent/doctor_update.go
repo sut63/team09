@@ -17,7 +17,7 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -61,16 +61,9 @@ func (du *DoctorUpdate) SetEmail(s string) *DoctorUpdate {
 	return du
 }
 
-// SetPnumber sets the pnumber field.
-func (du *DoctorUpdate) SetPnumber(i int) *DoctorUpdate {
-	du.mutation.ResetPnumber()
-	du.mutation.SetPnumber(i)
-	return du
-}
-
-// AddPnumber adds i to pnumber.
-func (du *DoctorUpdate) AddPnumber(i int) *DoctorUpdate {
-	du.mutation.AddPnumber(i)
+// SetPassword sets the password field.
+func (du *DoctorUpdate) SetPassword(s string) *DoctorUpdate {
+	du.mutation.SetPassword(s)
 	return du
 }
 
@@ -83,6 +76,12 @@ func (du *DoctorUpdate) SetAddress(s string) *DoctorUpdate {
 // SetEducational sets the educational field.
 func (du *DoctorUpdate) SetEducational(s string) *DoctorUpdate {
 	du.mutation.SetEducational(s)
+	return du
+}
+
+// SetPhone sets the phone field.
+func (du *DoctorUpdate) SetPhone(s string) *DoctorUpdate {
+	du.mutation.SetPhone(s)
 	return du
 }
 
@@ -222,19 +221,19 @@ func (du *DoctorUpdate) AddTrainings(t ...*Training) *DoctorUpdate {
 	return du.AddTrainingIDs(ids...)
 }
 
-// AddSpecialistIDs adds the specialists edge to Specialist by ids.
-func (du *DoctorUpdate) AddSpecialistIDs(ids ...int) *DoctorUpdate {
-	du.mutation.AddSpecialistIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (du *DoctorUpdate) AddSpecialdoctorIDs(ids ...int) *DoctorUpdate {
+	du.mutation.AddSpecialdoctorIDs(ids...)
 	return du
 }
 
-// AddSpecialists adds the specialists edges to Specialist.
-func (du *DoctorUpdate) AddSpecialists(s ...*Specialist) *DoctorUpdate {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (du *DoctorUpdate) AddSpecialdoctors(s ...*Specialdoctor) *DoctorUpdate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return du.AddSpecialistIDs(ids...)
+	return du.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -326,19 +325,19 @@ func (du *DoctorUpdate) RemoveTrainings(t ...*Training) *DoctorUpdate {
 	return du.RemoveTrainingIDs(ids...)
 }
 
-// RemoveSpecialistIDs removes the specialists edge to Specialist by ids.
-func (du *DoctorUpdate) RemoveSpecialistIDs(ids ...int) *DoctorUpdate {
-	du.mutation.RemoveSpecialistIDs(ids...)
+// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
+func (du *DoctorUpdate) RemoveSpecialdoctorIDs(ids ...int) *DoctorUpdate {
+	du.mutation.RemoveSpecialdoctorIDs(ids...)
 	return du
 }
 
-// RemoveSpecialists removes specialists edges to Specialist.
-func (du *DoctorUpdate) RemoveSpecialists(s ...*Specialist) *DoctorUpdate {
+// RemoveSpecialdoctors removes specialdoctors edges to Specialdoctor.
+func (du *DoctorUpdate) RemoveSpecialdoctors(s ...*Specialdoctor) *DoctorUpdate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return du.RemoveSpecialistIDs(ids...)
+	return du.RemoveSpecialdoctorIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -358,9 +357,9 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
-	if v, ok := du.mutation.Pnumber(); ok {
-		if err := doctor.PnumberValidator(v); err != nil {
-			return 0, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+	if v, ok := du.mutation.Password(); ok {
+		if err := doctor.PasswordValidator(v); err != nil {
+			return 0, &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
 	}
 	if v, ok := du.mutation.Address(); ok {
@@ -371,6 +370,11 @@ func (du *DoctorUpdate) Save(ctx context.Context) (int, error) {
 	if v, ok := du.mutation.Educational(); ok {
 		if err := doctor.EducationalValidator(v); err != nil {
 			return 0, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Phone(); ok {
+		if err := doctor.PhoneValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
 		}
 	}
 
@@ -469,18 +473,11 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: doctor.FieldEmail,
 		})
 	}
-	if value, ok := du.mutation.Pnumber(); ok {
+	if value, ok := du.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: doctor.FieldPnumber,
-		})
-	}
-	if value, ok := du.mutation.AddedPnumber(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldPnumber,
+			Column: doctor.FieldPassword,
 		})
 	}
 	if value, ok := du.mutation.Address(); ok {
@@ -495,6 +492,13 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEducational,
+		})
+	}
+	if value, ok := du.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: doctor.FieldPhone,
 		})
 	}
 	if du.mutation.TitleCleared() {
@@ -789,17 +793,17 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := du.mutation.RemovedSpecialistsIDs(); len(nodes) > 0 {
+	if nodes := du.mutation.RemovedSpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   doctor.SpecialistsTable,
-			Columns: []string{doctor.SpecialistsColumn},
+			Table:   doctor.SpecialdoctorsTable,
+			Columns: []string{doctor.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
@@ -808,17 +812,17 @@ func (du *DoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := du.mutation.SpecialistsIDs(); len(nodes) > 0 {
+	if nodes := du.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   doctor.SpecialistsTable,
-			Columns: []string{doctor.SpecialistsColumn},
+			Table:   doctor.SpecialdoctorsTable,
+			Columns: []string{doctor.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
@@ -870,16 +874,9 @@ func (duo *DoctorUpdateOne) SetEmail(s string) *DoctorUpdateOne {
 	return duo
 }
 
-// SetPnumber sets the pnumber field.
-func (duo *DoctorUpdateOne) SetPnumber(i int) *DoctorUpdateOne {
-	duo.mutation.ResetPnumber()
-	duo.mutation.SetPnumber(i)
-	return duo
-}
-
-// AddPnumber adds i to pnumber.
-func (duo *DoctorUpdateOne) AddPnumber(i int) *DoctorUpdateOne {
-	duo.mutation.AddPnumber(i)
+// SetPassword sets the password field.
+func (duo *DoctorUpdateOne) SetPassword(s string) *DoctorUpdateOne {
+	duo.mutation.SetPassword(s)
 	return duo
 }
 
@@ -892,6 +889,12 @@ func (duo *DoctorUpdateOne) SetAddress(s string) *DoctorUpdateOne {
 // SetEducational sets the educational field.
 func (duo *DoctorUpdateOne) SetEducational(s string) *DoctorUpdateOne {
 	duo.mutation.SetEducational(s)
+	return duo
+}
+
+// SetPhone sets the phone field.
+func (duo *DoctorUpdateOne) SetPhone(s string) *DoctorUpdateOne {
+	duo.mutation.SetPhone(s)
 	return duo
 }
 
@@ -1031,19 +1034,19 @@ func (duo *DoctorUpdateOne) AddTrainings(t ...*Training) *DoctorUpdateOne {
 	return duo.AddTrainingIDs(ids...)
 }
 
-// AddSpecialistIDs adds the specialists edge to Specialist by ids.
-func (duo *DoctorUpdateOne) AddSpecialistIDs(ids ...int) *DoctorUpdateOne {
-	duo.mutation.AddSpecialistIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (duo *DoctorUpdateOne) AddSpecialdoctorIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.AddSpecialdoctorIDs(ids...)
 	return duo
 }
 
-// AddSpecialists adds the specialists edges to Specialist.
-func (duo *DoctorUpdateOne) AddSpecialists(s ...*Specialist) *DoctorUpdateOne {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (duo *DoctorUpdateOne) AddSpecialdoctors(s ...*Specialdoctor) *DoctorUpdateOne {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return duo.AddSpecialistIDs(ids...)
+	return duo.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -1135,19 +1138,19 @@ func (duo *DoctorUpdateOne) RemoveTrainings(t ...*Training) *DoctorUpdateOne {
 	return duo.RemoveTrainingIDs(ids...)
 }
 
-// RemoveSpecialistIDs removes the specialists edge to Specialist by ids.
-func (duo *DoctorUpdateOne) RemoveSpecialistIDs(ids ...int) *DoctorUpdateOne {
-	duo.mutation.RemoveSpecialistIDs(ids...)
+// RemoveSpecialdoctorIDs removes the specialdoctors edge to Specialdoctor by ids.
+func (duo *DoctorUpdateOne) RemoveSpecialdoctorIDs(ids ...int) *DoctorUpdateOne {
+	duo.mutation.RemoveSpecialdoctorIDs(ids...)
 	return duo
 }
 
-// RemoveSpecialists removes specialists edges to Specialist.
-func (duo *DoctorUpdateOne) RemoveSpecialists(s ...*Specialist) *DoctorUpdateOne {
+// RemoveSpecialdoctors removes specialdoctors edges to Specialdoctor.
+func (duo *DoctorUpdateOne) RemoveSpecialdoctors(s ...*Specialdoctor) *DoctorUpdateOne {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return duo.RemoveSpecialistIDs(ids...)
+	return duo.RemoveSpecialdoctorIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1167,9 +1170,9 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
-	if v, ok := duo.mutation.Pnumber(); ok {
-		if err := doctor.PnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+	if v, ok := duo.mutation.Password(); ok {
+		if err := doctor.PasswordValidator(v); err != nil {
+			return nil, &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
 	}
 	if v, ok := duo.mutation.Address(); ok {
@@ -1180,6 +1183,11 @@ func (duo *DoctorUpdateOne) Save(ctx context.Context) (*Doctor, error) {
 	if v, ok := duo.mutation.Educational(); ok {
 		if err := doctor.EducationalValidator(v); err != nil {
 			return nil, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Phone(); ok {
+		if err := doctor.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
 		}
 	}
 
@@ -1276,18 +1284,11 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 			Column: doctor.FieldEmail,
 		})
 	}
-	if value, ok := duo.mutation.Pnumber(); ok {
+	if value, ok := duo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: doctor.FieldPnumber,
-		})
-	}
-	if value, ok := duo.mutation.AddedPnumber(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: doctor.FieldPnumber,
+			Column: doctor.FieldPassword,
 		})
 	}
 	if value, ok := duo.mutation.Address(); ok {
@@ -1302,6 +1303,13 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: doctor.FieldEducational,
+		})
+	}
+	if value, ok := duo.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: doctor.FieldPhone,
 		})
 	}
 	if duo.mutation.TitleCleared() {
@@ -1596,17 +1604,17 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := duo.mutation.RemovedSpecialistsIDs(); len(nodes) > 0 {
+	if nodes := duo.mutation.RemovedSpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   doctor.SpecialistsTable,
-			Columns: []string{doctor.SpecialistsColumn},
+			Table:   doctor.SpecialdoctorsTable,
+			Columns: []string{doctor.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}
@@ -1615,17 +1623,17 @@ func (duo *DoctorUpdateOne) sqlSave(ctx context.Context) (d *Doctor, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := duo.mutation.SpecialistsIDs(); len(nodes) > 0 {
+	if nodes := duo.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   doctor.SpecialistsTable,
-			Columns: []string{doctor.SpecialistsColumn},
+			Table:   doctor.SpecialdoctorsTable,
+			Columns: []string{doctor.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

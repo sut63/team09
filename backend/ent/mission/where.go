@@ -91,29 +91,29 @@ func IDLTE(id int) predicate.Mission {
 	})
 }
 
-// MissionType applies equality check predicate on the "MissionType" field. It's identical to MissionTypeEQ.
-func MissionType(v string) predicate.Mission {
+// Mission applies equality check predicate on the "mission" field. It's identical to MissionEQ.
+func Mission(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMissionType), v))
+		s.Where(sql.EQ(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeEQ applies the EQ predicate on the "MissionType" field.
-func MissionTypeEQ(v string) predicate.Mission {
+// MissionEQ applies the EQ predicate on the "mission" field.
+func MissionEQ(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMissionType), v))
+		s.Where(sql.EQ(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeNEQ applies the NEQ predicate on the "MissionType" field.
-func MissionTypeNEQ(v string) predicate.Mission {
+// MissionNEQ applies the NEQ predicate on the "mission" field.
+func MissionNEQ(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMissionType), v))
+		s.Where(sql.NEQ(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeIn applies the In predicate on the "MissionType" field.
-func MissionTypeIn(vs ...string) predicate.Mission {
+// MissionIn applies the In predicate on the "mission" field.
+func MissionIn(vs ...string) predicate.Mission {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -125,12 +125,12 @@ func MissionTypeIn(vs ...string) predicate.Mission {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldMissionType), v...))
+		s.Where(sql.In(s.C(FieldMission), v...))
 	})
 }
 
-// MissionTypeNotIn applies the NotIn predicate on the "MissionType" field.
-func MissionTypeNotIn(vs ...string) predicate.Mission {
+// MissionNotIn applies the NotIn predicate on the "mission" field.
+func MissionNotIn(vs ...string) predicate.Mission {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -142,70 +142,70 @@ func MissionTypeNotIn(vs ...string) predicate.Mission {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldMissionType), v...))
+		s.Where(sql.NotIn(s.C(FieldMission), v...))
 	})
 }
 
-// MissionTypeGT applies the GT predicate on the "MissionType" field.
-func MissionTypeGT(v string) predicate.Mission {
+// MissionGT applies the GT predicate on the "mission" field.
+func MissionGT(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMissionType), v))
+		s.Where(sql.GT(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeGTE applies the GTE predicate on the "MissionType" field.
-func MissionTypeGTE(v string) predicate.Mission {
+// MissionGTE applies the GTE predicate on the "mission" field.
+func MissionGTE(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMissionType), v))
+		s.Where(sql.GTE(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeLT applies the LT predicate on the "MissionType" field.
-func MissionTypeLT(v string) predicate.Mission {
+// MissionLT applies the LT predicate on the "mission" field.
+func MissionLT(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMissionType), v))
+		s.Where(sql.LT(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeLTE applies the LTE predicate on the "MissionType" field.
-func MissionTypeLTE(v string) predicate.Mission {
+// MissionLTE applies the LTE predicate on the "mission" field.
+func MissionLTE(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMissionType), v))
+		s.Where(sql.LTE(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeContains applies the Contains predicate on the "MissionType" field.
-func MissionTypeContains(v string) predicate.Mission {
+// MissionContains applies the Contains predicate on the "mission" field.
+func MissionContains(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldMissionType), v))
+		s.Where(sql.Contains(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeHasPrefix applies the HasPrefix predicate on the "MissionType" field.
-func MissionTypeHasPrefix(v string) predicate.Mission {
+// MissionHasPrefix applies the HasPrefix predicate on the "mission" field.
+func MissionHasPrefix(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldMissionType), v))
+		s.Where(sql.HasPrefix(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeHasSuffix applies the HasSuffix predicate on the "MissionType" field.
-func MissionTypeHasSuffix(v string) predicate.Mission {
+// MissionHasSuffix applies the HasSuffix predicate on the "mission" field.
+func MissionHasSuffix(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldMissionType), v))
+		s.Where(sql.HasSuffix(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeEqualFold applies the EqualFold predicate on the "MissionType" field.
-func MissionTypeEqualFold(v string) predicate.Mission {
+// MissionEqualFold applies the EqualFold predicate on the "mission" field.
+func MissionEqualFold(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldMissionType), v))
+		s.Where(sql.EqualFold(s.C(FieldMission), v))
 	})
 }
 
-// MissionTypeContainsFold applies the ContainsFold predicate on the "MissionType" field.
-func MissionTypeContainsFold(v string) predicate.Mission {
+// MissionContainsFold applies the ContainsFold predicate on the "mission" field.
+func MissionContainsFold(v string) predicate.Mission {
 	return predicate.Mission(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldMissionType), v))
+		s.Where(sql.ContainsFold(s.C(FieldMission), v))
 	})
 }
 
@@ -228,6 +228,34 @@ func HasDepartmentsWith(preds ...predicate.Department) predicate.Mission {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(DepartmentsInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, DepartmentsTable, DepartmentsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDetails applies the HasEdge predicate on the "details" edge.
+func HasDetails() predicate.Mission {
+	return predicate.Mission(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DetailsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DetailsTable, DetailsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDetailsWith applies the HasEdge predicate on the "details" edge with a given conditions (other predicates).
+func HasDetailsWith(preds ...predicate.Detail) predicate.Mission {
+	return predicate.Mission(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DetailsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DetailsTable, DetailsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

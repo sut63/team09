@@ -10,11 +10,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
-	"github.com/team09/app/ent/doctor"
-	"github.com/team09/app/ent/mission"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/training"
 )
 
@@ -25,54 +24,25 @@ type DepartmentCreate struct {
 	hooks    []Hook
 }
 
-// SetDetail sets the Detail field.
-func (dc *DepartmentCreate) SetDetail(s string) *DepartmentCreate {
-	dc.mutation.SetDetail(s)
-	return dc
-}
-
 // SetName sets the Name field.
 func (dc *DepartmentCreate) SetName(s string) *DepartmentCreate {
 	dc.mutation.SetName(s)
 	return dc
 }
 
-// SetMissionID sets the mission edge to Mission by id.
-func (dc *DepartmentCreate) SetMissionID(id int) *DepartmentCreate {
-	dc.mutation.SetMissionID(id)
+// AddDetailIDs adds the details edge to Detail by ids.
+func (dc *DepartmentCreate) AddDetailIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddDetailIDs(ids...)
 	return dc
 }
 
-// SetNillableMissionID sets the mission edge to Mission by id if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableMissionID(id *int) *DepartmentCreate {
-	if id != nil {
-		dc = dc.SetMissionID(*id)
+// AddDetails adds the details edges to Detail.
+func (dc *DepartmentCreate) AddDetails(d ...*Detail) *DepartmentCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
 	}
-	return dc
-}
-
-// SetMission sets the mission edge to Mission.
-func (dc *DepartmentCreate) SetMission(m *Mission) *DepartmentCreate {
-	return dc.SetMissionID(m.ID)
-}
-
-// SetDoctorID sets the doctor edge to Doctor by id.
-func (dc *DepartmentCreate) SetDoctorID(id int) *DepartmentCreate {
-	dc.mutation.SetDoctorID(id)
-	return dc
-}
-
-// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableDoctorID(id *int) *DepartmentCreate {
-	if id != nil {
-		dc = dc.SetDoctorID(*id)
-	}
-	return dc
-}
-
-// SetDoctor sets the doctor edge to Doctor.
-func (dc *DepartmentCreate) SetDoctor(d *Doctor) *DepartmentCreate {
-	return dc.SetDoctorID(d.ID)
+	return dc.AddDetailIDs(ids...)
 }
 
 // AddOfficeIDs adds the offices edge to Office by ids.
@@ -120,19 +90,19 @@ func (dc *DepartmentCreate) AddTrainings(t ...*Training) *DepartmentCreate {
 	return dc.AddTrainingIDs(ids...)
 }
 
-// AddSpecialistIDs adds the specialists edge to Specialist by ids.
-func (dc *DepartmentCreate) AddSpecialistIDs(ids ...int) *DepartmentCreate {
-	dc.mutation.AddSpecialistIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (dc *DepartmentCreate) AddSpecialdoctorIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddSpecialdoctorIDs(ids...)
 	return dc
 }
 
-// AddSpecialists adds the specialists edges to Specialist.
-func (dc *DepartmentCreate) AddSpecialists(s ...*Specialist) *DepartmentCreate {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (dc *DepartmentCreate) AddSpecialdoctors(s ...*Specialdoctor) *DepartmentCreate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return dc.AddSpecialistIDs(ids...)
+	return dc.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -142,14 +112,6 @@ func (dc *DepartmentCreate) Mutation() *DepartmentMutation {
 
 // Save creates the Department in the database.
 func (dc *DepartmentCreate) Save(ctx context.Context) (*Department, error) {
-	if _, ok := dc.mutation.Detail(); !ok {
-		return nil, &ValidationError{Name: "Detail", err: errors.New("ent: missing required field \"Detail\"")}
-	}
-	if v, ok := dc.mutation.Detail(); ok {
-		if err := department.DetailValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Detail", err: fmt.Errorf("ent: validator failed for field \"Detail\": %w", err)}
-		}
-	}
 	if _, ok := dc.mutation.Name(); !ok {
 		return nil, &ValidationError{Name: "Name", err: errors.New("ent: missing required field \"Name\"")}
 	}
@@ -218,14 +180,6 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := dc.mutation.Detail(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: department.FieldDetail,
-		})
-		d.Detail = value
-	}
 	if value, ok := dc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -234,36 +188,17 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		})
 		d.Name = value
 	}
-	if nodes := dc.mutation.MissionIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.DetailsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   department.MissionTable,
-			Columns: []string{department.MissionColumn},
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.DetailsTable,
+			Columns: []string{department.DetailsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: mission.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := dc.mutation.DoctorIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   department.DoctorTable,
-			Columns: []string{department.DoctorColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: doctor.FieldID,
+					Column: detail.FieldID,
 				},
 			},
 		}
@@ -329,17 +264,17 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialistsIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   department.SpecialistsTable,
-			Columns: []string{department.SpecialistsColumn},
+			Table:   department.SpecialdoctorsTable,
+			Columns: []string{department.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

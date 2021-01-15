@@ -11,39 +11,40 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 )
 
-// SpecialistUpdate is the builder for updating Specialist entities.
-type SpecialistUpdate struct {
+// SpecialdoctorUpdate is the builder for updating Specialdoctor entities.
+type SpecialdoctorUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *SpecialistMutation
-	predicates []predicate.Specialist
+	mutation   *SpecialdoctorMutation
+	predicates []predicate.Specialdoctor
 }
 
 // Where adds a new predicate for the builder.
-func (su *SpecialistUpdate) Where(ps ...predicate.Specialist) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) Where(ps ...predicate.Specialdoctor) *SpecialdoctorUpdate {
 	su.predicates = append(su.predicates, ps...)
 	return su
 }
 
-// SetSpecialist sets the specialist field.
-func (su *SpecialistUpdate) SetSpecialist(s string) *SpecialistUpdate {
-	su.mutation.SetSpecialist(s)
+// SetOther sets the other field.
+func (su *SpecialdoctorUpdate) SetOther(s string) *SpecialdoctorUpdate {
+	su.mutation.SetOther(s)
 	return su
 }
 
 // AddOfficeIDs adds the offices edge to Office by ids.
-func (su *SpecialistUpdate) AddOfficeIDs(ids ...int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) AddOfficeIDs(ids ...int) *SpecialdoctorUpdate {
 	su.mutation.AddOfficeIDs(ids...)
 	return su
 }
 
 // AddOffices adds the offices edges to Office.
-func (su *SpecialistUpdate) AddOffices(o ...*Office) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) AddOffices(o ...*Office) *SpecialdoctorUpdate {
 	ids := make([]int, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
@@ -52,13 +53,13 @@ func (su *SpecialistUpdate) AddOffices(o ...*Office) *SpecialistUpdate {
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
-func (su *SpecialistUpdate) SetDoctorID(id int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetDoctorID(id int) *SpecialdoctorUpdate {
 	su.mutation.SetDoctorID(id)
 	return su
 }
 
 // SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
-func (su *SpecialistUpdate) SetNillableDoctorID(id *int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetNillableDoctorID(id *int) *SpecialdoctorUpdate {
 	if id != nil {
 		su = su.SetDoctorID(*id)
 	}
@@ -66,18 +67,18 @@ func (su *SpecialistUpdate) SetNillableDoctorID(id *int) *SpecialistUpdate {
 }
 
 // SetDoctor sets the doctor edge to Doctor.
-func (su *SpecialistUpdate) SetDoctor(d *Doctor) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetDoctor(d *Doctor) *SpecialdoctorUpdate {
 	return su.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
-func (su *SpecialistUpdate) SetDepartmentID(id int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetDepartmentID(id int) *SpecialdoctorUpdate {
 	su.mutation.SetDepartmentID(id)
 	return su
 }
 
 // SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
-func (su *SpecialistUpdate) SetNillableDepartmentID(id *int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetNillableDepartmentID(id *int) *SpecialdoctorUpdate {
 	if id != nil {
 		su = su.SetDepartmentID(*id)
 	}
@@ -85,23 +86,42 @@ func (su *SpecialistUpdate) SetNillableDepartmentID(id *int) *SpecialistUpdate {
 }
 
 // SetDepartment sets the department edge to Department.
-func (su *SpecialistUpdate) SetDepartment(d *Department) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) SetDepartment(d *Department) *SpecialdoctorUpdate {
 	return su.SetDepartmentID(d.ID)
 }
 
-// Mutation returns the SpecialistMutation object of the builder.
-func (su *SpecialistUpdate) Mutation() *SpecialistMutation {
+// SetExtradoctorID sets the extradoctor edge to Extradoctor by id.
+func (su *SpecialdoctorUpdate) SetExtradoctorID(id int) *SpecialdoctorUpdate {
+	su.mutation.SetExtradoctorID(id)
+	return su
+}
+
+// SetNillableExtradoctorID sets the extradoctor edge to Extradoctor by id if the given value is not nil.
+func (su *SpecialdoctorUpdate) SetNillableExtradoctorID(id *int) *SpecialdoctorUpdate {
+	if id != nil {
+		su = su.SetExtradoctorID(*id)
+	}
+	return su
+}
+
+// SetExtradoctor sets the extradoctor edge to Extradoctor.
+func (su *SpecialdoctorUpdate) SetExtradoctor(e *Extradoctor) *SpecialdoctorUpdate {
+	return su.SetExtradoctorID(e.ID)
+}
+
+// Mutation returns the SpecialdoctorMutation object of the builder.
+func (su *SpecialdoctorUpdate) Mutation() *SpecialdoctorMutation {
 	return su.mutation
 }
 
 // RemoveOfficeIDs removes the offices edge to Office by ids.
-func (su *SpecialistUpdate) RemoveOfficeIDs(ids ...int) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) RemoveOfficeIDs(ids ...int) *SpecialdoctorUpdate {
 	su.mutation.RemoveOfficeIDs(ids...)
 	return su
 }
 
 // RemoveOffices removes offices edges to Office.
-func (su *SpecialistUpdate) RemoveOffices(o ...*Office) *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) RemoveOffices(o ...*Office) *SpecialdoctorUpdate {
 	ids := make([]int, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
@@ -110,22 +130,28 @@ func (su *SpecialistUpdate) RemoveOffices(o ...*Office) *SpecialistUpdate {
 }
 
 // ClearDoctor clears the doctor edge to Doctor.
-func (su *SpecialistUpdate) ClearDoctor() *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) ClearDoctor() *SpecialdoctorUpdate {
 	su.mutation.ClearDoctor()
 	return su
 }
 
 // ClearDepartment clears the department edge to Department.
-func (su *SpecialistUpdate) ClearDepartment() *SpecialistUpdate {
+func (su *SpecialdoctorUpdate) ClearDepartment() *SpecialdoctorUpdate {
 	su.mutation.ClearDepartment()
 	return su
 }
 
+// ClearExtradoctor clears the extradoctor edge to Extradoctor.
+func (su *SpecialdoctorUpdate) ClearExtradoctor() *SpecialdoctorUpdate {
+	su.mutation.ClearExtradoctor()
+	return su
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (su *SpecialistUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := su.mutation.Specialist(); ok {
-		if err := specialist.SpecialistValidator(v); err != nil {
-			return 0, &ValidationError{Name: "specialist", err: fmt.Errorf("ent: validator failed for field \"specialist\": %w", err)}
+func (su *SpecialdoctorUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := su.mutation.Other(); ok {
+		if err := specialdoctor.OtherValidator(v); err != nil {
+			return 0, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
 		}
 	}
 
@@ -137,7 +163,7 @@ func (su *SpecialistUpdate) Save(ctx context.Context) (int, error) {
 		affected, err = su.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*SpecialistMutation)
+			mutation, ok := m.(*SpecialdoctorMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -157,7 +183,7 @@ func (su *SpecialistUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (su *SpecialistUpdate) SaveX(ctx context.Context) int {
+func (su *SpecialdoctorUpdate) SaveX(ctx context.Context) int {
 	affected, err := su.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -166,26 +192,26 @@ func (su *SpecialistUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (su *SpecialistUpdate) Exec(ctx context.Context) error {
+func (su *SpecialdoctorUpdate) Exec(ctx context.Context) error {
 	_, err := su.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (su *SpecialistUpdate) ExecX(ctx context.Context) {
+func (su *SpecialdoctorUpdate) ExecX(ctx context.Context) {
 	if err := su.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (su *SpecialdoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   specialist.Table,
-			Columns: specialist.Columns,
+			Table:   specialdoctor.Table,
+			Columns: specialdoctor.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: specialist.FieldID,
+				Column: specialdoctor.FieldID,
 			},
 		},
 	}
@@ -196,19 +222,19 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := su.mutation.Specialist(); ok {
+	if value, ok := su.mutation.Other(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: specialist.FieldSpecialist,
+			Column: specialdoctor.FieldOther,
 		})
 	}
 	if nodes := su.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
+			Table:   specialdoctor.OfficesTable,
+			Columns: []string{specialdoctor.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -226,8 +252,8 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
+			Table:   specialdoctor.OfficesTable,
+			Columns: []string{specialdoctor.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -245,8 +271,8 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DoctorTable,
-			Columns: []string{specialist.DoctorColumn},
+			Table:   specialdoctor.DoctorTable,
+			Columns: []string{specialdoctor.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -261,8 +287,8 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DoctorTable,
-			Columns: []string{specialist.DoctorColumn},
+			Table:   specialdoctor.DoctorTable,
+			Columns: []string{specialdoctor.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -280,8 +306,8 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DepartmentTable,
-			Columns: []string{specialist.DepartmentColumn},
+			Table:   specialdoctor.DepartmentTable,
+			Columns: []string{specialdoctor.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -296,8 +322,8 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DepartmentTable,
-			Columns: []string{specialist.DepartmentColumn},
+			Table:   specialdoctor.DepartmentTable,
+			Columns: []string{specialdoctor.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -311,9 +337,44 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if su.mutation.ExtradoctorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialdoctor.ExtradoctorTable,
+			Columns: []string{specialdoctor.ExtradoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: extradoctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := su.mutation.ExtradoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialdoctor.ExtradoctorTable,
+			Columns: []string{specialdoctor.ExtradoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: extradoctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{specialist.Label}
+			err = &NotFoundError{specialdoctor.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
@@ -322,27 +383,27 @@ func (su *SpecialistUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// SpecialistUpdateOne is the builder for updating a single Specialist entity.
-type SpecialistUpdateOne struct {
+// SpecialdoctorUpdateOne is the builder for updating a single Specialdoctor entity.
+type SpecialdoctorUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *SpecialistMutation
+	mutation *SpecialdoctorMutation
 }
 
-// SetSpecialist sets the specialist field.
-func (suo *SpecialistUpdateOne) SetSpecialist(s string) *SpecialistUpdateOne {
-	suo.mutation.SetSpecialist(s)
+// SetOther sets the other field.
+func (suo *SpecialdoctorUpdateOne) SetOther(s string) *SpecialdoctorUpdateOne {
+	suo.mutation.SetOther(s)
 	return suo
 }
 
 // AddOfficeIDs adds the offices edge to Office by ids.
-func (suo *SpecialistUpdateOne) AddOfficeIDs(ids ...int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) AddOfficeIDs(ids ...int) *SpecialdoctorUpdateOne {
 	suo.mutation.AddOfficeIDs(ids...)
 	return suo
 }
 
 // AddOffices adds the offices edges to Office.
-func (suo *SpecialistUpdateOne) AddOffices(o ...*Office) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) AddOffices(o ...*Office) *SpecialdoctorUpdateOne {
 	ids := make([]int, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
@@ -351,13 +412,13 @@ func (suo *SpecialistUpdateOne) AddOffices(o ...*Office) *SpecialistUpdateOne {
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
-func (suo *SpecialistUpdateOne) SetDoctorID(id int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetDoctorID(id int) *SpecialdoctorUpdateOne {
 	suo.mutation.SetDoctorID(id)
 	return suo
 }
 
 // SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
-func (suo *SpecialistUpdateOne) SetNillableDoctorID(id *int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetNillableDoctorID(id *int) *SpecialdoctorUpdateOne {
 	if id != nil {
 		suo = suo.SetDoctorID(*id)
 	}
@@ -365,18 +426,18 @@ func (suo *SpecialistUpdateOne) SetNillableDoctorID(id *int) *SpecialistUpdateOn
 }
 
 // SetDoctor sets the doctor edge to Doctor.
-func (suo *SpecialistUpdateOne) SetDoctor(d *Doctor) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetDoctor(d *Doctor) *SpecialdoctorUpdateOne {
 	return suo.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
-func (suo *SpecialistUpdateOne) SetDepartmentID(id int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetDepartmentID(id int) *SpecialdoctorUpdateOne {
 	suo.mutation.SetDepartmentID(id)
 	return suo
 }
 
 // SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
-func (suo *SpecialistUpdateOne) SetNillableDepartmentID(id *int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetNillableDepartmentID(id *int) *SpecialdoctorUpdateOne {
 	if id != nil {
 		suo = suo.SetDepartmentID(*id)
 	}
@@ -384,23 +445,42 @@ func (suo *SpecialistUpdateOne) SetNillableDepartmentID(id *int) *SpecialistUpda
 }
 
 // SetDepartment sets the department edge to Department.
-func (suo *SpecialistUpdateOne) SetDepartment(d *Department) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) SetDepartment(d *Department) *SpecialdoctorUpdateOne {
 	return suo.SetDepartmentID(d.ID)
 }
 
-// Mutation returns the SpecialistMutation object of the builder.
-func (suo *SpecialistUpdateOne) Mutation() *SpecialistMutation {
+// SetExtradoctorID sets the extradoctor edge to Extradoctor by id.
+func (suo *SpecialdoctorUpdateOne) SetExtradoctorID(id int) *SpecialdoctorUpdateOne {
+	suo.mutation.SetExtradoctorID(id)
+	return suo
+}
+
+// SetNillableExtradoctorID sets the extradoctor edge to Extradoctor by id if the given value is not nil.
+func (suo *SpecialdoctorUpdateOne) SetNillableExtradoctorID(id *int) *SpecialdoctorUpdateOne {
+	if id != nil {
+		suo = suo.SetExtradoctorID(*id)
+	}
+	return suo
+}
+
+// SetExtradoctor sets the extradoctor edge to Extradoctor.
+func (suo *SpecialdoctorUpdateOne) SetExtradoctor(e *Extradoctor) *SpecialdoctorUpdateOne {
+	return suo.SetExtradoctorID(e.ID)
+}
+
+// Mutation returns the SpecialdoctorMutation object of the builder.
+func (suo *SpecialdoctorUpdateOne) Mutation() *SpecialdoctorMutation {
 	return suo.mutation
 }
 
 // RemoveOfficeIDs removes the offices edge to Office by ids.
-func (suo *SpecialistUpdateOne) RemoveOfficeIDs(ids ...int) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) RemoveOfficeIDs(ids ...int) *SpecialdoctorUpdateOne {
 	suo.mutation.RemoveOfficeIDs(ids...)
 	return suo
 }
 
 // RemoveOffices removes offices edges to Office.
-func (suo *SpecialistUpdateOne) RemoveOffices(o ...*Office) *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) RemoveOffices(o ...*Office) *SpecialdoctorUpdateOne {
 	ids := make([]int, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
@@ -409,34 +489,40 @@ func (suo *SpecialistUpdateOne) RemoveOffices(o ...*Office) *SpecialistUpdateOne
 }
 
 // ClearDoctor clears the doctor edge to Doctor.
-func (suo *SpecialistUpdateOne) ClearDoctor() *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) ClearDoctor() *SpecialdoctorUpdateOne {
 	suo.mutation.ClearDoctor()
 	return suo
 }
 
 // ClearDepartment clears the department edge to Department.
-func (suo *SpecialistUpdateOne) ClearDepartment() *SpecialistUpdateOne {
+func (suo *SpecialdoctorUpdateOne) ClearDepartment() *SpecialdoctorUpdateOne {
 	suo.mutation.ClearDepartment()
 	return suo
 }
 
+// ClearExtradoctor clears the extradoctor edge to Extradoctor.
+func (suo *SpecialdoctorUpdateOne) ClearExtradoctor() *SpecialdoctorUpdateOne {
+	suo.mutation.ClearExtradoctor()
+	return suo
+}
+
 // Save executes the query and returns the updated entity.
-func (suo *SpecialistUpdateOne) Save(ctx context.Context) (*Specialist, error) {
-	if v, ok := suo.mutation.Specialist(); ok {
-		if err := specialist.SpecialistValidator(v); err != nil {
-			return nil, &ValidationError{Name: "specialist", err: fmt.Errorf("ent: validator failed for field \"specialist\": %w", err)}
+func (suo *SpecialdoctorUpdateOne) Save(ctx context.Context) (*Specialdoctor, error) {
+	if v, ok := suo.mutation.Other(); ok {
+		if err := specialdoctor.OtherValidator(v); err != nil {
+			return nil, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
 		}
 	}
 
 	var (
 		err  error
-		node *Specialist
+		node *Specialdoctor
 	)
 	if len(suo.hooks) == 0 {
 		node, err = suo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*SpecialistMutation)
+			mutation, ok := m.(*SpecialdoctorMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -456,7 +542,7 @@ func (suo *SpecialistUpdateOne) Save(ctx context.Context) (*Specialist, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (suo *SpecialistUpdateOne) SaveX(ctx context.Context) *Specialist {
+func (suo *SpecialdoctorUpdateOne) SaveX(ctx context.Context) *Specialdoctor {
 	s, err := suo.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -465,47 +551,47 @@ func (suo *SpecialistUpdateOne) SaveX(ctx context.Context) *Specialist {
 }
 
 // Exec executes the query on the entity.
-func (suo *SpecialistUpdateOne) Exec(ctx context.Context) error {
+func (suo *SpecialdoctorUpdateOne) Exec(ctx context.Context) error {
 	_, err := suo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (suo *SpecialistUpdateOne) ExecX(ctx context.Context) {
+func (suo *SpecialdoctorUpdateOne) ExecX(ctx context.Context) {
 	if err := suo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err error) {
+func (suo *SpecialdoctorUpdateOne) sqlSave(ctx context.Context) (s *Specialdoctor, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   specialist.Table,
-			Columns: specialist.Columns,
+			Table:   specialdoctor.Table,
+			Columns: specialdoctor.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: specialist.FieldID,
+				Column: specialdoctor.FieldID,
 			},
 		},
 	}
 	id, ok := suo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Specialist.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Specialdoctor.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := suo.mutation.Specialist(); ok {
+	if value, ok := suo.mutation.Other(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: specialist.FieldSpecialist,
+			Column: specialdoctor.FieldOther,
 		})
 	}
 	if nodes := suo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
+			Table:   specialdoctor.OfficesTable,
+			Columns: []string{specialdoctor.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -523,8 +609,8 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
+			Table:   specialdoctor.OfficesTable,
+			Columns: []string{specialdoctor.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -542,8 +628,8 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DoctorTable,
-			Columns: []string{specialist.DoctorColumn},
+			Table:   specialdoctor.DoctorTable,
+			Columns: []string{specialdoctor.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -558,8 +644,8 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DoctorTable,
-			Columns: []string{specialist.DoctorColumn},
+			Table:   specialdoctor.DoctorTable,
+			Columns: []string{specialdoctor.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -577,8 +663,8 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DepartmentTable,
-			Columns: []string{specialist.DepartmentColumn},
+			Table:   specialdoctor.DepartmentTable,
+			Columns: []string{specialdoctor.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -593,8 +679,8 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DepartmentTable,
-			Columns: []string{specialist.DepartmentColumn},
+			Table:   specialdoctor.DepartmentTable,
+			Columns: []string{specialdoctor.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -608,12 +694,47 @@ func (suo *SpecialistUpdateOne) sqlSave(ctx context.Context) (s *Specialist, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	s = &Specialist{config: suo.config}
+	if suo.mutation.ExtradoctorCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialdoctor.ExtradoctorTable,
+			Columns: []string{specialdoctor.ExtradoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: extradoctor.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := suo.mutation.ExtradoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialdoctor.ExtradoctorTable,
+			Columns: []string{specialdoctor.ExtradoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: extradoctor.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	s = &Specialdoctor{config: suo.config}
 	_spec.Assign = s.assignValues
 	_spec.ScanValues = s.scanValues()
 	if err = sqlgraph.UpdateNode(ctx, suo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{specialist.Label}
+			err = &NotFoundError{specialdoctor.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}

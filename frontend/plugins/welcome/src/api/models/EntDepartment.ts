@@ -27,12 +27,6 @@ import {
  */
 export interface EntDepartment {
     /**
-     * Detail holds the value of the "Detail" field.
-     * @type {string}
-     * @memberof EntDepartment
-     */
-    detail?: string;
-    /**
      * Name holds the value of the "Name" field.
      * @type {string}
      * @memberof EntDepartment
@@ -62,7 +56,6 @@ export function EntDepartmentFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'detail': !exists(json, 'Detail') ? undefined : json['Detail'],
         'name': !exists(json, 'Name') ? undefined : json['Name'],
         'edges': !exists(json, 'edges') ? undefined : EntDepartmentEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
@@ -78,7 +71,6 @@ export function EntDepartmentToJSON(value?: EntDepartment | null): any {
     }
     return {
         
-        'Detail': value.detail,
         'Name': value.name,
         'edges': EntDepartmentEdgesToJSON(value.edges),
         'id': value.id,

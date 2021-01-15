@@ -12,9 +12,9 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
 )
 
 // OfficeCreate is the builder for creating a Office entity.
@@ -80,23 +80,23 @@ func (oc *OfficeCreate) SetDepartment(d *Department) *OfficeCreate {
 	return oc.SetDepartmentID(d.ID)
 }
 
-// SetSpecialistID sets the specialist edge to Specialist by id.
-func (oc *OfficeCreate) SetSpecialistID(id int) *OfficeCreate {
-	oc.mutation.SetSpecialistID(id)
+// SetExtradoctorID sets the extradoctor edge to Extradoctor by id.
+func (oc *OfficeCreate) SetExtradoctorID(id int) *OfficeCreate {
+	oc.mutation.SetExtradoctorID(id)
 	return oc
 }
 
-// SetNillableSpecialistID sets the specialist edge to Specialist by id if the given value is not nil.
-func (oc *OfficeCreate) SetNillableSpecialistID(id *int) *OfficeCreate {
+// SetNillableExtradoctorID sets the extradoctor edge to Extradoctor by id if the given value is not nil.
+func (oc *OfficeCreate) SetNillableExtradoctorID(id *int) *OfficeCreate {
 	if id != nil {
-		oc = oc.SetSpecialistID(*id)
+		oc = oc.SetExtradoctorID(*id)
 	}
 	return oc
 }
 
-// SetSpecialist sets the specialist edge to Specialist.
-func (oc *OfficeCreate) SetSpecialist(s *Specialist) *OfficeCreate {
-	return oc.SetSpecialistID(s.ID)
+// SetExtradoctor sets the extradoctor edge to Extradoctor.
+func (oc *OfficeCreate) SetExtradoctor(e *Extradoctor) *OfficeCreate {
+	return oc.SetExtradoctorID(e.ID)
 }
 
 // AddScheduleIDs adds the schedules edge to Schedule by ids.
@@ -257,17 +257,17 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := oc.mutation.SpecialistIDs(); len(nodes) > 0 {
+	if nodes := oc.mutation.ExtradoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   office.SpecialistTable,
-			Columns: []string{office.SpecialistColumn},
+			Table:   office.ExtradoctorTable,
+			Columns: []string{office.ExtradoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: extradoctor.FieldID,
 				},
 			},
 		}

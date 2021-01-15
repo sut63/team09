@@ -18,6 +18,10 @@ import {
     EntDepartmentFromJSON,
     EntDepartmentFromJSONTyped,
     EntDepartmentToJSON,
+    EntDetail,
+    EntDetailFromJSON,
+    EntDetailFromJSONTyped,
+    EntDetailToJSON,
 } from './';
 
 /**
@@ -32,6 +36,12 @@ export interface EntMissionEdges {
      * @memberof EntMissionEdges
      */
     departments?: Array<EntDepartment>;
+    /**
+     * Details holds the value of the details edge.
+     * @type {Array<EntDetail>}
+     * @memberof EntMissionEdges
+     */
+    details?: Array<EntDetail>;
 }
 
 export function EntMissionEdgesFromJSON(json: any): EntMissionEdges {
@@ -45,6 +55,7 @@ export function EntMissionEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'departments': !exists(json, 'departments') ? undefined : ((json['departments'] as Array<any>).map(EntDepartmentFromJSON)),
+        'details': !exists(json, 'details') ? undefined : ((json['details'] as Array<any>).map(EntDetailFromJSON)),
     };
 }
 
@@ -58,6 +69,7 @@ export function EntMissionEdgesToJSON(value?: EntMissionEdges | null): any {
     return {
         
         'departments': value.departments === undefined ? undefined : ((value.departments as Array<any>).map(EntDepartmentToJSON)),
+        'details': value.details === undefined ? undefined : ((value.details as Array<any>).map(EntDetailToJSON)),
     };
 }
 

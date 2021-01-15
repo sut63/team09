@@ -20,7 +20,7 @@ import (
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -34,16 +34,16 @@ type DoctorQuery struct {
 	unique     []string
 	predicates []predicate.Doctor
 	// eager-loading edges.
-	withTitle       *TitleQuery
-	withGender      *GenderQuery
-	withPosition    *PositionQuery
-	withDisease     *DiseaseQuery
-	withOffices     *OfficeQuery
-	withDepartments *DepartmentQuery
-	withSchedules   *ScheduleQuery
-	withTrainings   *TrainingQuery
-	withSpecialists *SpecialistQuery
-	withFKs         bool
+	withTitle          *TitleQuery
+	withGender         *GenderQuery
+	withPosition       *PositionQuery
+	withDisease        *DiseaseQuery
+	withOffices        *OfficeQuery
+	withDepartments    *DepartmentQuery
+	withSchedules      *ScheduleQuery
+	withTrainings      *TrainingQuery
+	withSpecialdoctors *SpecialdoctorQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -217,17 +217,17 @@ func (dq *DoctorQuery) QueryTrainings() *TrainingQuery {
 	return query
 }
 
-// QuerySpecialists chains the current query on the specialists edge.
-func (dq *DoctorQuery) QuerySpecialists() *SpecialistQuery {
-	query := &SpecialistQuery{config: dq.config}
+// QuerySpecialdoctors chains the current query on the specialdoctors edge.
+func (dq *DoctorQuery) QuerySpecialdoctors() *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := dq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(doctor.Table, doctor.FieldID, dq.sqlQuery()),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialistsTable, doctor.SpecialistsColumn),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialdoctorsTable, doctor.SpecialdoctorsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -502,14 +502,14 @@ func (dq *DoctorQuery) WithTrainings(opts ...func(*TrainingQuery)) *DoctorQuery 
 	return dq
 }
 
-//  WithSpecialists tells the query-builder to eager-loads the nodes that are connected to
-// the "specialists" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DoctorQuery) WithSpecialists(opts ...func(*SpecialistQuery)) *DoctorQuery {
-	query := &SpecialistQuery{config: dq.config}
+//  WithSpecialdoctors tells the query-builder to eager-loads the nodes that are connected to
+// the "specialdoctors" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DoctorQuery) WithSpecialdoctors(opts ...func(*SpecialdoctorQuery)) *DoctorQuery {
+	query := &SpecialdoctorQuery{config: dq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	dq.withSpecialists = query
+	dq.withSpecialdoctors = query
 	return dq
 }
 
@@ -589,7 +589,7 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			dq.withDepartments != nil,
 			dq.withSchedules != nil,
 			dq.withTrainings != nil,
-			dq.withSpecialists != nil,
+			dq.withSpecialdoctors != nil,
 		}
 	)
 	if dq.withTitle != nil || dq.withGender != nil || dq.withPosition != nil || dq.withDisease != nil {
@@ -834,7 +834,7 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 		}
 	}
 
-	if query := dq.withSpecialists; query != nil {
+	if query := dq.withSpecialdoctors; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Doctor)
 		for i := range nodes {
@@ -842,8 +842,8 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.Specialist(func(s *sql.Selector) {
-			s.Where(sql.InValues(doctor.SpecialistsColumn, fks...))
+		query.Where(predicate.Specialdoctor(func(s *sql.Selector) {
+			s.Where(sql.InValues(doctor.SpecialdoctorsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -858,7 +858,7 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Specialists = append(node.Edges.Specialists, n)
+			node.Edges.Specialdoctors = append(node.Edges.Specialdoctors, n)
 		}
 	}
 

@@ -26,7 +26,6 @@ import {
  * @interface EntDoctor
  */
 export interface EntDoctor {
-    title: ReactNode;
     /**
      * Address holds the value of the "address" field.
      * @type {string}
@@ -70,11 +69,17 @@ export interface EntDoctor {
      */
     name?: string;
     /**
-     * Pnumber holds the value of the "pnumber" field.
-     * @type {number}
+     * Password holds the value of the "password" field.
+     * @type {string}
      * @memberof EntDoctor
      */
-    pnumber?: number;
+    password?: string;
+    /**
+     * Phone holds the value of the "phone" field.
+     * @type {string}
+     * @memberof EntDoctor
+     */
+    phone?: string;
 }
 
 export function EntDoctorFromJSON(json: any): EntDoctor {
@@ -94,7 +99,8 @@ export function EntDoctorFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'email': !exists(json, 'email') ? undefined : json['email'],
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'pnumber': !exists(json, 'pnumber') ? undefined : json['pnumber'],
+        'password': !exists(json, 'password') ? undefined : json['password'],
+        'phone': !exists(json, 'phone') ? undefined : json['phone'],
     };
 }
 
@@ -114,7 +120,8 @@ export function EntDoctorToJSON(value?: EntDoctor | null): any {
         'email': value.email,
         'id': value.id,
         'name': value.name,
-        'pnumber': value.pnumber,
+        'password': value.password,
+        'phone': value.phone,
     };
 }
 

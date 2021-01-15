@@ -17,6 +17,11 @@ definitions:
     type: object
   ent.CourseEdges:
     properties:
+      details:
+        description: Details holds the value of the details edge.
+        items:
+          $ref: '#/definitions/ent.Detail'
+        type: array
       trainings:
         description: Trainings holds the value of the trainings edge.
         items:
@@ -25,9 +30,6 @@ definitions:
     type: object
   ent.Department:
     properties:
-      Detail:
-        description: Detail holds the value of the "Detail" field.
-        type: string
       Name:
         description: Name holds the value of the "Name" field.
         type: string
@@ -43,14 +45,11 @@ definitions:
     type: object
   ent.DepartmentEdges:
     properties:
-      doctor:
-        $ref: '#/definitions/ent.Doctor'
-        description: Doctor holds the value of the doctor edge.
-        type: object
-      mission:
-        $ref: '#/definitions/ent.Mission'
-        description: Mission holds the value of the mission edge.
-        type: object
+      details:
+        description: Details holds the value of the details edge.
+        items:
+          $ref: '#/definitions/ent.Detail'
+        type: array
       offices:
         description: Offices holds the value of the offices edge.
         items:
@@ -61,16 +60,46 @@ definitions:
         items:
           $ref: '#/definitions/ent.Schedule'
         type: array
-      specialists:
-        description: Specialists holds the value of the specialists edge.
+      specialdoctors:
+        description: Specialdoctors holds the value of the specialdoctors edge.
         items:
-          $ref: '#/definitions/ent.Specialist'
+          $ref: '#/definitions/ent.Specialdoctor'
         type: array
       trainings:
         description: Trainings holds the value of the trainings edge.
         items:
           $ref: '#/definitions/ent.Training'
         type: array
+    type: object
+  ent.Detail:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.DetailEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the DetailQuery when eager-loading is set.
+        type: object
+      explain:
+        description: Explain holds the value of the "explain" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.DetailEdges:
+    properties:
+      course:
+        $ref: '#/definitions/ent.Course'
+        description: Course holds the value of the course edge.
+        type: object
+      department:
+        $ref: '#/definitions/ent.Department'
+        description: Department holds the value of the department edge.
+        type: object
+      mission:
+        $ref: '#/definitions/ent.Mission'
+        description: Mission holds the value of the mission edge.
+        type: object
     type: object
   ent.Disease:
     properties:
@@ -121,9 +150,12 @@ definitions:
       name:
         description: Name holds the value of the "name" field.
         type: string
-      pnumber:
-        description: Pnumber holds the value of the "pnumber" field.
-        type: integer
+      password:
+        description: Password holds the value of the "password" field.
+        type: string
+      phone:
+        description: Phone holds the value of the "phone" field.
+        type: string
     type: object
   ent.DoctorEdges:
     properties:
@@ -154,10 +186,10 @@ definitions:
         items:
           $ref: '#/definitions/ent.Schedule'
         type: array
-      specialists:
-        description: Specialists holds the value of the specialists edge.
+      specialdoctors:
+        description: Specialdoctors holds the value of the specialdoctors edge.
         items:
-          $ref: '#/definitions/ent.Specialist'
+          $ref: '#/definitions/ent.Specialdoctor'
         type: array
       title:
         $ref: '#/definitions/ent.Title'
@@ -167,6 +199,34 @@ definitions:
         description: Trainings holds the value of the trainings edge.
         items:
           $ref: '#/definitions/ent.Training'
+        type: array
+    type: object
+  ent.Extradoctor:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.ExtradoctorEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ExtradoctorQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      specialname:
+        description: Specialname holds the value of the "specialname" field.
+        type: string
+    type: object
+  ent.ExtradoctorEdges:
+    properties:
+      offices:
+        description: Offices holds the value of the offices edge.
+        items:
+          $ref: '#/definitions/ent.Office'
+        type: array
+      specialdoctors:
+        description: Specialdoctors holds the value of the specialdoctors edge.
+        items:
+          $ref: '#/definitions/ent.Specialdoctor'
         type: array
     type: object
   ent.Gender:
@@ -194,9 +254,6 @@ definitions:
     type: object
   ent.Mission:
     properties:
-      MissionType:
-        description: MissionType holds the value of the "MissionType" field.
-        type: string
       edges:
         $ref: '#/definitions/ent.MissionEdges'
         description: |-
@@ -206,6 +263,9 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      mission:
+        description: Mission holds the value of the "mission" field.
+        type: string
     type: object
   ent.MissionEdges:
     properties:
@@ -213,6 +273,11 @@ definitions:
         description: Departments holds the value of the departments edge.
         items:
           $ref: '#/definitions/ent.Department'
+        type: array
+      details:
+        description: Details holds the value of the details edge.
+        items:
+          $ref: '#/definitions/ent.Detail'
         type: array
     type: object
   ent.Office:
@@ -235,6 +300,8 @@ definitions:
       officename:
         description: Officename holds the value of the "officename" field.
         type: string
+      specialdoctor_id:
+        type: integer
     type: object
   ent.OfficeEdges:
     properties:
@@ -246,15 +313,15 @@ definitions:
         $ref: '#/definitions/ent.Doctor'
         description: Doctor holds the value of the doctor edge.
         type: object
+      extradoctor:
+        $ref: '#/definitions/ent.Extradoctor'
+        description: Extradoctor holds the value of the extradoctor edge.
+        type: object
       schedules:
         description: Schedules holds the value of the schedules edge.
         items:
           $ref: '#/definitions/ent.Schedule'
         type: array
-      specialist:
-        $ref: '#/definitions/ent.Specialist'
-        description: Specialist holds the value of the specialist edge.
-        type: object
     type: object
   ent.Position:
     properties:
@@ -312,22 +379,22 @@ definitions:
         description: Office holds the value of the office edge.
         type: object
     type: object
-  ent.Specialist:
+  ent.Specialdoctor:
     properties:
       edges:
-        $ref: '#/definitions/ent.SpecialistEdges'
+        $ref: '#/definitions/ent.SpecialdoctorEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the SpecialistQuery when eager-loading is set.
+          The values are being populated by the SpecialdoctorQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
-      specialist:
-        description: Specialist holds the value of the "specialist" field.
+      other:
+        description: Other holds the value of the "other" field.
         type: string
     type: object
-  ent.SpecialistEdges:
+  ent.SpecialdoctorEdges:
     properties:
       department:
         $ref: '#/definitions/ent.Department'
@@ -336,6 +403,10 @@ definitions:
       doctor:
         $ref: '#/definitions/ent.Doctor'
         description: Doctor holds the value of the doctor edge.
+        type: object
+      extradoctor:
+        $ref: '#/definitions/ent.Extradoctor'
+        description: Extradoctor holds the value of the extradoctor edge.
         type: object
       offices:
         description: Offices holds the value of the offices edge.
@@ -626,6 +697,124 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a department entity by ID
+  /details:
+    get:
+      description: list detail entities
+      operationId: list-detail
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Detail'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List detail entities
+    post:
+      consumes:
+      - application/json
+      description: Create detail
+      operationId: create-detail
+      parameters:
+      - description: Detail entity
+        in: body
+        name: Detail
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Detail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Detail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create detail
+  /details/{id}:
+    delete:
+      description: get detail by ID
+      operationId: delete-detail
+      parameters:
+      - description: detail ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a detail entity by ID
+    get:
+      description: get detail by ID
+      operationId: get-detail
+      parameters:
+      - description: detail ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Detail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a detail entity by ID
   /diseases:
     get:
       description: list disease entities
@@ -862,6 +1051,67 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a doctor entity by ID
+  /extradoctors:
+    get:
+      description: list extradoctor entities
+      operationId: list-extradoctor
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Extradoctor'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Listextradoctor entities
+  /extradoctors/{id}:
+    get:
+      description: get extradoctor by ID
+      operationId: get-extradoctor
+      parameters:
+      - description: Special ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Extradoctor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a extradoctor entity by ID
   /genders:
     get:
       description: list gender entities
@@ -1137,7 +1387,7 @@ paths:
       parameters:
       - description: Office entity
         in: body
-        name: doctor
+        name: office
         required: true
         schema:
           $ref: '#/definitions/ent.Office'
@@ -1485,10 +1735,10 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a schedule entity by ID
-  /specialists:
+  /specialdoctors:
     get:
-      description: list specialist entities
-      operationId: list-specialist
+      description: list specialdoctor entities
+      operationId: list-specialdoctor
       parameters:
       - description: Limit
         in: query
@@ -1505,7 +1755,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Specialist'
+              $ref: '#/definitions/ent.Specialdoctor'
             type: array
         "400":
           description: Bad Request
@@ -1515,26 +1765,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List specialist entities
+      summary: List specialdoctor entities
     post:
       consumes:
       - application/json
-      description: Create specialist
-      operationId: create-specialist
+      description: Create specialdoctor
+      operationId: create-specialdoctor
       parameters:
-      - description: Specialist entity
+      - description: Specialdoctor entity
         in: body
-        name: specialist
+        name: specialdoctor
         required: true
         schema:
-          $ref: '#/definitions/ent.Specialist'
+          $ref: '#/definitions/ent.Specialdoctor'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Specialist'
+            $ref: '#/definitions/ent.Specialdoctor'
         "400":
           description: Bad Request
           schema:
@@ -1543,13 +1793,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create specialist
-  /specialists/{id}:
+      summary: Create specialdoctor
+  /specialdoctors/{id}:
     delete:
-      description: get specialist by ID
-      operationId: delete-specialist
+      description: get specialdoctor by ID
+      operationId: delete-specialdoctor
       parameters:
-      - description: Specialist ID
+      - description: Specialdoctor ID
         in: path
         name: id
         required: true
@@ -1573,12 +1823,12 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a specialist entity by ID
+      summary: Delete a specialdoctor entity by ID
     get:
-      description: get specialist by ID
-      operationId: get-specialist
+      description: get specialdoctor by ID
+      operationId: get-specialdoctor
       parameters:
-      - description: Specialist ID
+      - description: Specialdoctor ID
         in: path
         name: id
         required: true
@@ -1589,7 +1839,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Specialist'
+            $ref: '#/definitions/ent.Specialdoctor'
         "400":
           description: Bad Request
           schema:
@@ -1602,7 +1852,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a specialist entity by ID
+      summary: Get a specialdoctor entity by ID
   /titles:
     get:
       description: list title entities

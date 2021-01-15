@@ -65,7 +65,7 @@ const Homepage: FC<{}> = () => {
 
             <Link 
             color="textPrimary" 
-            href="/SaveDenExpen" >
+            href="/detail" >
                 บันทึกข้อมูลแผนกแพทย์
             </Link>
 

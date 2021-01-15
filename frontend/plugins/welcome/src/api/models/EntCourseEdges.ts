@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    EntDetail,
+    EntDetailFromJSON,
+    EntDetailFromJSONTyped,
+    EntDetailToJSON,
     EntTraining,
     EntTrainingFromJSON,
     EntTrainingFromJSONTyped,
@@ -26,6 +30,12 @@ import {
  * @interface EntCourseEdges
  */
 export interface EntCourseEdges {
+    /**
+     * Details holds the value of the details edge.
+     * @type {Array<EntDetail>}
+     * @memberof EntCourseEdges
+     */
+    details?: Array<EntDetail>;
     /**
      * Trainings holds the value of the trainings edge.
      * @type {Array<EntTraining>}
@@ -44,6 +54,7 @@ export function EntCourseEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
+        'details': !exists(json, 'details') ? undefined : ((json['details'] as Array<any>).map(EntDetailFromJSON)),
         'trainings': !exists(json, 'trainings') ? undefined : ((json['trainings'] as Array<any>).map(EntTrainingFromJSON)),
     };
 }
@@ -57,6 +68,7 @@ export function EntCourseEdgesToJSON(value?: EntCourseEdges | null): any {
     }
     return {
         
+        'details': value.details === undefined ? undefined : ((value.details as Array<any>).map(EntDetailToJSON)),
         'trainings': value.trainings === undefined ? undefined : ((value.trainings as Array<any>).map(EntTrainingToJSON)),
     };
 }

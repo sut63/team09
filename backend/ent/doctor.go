@@ -32,7 +32,7 @@ type Doctor struct {
 	// Educational holds the value of the "educational" field.
 	Educational string `json:"educational,omitempty"`
 	// Phone holds the value of the "phone" field.
-	Phone int `json:"phone,omitempty"`
+	Phone string `json:"phone,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DoctorQuery when eager-loading is set.
 	Edges       DoctorEdges `json:"edges"`
@@ -60,8 +60,8 @@ type DoctorEdges struct {
 	Schedules []*Schedule
 	// Trainings holds the value of the trainings edge.
 	Trainings []*Training
-	// Specialists holds the value of the specialists edge.
-	Specialists []*Specialist
+	// Specialdoctors holds the value of the specialdoctors edge.
+	Specialdoctors []*Specialdoctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [9]bool
@@ -159,13 +159,13 @@ func (e DoctorEdges) TrainingsOrErr() ([]*Training, error) {
 	return nil, &NotLoadedError{edge: "trainings"}
 }
 
-// SpecialistsOrErr returns the Specialists value or an error if the edge
+// SpecialdoctorsOrErr returns the Specialdoctors value or an error if the edge
 // was not loaded in eager-loading.
-func (e DoctorEdges) SpecialistsOrErr() ([]*Specialist, error) {
+func (e DoctorEdges) SpecialdoctorsOrErr() ([]*Specialdoctor, error) {
 	if e.loadedTypes[8] {
-		return e.Specialists, nil
+		return e.Specialdoctors, nil
 	}
-	return nil, &NotLoadedError{edge: "specialists"}
+	return nil, &NotLoadedError{edge: "specialdoctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -178,7 +178,7 @@ func (*Doctor) scanValues() []interface{} {
 		&sql.NullString{}, // password
 		&sql.NullString{}, // address
 		&sql.NullString{}, // educational
-		&sql.NullInt64{},  // phone
+		&sql.NullString{}, // phone
 	}
 }
 
@@ -234,10 +234,10 @@ func (d *Doctor) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Educational = value.String
 	}
-	if value, ok := values[6].(*sql.NullInt64); !ok {
+	if value, ok := values[6].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field phone", values[6])
 	} else if value.Valid {
-		d.Phone = int(value.Int64)
+		d.Phone = value.String
 	}
 	values = values[7:]
 	if len(values) == len(doctor.ForeignKeys) {
@@ -309,9 +309,9 @@ func (d *Doctor) QueryTrainings() *TrainingQuery {
 	return (&DoctorClient{config: d.config}).QueryTrainings(d)
 }
 
-// QuerySpecialists queries the specialists edge of the Doctor.
-func (d *Doctor) QuerySpecialists() *SpecialistQuery {
-	return (&DoctorClient{config: d.config}).QuerySpecialists(d)
+// QuerySpecialdoctors queries the specialdoctors edge of the Doctor.
+func (d *Doctor) QuerySpecialdoctors() *SpecialdoctorQuery {
+	return (&DoctorClient{config: d.config}).QuerySpecialdoctors(d)
 }
 
 // Update returns a builder for updating this Doctor.
@@ -350,7 +350,7 @@ func (d *Doctor) String() string {
 	builder.WriteString(", educational=")
 	builder.WriteString(d.Educational)
 	builder.WriteString(", phone=")
-	builder.WriteString(fmt.Sprintf("%v", d.Phone))
+	builder.WriteString(d.Phone)
 	builder.WriteByte(')')
 	return builder.String()
 }

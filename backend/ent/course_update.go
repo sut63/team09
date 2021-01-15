@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/course"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/training"
 )
@@ -49,6 +50,21 @@ func (cu *CourseUpdate) AddTrainings(t ...*Training) *CourseUpdate {
 	return cu.AddTrainingIDs(ids...)
 }
 
+// AddDetailIDs adds the details edge to Detail by ids.
+func (cu *CourseUpdate) AddDetailIDs(ids ...int) *CourseUpdate {
+	cu.mutation.AddDetailIDs(ids...)
+	return cu
+}
+
+// AddDetails adds the details edges to Detail.
+func (cu *CourseUpdate) AddDetails(d ...*Detail) *CourseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return cu.AddDetailIDs(ids...)
+}
+
 // Mutation returns the CourseMutation object of the builder.
 func (cu *CourseUpdate) Mutation() *CourseMutation {
 	return cu.mutation
@@ -67,6 +83,21 @@ func (cu *CourseUpdate) RemoveTrainings(t ...*Training) *CourseUpdate {
 		ids[i] = t[i].ID
 	}
 	return cu.RemoveTrainingIDs(ids...)
+}
+
+// RemoveDetailIDs removes the details edge to Detail by ids.
+func (cu *CourseUpdate) RemoveDetailIDs(ids ...int) *CourseUpdate {
+	cu.mutation.RemoveDetailIDs(ids...)
+	return cu
+}
+
+// RemoveDetails removes details edges to Detail.
+func (cu *CourseUpdate) RemoveDetails(d ...*Detail) *CourseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return cu.RemoveDetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -189,6 +220,44 @@ func (cu *CourseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   course.DetailsTable,
+			Columns: []string{course.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   course.DetailsTable,
+			Columns: []string{course.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{course.Label}
@@ -228,6 +297,21 @@ func (cuo *CourseUpdateOne) AddTrainings(t ...*Training) *CourseUpdateOne {
 	return cuo.AddTrainingIDs(ids...)
 }
 
+// AddDetailIDs adds the details edge to Detail by ids.
+func (cuo *CourseUpdateOne) AddDetailIDs(ids ...int) *CourseUpdateOne {
+	cuo.mutation.AddDetailIDs(ids...)
+	return cuo
+}
+
+// AddDetails adds the details edges to Detail.
+func (cuo *CourseUpdateOne) AddDetails(d ...*Detail) *CourseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return cuo.AddDetailIDs(ids...)
+}
+
 // Mutation returns the CourseMutation object of the builder.
 func (cuo *CourseUpdateOne) Mutation() *CourseMutation {
 	return cuo.mutation
@@ -246,6 +330,21 @@ func (cuo *CourseUpdateOne) RemoveTrainings(t ...*Training) *CourseUpdateOne {
 		ids[i] = t[i].ID
 	}
 	return cuo.RemoveTrainingIDs(ids...)
+}
+
+// RemoveDetailIDs removes the details edge to Detail by ids.
+func (cuo *CourseUpdateOne) RemoveDetailIDs(ids ...int) *CourseUpdateOne {
+	cuo.mutation.RemoveDetailIDs(ids...)
+	return cuo
+}
+
+// RemoveDetails removes details edges to Detail.
+func (cuo *CourseUpdateOne) RemoveDetails(d ...*Detail) *CourseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return cuo.RemoveDetailIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -358,6 +457,44 @@ func (cuo *CourseUpdateOne) sqlSave(ctx context.Context) (c *Course, err error) 
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   course.DetailsTable,
+			Columns: []string{course.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   course.DetailsTable,
+			Columns: []string{course.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
 				},
 			},
 		}

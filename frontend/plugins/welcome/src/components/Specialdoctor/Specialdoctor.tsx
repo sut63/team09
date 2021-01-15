@@ -16,8 +16,7 @@ import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
 import { EntExtradoctor } from '../../api/models/EntExtradoctor';
 import Swal from 'sweetalert2';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +52,7 @@ const Specialdoctor: FC<{}> = () => {
   const http = new DefaultApi();
   const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
-  const [extraoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
+  const [extradoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
 
   const [specialdoctor, setSpecialdoctor] = React.useState<
     Partial<specialdoctor>>({});
@@ -90,7 +89,7 @@ const Specialdoctor: FC<{}> = () => {
     console.log(res)
   };
 
-  const getExtradoctra = async () => {
+  const getExtradoctors = async () => {
     const res = await http.listExtradoctor({ limit: 11, offset: 0 });
     setExtradoctor(res);
     console.log(res)
@@ -100,7 +99,7 @@ const Specialdoctor: FC<{}> = () => {
   useEffect(() => {
     getDoctors();
     getDepartments();
-    getExtradoctra();
+    getExtradoctors();
     getDoctors();
     getDepartments();
 
@@ -154,7 +153,7 @@ const Specialdoctor: FC<{}> = () => {
           <Typography variant="h6" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-          <Button color="inherit" component={RouterLink} to="/"> Login </Button>
+            <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
         </Toolbar>
       </AppBar>
       <Content className={classes.withoutLabel}>
@@ -205,13 +204,13 @@ const Specialdoctor: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>สาขาเฉพาะทาง</InputLabel>
                 <Select
-                  name="specialdoctor"
+                  name="extradoctor"
                   label="สาขาเฉพาะทาง"
                   type="string"
                   value={specialdoctor.extradoctor || ''}
                   onChange={handleChange}
                 >
-                  {extraoctors.map(item => {
+                  {extradoctors.map(item => {
                     return (
                       <MenuItem key={item.id} value={item.id}>{item.specialname}</MenuItem>
                     );
@@ -243,13 +242,13 @@ const Specialdoctor: FC<{}> = () => {
                 SAVE
              </Button>
               <Button style={{ marginLeft: 10 }}
-                // onClick={clear}
+                onClick={clear}
                 variant="contained"
                 color="secondary">
                 CLEAR
              </Button>
               <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/table"
+                component={RouterLink} to="/home"
                 variant="contained"
                 color="secondary">
                 BACK

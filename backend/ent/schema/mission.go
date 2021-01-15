@@ -14,7 +14,7 @@ type Mission struct {
 // Fields of the Mission.
 func (Mission) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("MissionType").NotEmpty(),
+		field.String("mission").NotEmpty(),
 	}
  }
 
@@ -22,6 +22,7 @@ func (Mission) Fields() []ent.Field {
 func (Mission) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("departments",Department.Type).StorageKey(edge.Column("mission_id")),
+		edge.To("details",Detail.Type).StorageKey(edge.Column("mission_id")),
 
 	}
 }
