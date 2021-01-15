@@ -14,14 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntDoctor,
-    EntDoctorFromJSON,
-    EntDoctorFromJSONTyped,
-    EntDoctorToJSON,
-    EntMission,
-    EntMissionFromJSON,
-    EntMissionFromJSONTyped,
-    EntMissionToJSON,
+    EntDetail,
+    EntDetailFromJSON,
+    EntDetailFromJSONTyped,
+    EntDetailToJSON,
     EntOffice,
     EntOfficeFromJSON,
     EntOfficeFromJSONTyped,
@@ -30,10 +26,10 @@ import {
     EntScheduleFromJSON,
     EntScheduleFromJSONTyped,
     EntScheduleToJSON,
-    EntSpecialist,
-    EntSpecialistFromJSON,
-    EntSpecialistFromJSONTyped,
-    EntSpecialistToJSON,
+    EntSpecialdoctor,
+    EntSpecialdoctorFromJSON,
+    EntSpecialdoctorFromJSONTyped,
+    EntSpecialdoctorToJSON,
     EntTraining,
     EntTrainingFromJSON,
     EntTrainingFromJSONTyped,
@@ -47,17 +43,11 @@ import {
  */
 export interface EntDepartmentEdges {
     /**
-     * 
-     * @type {EntDoctor}
+     * Details holds the value of the details edge.
+     * @type {Array<EntDetail>}
      * @memberof EntDepartmentEdges
      */
-    doctor?: EntDoctor;
-    /**
-     * 
-     * @type {EntMission}
-     * @memberof EntDepartmentEdges
-     */
-    mission?: EntMission;
+    details?: Array<EntDetail>;
     /**
      * Offices holds the value of the offices edge.
      * @type {Array<EntOffice>}
@@ -71,11 +61,11 @@ export interface EntDepartmentEdges {
      */
     schedules?: Array<EntSchedule>;
     /**
-     * Specialists holds the value of the specialists edge.
-     * @type {Array<EntSpecialist>}
+     * Specialdoctors holds the value of the specialdoctors edge.
+     * @type {Array<EntSpecialdoctor>}
      * @memberof EntDepartmentEdges
      */
-    specialists?: Array<EntSpecialist>;
+    specialdoctors?: Array<EntSpecialdoctor>;
     /**
      * Trainings holds the value of the trainings edge.
      * @type {Array<EntTraining>}
@@ -94,11 +84,10 @@ export function EntDepartmentEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
-        'mission': !exists(json, 'mission') ? undefined : EntMissionFromJSON(json['mission']),
+        'details': !exists(json, 'details') ? undefined : ((json['details'] as Array<any>).map(EntDetailFromJSON)),
         'offices': !exists(json, 'offices') ? undefined : ((json['offices'] as Array<any>).map(EntOfficeFromJSON)),
         'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
-        'specialists': !exists(json, 'specialists') ? undefined : ((json['specialists'] as Array<any>).map(EntSpecialistFromJSON)),
+        'specialdoctors': !exists(json, 'specialdoctors') ? undefined : ((json['specialdoctors'] as Array<any>).map(EntSpecialdoctorFromJSON)),
         'trainings': !exists(json, 'trainings') ? undefined : ((json['trainings'] as Array<any>).map(EntTrainingFromJSON)),
     };
 }
@@ -112,11 +101,10 @@ export function EntDepartmentEdgesToJSON(value?: EntDepartmentEdges | null): any
     }
     return {
         
-        'doctor': EntDoctorToJSON(value.doctor),
-        'mission': EntMissionToJSON(value.mission),
+        'details': value.details === undefined ? undefined : ((value.details as Array<any>).map(EntDetailToJSON)),
         'offices': value.offices === undefined ? undefined : ((value.offices as Array<any>).map(EntOfficeToJSON)),
         'schedules': value.schedules === undefined ? undefined : ((value.schedules as Array<any>).map(EntScheduleToJSON)),
-        'specialists': value.specialists === undefined ? undefined : ((value.specialists as Array<any>).map(EntSpecialistToJSON)),
+        'specialdoctors': value.specialdoctors === undefined ? undefined : ((value.specialdoctors as Array<any>).map(EntSpecialdoctorToJSON)),
         'trainings': value.trainings === undefined ? undefined : ((value.trainings as Array<any>).map(EntTrainingToJSON)),
     };
 }

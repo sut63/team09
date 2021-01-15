@@ -7,40 +7,29 @@ const (
 	Label = "department"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldDetail holds the string denoting the detail field in the database.
-	FieldDetail = "detail"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 
-	// EdgeMission holds the string denoting the mission edge name in mutations.
-	EdgeMission = "mission"
-	// EdgeDoctor holds the string denoting the doctor edge name in mutations.
-	EdgeDoctor = "doctor"
+	// EdgeDetails holds the string denoting the details edge name in mutations.
+	EdgeDetails = "details"
 	// EdgeOffices holds the string denoting the offices edge name in mutations.
 	EdgeOffices = "offices"
 	// EdgeSchedules holds the string denoting the schedules edge name in mutations.
 	EdgeSchedules = "schedules"
 	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
 	EdgeTrainings = "trainings"
-	// EdgeSpecialists holds the string denoting the specialists edge name in mutations.
-	EdgeSpecialists = "specialists"
+	// EdgeSpecialdoctors holds the string denoting the specialdoctors edge name in mutations.
+	EdgeSpecialdoctors = "specialdoctors"
 
 	// Table holds the table name of the department in the database.
 	Table = "departments"
-	// MissionTable is the table the holds the mission relation/edge.
-	MissionTable = "departments"
-	// MissionInverseTable is the table name for the Mission entity.
-	// It exists in this package in order to avoid circular dependency with the "mission" package.
-	MissionInverseTable = "missions"
-	// MissionColumn is the table column denoting the mission relation/edge.
-	MissionColumn = "mission_id"
-	// DoctorTable is the table the holds the doctor relation/edge.
-	DoctorTable = "departments"
-	// DoctorInverseTable is the table name for the Doctor entity.
-	// It exists in this package in order to avoid circular dependency with the "doctor" package.
-	DoctorInverseTable = "doctors"
-	// DoctorColumn is the table column denoting the doctor relation/edge.
-	DoctorColumn = "doctor_id"
+	// DetailsTable is the table the holds the details relation/edge.
+	DetailsTable = "details"
+	// DetailsInverseTable is the table name for the Detail entity.
+	// It exists in this package in order to avoid circular dependency with the "detail" package.
+	DetailsInverseTable = "details"
+	// DetailsColumn is the table column denoting the details relation/edge.
+	DetailsColumn = "department_id"
 	// OfficesTable is the table the holds the offices relation/edge.
 	OfficesTable = "offices"
 	// OfficesInverseTable is the table name for the Office entity.
@@ -62,19 +51,18 @@ const (
 	TrainingsInverseTable = "trainings"
 	// TrainingsColumn is the table column denoting the trainings relation/edge.
 	TrainingsColumn = "department_id"
-	// SpecialistsTable is the table the holds the specialists relation/edge.
-	SpecialistsTable = "specialists"
-	// SpecialistsInverseTable is the table name for the Specialist entity.
-	// It exists in this package in order to avoid circular dependency with the "specialist" package.
-	SpecialistsInverseTable = "specialists"
-	// SpecialistsColumn is the table column denoting the specialists relation/edge.
-	SpecialistsColumn = "department_id"
+	// SpecialdoctorsTable is the table the holds the specialdoctors relation/edge.
+	SpecialdoctorsTable = "specialdoctors"
+	// SpecialdoctorsInverseTable is the table name for the Specialdoctor entity.
+	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
+	SpecialdoctorsInverseTable = "specialdoctors"
+	// SpecialdoctorsColumn is the table column denoting the specialdoctors relation/edge.
+	SpecialdoctorsColumn = "department_id"
 )
 
 // Columns holds all SQL columns for department fields.
 var Columns = []string{
 	FieldID,
-	FieldDetail,
 	FieldName,
 }
 
@@ -85,8 +73,6 @@ var ForeignKeys = []string{
 }
 
 var (
-	// DetailValidator is a validator for the "Detail" field. It is called by the builders before save.
-	DetailValidator func(string) error
 	// NameValidator is a validator for the "Name" field. It is called by the builders before save.
 	NameValidator func(string) error
 )

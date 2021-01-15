@@ -13,6 +13,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/predicate"
 )
@@ -27,6 +28,7 @@ type MissionQuery struct {
 	predicates []predicate.Mission
 	// eager-loading edges.
 	withDepartments *DepartmentQuery
+	withDetails     *DetailQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +69,24 @@ func (mq *MissionQuery) QueryDepartments() *DepartmentQuery {
 			sqlgraph.From(mission.Table, mission.FieldID, mq.sqlQuery()),
 			sqlgraph.To(department.Table, department.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, mission.DepartmentsTable, mission.DepartmentsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDetails chains the current query on the details edge.
+func (mq *MissionQuery) QueryDetails() *DetailQuery {
+	query := &DetailQuery{config: mq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := mq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(mission.Table, mission.FieldID, mq.sqlQuery()),
+			sqlgraph.To(detail.Table, detail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, mission.DetailsTable, mission.DetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,18 +284,29 @@ func (mq *MissionQuery) WithDepartments(opts ...func(*DepartmentQuery)) *Mission
 	return mq
 }
 
+//  WithDetails tells the query-builder to eager-loads the nodes that are connected to
+// the "details" edge. The optional arguments used to configure the query builder of the edge.
+func (mq *MissionQuery) WithDetails(opts ...func(*DetailQuery)) *MissionQuery {
+	query := &DetailQuery{config: mq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	mq.withDetails = query
+	return mq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		MissionType string `json:"MissionType,omitempty"`
+//		Mission string `json:"mission,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Mission.Query().
-//		GroupBy(mission.FieldMissionType).
+//		GroupBy(mission.FieldMission).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +327,11 @@ func (mq *MissionQuery) GroupBy(field string, fields ...string) *MissionGroupBy 
 // Example:
 //
 //	var v []struct {
-//		MissionType string `json:"MissionType,omitempty"`
+//		Mission string `json:"mission,omitempty"`
 //	}
 //
 //	client.Mission.Query().
-//		Select(mission.FieldMissionType).
+//		Select(mission.FieldMission).
 //		Scan(ctx, &v)
 //
 func (mq *MissionQuery) Select(field string, fields ...string) *MissionSelect {
@@ -330,8 +361,9 @@ func (mq *MissionQuery) sqlAll(ctx context.Context) ([]*Mission, error) {
 	var (
 		nodes       = []*Mission{}
 		_spec       = mq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			mq.withDepartments != nil,
+			mq.withDetails != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -380,6 +412,34 @@ func (mq *MissionQuery) sqlAll(ctx context.Context) ([]*Mission, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "mission_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Departments = append(node.Edges.Departments, n)
+		}
+	}
+
+	if query := mq.withDetails; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Mission)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Detail(func(s *sql.Selector) {
+			s.Where(sql.InValues(mission.DetailsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.mission_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "mission_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "mission_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Details = append(node.Edges.Details, n)
 		}
 	}
 

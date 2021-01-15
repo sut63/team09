@@ -8,8 +8,6 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team09/app/ent/department"
-	"github.com/team09/app/ent/doctor"
-	"github.com/team09/app/ent/mission"
 )
 
 // Department is the model entity for the Department schema.
@@ -17,8 +15,6 @@ type Department struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Detail holds the value of the "Detail" field.
-	Detail string `json:"Detail,omitempty"`
 	// Name holds the value of the "Name" field.
 	Name string `json:"Name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -30,55 +26,34 @@ type Department struct {
 
 // DepartmentEdges holds the relations/edges for other nodes in the graph.
 type DepartmentEdges struct {
-	// Mission holds the value of the mission edge.
-	Mission *Mission
-	// Doctor holds the value of the doctor edge.
-	Doctor *Doctor
+	// Details holds the value of the details edge.
+	Details []*Detail
 	// Offices holds the value of the offices edge.
 	Offices []*Office
 	// Schedules holds the value of the schedules edge.
 	Schedules []*Schedule
 	// Trainings holds the value of the trainings edge.
 	Trainings []*Training
-	// Specialists holds the value of the specialists edge.
-	Specialists []*Specialist
+	// Specialdoctors holds the value of the specialdoctors edge.
+	Specialdoctors []*Specialdoctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [5]bool
 }
 
-// MissionOrErr returns the Mission value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e DepartmentEdges) MissionOrErr() (*Mission, error) {
+// DetailsOrErr returns the Details value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) DetailsOrErr() ([]*Detail, error) {
 	if e.loadedTypes[0] {
-		if e.Mission == nil {
-			// The edge mission was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: mission.Label}
-		}
-		return e.Mission, nil
+		return e.Details, nil
 	}
-	return nil, &NotLoadedError{edge: "mission"}
-}
-
-// DoctorOrErr returns the Doctor value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e DepartmentEdges) DoctorOrErr() (*Doctor, error) {
-	if e.loadedTypes[1] {
-		if e.Doctor == nil {
-			// The edge doctor was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: doctor.Label}
-		}
-		return e.Doctor, nil
-	}
-	return nil, &NotLoadedError{edge: "doctor"}
+	return nil, &NotLoadedError{edge: "details"}
 }
 
 // OfficesOrErr returns the Offices value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) OfficesOrErr() ([]*Office, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.Offices, nil
 	}
 	return nil, &NotLoadedError{edge: "offices"}
@@ -87,7 +62,7 @@ func (e DepartmentEdges) OfficesOrErr() ([]*Office, error) {
 // SchedulesOrErr returns the Schedules value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) SchedulesOrErr() ([]*Schedule, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.Schedules, nil
 	}
 	return nil, &NotLoadedError{edge: "schedules"}
@@ -96,26 +71,25 @@ func (e DepartmentEdges) SchedulesOrErr() ([]*Schedule, error) {
 // TrainingsOrErr returns the Trainings value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) TrainingsOrErr() ([]*Training, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.Trainings, nil
 	}
 	return nil, &NotLoadedError{edge: "trainings"}
 }
 
-// SpecialistsOrErr returns the Specialists value or an error if the edge
+// SpecialdoctorsOrErr returns the Specialdoctors value or an error if the edge
 // was not loaded in eager-loading.
-func (e DepartmentEdges) SpecialistsOrErr() ([]*Specialist, error) {
-	if e.loadedTypes[5] {
-		return e.Specialists, nil
+func (e DepartmentEdges) SpecialdoctorsOrErr() ([]*Specialdoctor, error) {
+	if e.loadedTypes[4] {
+		return e.Specialdoctors, nil
 	}
-	return nil, &NotLoadedError{edge: "specialists"}
+	return nil, &NotLoadedError{edge: "specialdoctors"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Department) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // Detail
 		&sql.NullString{}, // Name
 	}
 }
@@ -141,16 +115,11 @@ func (d *Department) assignValues(values ...interface{}) error {
 	d.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Detail", values[0])
-	} else if value.Valid {
-		d.Detail = value.String
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Name", values[1])
+		return fmt.Errorf("unexpected type %T for field Name", values[0])
 	} else if value.Valid {
 		d.Name = value.String
 	}
-	values = values[2:]
+	values = values[1:]
 	if len(values) == len(department.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field doctor_id", value)
@@ -168,14 +137,9 @@ func (d *Department) assignValues(values ...interface{}) error {
 	return nil
 }
 
-// QueryMission queries the mission edge of the Department.
-func (d *Department) QueryMission() *MissionQuery {
-	return (&DepartmentClient{config: d.config}).QueryMission(d)
-}
-
-// QueryDoctor queries the doctor edge of the Department.
-func (d *Department) QueryDoctor() *DoctorQuery {
-	return (&DepartmentClient{config: d.config}).QueryDoctor(d)
+// QueryDetails queries the details edge of the Department.
+func (d *Department) QueryDetails() *DetailQuery {
+	return (&DepartmentClient{config: d.config}).QueryDetails(d)
 }
 
 // QueryOffices queries the offices edge of the Department.
@@ -193,9 +157,9 @@ func (d *Department) QueryTrainings() *TrainingQuery {
 	return (&DepartmentClient{config: d.config}).QueryTrainings(d)
 }
 
-// QuerySpecialists queries the specialists edge of the Department.
-func (d *Department) QuerySpecialists() *SpecialistQuery {
-	return (&DepartmentClient{config: d.config}).QuerySpecialists(d)
+// QuerySpecialdoctors queries the specialdoctors edge of the Department.
+func (d *Department) QuerySpecialdoctors() *SpecialdoctorQuery {
+	return (&DepartmentClient{config: d.config}).QuerySpecialdoctors(d)
 }
 
 // Update returns a builder for updating this Department.
@@ -221,8 +185,6 @@ func (d *Department) String() string {
 	var builder strings.Builder
 	builder.WriteString("Department(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
-	builder.WriteString(", Detail=")
-	builder.WriteString(d.Detail)
 	builder.WriteString(", Name=")
 	builder.WriteString(d.Name)
 	builder.WriteByte(')')

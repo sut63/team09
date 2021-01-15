@@ -7,11 +7,13 @@ const (
 	Label = "mission"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldMissionType holds the string denoting the missiontype field in the database.
-	FieldMissionType = "mission_type"
+	// FieldMission holds the string denoting the mission field in the database.
+	FieldMission = "mission"
 
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
 	EdgeDepartments = "departments"
+	// EdgeDetails holds the string denoting the details edge name in mutations.
+	EdgeDetails = "details"
 
 	// Table holds the table name of the mission in the database.
 	Table = "missions"
@@ -22,15 +24,22 @@ const (
 	DepartmentsInverseTable = "departments"
 	// DepartmentsColumn is the table column denoting the departments relation/edge.
 	DepartmentsColumn = "mission_id"
+	// DetailsTable is the table the holds the details relation/edge.
+	DetailsTable = "details"
+	// DetailsInverseTable is the table name for the Detail entity.
+	// It exists in this package in order to avoid circular dependency with the "detail" package.
+	DetailsInverseTable = "details"
+	// DetailsColumn is the table column denoting the details relation/edge.
+	DetailsColumn = "mission_id"
 )
 
 // Columns holds all SQL columns for mission fields.
 var Columns = []string{
 	FieldID,
-	FieldMissionType,
+	FieldMission,
 }
 
 var (
-	// MissionTypeValidator is a validator for the "MissionType" field. It is called by the builders before save.
-	MissionTypeValidator func(string) error
+	// MissionValidator is a validator for the "mission" field. It is called by the builders before save.
+	MissionValidator func(string) error
 )

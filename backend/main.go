@@ -68,7 +68,6 @@ type Departments struct {
 
 type Department struct {
 	Name string
-	// Detail	string
 }
 
 type Missions struct {
@@ -76,7 +75,7 @@ type Missions struct {
 }
 
 type Mission struct {
-	MissionType string
+	Mission string
 }
 
 type Offices struct {
@@ -163,12 +162,13 @@ func main() {
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewMissionController(v1, client)
 	controllers.NewExtradoctorController(v1, client)
-
+	controllers.NewDetailController(v1, client)
+	
 
 	//setcourse
 	courses := Courses{
 		Course: []Course{
-			Course{"ลักสูตรฝึกอบรมแพทย์ประจำบ้าน"},
+			Course{"หลักสูตรฝึกอบรมแพทย์ประจำบ้าน"},
 			Course{"หลักสูตรฝึกอบรมแพทย์ประจำบ้านต่อยอด"},
 			Course{"หลูกสูตร Ph.D. in Clinical Sciences"},
 		},
@@ -214,11 +214,11 @@ func main() {
 	// Set Positions Data
 	positions := Positions{
 		Position: []Position{
-			Position{"นายแพทย์ปฏิบัติการ"},
-			Position{"นายแพทย์ชำนาญการ"},
-			Position{"นายแพทย์ชำนาญการพิเศษ"},
-			Position{"นายแพทย์เชี่ยวชาญ"},
-			Position{"นายแพทย์ทรงคุณวุฒิ"},
+			Position{"แพทย์ปฏิบัติการ"},
+			Position{"แพทย์ชำนาญการ"},
+			Position{"แพทย์ชำนาญการพิเศษ"},
+			Position{"แพทย์เชี่ยวชาญ"},
+			Position{"แพทย์ทรงคุณวุฒิ"},
 			Position{"อื่นๆ"},
 		},
 	}
@@ -241,6 +241,7 @@ func main() {
 			Disease{"โรคปอดเรื้อรัง"},
 			Disease{"โรคภูมิแพ้"},
 			Disease{"อื่นๆ"},
+			Disease{"ไม่มีโรค"},
 		},
 	}
 
@@ -272,7 +273,6 @@ func main() {
 		client.Department.
 			Create().
 			SetName(de.Name).
-			// SetDetail(de.Detail).
 			Save(context.Background())
 	}
 
@@ -281,26 +281,13 @@ func main() {
 		Mission: []Mission{
 			Mission{"หัวหน้าแผนก"},
 			Mission{"รองหัวหน้าแผนก"},
-			// Mission{"แผนกผู้ป่วยหนัก"},
-			// Mission{"แผนกรังสี"},
-			// Mission{"แผนกห้องปฏิบัติการทางการแพทย์"},
-			// Mission{"แผนกศัลยกรรม"},
-			// Mission{"แผนกวิสัญญี"},
-			// Mission{"แผนกกุมารเวช"},
-			// Mission{"แผนกสูตินรีเวช"},
-			// Mission{"แผนกเวชศาสตร์ฟื้นฟู"},
-			// Mission{"แผนกอายุรกรรม"},
-			// Mission{"แผนกจักษุ"},
-			// Mission{"แผนกหู คอ จมูก"},
-			// Mission{"แผนกเภสัชกรรม"},
-			// Mission{"แผนกจิตเวช"},
 		},
 	}
 
 	for _, m := range missions.Mission {
 		client.Mission.
 			Create().
-			SetMissionType(m.MissionType).
+			SetMission(m.Mission).
 			Save(context.Background())
 	}
 

@@ -13,12 +13,14 @@ const (
 	FieldAge = "age"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
-	// FieldPnumber holds the string denoting the pnumber field in the database.
-	FieldPnumber = "pnumber"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
 	// FieldAddress holds the string denoting the address field in the database.
 	FieldAddress = "address"
 	// FieldEducational holds the string denoting the educational field in the database.
 	FieldEducational = "educational"
+	// FieldPhone holds the string denoting the phone field in the database.
+	FieldPhone = "phone"
 
 	// EdgeTitle holds the string denoting the title edge name in mutations.
 	EdgeTitle = "title"
@@ -36,8 +38,8 @@ const (
 	EdgeSchedules = "schedules"
 	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
 	EdgeTrainings = "trainings"
-	// EdgeSpecialists holds the string denoting the specialists edge name in mutations.
-	EdgeSpecialists = "specialists"
+	// EdgeSpecialdoctors holds the string denoting the specialdoctors edge name in mutations.
+	EdgeSpecialdoctors = "specialdoctors"
 
 	// Table holds the table name of the doctor in the database.
 	Table = "doctors"
@@ -97,13 +99,13 @@ const (
 	TrainingsInverseTable = "trainings"
 	// TrainingsColumn is the table column denoting the trainings relation/edge.
 	TrainingsColumn = "doctor_id"
-	// SpecialistsTable is the table the holds the specialists relation/edge.
-	SpecialistsTable = "specialists"
-	// SpecialistsInverseTable is the table name for the Specialist entity.
-	// It exists in this package in order to avoid circular dependency with the "specialist" package.
-	SpecialistsInverseTable = "specialists"
-	// SpecialistsColumn is the table column denoting the specialists relation/edge.
-	SpecialistsColumn = "doctor_id"
+	// SpecialdoctorsTable is the table the holds the specialdoctors relation/edge.
+	SpecialdoctorsTable = "specialdoctors"
+	// SpecialdoctorsInverseTable is the table name for the Specialdoctor entity.
+	// It exists in this package in order to avoid circular dependency with the "specialdoctor" package.
+	SpecialdoctorsInverseTable = "specialdoctors"
+	// SpecialdoctorsColumn is the table column denoting the specialdoctors relation/edge.
+	SpecialdoctorsColumn = "doctor_id"
 )
 
 // Columns holds all SQL columns for doctor fields.
@@ -112,9 +114,10 @@ var Columns = []string{
 	FieldName,
 	FieldAge,
 	FieldEmail,
-	FieldPnumber,
+	FieldPassword,
 	FieldAddress,
 	FieldEducational,
+	FieldPhone,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Doctor type.
@@ -132,10 +135,12 @@ var (
 	AgeValidator func(int) error
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
-	// PnumberValidator is a validator for the "pnumber" field. It is called by the builders before save.
-	PnumberValidator func(int) error
+	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	PasswordValidator func(string) error
 	// AddressValidator is a validator for the "address" field. It is called by the builders before save.
 	AddressValidator func(string) error
 	// EducationalValidator is a validator for the "educational" field. It is called by the builders before save.
 	EducationalValidator func(string) error
+	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	PhoneValidator func(string) error
 )

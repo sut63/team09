@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/predicate"
 )
@@ -28,9 +29,9 @@ func (mu *MissionUpdate) Where(ps ...predicate.Mission) *MissionUpdate {
 	return mu
 }
 
-// SetMissionType sets the MissionType field.
-func (mu *MissionUpdate) SetMissionType(s string) *MissionUpdate {
-	mu.mutation.SetMissionType(s)
+// SetMission sets the mission field.
+func (mu *MissionUpdate) SetMission(s string) *MissionUpdate {
+	mu.mutation.SetMission(s)
 	return mu
 }
 
@@ -47,6 +48,21 @@ func (mu *MissionUpdate) AddDepartments(d ...*Department) *MissionUpdate {
 		ids[i] = d[i].ID
 	}
 	return mu.AddDepartmentIDs(ids...)
+}
+
+// AddDetailIDs adds the details edge to Detail by ids.
+func (mu *MissionUpdate) AddDetailIDs(ids ...int) *MissionUpdate {
+	mu.mutation.AddDetailIDs(ids...)
+	return mu
+}
+
+// AddDetails adds the details edges to Detail.
+func (mu *MissionUpdate) AddDetails(d ...*Detail) *MissionUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return mu.AddDetailIDs(ids...)
 }
 
 // Mutation returns the MissionMutation object of the builder.
@@ -69,11 +85,26 @@ func (mu *MissionUpdate) RemoveDepartments(d ...*Department) *MissionUpdate {
 	return mu.RemoveDepartmentIDs(ids...)
 }
 
+// RemoveDetailIDs removes the details edge to Detail by ids.
+func (mu *MissionUpdate) RemoveDetailIDs(ids ...int) *MissionUpdate {
+	mu.mutation.RemoveDetailIDs(ids...)
+	return mu
+}
+
+// RemoveDetails removes details edges to Detail.
+func (mu *MissionUpdate) RemoveDetails(d ...*Detail) *MissionUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return mu.RemoveDetailIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (mu *MissionUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := mu.mutation.MissionType(); ok {
-		if err := mission.MissionTypeValidator(v); err != nil {
-			return 0, &ValidationError{Name: "MissionType", err: fmt.Errorf("ent: validator failed for field \"MissionType\": %w", err)}
+	if v, ok := mu.mutation.Mission(); ok {
+		if err := mission.MissionValidator(v); err != nil {
+			return 0, &ValidationError{Name: "mission", err: fmt.Errorf("ent: validator failed for field \"mission\": %w", err)}
 		}
 	}
 
@@ -144,11 +175,11 @@ func (mu *MissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := mu.mutation.MissionType(); ok {
+	if value, ok := mu.mutation.Mission(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mission.FieldMissionType,
+			Column: mission.FieldMission,
 		})
 	}
 	if nodes := mu.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
@@ -189,6 +220,44 @@ func (mu *MissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := mu.mutation.RemovedDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   mission.DetailsTable,
+			Columns: []string{mission.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := mu.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   mission.DetailsTable,
+			Columns: []string{mission.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{mission.Label}
@@ -207,9 +276,9 @@ type MissionUpdateOne struct {
 	mutation *MissionMutation
 }
 
-// SetMissionType sets the MissionType field.
-func (muo *MissionUpdateOne) SetMissionType(s string) *MissionUpdateOne {
-	muo.mutation.SetMissionType(s)
+// SetMission sets the mission field.
+func (muo *MissionUpdateOne) SetMission(s string) *MissionUpdateOne {
+	muo.mutation.SetMission(s)
 	return muo
 }
 
@@ -226,6 +295,21 @@ func (muo *MissionUpdateOne) AddDepartments(d ...*Department) *MissionUpdateOne 
 		ids[i] = d[i].ID
 	}
 	return muo.AddDepartmentIDs(ids...)
+}
+
+// AddDetailIDs adds the details edge to Detail by ids.
+func (muo *MissionUpdateOne) AddDetailIDs(ids ...int) *MissionUpdateOne {
+	muo.mutation.AddDetailIDs(ids...)
+	return muo
+}
+
+// AddDetails adds the details edges to Detail.
+func (muo *MissionUpdateOne) AddDetails(d ...*Detail) *MissionUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return muo.AddDetailIDs(ids...)
 }
 
 // Mutation returns the MissionMutation object of the builder.
@@ -248,11 +332,26 @@ func (muo *MissionUpdateOne) RemoveDepartments(d ...*Department) *MissionUpdateO
 	return muo.RemoveDepartmentIDs(ids...)
 }
 
+// RemoveDetailIDs removes the details edge to Detail by ids.
+func (muo *MissionUpdateOne) RemoveDetailIDs(ids ...int) *MissionUpdateOne {
+	muo.mutation.RemoveDetailIDs(ids...)
+	return muo
+}
+
+// RemoveDetails removes details edges to Detail.
+func (muo *MissionUpdateOne) RemoveDetails(d ...*Detail) *MissionUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return muo.RemoveDetailIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (muo *MissionUpdateOne) Save(ctx context.Context) (*Mission, error) {
-	if v, ok := muo.mutation.MissionType(); ok {
-		if err := mission.MissionTypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "MissionType", err: fmt.Errorf("ent: validator failed for field \"MissionType\": %w", err)}
+	if v, ok := muo.mutation.Mission(); ok {
+		if err := mission.MissionValidator(v); err != nil {
+			return nil, &ValidationError{Name: "mission", err: fmt.Errorf("ent: validator failed for field \"mission\": %w", err)}
 		}
 	}
 
@@ -321,11 +420,11 @@ func (muo *MissionUpdateOne) sqlSave(ctx context.Context) (m *Mission, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Mission.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := muo.mutation.MissionType(); ok {
+	if value, ok := muo.mutation.Mission(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: mission.FieldMissionType,
+			Column: mission.FieldMission,
 		})
 	}
 	if nodes := muo.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 {
@@ -358,6 +457,44 @@ func (muo *MissionUpdateOne) sqlSave(ctx context.Context) (m *Mission, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := muo.mutation.RemovedDetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   mission.DetailsTable,
+			Columns: []string{mission.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := muo.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   mission.DetailsTable,
+			Columns: []string{mission.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
 				},
 			},
 		}

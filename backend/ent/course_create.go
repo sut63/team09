@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/course"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/training"
 )
 
@@ -39,6 +40,21 @@ func (cc *CourseCreate) AddTrainings(t ...*Training) *CourseCreate {
 		ids[i] = t[i].ID
 	}
 	return cc.AddTrainingIDs(ids...)
+}
+
+// AddDetailIDs adds the details edge to Detail by ids.
+func (cc *CourseCreate) AddDetailIDs(ids ...int) *CourseCreate {
+	cc.mutation.AddDetailIDs(ids...)
+	return cc
+}
+
+// AddDetails adds the details edges to Detail.
+func (cc *CourseCreate) AddDetails(d ...*Detail) *CourseCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return cc.AddDetailIDs(ids...)
 }
 
 // Mutation returns the CourseMutation object of the builder.
@@ -135,6 +151,25 @@ func (cc *CourseCreate) createSpec() (*Course, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: training.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.DetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   course.DetailsTable,
+			Columns: []string{course.DetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: detail.FieldID,
 				},
 			},
 		}

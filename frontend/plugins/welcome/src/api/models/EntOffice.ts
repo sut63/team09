@@ -56,6 +56,12 @@ export interface EntOffice {
      * @memberof EntOffice
      */
     officename?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EntOffice
+     */
+    specialdoctorId?: number;
 }
 
 export function EntOfficeFromJSON(json: any): EntOffice {
@@ -73,6 +79,7 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
+        'specialdoctorId': !exists(json, 'specialdoctor_id') ? undefined : json['specialdoctor_id'],
     };
 }
 
@@ -90,6 +97,7 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
         'edges': EntOfficeEdgesToJSON(value.edges),
         'id': value.id,
         'officename': value.officename,
+        'specialdoctor_id': value.specialdoctorId,
     };
 }
 

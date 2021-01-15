@@ -26,9 +26,11 @@ type Course struct {
 type CourseEdges struct {
 	// Trainings holds the value of the trainings edge.
 	Trainings []*Training
+	// Details holds the value of the details edge.
+	Details []*Detail
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // TrainingsOrErr returns the Trainings value or an error if the edge
@@ -38,6 +40,15 @@ func (e CourseEdges) TrainingsOrErr() ([]*Training, error) {
 		return e.Trainings, nil
 	}
 	return nil, &NotLoadedError{edge: "trainings"}
+}
+
+// DetailsOrErr returns the Details value or an error if the edge
+// was not loaded in eager-loading.
+func (e CourseEdges) DetailsOrErr() ([]*Detail, error) {
+	if e.loadedTypes[1] {
+		return e.Details, nil
+	}
+	return nil, &NotLoadedError{edge: "details"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -71,6 +82,11 @@ func (c *Course) assignValues(values ...interface{}) error {
 // QueryTrainings queries the trainings edge of the Course.
 func (c *Course) QueryTrainings() *TrainingQuery {
 	return (&CourseClient{config: c.config}).QueryTrainings(c)
+}
+
+// QueryDetails queries the details edge of the Course.
+func (c *Course) QueryDetails() *DetailQuery {
+	return (&CourseClient{config: c.config}).QueryDetails(c)
 }
 
 // Update returns a builder for updating this Course.

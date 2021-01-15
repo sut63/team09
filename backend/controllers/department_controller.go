@@ -15,10 +15,7 @@ type DepartmentController struct {
 	client *ent.Client
 	router gin.IRouter
 }
-type Department struct {
-	Name        string
-	Detail       string
-}
+
 
 // CreateDepartment handles POST requests for adding department entities
 // @Summary Create department
@@ -42,7 +39,6 @@ func (ctl *DepartmentController) CreateDepartment(c *gin.Context) {
 	de, err := ctl.client.Department.
 		Create().
 		SetName(obj.Name).
-		SetDetail(obj.Detail).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{

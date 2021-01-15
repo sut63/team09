@@ -4,9 +4,10 @@ import Workhistory  from './components/Workhistory';
 import Personalinformation from './components/Personalinformation';
 import Login  from './components/Login';
 import Home  from './components/Home';
-import Table from './components/Table';
 import Training from './components/Training';
 import Specialdoctor from './components/Specialdoctor';
+import Schedule from './components/Schedule';
+import Detail from './components/Detail';
 
 export const plugin = createPlugin({
   id: 'welcome',
@@ -16,9 +17,10 @@ export const plugin = createPlugin({
     router.registerRoute('/history', Workhistory);
     router.registerRoute('/WelcomePage', WelcomePage);
     router.registerRoute('/home', Home);
-    router.registerRoute('/table', Table);
     router.registerRoute('/training', Training);
     router.registerRoute('/specialdoctor', Specialdoctor);
+    router.registerRoute('/schedule', Schedule);
+    router.registerRoute('/detail', Detail);
 
   },
 });

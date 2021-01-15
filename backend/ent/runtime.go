@@ -5,15 +5,17 @@ package ent
 import (
 	"github.com/team09/app/ent/course"
 	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/gender"
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
 	"github.com/team09/app/ent/schema"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -30,14 +32,16 @@ func init() {
 	course.NamecourseValidator = courseDescNamecourse.Validators[0].(func(string) error)
 	departmentFields := schema.Department{}.Fields()
 	_ = departmentFields
-	// departmentDescDetail is the schema descriptor for Detail field.
-	departmentDescDetail := departmentFields[0].Descriptor()
-	// department.DetailValidator is a validator for the "Detail" field. It is called by the builders before save.
-	department.DetailValidator = departmentDescDetail.Validators[0].(func(string) error)
 	// departmentDescName is the schema descriptor for Name field.
-	departmentDescName := departmentFields[1].Descriptor()
+	departmentDescName := departmentFields[0].Descriptor()
 	// department.NameValidator is a validator for the "Name" field. It is called by the builders before save.
 	department.NameValidator = departmentDescName.Validators[0].(func(string) error)
+	detailFields := schema.Detail{}.Fields()
+	_ = detailFields
+	// detailDescExplain is the schema descriptor for explain field.
+	detailDescExplain := detailFields[0].Descriptor()
+	// detail.ExplainValidator is a validator for the "explain" field. It is called by the builders before save.
+	detail.ExplainValidator = detailDescExplain.Validators[0].(func(string) error)
 	diseaseFields := schema.Disease{}.Fields()
 	_ = diseaseFields
 	// diseaseDescDisease is the schema descriptor for disease field.
@@ -58,10 +62,10 @@ func init() {
 	doctorDescEmail := doctorFields[2].Descriptor()
 	// doctor.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	doctor.EmailValidator = doctorDescEmail.Validators[0].(func(string) error)
-	// doctorDescPnumber is the schema descriptor for pnumber field.
-	doctorDescPnumber := doctorFields[3].Descriptor()
-	// doctor.PnumberValidator is a validator for the "pnumber" field. It is called by the builders before save.
-	doctor.PnumberValidator = doctorDescPnumber.Validators[0].(func(int) error)
+	// doctorDescPassword is the schema descriptor for password field.
+	doctorDescPassword := doctorFields[3].Descriptor()
+	// doctor.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	doctor.PasswordValidator = doctorDescPassword.Validators[0].(func(string) error)
 	// doctorDescAddress is the schema descriptor for address field.
 	doctorDescAddress := doctorFields[4].Descriptor()
 	// doctor.AddressValidator is a validator for the "address" field. It is called by the builders before save.
@@ -70,6 +74,16 @@ func init() {
 	doctorDescEducational := doctorFields[5].Descriptor()
 	// doctor.EducationalValidator is a validator for the "educational" field. It is called by the builders before save.
 	doctor.EducationalValidator = doctorDescEducational.Validators[0].(func(string) error)
+	// doctorDescPhone is the schema descriptor for phone field.
+	doctorDescPhone := doctorFields[6].Descriptor()
+	// doctor.PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	doctor.PhoneValidator = doctorDescPhone.Validators[0].(func(string) error)
+	extradoctorFields := schema.Extradoctor{}.Fields()
+	_ = extradoctorFields
+	// extradoctorDescSpecialname is the schema descriptor for specialname field.
+	extradoctorDescSpecialname := extradoctorFields[0].Descriptor()
+	// extradoctor.SpecialnameValidator is a validator for the "specialname" field. It is called by the builders before save.
+	extradoctor.SpecialnameValidator = extradoctorDescSpecialname.Validators[0].(func(string) error)
 	genderFields := schema.Gender{}.Fields()
 	_ = genderFields
 	// genderDescGender is the schema descriptor for gender field.
@@ -78,10 +92,10 @@ func init() {
 	gender.GenderValidator = genderDescGender.Validators[0].(func(string) error)
 	missionFields := schema.Mission{}.Fields()
 	_ = missionFields
-	// missionDescMissionType is the schema descriptor for MissionType field.
-	missionDescMissionType := missionFields[0].Descriptor()
-	// mission.MissionTypeValidator is a validator for the "MissionType" field. It is called by the builders before save.
-	mission.MissionTypeValidator = missionDescMissionType.Validators[0].(func(string) error)
+	// missionDescMission is the schema descriptor for mission field.
+	missionDescMission := missionFields[0].Descriptor()
+	// mission.MissionValidator is a validator for the "mission" field. It is called by the builders before save.
+	mission.MissionValidator = missionDescMission.Validators[0].(func(string) error)
 	officeFields := schema.Office{}.Fields()
 	_ = officeFields
 	// officeDescOfficename is the schema descriptor for officename field.
@@ -100,12 +114,12 @@ func init() {
 	scheduleDescActivity := scheduleFields[0].Descriptor()
 	// schedule.ActivityValidator is a validator for the "activity" field. It is called by the builders before save.
 	schedule.ActivityValidator = scheduleDescActivity.Validators[0].(func(string) error)
-	specialistFields := schema.Specialist{}.Fields()
-	_ = specialistFields
-	// specialistDescSpecialist is the schema descriptor for specialist field.
-	specialistDescSpecialist := specialistFields[0].Descriptor()
-	// specialist.SpecialistValidator is a validator for the "specialist" field. It is called by the builders before save.
-	specialist.SpecialistValidator = specialistDescSpecialist.Validators[0].(func(string) error)
+	specialdoctorFields := schema.Specialdoctor{}.Fields()
+	_ = specialdoctorFields
+	// specialdoctorDescOther is the schema descriptor for other field.
+	specialdoctorDescOther := specialdoctorFields[0].Descriptor()
+	// specialdoctor.OtherValidator is a validator for the "other" field. It is called by the builders before save.
+	specialdoctor.OtherValidator = specialdoctorDescOther.Validators[0].(func(string) error)
 	titleFields := schema.Title{}.Fields()
 	_ = titleFields
 	// titleDescTitle is the schema descriptor for title field.

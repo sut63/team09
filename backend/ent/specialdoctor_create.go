@@ -11,31 +11,32 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/office"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 )
 
-// SpecialistCreate is the builder for creating a Specialist entity.
-type SpecialistCreate struct {
+// SpecialdoctorCreate is the builder for creating a Specialdoctor entity.
+type SpecialdoctorCreate struct {
 	config
-	mutation *SpecialistMutation
+	mutation *SpecialdoctorMutation
 	hooks    []Hook
 }
 
-// SetSpecialist sets the specialist field.
-func (sc *SpecialistCreate) SetSpecialist(s string) *SpecialistCreate {
-	sc.mutation.SetSpecialist(s)
+// SetOther sets the other field.
+func (sc *SpecialdoctorCreate) SetOther(s string) *SpecialdoctorCreate {
+	sc.mutation.SetOther(s)
 	return sc
 }
 
 // AddOfficeIDs adds the offices edge to Office by ids.
-func (sc *SpecialistCreate) AddOfficeIDs(ids ...int) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) AddOfficeIDs(ids ...int) *SpecialdoctorCreate {
 	sc.mutation.AddOfficeIDs(ids...)
 	return sc
 }
 
 // AddOffices adds the offices edges to Office.
-func (sc *SpecialistCreate) AddOffices(o ...*Office) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) AddOffices(o ...*Office) *SpecialdoctorCreate {
 	ids := make([]int, len(o))
 	for i := range o {
 		ids[i] = o[i].ID
@@ -44,13 +45,13 @@ func (sc *SpecialistCreate) AddOffices(o ...*Office) *SpecialistCreate {
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
-func (sc *SpecialistCreate) SetDoctorID(id int) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetDoctorID(id int) *SpecialdoctorCreate {
 	sc.mutation.SetDoctorID(id)
 	return sc
 }
 
 // SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
-func (sc *SpecialistCreate) SetNillableDoctorID(id *int) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetNillableDoctorID(id *int) *SpecialdoctorCreate {
 	if id != nil {
 		sc = sc.SetDoctorID(*id)
 	}
@@ -58,18 +59,18 @@ func (sc *SpecialistCreate) SetNillableDoctorID(id *int) *SpecialistCreate {
 }
 
 // SetDoctor sets the doctor edge to Doctor.
-func (sc *SpecialistCreate) SetDoctor(d *Doctor) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetDoctor(d *Doctor) *SpecialdoctorCreate {
 	return sc.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
-func (sc *SpecialistCreate) SetDepartmentID(id int) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetDepartmentID(id int) *SpecialdoctorCreate {
 	sc.mutation.SetDepartmentID(id)
 	return sc
 }
 
 // SetNillableDepartmentID sets the department edge to Department by id if the given value is not nil.
-func (sc *SpecialistCreate) SetNillableDepartmentID(id *int) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetNillableDepartmentID(id *int) *SpecialdoctorCreate {
 	if id != nil {
 		sc = sc.SetDepartmentID(*id)
 	}
@@ -77,34 +78,53 @@ func (sc *SpecialistCreate) SetNillableDepartmentID(id *int) *SpecialistCreate {
 }
 
 // SetDepartment sets the department edge to Department.
-func (sc *SpecialistCreate) SetDepartment(d *Department) *SpecialistCreate {
+func (sc *SpecialdoctorCreate) SetDepartment(d *Department) *SpecialdoctorCreate {
 	return sc.SetDepartmentID(d.ID)
 }
 
-// Mutation returns the SpecialistMutation object of the builder.
-func (sc *SpecialistCreate) Mutation() *SpecialistMutation {
+// SetExtradoctorID sets the extradoctor edge to Extradoctor by id.
+func (sc *SpecialdoctorCreate) SetExtradoctorID(id int) *SpecialdoctorCreate {
+	sc.mutation.SetExtradoctorID(id)
+	return sc
+}
+
+// SetNillableExtradoctorID sets the extradoctor edge to Extradoctor by id if the given value is not nil.
+func (sc *SpecialdoctorCreate) SetNillableExtradoctorID(id *int) *SpecialdoctorCreate {
+	if id != nil {
+		sc = sc.SetExtradoctorID(*id)
+	}
+	return sc
+}
+
+// SetExtradoctor sets the extradoctor edge to Extradoctor.
+func (sc *SpecialdoctorCreate) SetExtradoctor(e *Extradoctor) *SpecialdoctorCreate {
+	return sc.SetExtradoctorID(e.ID)
+}
+
+// Mutation returns the SpecialdoctorMutation object of the builder.
+func (sc *SpecialdoctorCreate) Mutation() *SpecialdoctorMutation {
 	return sc.mutation
 }
 
-// Save creates the Specialist in the database.
-func (sc *SpecialistCreate) Save(ctx context.Context) (*Specialist, error) {
-	if _, ok := sc.mutation.Specialist(); !ok {
-		return nil, &ValidationError{Name: "specialist", err: errors.New("ent: missing required field \"specialist\"")}
+// Save creates the Specialdoctor in the database.
+func (sc *SpecialdoctorCreate) Save(ctx context.Context) (*Specialdoctor, error) {
+	if _, ok := sc.mutation.Other(); !ok {
+		return nil, &ValidationError{Name: "other", err: errors.New("ent: missing required field \"other\"")}
 	}
-	if v, ok := sc.mutation.Specialist(); ok {
-		if err := specialist.SpecialistValidator(v); err != nil {
-			return nil, &ValidationError{Name: "specialist", err: fmt.Errorf("ent: validator failed for field \"specialist\": %w", err)}
+	if v, ok := sc.mutation.Other(); ok {
+		if err := specialdoctor.OtherValidator(v); err != nil {
+			return nil, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
 		}
 	}
 	var (
 		err  error
-		node *Specialist
+		node *Specialdoctor
 	)
 	if len(sc.hooks) == 0 {
 		node, err = sc.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*SpecialistMutation)
+			mutation, ok := m.(*SpecialdoctorMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -124,7 +144,7 @@ func (sc *SpecialistCreate) Save(ctx context.Context) (*Specialist, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (sc *SpecialistCreate) SaveX(ctx context.Context) *Specialist {
+func (sc *SpecialdoctorCreate) SaveX(ctx context.Context) *Specialdoctor {
 	v, err := sc.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -132,7 +152,7 @@ func (sc *SpecialistCreate) SaveX(ctx context.Context) *Specialist {
 	return v
 }
 
-func (sc *SpecialistCreate) sqlSave(ctx context.Context) (*Specialist, error) {
+func (sc *SpecialdoctorCreate) sqlSave(ctx context.Context) (*Specialdoctor, error) {
 	s, _spec := sc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, sc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {
@@ -145,31 +165,31 @@ func (sc *SpecialistCreate) sqlSave(ctx context.Context) (*Specialist, error) {
 	return s, nil
 }
 
-func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
+func (sc *SpecialdoctorCreate) createSpec() (*Specialdoctor, *sqlgraph.CreateSpec) {
 	var (
-		s     = &Specialist{config: sc.config}
+		s     = &Specialdoctor{config: sc.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: specialist.Table,
+			Table: specialdoctor.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: specialist.FieldID,
+				Column: specialdoctor.FieldID,
 			},
 		}
 	)
-	if value, ok := sc.mutation.Specialist(); ok {
+	if value, ok := sc.mutation.Other(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: specialist.FieldSpecialist,
+			Column: specialdoctor.FieldOther,
 		})
-		s.Specialist = value
+		s.Other = value
 	}
 	if nodes := sc.mutation.OfficesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   specialist.OfficesTable,
-			Columns: []string{specialist.OfficesColumn},
+			Table:   specialdoctor.OfficesTable,
+			Columns: []string{specialdoctor.OfficesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -187,8 +207,8 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DoctorTable,
-			Columns: []string{specialist.DoctorColumn},
+			Table:   specialdoctor.DoctorTable,
+			Columns: []string{specialdoctor.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -206,13 +226,32 @@ func (sc *SpecialistCreate) createSpec() (*Specialist, *sqlgraph.CreateSpec) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   specialist.DepartmentTable,
-			Columns: []string{specialist.DepartmentColumn},
+			Table:   specialdoctor.DepartmentTable,
+			Columns: []string{specialdoctor.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: department.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := sc.mutation.ExtradoctorIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   specialdoctor.ExtradoctorTable,
+			Columns: []string{specialdoctor.ExtradoctorColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: extradoctor.FieldID,
 				},
 			},
 		}

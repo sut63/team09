@@ -19,7 +19,7 @@ import { EntPosition } from '../../api/models/EntPosition';
 import { EntGender } from '../../api/models/EntGender';
 import Swal from 'sweetalert2';
 import { EntDisease } from '../../api/models/EntDisease';
-
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -153,7 +153,7 @@ const Doctor: FC<{}> = () => {
           <Typography variant="h4" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-          <Button color="inherit" component={RouterLink} to="/"> Login </Button>
+            <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
         </Toolbar>
       </AppBar>
 
@@ -373,7 +373,7 @@ const Doctor: FC<{}> = () => {
                 CLEAR
              </Button>
               <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/table"
+                component={RouterLink} to="/home"
                 variant="contained"
                 color="secondary">
                 BACK

@@ -91,128 +91,10 @@ func IDLTE(id int) predicate.Department {
 	})
 }
 
-// Detail applies equality check predicate on the "Detail" field. It's identical to DetailEQ.
-func Detail(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDetail), v))
-	})
-}
-
 // Name applies equality check predicate on the "Name" field. It's identical to NameEQ.
 func Name(v string) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldName), v))
-	})
-}
-
-// DetailEQ applies the EQ predicate on the "Detail" field.
-func DetailEQ(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDetail), v))
-	})
-}
-
-// DetailNEQ applies the NEQ predicate on the "Detail" field.
-func DetailNEQ(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDetail), v))
-	})
-}
-
-// DetailIn applies the In predicate on the "Detail" field.
-func DetailIn(vs ...string) predicate.Department {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Department(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldDetail), v...))
-	})
-}
-
-// DetailNotIn applies the NotIn predicate on the "Detail" field.
-func DetailNotIn(vs ...string) predicate.Department {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Department(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldDetail), v...))
-	})
-}
-
-// DetailGT applies the GT predicate on the "Detail" field.
-func DetailGT(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDetail), v))
-	})
-}
-
-// DetailGTE applies the GTE predicate on the "Detail" field.
-func DetailGTE(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDetail), v))
-	})
-}
-
-// DetailLT applies the LT predicate on the "Detail" field.
-func DetailLT(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDetail), v))
-	})
-}
-
-// DetailLTE applies the LTE predicate on the "Detail" field.
-func DetailLTE(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDetail), v))
-	})
-}
-
-// DetailContains applies the Contains predicate on the "Detail" field.
-func DetailContains(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDetail), v))
-	})
-}
-
-// DetailHasPrefix applies the HasPrefix predicate on the "Detail" field.
-func DetailHasPrefix(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDetail), v))
-	})
-}
-
-// DetailHasSuffix applies the HasSuffix predicate on the "Detail" field.
-func DetailHasSuffix(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDetail), v))
-	})
-}
-
-// DetailEqualFold applies the EqualFold predicate on the "Detail" field.
-func DetailEqualFold(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDetail), v))
-	})
-}
-
-// DetailContainsFold applies the ContainsFold predicate on the "Detail" field.
-func DetailContainsFold(v string) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDetail), v))
 	})
 }
 
@@ -327,53 +209,25 @@ func NameContainsFold(v string) predicate.Department {
 	})
 }
 
-// HasMission applies the HasEdge predicate on the "mission" edge.
-func HasMission() predicate.Department {
+// HasDetails applies the HasEdge predicate on the "details" edge.
+func HasDetails() predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(MissionTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, MissionTable, MissionColumn),
+			sqlgraph.To(DetailsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DetailsTable, DetailsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasMissionWith applies the HasEdge predicate on the "mission" edge with a given conditions (other predicates).
-func HasMissionWith(preds ...predicate.Mission) predicate.Department {
+// HasDetailsWith applies the HasEdge predicate on the "details" edge with a given conditions (other predicates).
+func HasDetailsWith(preds ...predicate.Detail) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(MissionInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, MissionTable, MissionColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasDoctor applies the HasEdge predicate on the "doctor" edge.
-func HasDoctor() predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasDoctorWith applies the HasEdge predicate on the "doctor" edge with a given conditions (other predicates).
-func HasDoctorWith(preds ...predicate.Doctor) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DoctorInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
+			sqlgraph.To(DetailsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DetailsTable, DetailsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -467,25 +321,25 @@ func HasTrainingsWith(preds ...predicate.Training) predicate.Department {
 	})
 }
 
-// HasSpecialists applies the HasEdge predicate on the "specialists" edge.
-func HasSpecialists() predicate.Department {
+// HasSpecialdoctors applies the HasEdge predicate on the "specialdoctors" edge.
+func HasSpecialdoctors() predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
+			sqlgraph.To(SpecialdoctorsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialdoctorsTable, SpecialdoctorsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasSpecialistsWith applies the HasEdge predicate on the "specialists" edge with a given conditions (other predicates).
-func HasSpecialistsWith(preds ...predicate.Specialist) predicate.Department {
+// HasSpecialdoctorsWith applies the HasEdge predicate on the "specialdoctors" edge with a given conditions (other predicates).
+func HasSpecialdoctorsWith(preds ...predicate.Specialdoctor) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SpecialistsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, SpecialistsTable, SpecialistsColumn),
+			sqlgraph.To(SpecialdoctorsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SpecialdoctorsTable, SpecialdoctorsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

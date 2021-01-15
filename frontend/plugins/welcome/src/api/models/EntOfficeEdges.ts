@@ -22,14 +22,14 @@ import {
     EntDoctorFromJSON,
     EntDoctorFromJSONTyped,
     EntDoctorToJSON,
+    EntExtradoctor,
+    EntExtradoctorFromJSON,
+    EntExtradoctorFromJSONTyped,
+    EntExtradoctorToJSON,
     EntSchedule,
     EntScheduleFromJSON,
     EntScheduleFromJSONTyped,
     EntScheduleToJSON,
-    EntSpecialist,
-    EntSpecialistFromJSON,
-    EntSpecialistFromJSONTyped,
-    EntSpecialistToJSON,
 } from './';
 
 /**
@@ -51,17 +51,17 @@ export interface EntOfficeEdges {
      */
     doctor?: EntDoctor;
     /**
+     * 
+     * @type {EntExtradoctor}
+     * @memberof EntOfficeEdges
+     */
+    extradoctor?: EntExtradoctor;
+    /**
      * Schedules holds the value of the schedules edge.
      * @type {Array<EntSchedule>}
      * @memberof EntOfficeEdges
      */
     schedules?: Array<EntSchedule>;
-    /**
-     * 
-     * @type {EntSpecialist}
-     * @memberof EntOfficeEdges
-     */
-    specialist?: EntSpecialist;
 }
 
 export function EntOfficeEdgesFromJSON(json: any): EntOfficeEdges {
@@ -76,8 +76,8 @@ export function EntOfficeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
         'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
+        'extradoctor': !exists(json, 'extradoctor') ? undefined : EntExtradoctorFromJSON(json['extradoctor']),
         'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
-        'specialist': !exists(json, 'specialist') ? undefined : EntSpecialistFromJSON(json['specialist']),
     };
 }
 
@@ -92,8 +92,8 @@ export function EntOfficeEdgesToJSON(value?: EntOfficeEdges | null): any {
         
         'department': EntDepartmentToJSON(value.department),
         'doctor': EntDoctorToJSON(value.doctor),
+        'extradoctor': EntExtradoctorToJSON(value.extradoctor),
         'schedules': value.schedules === undefined ? undefined : ((value.schedules as Array<any>).map(EntScheduleToJSON)),
-        'specialist': EntSpecialistToJSON(value.specialist),
     };
 }
 

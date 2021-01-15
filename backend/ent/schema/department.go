@@ -14,7 +14,6 @@ type Department struct {
 // Fields of the Department.
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Detail").NotEmpty(),
 		field.String("Name").NotEmpty(),
 
 	}
@@ -23,8 +22,9 @@ func (Department) Fields() []ent.Field {
 // Edges of the Department.
 func (Department) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("mission", Mission.Type).Ref("departments").Unique(),
-		edge.From("doctor", Doctor.Type).Ref("departments").Unique(),
+		
+		edge.To("details", Detail.Type).
+			StorageKey(edge.Column("department_id")),
 
 		edge.To("offices", Office.Type).
 			StorageKey(edge.Column("department_id")),

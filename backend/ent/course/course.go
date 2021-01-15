@@ -12,6 +12,8 @@ const (
 
 	// EdgeTrainings holds the string denoting the trainings edge name in mutations.
 	EdgeTrainings = "trainings"
+	// EdgeDetails holds the string denoting the details edge name in mutations.
+	EdgeDetails = "details"
 
 	// Table holds the table name of the course in the database.
 	Table = "courses"
@@ -22,6 +24,13 @@ const (
 	TrainingsInverseTable = "trainings"
 	// TrainingsColumn is the table column denoting the trainings relation/edge.
 	TrainingsColumn = "course_id"
+	// DetailsTable is the table the holds the details relation/edge.
+	DetailsTable = "details"
+	// DetailsInverseTable is the table name for the Detail entity.
+	// It exists in this package in order to avoid circular dependency with the "detail" package.
+	DetailsInverseTable = "details"
+	// DetailsColumn is the table column denoting the details relation/edge.
+	DetailsColumn = "course_id"
 )
 
 // Columns holds all SQL columns for course fields.

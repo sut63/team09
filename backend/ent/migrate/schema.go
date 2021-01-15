@@ -23,7 +23,6 @@ var (
 	// DepartmentsColumns holds the columns for the "departments" table.
 	DepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "detail", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "mission_id", Type: field.TypeInt, Nullable: true},
@@ -36,14 +35,51 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "departments_doctors_departments",
-				Columns: []*schema.Column{DepartmentsColumns[3]},
+				Columns: []*schema.Column{DepartmentsColumns[2]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "departments_missions_departments",
-				Columns: []*schema.Column{DepartmentsColumns[4]},
+				Columns: []*schema.Column{DepartmentsColumns[3]},
+
+				RefColumns: []*schema.Column{MissionsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// DetailsColumns holds the columns for the "details" table.
+	DetailsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "explain", Type: field.TypeString},
+		{Name: "course_id", Type: field.TypeInt, Nullable: true},
+		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+		{Name: "mission_id", Type: field.TypeInt, Nullable: true},
+	}
+	// DetailsTable holds the schema information for the "details" table.
+	DetailsTable = &schema.Table{
+		Name:       "details",
+		Columns:    DetailsColumns,
+		PrimaryKey: []*schema.Column{DetailsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "details_courses_details",
+				Columns: []*schema.Column{DetailsColumns[2]},
+
+				RefColumns: []*schema.Column{CoursesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "details_departments_details",
+				Columns: []*schema.Column{DetailsColumns[3]},
+
+				RefColumns: []*schema.Column{DepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "details_missions_details",
+				Columns: []*schema.Column{DetailsColumns[4]},
 
 				RefColumns: []*schema.Column{MissionsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -68,9 +104,10 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "age", Type: field.TypeInt},
 		{Name: "email", Type: field.TypeString},
-		{Name: "pnumber", Type: field.TypeInt},
+		{Name: "password", Type: field.TypeString},
 		{Name: "address", Type: field.TypeString},
 		{Name: "educational", Type: field.TypeString},
+		{Name: "phone", Type: field.TypeString},
 		{Name: "disease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "position_id", Type: field.TypeInt, Nullable: true},
@@ -84,33 +121,45 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "doctors_diseases_doctors",
-				Columns: []*schema.Column{DoctorsColumns[7]},
+				Columns: []*schema.Column{DoctorsColumns[8]},
 
 				RefColumns: []*schema.Column{DiseasesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "doctors_genders_doctors",
-				Columns: []*schema.Column{DoctorsColumns[8]},
+				Columns: []*schema.Column{DoctorsColumns[9]},
 
 				RefColumns: []*schema.Column{GendersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "doctors_positions_doctors",
-				Columns: []*schema.Column{DoctorsColumns[9]},
+				Columns: []*schema.Column{DoctorsColumns[10]},
 
 				RefColumns: []*schema.Column{PositionsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "doctors_titles_doctors",
-				Columns: []*schema.Column{DoctorsColumns[10]},
+				Columns: []*schema.Column{DoctorsColumns[11]},
 
 				RefColumns: []*schema.Column{TitlesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
+	}
+	// ExtradoctorsColumns holds the columns for the "extradoctors" table.
+	ExtradoctorsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "specialname", Type: field.TypeString},
+	}
+	// ExtradoctorsTable holds the schema information for the "extradoctors" table.
+	ExtradoctorsTable = &schema.Table{
+		Name:        "extradoctors",
+		Columns:     ExtradoctorsColumns,
+		PrimaryKey:  []*schema.Column{ExtradoctorsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// GendersColumns holds the columns for the "genders" table.
 	GendersColumns = []*schema.Column{
@@ -127,7 +176,7 @@ var (
 	// MissionsColumns holds the columns for the "missions" table.
 	MissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "mission_type", Type: field.TypeString},
+		{Name: "mission", Type: field.TypeString},
 	}
 	// MissionsTable holds the schema information for the "missions" table.
 	MissionsTable = &schema.Table{
@@ -144,7 +193,8 @@ var (
 		{Name: "added_time2", Type: field.TypeTime},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
-		{Name: "specialist_id", Type: field.TypeInt, Nullable: true},
+		{Name: "extradoctor_id", Type: field.TypeInt, Nullable: true},
+		{Name: "Specialdoctor_id", Type: field.TypeInt, Nullable: true},
 	}
 	// OfficesTable holds the schema information for the "offices" table.
 	OfficesTable = &schema.Table{
@@ -167,10 +217,17 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "offices_specialists_offices",
+				Symbol:  "offices_extradoctors_offices",
 				Columns: []*schema.Column{OfficesColumns[6]},
 
-				RefColumns: []*schema.Column{SpecialistsColumns[0]},
+				RefColumns: []*schema.Column{ExtradoctorsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "offices_specialdoctors_offices",
+				Columns: []*schema.Column{OfficesColumns[7]},
+
+				RefColumns: []*schema.Column{SpecialdoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -225,31 +282,39 @@ var (
 			},
 		},
 	}
-	// SpecialistsColumns holds the columns for the "specialists" table.
-	SpecialistsColumns = []*schema.Column{
+	// SpecialdoctorsColumns holds the columns for the "specialdoctors" table.
+	SpecialdoctorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "specialist", Type: field.TypeString},
+		{Name: "other", Type: field.TypeString},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
+		{Name: "extradoctor_id", Type: field.TypeInt, Nullable: true},
 	}
-	// SpecialistsTable holds the schema information for the "specialists" table.
-	SpecialistsTable = &schema.Table{
-		Name:       "specialists",
-		Columns:    SpecialistsColumns,
-		PrimaryKey: []*schema.Column{SpecialistsColumns[0]},
+	// SpecialdoctorsTable holds the schema information for the "specialdoctors" table.
+	SpecialdoctorsTable = &schema.Table{
+		Name:       "specialdoctors",
+		Columns:    SpecialdoctorsColumns,
+		PrimaryKey: []*schema.Column{SpecialdoctorsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "specialists_departments_specialists",
-				Columns: []*schema.Column{SpecialistsColumns[2]},
+				Symbol:  "specialdoctors_departments_specialdoctors",
+				Columns: []*schema.Column{SpecialdoctorsColumns[2]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "specialists_doctors_specialists",
-				Columns: []*schema.Column{SpecialistsColumns[3]},
+				Symbol:  "specialdoctors_doctors_specialdoctors",
+				Columns: []*schema.Column{SpecialdoctorsColumns[3]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "specialdoctors_extradoctors_specialdoctors",
+				Columns: []*schema.Column{SpecialdoctorsColumns[4]},
+
+				RefColumns: []*schema.Column{ExtradoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -309,14 +374,16 @@ var (
 	Tables = []*schema.Table{
 		CoursesTable,
 		DepartmentsTable,
+		DetailsTable,
 		DiseasesTable,
 		DoctorsTable,
+		ExtradoctorsTable,
 		GendersTable,
 		MissionsTable,
 		OfficesTable,
 		PositionsTable,
 		SchedulesTable,
-		SpecialistsTable,
+		SpecialdoctorsTable,
 		TitlesTable,
 		TrainingsTable,
 	}
@@ -325,18 +392,23 @@ var (
 func init() {
 	DepartmentsTable.ForeignKeys[0].RefTable = DoctorsTable
 	DepartmentsTable.ForeignKeys[1].RefTable = MissionsTable
+	DetailsTable.ForeignKeys[0].RefTable = CoursesTable
+	DetailsTable.ForeignKeys[1].RefTable = DepartmentsTable
+	DetailsTable.ForeignKeys[2].RefTable = MissionsTable
 	DoctorsTable.ForeignKeys[0].RefTable = DiseasesTable
 	DoctorsTable.ForeignKeys[1].RefTable = GendersTable
 	DoctorsTable.ForeignKeys[2].RefTable = PositionsTable
 	DoctorsTable.ForeignKeys[3].RefTable = TitlesTable
 	OfficesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	OfficesTable.ForeignKeys[1].RefTable = DoctorsTable
-	OfficesTable.ForeignKeys[2].RefTable = SpecialistsTable
+	OfficesTable.ForeignKeys[2].RefTable = ExtradoctorsTable
+	OfficesTable.ForeignKeys[3].RefTable = SpecialdoctorsTable
 	SchedulesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	SchedulesTable.ForeignKeys[1].RefTable = DoctorsTable
 	SchedulesTable.ForeignKeys[2].RefTable = OfficesTable
-	SpecialistsTable.ForeignKeys[0].RefTable = DepartmentsTable
-	SpecialistsTable.ForeignKeys[1].RefTable = DoctorsTable
+	SpecialdoctorsTable.ForeignKeys[0].RefTable = DepartmentsTable
+	SpecialdoctorsTable.ForeignKeys[1].RefTable = DoctorsTable
+	SpecialdoctorsTable.ForeignKeys[2].RefTable = ExtradoctorsTable
 	TrainingsTable.ForeignKeys[0].RefTable = CoursesTable
 	TrainingsTable.ForeignKeys[1].RefTable = DepartmentsTable
 	TrainingsTable.ForeignKeys[2].RefTable = DoctorsTable

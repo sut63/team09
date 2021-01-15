@@ -16,7 +16,7 @@ import (
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 )
@@ -46,9 +46,9 @@ func (dc *DoctorCreate) SetEmail(s string) *DoctorCreate {
 	return dc
 }
 
-// SetPnumber sets the pnumber field.
-func (dc *DoctorCreate) SetPnumber(i int) *DoctorCreate {
-	dc.mutation.SetPnumber(i)
+// SetPassword sets the password field.
+func (dc *DoctorCreate) SetPassword(s string) *DoctorCreate {
+	dc.mutation.SetPassword(s)
 	return dc
 }
 
@@ -61,6 +61,12 @@ func (dc *DoctorCreate) SetAddress(s string) *DoctorCreate {
 // SetEducational sets the educational field.
 func (dc *DoctorCreate) SetEducational(s string) *DoctorCreate {
 	dc.mutation.SetEducational(s)
+	return dc
+}
+
+// SetPhone sets the phone field.
+func (dc *DoctorCreate) SetPhone(s string) *DoctorCreate {
+	dc.mutation.SetPhone(s)
 	return dc
 }
 
@@ -200,19 +206,19 @@ func (dc *DoctorCreate) AddTrainings(t ...*Training) *DoctorCreate {
 	return dc.AddTrainingIDs(ids...)
 }
 
-// AddSpecialistIDs adds the specialists edge to Specialist by ids.
-func (dc *DoctorCreate) AddSpecialistIDs(ids ...int) *DoctorCreate {
-	dc.mutation.AddSpecialistIDs(ids...)
+// AddSpecialdoctorIDs adds the specialdoctors edge to Specialdoctor by ids.
+func (dc *DoctorCreate) AddSpecialdoctorIDs(ids ...int) *DoctorCreate {
+	dc.mutation.AddSpecialdoctorIDs(ids...)
 	return dc
 }
 
-// AddSpecialists adds the specialists edges to Specialist.
-func (dc *DoctorCreate) AddSpecialists(s ...*Specialist) *DoctorCreate {
+// AddSpecialdoctors adds the specialdoctors edges to Specialdoctor.
+func (dc *DoctorCreate) AddSpecialdoctors(s ...*Specialdoctor) *DoctorCreate {
 	ids := make([]int, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return dc.AddSpecialistIDs(ids...)
+	return dc.AddSpecialdoctorIDs(ids...)
 }
 
 // Mutation returns the DoctorMutation object of the builder.
@@ -246,12 +252,12 @@ func (dc *DoctorCreate) Save(ctx context.Context) (*Doctor, error) {
 			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
-	if _, ok := dc.mutation.Pnumber(); !ok {
-		return nil, &ValidationError{Name: "pnumber", err: errors.New("ent: missing required field \"pnumber\"")}
+	if _, ok := dc.mutation.Password(); !ok {
+		return nil, &ValidationError{Name: "password", err: errors.New("ent: missing required field \"password\"")}
 	}
-	if v, ok := dc.mutation.Pnumber(); ok {
-		if err := doctor.PnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "pnumber", err: fmt.Errorf("ent: validator failed for field \"pnumber\": %w", err)}
+	if v, ok := dc.mutation.Password(); ok {
+		if err := doctor.PasswordValidator(v); err != nil {
+			return nil, &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
 	}
 	if _, ok := dc.mutation.Address(); !ok {
@@ -268,6 +274,14 @@ func (dc *DoctorCreate) Save(ctx context.Context) (*Doctor, error) {
 	if v, ok := dc.mutation.Educational(); ok {
 		if err := doctor.EducationalValidator(v); err != nil {
 			return nil, &ValidationError{Name: "educational", err: fmt.Errorf("ent: validator failed for field \"educational\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Phone(); !ok {
+		return nil, &ValidationError{Name: "phone", err: errors.New("ent: missing required field \"phone\"")}
+	}
+	if v, ok := dc.mutation.Phone(); ok {
+		if err := doctor.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
 		}
 	}
 	var (
@@ -354,13 +368,13 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 		})
 		d.Email = value
 	}
-	if value, ok := dc.mutation.Pnumber(); ok {
+	if value, ok := dc.mutation.Password(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: doctor.FieldPnumber,
+			Column: doctor.FieldPassword,
 		})
-		d.Pnumber = value
+		d.Password = value
 	}
 	if value, ok := dc.mutation.Address(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -377,6 +391,14 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 			Column: doctor.FieldEducational,
 		})
 		d.Educational = value
+	}
+	if value, ok := dc.mutation.Phone(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: doctor.FieldPhone,
+		})
+		d.Phone = value
 	}
 	if nodes := dc.mutation.TitleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -530,17 +552,17 @@ func (dc *DoctorCreate) createSpec() (*Doctor, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.SpecialistsIDs(); len(nodes) > 0 {
+	if nodes := dc.mutation.SpecialdoctorsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   doctor.SpecialistsTable,
-			Columns: []string{doctor.SpecialistsColumn},
+			Table:   doctor.SpecialdoctorsTable,
+			Columns: []string{doctor.SpecialdoctorsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: specialist.FieldID,
+					Column: specialdoctor.FieldID,
 				},
 			},
 		}

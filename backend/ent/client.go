@@ -11,14 +11,16 @@ import (
 
 	"github.com/team09/app/ent/course"
 	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/detail"
 	"github.com/team09/app/ent/disease"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/gender"
 	"github.com/team09/app/ent/mission"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/position"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
+	"github.com/team09/app/ent/specialdoctor"
 	"github.com/team09/app/ent/title"
 	"github.com/team09/app/ent/training"
 
@@ -36,10 +38,14 @@ type Client struct {
 	Course *CourseClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
+	// Detail is the client for interacting with the Detail builders.
+	Detail *DetailClient
 	// Disease is the client for interacting with the Disease builders.
 	Disease *DiseaseClient
 	// Doctor is the client for interacting with the Doctor builders.
 	Doctor *DoctorClient
+	// Extradoctor is the client for interacting with the Extradoctor builders.
+	Extradoctor *ExtradoctorClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
 	// Mission is the client for interacting with the Mission builders.
@@ -50,8 +56,8 @@ type Client struct {
 	Position *PositionClient
 	// Schedule is the client for interacting with the Schedule builders.
 	Schedule *ScheduleClient
-	// Specialist is the client for interacting with the Specialist builders.
-	Specialist *SpecialistClient
+	// Specialdoctor is the client for interacting with the Specialdoctor builders.
+	Specialdoctor *SpecialdoctorClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
 	// Training is the client for interacting with the Training builders.
@@ -71,14 +77,16 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Course = NewCourseClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
+	c.Detail = NewDetailClient(c.config)
 	c.Disease = NewDiseaseClient(c.config)
 	c.Doctor = NewDoctorClient(c.config)
+	c.Extradoctor = NewExtradoctorClient(c.config)
 	c.Gender = NewGenderClient(c.config)
 	c.Mission = NewMissionClient(c.config)
 	c.Office = NewOfficeClient(c.config)
 	c.Position = NewPositionClient(c.config)
 	c.Schedule = NewScheduleClient(c.config)
-	c.Specialist = NewSpecialistClient(c.config)
+	c.Specialdoctor = NewSpecialdoctorClient(c.config)
 	c.Title = NewTitleClient(c.config)
 	c.Training = NewTrainingClient(c.config)
 }
@@ -111,20 +119,22 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:        ctx,
-		config:     cfg,
-		Course:     NewCourseClient(cfg),
-		Department: NewDepartmentClient(cfg),
-		Disease:    NewDiseaseClient(cfg),
-		Doctor:     NewDoctorClient(cfg),
-		Gender:     NewGenderClient(cfg),
-		Mission:    NewMissionClient(cfg),
-		Office:     NewOfficeClient(cfg),
-		Position:   NewPositionClient(cfg),
-		Schedule:   NewScheduleClient(cfg),
-		Specialist: NewSpecialistClient(cfg),
-		Title:      NewTitleClient(cfg),
-		Training:   NewTrainingClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		Course:        NewCourseClient(cfg),
+		Department:    NewDepartmentClient(cfg),
+		Detail:        NewDetailClient(cfg),
+		Disease:       NewDiseaseClient(cfg),
+		Doctor:        NewDoctorClient(cfg),
+		Extradoctor:   NewExtradoctorClient(cfg),
+		Gender:        NewGenderClient(cfg),
+		Mission:       NewMissionClient(cfg),
+		Office:        NewOfficeClient(cfg),
+		Position:      NewPositionClient(cfg),
+		Schedule:      NewScheduleClient(cfg),
+		Specialdoctor: NewSpecialdoctorClient(cfg),
+		Title:         NewTitleClient(cfg),
+		Training:      NewTrainingClient(cfg),
 	}, nil
 }
 
@@ -139,19 +149,21 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:     cfg,
-		Course:     NewCourseClient(cfg),
-		Department: NewDepartmentClient(cfg),
-		Disease:    NewDiseaseClient(cfg),
-		Doctor:     NewDoctorClient(cfg),
-		Gender:     NewGenderClient(cfg),
-		Mission:    NewMissionClient(cfg),
-		Office:     NewOfficeClient(cfg),
-		Position:   NewPositionClient(cfg),
-		Schedule:   NewScheduleClient(cfg),
-		Specialist: NewSpecialistClient(cfg),
-		Title:      NewTitleClient(cfg),
-		Training:   NewTrainingClient(cfg),
+		config:        cfg,
+		Course:        NewCourseClient(cfg),
+		Department:    NewDepartmentClient(cfg),
+		Detail:        NewDetailClient(cfg),
+		Disease:       NewDiseaseClient(cfg),
+		Doctor:        NewDoctorClient(cfg),
+		Extradoctor:   NewExtradoctorClient(cfg),
+		Gender:        NewGenderClient(cfg),
+		Mission:       NewMissionClient(cfg),
+		Office:        NewOfficeClient(cfg),
+		Position:      NewPositionClient(cfg),
+		Schedule:      NewScheduleClient(cfg),
+		Specialdoctor: NewSpecialdoctorClient(cfg),
+		Title:         NewTitleClient(cfg),
+		Training:      NewTrainingClient(cfg),
 	}, nil
 }
 
@@ -182,14 +194,16 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.Course.Use(hooks...)
 	c.Department.Use(hooks...)
+	c.Detail.Use(hooks...)
 	c.Disease.Use(hooks...)
 	c.Doctor.Use(hooks...)
+	c.Extradoctor.Use(hooks...)
 	c.Gender.Use(hooks...)
 	c.Mission.Use(hooks...)
 	c.Office.Use(hooks...)
 	c.Position.Use(hooks...)
 	c.Schedule.Use(hooks...)
-	c.Specialist.Use(hooks...)
+	c.Specialdoctor.Use(hooks...)
 	c.Title.Use(hooks...)
 	c.Training.Use(hooks...)
 }
@@ -288,6 +302,22 @@ func (c *CourseClient) QueryTrainings(co *Course) *TrainingQuery {
 	return query
 }
 
+// QueryDetails queries the details edge of a Course.
+func (c *CourseClient) QueryDetails(co *Course) *DetailQuery {
+	query := &DetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := co.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(course.Table, course.FieldID, id),
+			sqlgraph.To(detail.Table, detail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, course.DetailsTable, course.DetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CourseClient) Hooks() []Hook {
 	return c.hooks.Course
@@ -371,31 +401,15 @@ func (c *DepartmentClient) GetX(ctx context.Context, id int) *Department {
 	return d
 }
 
-// QueryMission queries the mission edge of a Department.
-func (c *DepartmentClient) QueryMission(d *Department) *MissionQuery {
-	query := &MissionQuery{config: c.config}
+// QueryDetails queries the details edge of a Department.
+func (c *DepartmentClient) QueryDetails(d *Department) *DetailQuery {
+	query := &DetailQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := d.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, id),
-			sqlgraph.To(mission.Table, mission.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, department.MissionTable, department.MissionColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryDoctor queries the doctor edge of a Department.
-func (c *DepartmentClient) QueryDoctor(d *Department) *DoctorQuery {
-	query := &DoctorQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(department.Table, department.FieldID, id),
-			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, department.DoctorTable, department.DoctorColumn),
+			sqlgraph.To(detail.Table, detail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.DetailsTable, department.DetailsColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -451,15 +465,15 @@ func (c *DepartmentClient) QueryTrainings(d *Department) *TrainingQuery {
 	return query
 }
 
-// QuerySpecialists queries the specialists edge of a Department.
-func (c *DepartmentClient) QuerySpecialists(d *Department) *SpecialistQuery {
-	query := &SpecialistQuery{config: c.config}
+// QuerySpecialdoctors queries the specialdoctors edge of a Department.
+func (c *DepartmentClient) QuerySpecialdoctors(d *Department) *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := d.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(department.Table, department.FieldID, id),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialistsTable, department.SpecialistsColumn),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.SpecialdoctorsTable, department.SpecialdoctorsColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -470,6 +484,137 @@ func (c *DepartmentClient) QuerySpecialists(d *Department) *SpecialistQuery {
 // Hooks returns the client hooks.
 func (c *DepartmentClient) Hooks() []Hook {
 	return c.hooks.Department
+}
+
+// DetailClient is a client for the Detail schema.
+type DetailClient struct {
+	config
+}
+
+// NewDetailClient returns a client for the Detail from the given config.
+func NewDetailClient(c config) *DetailClient {
+	return &DetailClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `detail.Hooks(f(g(h())))`.
+func (c *DetailClient) Use(hooks ...Hook) {
+	c.hooks.Detail = append(c.hooks.Detail, hooks...)
+}
+
+// Create returns a create builder for Detail.
+func (c *DetailClient) Create() *DetailCreate {
+	mutation := newDetailMutation(c.config, OpCreate)
+	return &DetailCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Detail.
+func (c *DetailClient) Update() *DetailUpdate {
+	mutation := newDetailMutation(c.config, OpUpdate)
+	return &DetailUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DetailClient) UpdateOne(d *Detail) *DetailUpdateOne {
+	mutation := newDetailMutation(c.config, OpUpdateOne, withDetail(d))
+	return &DetailUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DetailClient) UpdateOneID(id int) *DetailUpdateOne {
+	mutation := newDetailMutation(c.config, OpUpdateOne, withDetailID(id))
+	return &DetailUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Detail.
+func (c *DetailClient) Delete() *DetailDelete {
+	mutation := newDetailMutation(c.config, OpDelete)
+	return &DetailDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *DetailClient) DeleteOne(d *Detail) *DetailDeleteOne {
+	return c.DeleteOneID(d.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *DetailClient) DeleteOneID(id int) *DetailDeleteOne {
+	builder := c.Delete().Where(detail.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DetailDeleteOne{builder}
+}
+
+// Create returns a query builder for Detail.
+func (c *DetailClient) Query() *DetailQuery {
+	return &DetailQuery{config: c.config}
+}
+
+// Get returns a Detail entity by its id.
+func (c *DetailClient) Get(ctx context.Context, id int) (*Detail, error) {
+	return c.Query().Where(detail.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DetailClient) GetX(ctx context.Context, id int) *Detail {
+	d, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return d
+}
+
+// QueryCourse queries the course edge of a Detail.
+func (c *DetailClient) QueryCourse(d *Detail) *CourseQuery {
+	query := &CourseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(detail.Table, detail.FieldID, id),
+			sqlgraph.To(course.Table, course.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, detail.CourseTable, detail.CourseColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryMission queries the mission edge of a Detail.
+func (c *DetailClient) QueryMission(d *Detail) *MissionQuery {
+	query := &MissionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(detail.Table, detail.FieldID, id),
+			sqlgraph.To(mission.Table, mission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, detail.MissionTable, detail.MissionColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartment queries the department edge of a Detail.
+func (c *DetailClient) QueryDepartment(d *Detail) *DepartmentQuery {
+	query := &DepartmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(detail.Table, detail.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, detail.DepartmentTable, detail.DepartmentColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *DetailClient) Hooks() []Hook {
+	return c.hooks.Detail
 }
 
 // DiseaseClient is a client for the Disease schema.
@@ -777,15 +922,15 @@ func (c *DoctorClient) QueryTrainings(d *Doctor) *TrainingQuery {
 	return query
 }
 
-// QuerySpecialists queries the specialists edge of a Doctor.
-func (c *DoctorClient) QuerySpecialists(d *Doctor) *SpecialistQuery {
-	query := &SpecialistQuery{config: c.config}
+// QuerySpecialdoctors queries the specialdoctors edge of a Doctor.
+func (c *DoctorClient) QuerySpecialdoctors(d *Doctor) *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := d.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(doctor.Table, doctor.FieldID, id),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialistsTable, doctor.SpecialistsColumn),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, doctor.SpecialdoctorsTable, doctor.SpecialdoctorsColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -796,6 +941,121 @@ func (c *DoctorClient) QuerySpecialists(d *Doctor) *SpecialistQuery {
 // Hooks returns the client hooks.
 func (c *DoctorClient) Hooks() []Hook {
 	return c.hooks.Doctor
+}
+
+// ExtradoctorClient is a client for the Extradoctor schema.
+type ExtradoctorClient struct {
+	config
+}
+
+// NewExtradoctorClient returns a client for the Extradoctor from the given config.
+func NewExtradoctorClient(c config) *ExtradoctorClient {
+	return &ExtradoctorClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `extradoctor.Hooks(f(g(h())))`.
+func (c *ExtradoctorClient) Use(hooks ...Hook) {
+	c.hooks.Extradoctor = append(c.hooks.Extradoctor, hooks...)
+}
+
+// Create returns a create builder for Extradoctor.
+func (c *ExtradoctorClient) Create() *ExtradoctorCreate {
+	mutation := newExtradoctorMutation(c.config, OpCreate)
+	return &ExtradoctorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Extradoctor.
+func (c *ExtradoctorClient) Update() *ExtradoctorUpdate {
+	mutation := newExtradoctorMutation(c.config, OpUpdate)
+	return &ExtradoctorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ExtradoctorClient) UpdateOne(e *Extradoctor) *ExtradoctorUpdateOne {
+	mutation := newExtradoctorMutation(c.config, OpUpdateOne, withExtradoctor(e))
+	return &ExtradoctorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ExtradoctorClient) UpdateOneID(id int) *ExtradoctorUpdateOne {
+	mutation := newExtradoctorMutation(c.config, OpUpdateOne, withExtradoctorID(id))
+	return &ExtradoctorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Extradoctor.
+func (c *ExtradoctorClient) Delete() *ExtradoctorDelete {
+	mutation := newExtradoctorMutation(c.config, OpDelete)
+	return &ExtradoctorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ExtradoctorClient) DeleteOne(e *Extradoctor) *ExtradoctorDeleteOne {
+	return c.DeleteOneID(e.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ExtradoctorClient) DeleteOneID(id int) *ExtradoctorDeleteOne {
+	builder := c.Delete().Where(extradoctor.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ExtradoctorDeleteOne{builder}
+}
+
+// Create returns a query builder for Extradoctor.
+func (c *ExtradoctorClient) Query() *ExtradoctorQuery {
+	return &ExtradoctorQuery{config: c.config}
+}
+
+// Get returns a Extradoctor entity by its id.
+func (c *ExtradoctorClient) Get(ctx context.Context, id int) (*Extradoctor, error) {
+	return c.Query().Where(extradoctor.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ExtradoctorClient) GetX(ctx context.Context, id int) *Extradoctor {
+	e, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return e
+}
+
+// QuerySpecialdoctors queries the specialdoctors edge of a Extradoctor.
+func (c *ExtradoctorClient) QuerySpecialdoctors(e *Extradoctor) *SpecialdoctorQuery {
+	query := &SpecialdoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(extradoctor.Table, extradoctor.FieldID, id),
+			sqlgraph.To(specialdoctor.Table, specialdoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, extradoctor.SpecialdoctorsTable, extradoctor.SpecialdoctorsColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryOffices queries the offices edge of a Extradoctor.
+func (c *ExtradoctorClient) QueryOffices(e *Extradoctor) *OfficeQuery {
+	query := &OfficeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(extradoctor.Table, extradoctor.FieldID, id),
+			sqlgraph.To(office.Table, office.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, extradoctor.OfficesTable, extradoctor.OfficesColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ExtradoctorClient) Hooks() []Hook {
+	return c.hooks.Extradoctor
 }
 
 // GenderClient is a client for the Gender schema.
@@ -991,6 +1251,22 @@ func (c *MissionClient) QueryDepartments(m *Mission) *DepartmentQuery {
 	return query
 }
 
+// QueryDetails queries the details edge of a Mission.
+func (c *MissionClient) QueryDetails(m *Mission) *DetailQuery {
+	query := &DetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(mission.Table, mission.FieldID, id),
+			sqlgraph.To(detail.Table, detail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, mission.DetailsTable, mission.DetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *MissionClient) Hooks() []Hook {
 	return c.hooks.Mission
@@ -1106,15 +1382,15 @@ func (c *OfficeClient) QueryDepartment(o *Office) *DepartmentQuery {
 	return query
 }
 
-// QuerySpecialist queries the specialist edge of a Office.
-func (c *OfficeClient) QuerySpecialist(o *Office) *SpecialistQuery {
-	query := &SpecialistQuery{config: c.config}
+// QueryExtradoctor queries the extradoctor edge of a Office.
+func (c *OfficeClient) QueryExtradoctor(o *Office) *ExtradoctorQuery {
+	query := &ExtradoctorQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := o.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(office.Table, office.FieldID, id),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, office.SpecialistTable, office.SpecialistColumn),
+			sqlgraph.To(extradoctor.Table, extradoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, office.ExtradoctorTable, office.ExtradoctorColumn),
 		)
 		fromV = sqlgraph.Neighbors(o.driver.Dialect(), step)
 		return fromV, nil
@@ -1373,77 +1649,77 @@ func (c *ScheduleClient) Hooks() []Hook {
 	return c.hooks.Schedule
 }
 
-// SpecialistClient is a client for the Specialist schema.
-type SpecialistClient struct {
+// SpecialdoctorClient is a client for the Specialdoctor schema.
+type SpecialdoctorClient struct {
 	config
 }
 
-// NewSpecialistClient returns a client for the Specialist from the given config.
-func NewSpecialistClient(c config) *SpecialistClient {
-	return &SpecialistClient{config: c}
+// NewSpecialdoctorClient returns a client for the Specialdoctor from the given config.
+func NewSpecialdoctorClient(c config) *SpecialdoctorClient {
+	return &SpecialdoctorClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `specialist.Hooks(f(g(h())))`.
-func (c *SpecialistClient) Use(hooks ...Hook) {
-	c.hooks.Specialist = append(c.hooks.Specialist, hooks...)
+// A call to `Use(f, g, h)` equals to `specialdoctor.Hooks(f(g(h())))`.
+func (c *SpecialdoctorClient) Use(hooks ...Hook) {
+	c.hooks.Specialdoctor = append(c.hooks.Specialdoctor, hooks...)
 }
 
-// Create returns a create builder for Specialist.
-func (c *SpecialistClient) Create() *SpecialistCreate {
-	mutation := newSpecialistMutation(c.config, OpCreate)
-	return &SpecialistCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Specialdoctor.
+func (c *SpecialdoctorClient) Create() *SpecialdoctorCreate {
+	mutation := newSpecialdoctorMutation(c.config, OpCreate)
+	return &SpecialdoctorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Update returns an update builder for Specialist.
-func (c *SpecialistClient) Update() *SpecialistUpdate {
-	mutation := newSpecialistMutation(c.config, OpUpdate)
-	return &SpecialistUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Specialdoctor.
+func (c *SpecialdoctorClient) Update() *SpecialdoctorUpdate {
+	mutation := newSpecialdoctorMutation(c.config, OpUpdate)
+	return &SpecialdoctorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *SpecialistClient) UpdateOne(s *Specialist) *SpecialistUpdateOne {
-	mutation := newSpecialistMutation(c.config, OpUpdateOne, withSpecialist(s))
-	return &SpecialistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *SpecialdoctorClient) UpdateOne(s *Specialdoctor) *SpecialdoctorUpdateOne {
+	mutation := newSpecialdoctorMutation(c.config, OpUpdateOne, withSpecialdoctor(s))
+	return &SpecialdoctorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *SpecialistClient) UpdateOneID(id int) *SpecialistUpdateOne {
-	mutation := newSpecialistMutation(c.config, OpUpdateOne, withSpecialistID(id))
-	return &SpecialistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *SpecialdoctorClient) UpdateOneID(id int) *SpecialdoctorUpdateOne {
+	mutation := newSpecialdoctorMutation(c.config, OpUpdateOne, withSpecialdoctorID(id))
+	return &SpecialdoctorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Specialist.
-func (c *SpecialistClient) Delete() *SpecialistDelete {
-	mutation := newSpecialistMutation(c.config, OpDelete)
-	return &SpecialistDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Specialdoctor.
+func (c *SpecialdoctorClient) Delete() *SpecialdoctorDelete {
+	mutation := newSpecialdoctorMutation(c.config, OpDelete)
+	return &SpecialdoctorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *SpecialistClient) DeleteOne(s *Specialist) *SpecialistDeleteOne {
+func (c *SpecialdoctorClient) DeleteOne(s *Specialdoctor) *SpecialdoctorDeleteOne {
 	return c.DeleteOneID(s.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *SpecialistClient) DeleteOneID(id int) *SpecialistDeleteOne {
-	builder := c.Delete().Where(specialist.ID(id))
+func (c *SpecialdoctorClient) DeleteOneID(id int) *SpecialdoctorDeleteOne {
+	builder := c.Delete().Where(specialdoctor.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &SpecialistDeleteOne{builder}
+	return &SpecialdoctorDeleteOne{builder}
 }
 
-// Create returns a query builder for Specialist.
-func (c *SpecialistClient) Query() *SpecialistQuery {
-	return &SpecialistQuery{config: c.config}
+// Create returns a query builder for Specialdoctor.
+func (c *SpecialdoctorClient) Query() *SpecialdoctorQuery {
+	return &SpecialdoctorQuery{config: c.config}
 }
 
-// Get returns a Specialist entity by its id.
-func (c *SpecialistClient) Get(ctx context.Context, id int) (*Specialist, error) {
-	return c.Query().Where(specialist.ID(id)).Only(ctx)
+// Get returns a Specialdoctor entity by its id.
+func (c *SpecialdoctorClient) Get(ctx context.Context, id int) (*Specialdoctor, error) {
+	return c.Query().Where(specialdoctor.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *SpecialistClient) GetX(ctx context.Context, id int) *Specialist {
+func (c *SpecialdoctorClient) GetX(ctx context.Context, id int) *Specialdoctor {
 	s, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -1451,15 +1727,15 @@ func (c *SpecialistClient) GetX(ctx context.Context, id int) *Specialist {
 	return s
 }
 
-// QueryOffices queries the offices edge of a Specialist.
-func (c *SpecialistClient) QueryOffices(s *Specialist) *OfficeQuery {
+// QueryOffices queries the offices edge of a Specialdoctor.
+func (c *SpecialdoctorClient) QueryOffices(s *Specialdoctor) *OfficeQuery {
 	query := &OfficeQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, id),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, id),
 			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialist.OfficesTable, specialist.OfficesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, specialdoctor.OfficesTable, specialdoctor.OfficesColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
@@ -1467,15 +1743,15 @@ func (c *SpecialistClient) QueryOffices(s *Specialist) *OfficeQuery {
 	return query
 }
 
-// QueryDoctor queries the doctor edge of a Specialist.
-func (c *SpecialistClient) QueryDoctor(s *Specialist) *DoctorQuery {
+// QueryDoctor queries the doctor edge of a Specialdoctor.
+func (c *SpecialdoctorClient) QueryDoctor(s *Specialdoctor) *DoctorQuery {
 	query := &DoctorQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, id),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, id),
 			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DoctorTable, specialist.DoctorColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.DoctorTable, specialdoctor.DoctorColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
@@ -1483,15 +1759,31 @@ func (c *SpecialistClient) QueryDoctor(s *Specialist) *DoctorQuery {
 	return query
 }
 
-// QueryDepartment queries the department edge of a Specialist.
-func (c *SpecialistClient) QueryDepartment(s *Specialist) *DepartmentQuery {
+// QueryDepartment queries the department edge of a Specialdoctor.
+func (c *SpecialdoctorClient) QueryDepartment(s *Specialdoctor) *DepartmentQuery {
 	query := &DepartmentQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(specialist.Table, specialist.FieldID, id),
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, id),
 			sqlgraph.To(department.Table, department.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, specialist.DepartmentTable, specialist.DepartmentColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.DepartmentTable, specialdoctor.DepartmentColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryExtradoctor queries the extradoctor edge of a Specialdoctor.
+func (c *SpecialdoctorClient) QueryExtradoctor(s *Specialdoctor) *ExtradoctorQuery {
+	query := &ExtradoctorQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, id),
+			sqlgraph.To(extradoctor.Table, extradoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, specialdoctor.ExtradoctorTable, specialdoctor.ExtradoctorColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
@@ -1500,8 +1792,8 @@ func (c *SpecialistClient) QueryDepartment(s *Specialist) *DepartmentQuery {
 }
 
 // Hooks returns the client hooks.
-func (c *SpecialistClient) Hooks() []Hook {
-	return c.hooks.Specialist
+func (c *SpecialdoctorClient) Hooks() []Hook {
+	return c.hooks.Specialdoctor
 }
 
 // TitleClient is a client for the Title schema.

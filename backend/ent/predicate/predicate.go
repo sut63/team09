@@ -12,11 +12,17 @@ type Course func(*sql.Selector)
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
 
+// Detail is the predicate function for detail builders.
+type Detail func(*sql.Selector)
+
 // Disease is the predicate function for disease builders.
 type Disease func(*sql.Selector)
 
 // Doctor is the predicate function for doctor builders.
 type Doctor func(*sql.Selector)
+
+// Extradoctor is the predicate function for extradoctor builders.
+type Extradoctor func(*sql.Selector)
 
 // Gender is the predicate function for gender builders.
 type Gender func(*sql.Selector)
@@ -33,8 +39,8 @@ type Position func(*sql.Selector)
 // Schedule is the predicate function for schedule builders.
 type Schedule func(*sql.Selector)
 
-// Specialist is the predicate function for specialist builders.
-type Specialist func(*sql.Selector)
+// Specialdoctor is the predicate function for specialdoctor builders.
+type Specialdoctor func(*sql.Selector)
 
 // Title is the predicate function for title builders.
 type Title func(*sql.Selector)

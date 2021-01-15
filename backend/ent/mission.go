@@ -15,8 +15,8 @@ type Mission struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// MissionType holds the value of the "MissionType" field.
-	MissionType string `json:"MissionType,omitempty"`
+	// Mission holds the value of the "mission" field.
+	Mission string `json:"mission,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MissionQuery when eager-loading is set.
 	Edges MissionEdges `json:"edges"`
@@ -26,9 +26,11 @@ type Mission struct {
 type MissionEdges struct {
 	// Departments holds the value of the departments edge.
 	Departments []*Department
+	// Details holds the value of the details edge.
+	Details []*Detail
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // DepartmentsOrErr returns the Departments value or an error if the edge
@@ -40,11 +42,20 @@ func (e MissionEdges) DepartmentsOrErr() ([]*Department, error) {
 	return nil, &NotLoadedError{edge: "departments"}
 }
 
+// DetailsOrErr returns the Details value or an error if the edge
+// was not loaded in eager-loading.
+func (e MissionEdges) DetailsOrErr() ([]*Detail, error) {
+	if e.loadedTypes[1] {
+		return e.Details, nil
+	}
+	return nil, &NotLoadedError{edge: "details"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Mission) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // MissionType
+		&sql.NullString{}, // mission
 	}
 }
 
@@ -61,9 +72,9 @@ func (m *Mission) assignValues(values ...interface{}) error {
 	m.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field MissionType", values[0])
+		return fmt.Errorf("unexpected type %T for field mission", values[0])
 	} else if value.Valid {
-		m.MissionType = value.String
+		m.Mission = value.String
 	}
 	return nil
 }
@@ -71,6 +82,11 @@ func (m *Mission) assignValues(values ...interface{}) error {
 // QueryDepartments queries the departments edge of the Mission.
 func (m *Mission) QueryDepartments() *DepartmentQuery {
 	return (&MissionClient{config: m.config}).QueryDepartments(m)
+}
+
+// QueryDetails queries the details edge of the Mission.
+func (m *Mission) QueryDetails() *DetailQuery {
+	return (&MissionClient{config: m.config}).QueryDetails(m)
 }
 
 // Update returns a builder for updating this Mission.
@@ -96,8 +112,8 @@ func (m *Mission) String() string {
 	var builder strings.Builder
 	builder.WriteString("Mission(")
 	builder.WriteString(fmt.Sprintf("id=%v", m.ID))
-	builder.WriteString(", MissionType=")
-	builder.WriteString(m.MissionType)
+	builder.WriteString(", mission=")
+	builder.WriteString(m.Mission)
 	builder.WriteByte(')')
 	return builder.String()
 }

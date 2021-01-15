@@ -14,10 +14,10 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/extradoctor"
 	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/schedule"
-	"github.com/team09/app/ent/specialist"
 )
 
 // OfficeQuery is the builder for querying Office entities.
@@ -29,11 +29,11 @@ type OfficeQuery struct {
 	unique     []string
 	predicates []predicate.Office
 	// eager-loading edges.
-	withDoctor     *DoctorQuery
-	withDepartment *DepartmentQuery
-	withSpecialist *SpecialistQuery
-	withSchedules  *ScheduleQuery
-	withFKs        bool
+	withDoctor      *DoctorQuery
+	withDepartment  *DepartmentQuery
+	withExtradoctor *ExtradoctorQuery
+	withSchedules   *ScheduleQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -99,17 +99,17 @@ func (oq *OfficeQuery) QueryDepartment() *DepartmentQuery {
 	return query
 }
 
-// QuerySpecialist chains the current query on the specialist edge.
-func (oq *OfficeQuery) QuerySpecialist() *SpecialistQuery {
-	query := &SpecialistQuery{config: oq.config}
+// QueryExtradoctor chains the current query on the extradoctor edge.
+func (oq *OfficeQuery) QueryExtradoctor() *ExtradoctorQuery {
+	query := &ExtradoctorQuery{config: oq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := oq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(office.Table, office.FieldID, oq.sqlQuery()),
-			sqlgraph.To(specialist.Table, specialist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, office.SpecialistTable, office.SpecialistColumn),
+			sqlgraph.To(extradoctor.Table, extradoctor.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, office.ExtradoctorTable, office.ExtradoctorColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
 		return fromU, nil
@@ -336,14 +336,14 @@ func (oq *OfficeQuery) WithDepartment(opts ...func(*DepartmentQuery)) *OfficeQue
 	return oq
 }
 
-//  WithSpecialist tells the query-builder to eager-loads the nodes that are connected to
-// the "specialist" edge. The optional arguments used to configure the query builder of the edge.
-func (oq *OfficeQuery) WithSpecialist(opts ...func(*SpecialistQuery)) *OfficeQuery {
-	query := &SpecialistQuery{config: oq.config}
+//  WithExtradoctor tells the query-builder to eager-loads the nodes that are connected to
+// the "extradoctor" edge. The optional arguments used to configure the query builder of the edge.
+func (oq *OfficeQuery) WithExtradoctor(opts ...func(*ExtradoctorQuery)) *OfficeQuery {
+	query := &ExtradoctorQuery{config: oq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	oq.withSpecialist = query
+	oq.withExtradoctor = query
 	return oq
 }
 
@@ -428,11 +428,11 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 		loadedTypes = [4]bool{
 			oq.withDoctor != nil,
 			oq.withDepartment != nil,
-			oq.withSpecialist != nil,
+			oq.withExtradoctor != nil,
 			oq.withSchedules != nil,
 		}
 	)
-	if oq.withDoctor != nil || oq.withDepartment != nil || oq.withSpecialist != nil {
+	if oq.withDoctor != nil || oq.withDepartment != nil || oq.withExtradoctor != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -512,16 +512,16 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 		}
 	}
 
-	if query := oq.withSpecialist; query != nil {
+	if query := oq.withExtradoctor; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Office)
 		for i := range nodes {
-			if fk := nodes[i].specialist_id; fk != nil {
+			if fk := nodes[i].extradoctor_id; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(specialist.IDIn(ids...))
+		query.Where(extradoctor.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -529,10 +529,10 @@ func (oq *OfficeQuery) sqlAll(ctx context.Context) ([]*Office, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "specialist_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "extradoctor_id" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Specialist = n
+				nodes[i].Edges.Extradoctor = n
 			}
 		}
 	}

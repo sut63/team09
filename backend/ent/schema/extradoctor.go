@@ -2,8 +2,8 @@ package schema
 
 import (
 	"github.com/facebookincubator/ent"
-	"github.com/facebookincubator/ent/schema/field"
 	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // extradoctor holds the schema definition for the Extradoctor entity.
@@ -21,8 +21,10 @@ func (Extradoctor) Fields() []ent.Field {
 // Edges of the Extradoctor.
 func (Extradoctor) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("specialdoctors",Specialdoctor.Type).
+		edge.To("specialdoctors", Specialdoctor.Type).
 			StorageKey(edge.Column("extradoctor_id")),
+		edge.To("offices", Office.Type).
+			StorageKey(edge.Column("extradoctor_id")),
+			
 	}
-
 }

@@ -157,7 +157,6 @@ const Schedule: FC<{}> = () => {
 
     function save() {
         schedule.Added + ":00+07:00";
-        debugger
         const apiUrl = 'http://localhost:8080/api/v1/schedules';
         const requestOptions = {
             method: 'POST',
@@ -192,6 +191,9 @@ const Schedule: FC<{}> = () => {
     function LogOut() {
         //redirec Page ... http://localhost:3000/
         window.location.href = "http://localhost:3000/";
+    }
+    function Back() {
+        window.location.href = "home";
     }
 
 
@@ -314,7 +316,7 @@ const Schedule: FC<{}> = () => {
 
                         <Button variant="contained" color="primary" onClick={save} style={{ marginLeft: 100 }}>บันทึกข้อมูล</Button>
                         <Button variant="contained" color="secondary" onClick={clear} style={{ marginLeft: 10 }}>ยกเลิก</Button>
-
+                        <Button variant="contained" color="secondary" onClick={Back} style={{ marginLeft: 10 }}>BACK</Button>          
                     </form>
                 </div>
             </Content>
