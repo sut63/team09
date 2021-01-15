@@ -153,7 +153,7 @@ const Doctor: FC<{}> = () => {
           <Typography variant="h4" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-          <Button color="inherit" component={RouterLink} to="/"> Login </Button>
+          <Button color="inherit" component={RouterLink} to="/"> Logout </Button>
         </Toolbar>
       </AppBar>
 
@@ -371,13 +371,7 @@ const Doctor: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 CLEAR
-             </Button>
-              <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/table"
-                variant="contained"
-                color="secondary">
-                BACK
-             </Button>
+             </Button>              
             </div>
           </form>
         </div>
