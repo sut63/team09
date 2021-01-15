@@ -21,9 +21,10 @@ type Doctor struct {
 	Name        string
 	Age         int
 	Email       string
-	Pnumber     int
+	Password	string
 	Address     string
 	Educational string
+	Phone    	string
 }
 type Genders struct {
 	Gender []Gender
@@ -86,13 +87,14 @@ type Office struct {
 	Officename string
 }
 
-type Specials struct {
-	Special []Special
+type Extradoctors struct {
+	Extradoctor []Extradoctor
 }
 
-type Special struct {
+type Extradoctor struct {
 	Specialname string
 }
+
 
 // @title SUT SA Example API
 // @version 1.0
@@ -302,80 +304,58 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Officename
-	offices := Offices{
-		Office: []Office{
-			Office{"โรงพยาบาลกรุงเทพ"},
-			Office{"โรงพยาบาลบำเน็จนราดูล"},
-			Office{"โรงพยาบาลมหาราช"},
-			Office{"โรงพยาบาลเซนแมรี่"},
-			Office{"โรงพยาบาลหนองคาย"},
-			Office{"ศิริราชพยาบาล มหาวิทยาลัยมหิดล"},
-			Office{"โรงพยาบาลเจ้าพระยา"},
-			Office{"โรงพยาบาลยันฮี"},
-			Office{"โรงพยาบาลบำราศนราดูร"},
-		},
-	}
-
-	for _, of := range offices.Office {
-		client.Mission.
-			Create().
-			SetMissionType(of.Officename).
-			Save(context.Background())
-	}
-
 	// Set Special Data
-	specials := Specials{
-		Special: []Special{
+	extradoctors := Extradoctors{
+		Extradoctor: []Extradoctor{
 			//Special{"แผนกรังสี"},
-			Special{"รังสีร่วมรักษาระบบประสาท"},
-			Special{"รังสีรักษาและมะเร็งวิทยา"},
-			Special{"รังสีวิทยาวินิจฉัย"},
+			Extradoctor{"รังสีร่วมรักษาระบบประสาท"},
+			Extradoctor{"รังสีรักษาและมะเร็งวิทยา"},
+			Extradoctor{"รังสีวิทยาวินิจฉัย"},
 			//Special{"แผนกห้องปฏิบัติการทางการแพทย์"},
-			Special{"จุลกายวิภาคศาสตร์"},
-			Special{"ปรสิตวิทยา"},
-			Special{"เวชศาสตร์การบริการโลหิต"},
+			Extradoctor{"จุลกายวิภาคศาสตร์"},
+			Extradoctor{"ปรสิตวิทยา"},
+			Extradoctor{"เวชศาสตร์การบริการโลหิต"},
 			//Special{"แผนกศัลยกรรม"},
-			Special{"ศัลยศาสตร์ตกแต่งและเสริมสร้าง"},
-			Special{"ศัลยศาสตร์หลอดเลือด"},
-			Special{"ศัลยศาสตร์ลำไส้ใหญ่และทวารหนัก"},
+			Extradoctor{"ศัลยศาสตร์ตกแต่งและเสริมสร้าง"},
+			Extradoctor{"ศัลยศาสตร์หลอดเลือด"},
+			Extradoctor{"ศัลยศาสตร์ลำไส้ใหญ่และทวารหนัก"},
 			//Special{"แผนกวิสัญญี"},
-			Special{"วิสัญญีวิทยาเพื่อการผ่าตัดหัวใจ หลอดเลือดใหญ่และทรวงอก"},
-			Special{"วิสัญญีวิทยาสำหรับผู้ป่วยโรคทางระบบประสาท"},
-			Special{"วิสัญญีวิทยาเพื่อการระงับปวด"},
+			Extradoctor{"วิสัญญีวิทยาเพื่อการผ่าตัดหัวใจ หลอดเลือดใหญ่และทรวงอก"},
+			Extradoctor{"วิสัญญีวิทยาสำหรับผู้ป่วยโรคทางระบบประสาท"},
+			Extradoctor{"วิสัญญีวิทยาเพื่อการระงับปวด"},
 			//Special{"แผนกกุมารเวช"},
-			Special{"กุมารเวชศาสตร์โรคติดเชื้อ"},
-			Special{"กุมารเวชศาสตร์พัฒนาการและพฤติกรรม"},
-			Special{"กุมารเวชศาสตร์โรคภูมิแพ้และภูมิคุ้มกัน"},
+			Extradoctor{"กุมารเวชศาสตร์โรคติดเชื้อ"},
+			Extradoctor{"กุมารเวชศาสตร์พัฒนาการและพฤติกรรม"},
+			Extradoctor{"กุมารเวชศาสตร์โรคภูมิแพ้และภูมิคุ้มกัน"},
 			//Special{"แผนกสูตินรีเวช"},
-			Special{"เวชศาสตร์มารดาและทารกในครรภ์"},
-			Special{"มะเร็งนรีเวชวิทยา"},
-			Special{"เวชศาสตร์การเจริญพันธุ์"},
+			Extradoctor{"เวชศาสตร์มารดาและทารกในครรภ์"},
+			Extradoctor{"มะเร็งนรีเวชวิทยา"},
+			Extradoctor{"เวชศาสตร์การเจริญพันธุ์"},
 			//Special{"แผนกเวชศาสตร์ป้องกัน"},
-			Special{"ระบาดวิทยา"},
-			Special{"อาชีวเวชศาสตร์"},
-			Special{"เวชศาสตร์การบิน"},
+			Extradoctor{"ระบาดวิทยา"},
+			Extradoctor{"อาชีวเวชศาสตร์"},
+			Extradoctor{"เวชศาสตร์การบิน"},
 			//Special{"แผนกอายุรกรรม"},
-			Special{"อายุรศาสตร์โรคข้อและรูมาติสซั่ม"},
-			Special{"อายุรศาสตร์โรคภูมิแพ้และอิมมูโนวิทยาคลินิก"},
-			Special{"อายุรศาสตร์โรคระบบทางเดินอาหาร"},
+			Extradoctor{"อายุรศาสตร์โรคข้อและรูมาติสซั่ม"},
+			Extradoctor{"อายุรศาสตร์โรคภูมิแพ้และอิมมูโนวิทยาคลินิก"},
+			Extradoctor{"อายุรศาสตร์โรคระบบทางเดินอาหาร"},
 			//Special{"แผนกจักษุ"},
-			Special{"จักษุวิทยาโรคต้อหิน"},
-			Special{"จักษุวิทยาการตรวจคลื่นไฟฟ้า"},
-			Special{"ศัลยกรรมจักษุตกแต่งและเสริมสร้าง"},
+			Extradoctor{"จักษุวิทยาโรคต้อหิน"},
+			Extradoctor{"จักษุวิทยาการตรวจคลื่นไฟฟ้า"},
+			Extradoctor{"ศัลยกรรมจักษุตกแต่งและเสริมสร้าง"},
 			//Specialist{"แผนกหู คอ จมูก"},
-			Special{"โสต ศอ นาสิกวิทยา"},
-			Special{"ศัลยศาสตร์ตกแต่งและเสริมสร้างใบหน้า"},
+			Extradoctor{"โสต ศอ นาสิกวิทยา"},
+			Extradoctor{"ศัลยศาสตร์ตกแต่งและเสริมสร้างใบหน้า"},
 			//Special{"แผนกจิตเวช"},
-			Special{"จิตเวชศาสตร์ทั่วไป"},
-			Special{"จิตเวชศาสตร์เด็กและวัยรุ่น"},
+			Extradoctor{"จิตเวชศาสตร์ทั่วไป"},
+			Extradoctor{"จิตเวชศาสตร์เด็กและวัยรุ่น"},
 		},
 	}
 
-	for _, s := range specials.Special {
+	for _, sl := range extradoctors.Extradoctor {
 		client.Extradoctor.
 			Create().
-			SetSpecialname(s.Specialname).
+			SetSpecialname(sl.Specialname).
 			Save(context.Background())
 	}
 
