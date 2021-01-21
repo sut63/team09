@@ -1,15 +1,16 @@
 package controllers
- 
+
 import (
+	"context"
 	"time"
-   	"context"
-   
-   	"strconv"
-   	"github.com/team09/app/ent"
-   	"github.com/team09/app/ent/department"
-   	"github.com/team09/app/ent/course"
-   	"github.com/team09/app/ent/doctor"
-   	"github.com/gin-gonic/gin"
+
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/team09/app/ent"
+	"github.com/team09/app/ent/course"
+	"github.com/team09/app/ent/department"
+	"github.com/team09/app/ent/doctor"
 )
 
 // TrainingController defines the struct for the training controller
@@ -19,12 +20,14 @@ type TrainingController struct {
 }
 
 type Training struct {
-    Course     int
-    Department int
-    Doctor     int
-    Branch     string
-    Dateone    string
-    Datetwo    string
+	Course       int
+	Department   int
+	Doctor       int
+	Branch       string
+	Dateone      string
+	Datetwo      string
+	Doctoridcard string
+	Hour        string
 }
 
 // CreateTraining handles POST requests for adding training entities
@@ -45,21 +48,21 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 			"error": "training binding failed",
 		})
 		return
-    }
-    
-    co, err := ctl.client.Course.
+	}
+
+	co, err := ctl.client.Course.
 		Query().
 		Where(course.IDEQ(int(obj.Course))).
-        Only(context.Background())
+		Only(context.Background())
 
-    if err != nil {
-         c.JSON(400, gin.H{
-            "error": "Course not found",
-        })
-         return
-     }
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Course not found",
+		})
+		return
+	}
 
-     de, err := ctl.client.Department.
+	de, err := ctl.client.Department.
 		Query().
 		Where(department.IDEQ(int(obj.Department))).
 		Only(context.Background())
@@ -81,31 +84,33 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 			"error": "Doctor not found",
 		})
 		return
-    }
-	
-	time1, err := time.Parse(time.RFC3339, obj.Dateone+ "T00:00:00Z")
-	time2, err := time.Parse(time.RFC3339, obj.Datetwo+ "T00:00:00Z")
-    t, err := ctl.client.Training.
-        Create().
-        SetCourse(co).
-        SetDepartment(de).
-        SetDoctor(d).
-        SetBranch(obj.Branch).
-        SetDateone(time1).
-        SetDatetwo(time2).
-        Save(context.Background())
-    
-    if err != nil {
-        c.JSON(400, gin.H{
-            "error": "saving failed",
-        })
-        return
-    }
-    
-    c.JSON(200, gin.H{
-        "status": true,
-        "data":   t,
-    })
+	}
+
+	time1, err := time.Parse(time.RFC3339, obj.Dateone+"T00:00:00Z")
+	time2, err := time.Parse(time.RFC3339, obj.Datetwo+"T00:00:00Z")
+	t, err := ctl.client.Training.
+		Create().
+		SetCourse(co).
+		SetDepartment(de).
+		SetDoctor(d).
+		SetBranch(obj.Branch).
+		SetDateone(time1).
+		SetDatetwo(time2).
+		SetDoctoridcard(obj.Doctoridcard).
+		SetHour(obj.Hour).
+		Save(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"status": false,
+			"error":  err,
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   t,
+	})
 }
 
 // ListTraining handles request to get a list of training entities
