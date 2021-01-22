@@ -27,6 +27,8 @@ type Office struct {
 	Doctor      	int
 	Department  	int
 	Extradoctor  	int
+	Roomnumber		string
+	Doctoridcard    string
 }
 
 // CreateOffice handles POST requests for adding office entities
@@ -90,15 +92,20 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 	of, err := ctl.client.Office.
 		Create().
 		SetOfficename(obj.Officename).
+		SetDoctoridcard(obj.Doctoridcard).
+		SetRoomnumber(obj.Roomnumber).
 		SetDoctor(d).
 		SetDepartment(de). 
 		SetExtradoctor(et).
 		SetAddedTime1(time1).
 		SetAddedTime2(time2).
 		Save(context.Background())
+
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error" : err,
 		})
 		return
 	}
