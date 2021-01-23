@@ -51,20 +51,25 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface detial {
+interface detail {
   Department: number;
   Mission: number;
   Course: number;
   Explain: string;
+  Phone: string;
+  Email: string;
 }
 
 const Detail: FC<{}> = () => {
   const classes = useStyles();
   const http = new DefaultApi();
-  const [detail, setDetail] = React.useState<Partial<detial>>({});
+  const [detail, setDetail] = React.useState<Partial<detail>>({});
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
   const [missions, setMission] = React.useState<EntMission[]>([]);
   const [courses, setCourse] = React.useState<EntCourse[]>([]);
+  const [explainError, setexplainError] = React.useState('');
+  const [emailError, setemailError] = React.useState('');
+  const [phoneError, setphoneError] = React.useState('');
 
   const Toast = Swal.mixin({
     toast: true,
@@ -79,9 +84,11 @@ const Detail: FC<{}> = () => {
   });
 
   const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,) => {
+    event: React.ChangeEvent<{ name?: string; value: any }>,) => {
     const name = event.target.name as keyof typeof Detail;
     const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(name, validateValue)
     setDetail({ ...detail, [name]: value });
     // console.log(department);
   };
@@ -95,10 +102,10 @@ const Detail: FC<{}> = () => {
     setCourse(res);
   };
   const getMission = async () => {
-      const res = await http.listMission({limit: 10, offset: 0});
-      setMission(res);
+    const res = await http.listMission({ limit: 10, offset: 0 });
+    setMission(res);
   };
-  
+
 
   // Lifecycle Hooks
   useEffect(() => {
@@ -112,6 +119,64 @@ const Detail: FC<{}> = () => {
     setDetail({});
   }
 
+  const Validateexplain = (val: string) => {
+    return val.match("^[ก-๏\s]+$");
+  }
+  const Validatephone = (val: string) => {
+    return val.match("^[0-9]{10}$");
+  }
+  // const Validateemail = (val: string) => {
+  //   return val.match("^[a-zA-Z_]+$");
+  // }
+
+  // ฟังก์ชั่นสำหรับ validate อีเมล
+  const Validateemail = (email: string) => {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+  const checkPattern = (id: string, value: string) => {
+    switch (id) {
+      case 'Phone':
+        Validatephone(value) ? setphoneError('') : setphoneError("กรุณากรอกเบอร์โทรศัพท์ 10 ตัวเท่านั้น");
+        return;
+      case 'Email':
+        Validateemail(value) ? setemailError('') : setemailError("กรุณากรอกอีเมลให้ถูกต้อง");
+        return;
+      case 'Explain':
+        Validateexplain(value) ? setexplainError('') : setexplainError("กรุณากรอกรายละเอียดเป็นภาษาไทยเท่านั้น");
+        return;
+      default:
+        return;
+    }
+  }
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch (field) {
+      case 'phone':
+        alertMessage("error", "กรุณากรอกเบอร์โทรศัพท์10ตัวเท่านั้น");
+        return;
+      
+      case 'email':
+        alertMessage("error", "กรุณากรอกอีเมลให้ถูกต้อง");
+        return;
+      
+      case 'explain':
+        alertMessage("error", "กรุณากรอกรายละเอียดเป็นภาษาไทยตัวเท่านั้น");
+        return;
+      
+      default:
+        alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ")
+        return;
+    }
+  }
+
   function save() {
     const apiUrl = 'http://localhost:8080/api/v1/details';
     const requestOptions = {
@@ -119,8 +184,8 @@ const Detail: FC<{}> = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(detail),
     };
-    console.log(detail); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
 
+    console.log(detail); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
     fetch(apiUrl, requestOptions)
       .then(response => response.json())
       .then(data => {
@@ -131,13 +196,10 @@ const Detail: FC<{}> = () => {
             icon: 'success',
           });
         } else {
-          Toast.fire({
-            title: 'บันทึกข้อมูลไม่สำเร็จ',
-            icon: 'error',
-          });
+          checkCaseSaveError(data.error.Name)
         }
       });
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -146,7 +208,7 @@ const Detail: FC<{}> = () => {
           <Typography variant="h6" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-            <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
+          <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
         </Toolbar>
       </AppBar>
       <Content className={classes.withoutLabel}>
@@ -212,15 +274,56 @@ const Detail: FC<{}> = () => {
                 </Select>
               </FormControl>
             </Grid>
+
+            <Grid item xs={6}>
+              <FormControl
+                fullWidth
+                className={classes.formControl}
+                style={{ marginLeft: 100 }}
+                variant="outlined">
+                <TextField
+                  error={phoneError ? true : false}
+                  name="Phone"
+                  label="เบอร์ติดต่อ"
+                  variant="outlined"
+                  size="medium"
+                  value={detail.Phone || ''}
+                  helperText={phoneError}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl
+                fullWidth
+                className={classes.formControl}
+                style={{ marginLeft: 100 }}
+                variant="outlined">
+                <TextField
+                  error={emailError ? true : false}
+                  name="Email"
+                  label="อีเมล"
+                  variant="outlined"
+                  size="medium"
+                  value={detail.Email || ''}
+                  helperText={emailError}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            </Grid>
+
             <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <TextField
+                  error={explainError ? true : false}
                   name="Explain"
                   value={detail.Explain || ''}
                   label="ข้อมูลแผนก"
                   multiline
                   rows={5}
                   variant="outlined"
+                  helperText={explainError}
                   onChange={handleChange}
                 />
               </FormControl>
