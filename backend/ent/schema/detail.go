@@ -1,9 +1,12 @@
 package schema
- 
+
 import (
+	"errors"
+	"regexp"
+
+	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
-   "github.com/facebookincubator/ent"
-   "github.com/facebookincubator/ent/schema/field"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // Detail holds the schema definition for the Detail entity.
@@ -14,16 +17,23 @@ type Detail struct {
 // Fields of the Detail.
 func (Detail) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("explain").NotEmpty(),
+		field.String("explain").Validate(func(s string) error {
+			match, _ := regexp.MatchString("^[ก-๏]+$", s)
+			if !match {
+				return errors.New("กรอกรายละเอียดเป็นภาษาไทยเท่านั้น")
+			}
+			return nil
+		}),
+		field.String("phone").MaxLen(10).MinLen(10),
+		field.String("email").Match(regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")),
 	}
- }
+}
 
 // Edges of the Detail.
 func (Detail) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("course",Course.Type).Ref("details").Unique(),
+		edge.From("course", Course.Type).Ref("details").Unique(),
 		edge.From("mission", Mission.Type).Ref("details").Unique(),
 		edge.From("department", Department.Type).Ref("details").Unique(),
-
 	}
 }
