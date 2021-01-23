@@ -23,6 +23,8 @@ type Detail struct {
 	Course     int
 	Department int
 	Mission    int
+	Phone string
+	Email string
 }
 
 // CreateDetail handles POST requests for adding detail entities
@@ -87,11 +89,15 @@ func (ctl *DetailController) CreateDetail(c *gin.Context) {
 		SetDepartment(de).
 		SetMission(m).
 		SetExplain(obj.Explain).
+		SetPhone(obj.Phone).
+		SetEmail(obj.Email).
 		Save(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			// "error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
