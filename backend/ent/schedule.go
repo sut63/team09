@@ -19,22 +19,26 @@ type Schedule struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Activity holds the value of the "activity" field.
-	Activity string `json:"activity,omitempty"`
+	// Activity holds the value of the "Activity" field.
+	Activity string `json:"Activity,omitempty"`
+	// Roomnumber holds the value of the "Roomnumber" field.
+	Roomnumber string `json:"Roomnumber,omitempty"`
+	// Docterid holds the value of the "Docterid" field.
+	Docterid string `json:"Docterid,omitempty"`
 	// AddedTime holds the value of the "added_time" field.
 	AddedTime time.Time `json:"added_time,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ScheduleQuery when eager-loading is set.
 	Edges         ScheduleEdges `json:"edges"`
 	department_id *int
-	schedule_id   *int
+	doctor_id     *int
 	office_id     *int
 }
 
 // ScheduleEdges holds the relations/edges for other nodes in the graph.
 type ScheduleEdges struct {
-	// Docter holds the value of the docter edge.
-	Docter *Doctor
+	// Doctor holds the value of the doctor edge.
+	Doctor *Doctor
 	// Department holds the value of the department edge.
 	Department *Department
 	// Office holds the value of the office edge.
@@ -44,18 +48,18 @@ type ScheduleEdges struct {
 	loadedTypes [3]bool
 }
 
-// DocterOrErr returns the Docter value or an error if the edge
+// DoctorOrErr returns the Doctor value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e ScheduleEdges) DocterOrErr() (*Doctor, error) {
+func (e ScheduleEdges) DoctorOrErr() (*Doctor, error) {
 	if e.loadedTypes[0] {
-		if e.Docter == nil {
-			// The edge docter was loaded in eager-loading,
+		if e.Doctor == nil {
+			// The edge doctor was loaded in eager-loading,
 			// but was not found.
 			return nil, &NotFoundError{label: doctor.Label}
 		}
-		return e.Docter, nil
+		return e.Doctor, nil
 	}
-	return nil, &NotLoadedError{edge: "docter"}
+	return nil, &NotLoadedError{edge: "doctor"}
 }
 
 // DepartmentOrErr returns the Department value or an error if the edge
@@ -90,7 +94,9 @@ func (e ScheduleEdges) OfficeOrErr() (*Office, error) {
 func (*Schedule) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // activity
+		&sql.NullString{}, // Activity
+		&sql.NullString{}, // Roomnumber
+		&sql.NullString{}, // Docterid
 		&sql.NullTime{},   // added_time
 	}
 }
@@ -99,7 +105,7 @@ func (*Schedule) scanValues() []interface{} {
 func (*Schedule) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // department_id
-		&sql.NullInt64{}, // schedule_id
+		&sql.NullInt64{}, // doctor_id
 		&sql.NullInt64{}, // office_id
 	}
 }
@@ -117,16 +123,26 @@ func (s *Schedule) assignValues(values ...interface{}) error {
 	s.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field activity", values[0])
+		return fmt.Errorf("unexpected type %T for field Activity", values[0])
 	} else if value.Valid {
 		s.Activity = value.String
 	}
-	if value, ok := values[1].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time", values[1])
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Roomnumber", values[1])
+	} else if value.Valid {
+		s.Roomnumber = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Docterid", values[2])
+	} else if value.Valid {
+		s.Docterid = value.String
+	}
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time", values[3])
 	} else if value.Valid {
 		s.AddedTime = value.Time
 	}
-	values = values[2:]
+	values = values[4:]
 	if len(values) == len(schedule.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
@@ -135,10 +151,10 @@ func (s *Schedule) assignValues(values ...interface{}) error {
 			*s.department_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field schedule_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field doctor_id", value)
 		} else if value.Valid {
-			s.schedule_id = new(int)
-			*s.schedule_id = int(value.Int64)
+			s.doctor_id = new(int)
+			*s.doctor_id = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field office_id", value)
@@ -150,9 +166,9 @@ func (s *Schedule) assignValues(values ...interface{}) error {
 	return nil
 }
 
-// QueryDocter queries the docter edge of the Schedule.
-func (s *Schedule) QueryDocter() *DoctorQuery {
-	return (&ScheduleClient{config: s.config}).QueryDocter(s)
+// QueryDoctor queries the doctor edge of the Schedule.
+func (s *Schedule) QueryDoctor() *DoctorQuery {
+	return (&ScheduleClient{config: s.config}).QueryDoctor(s)
 }
 
 // QueryDepartment queries the department edge of the Schedule.
@@ -188,8 +204,12 @@ func (s *Schedule) String() string {
 	var builder strings.Builder
 	builder.WriteString("Schedule(")
 	builder.WriteString(fmt.Sprintf("id=%v", s.ID))
-	builder.WriteString(", activity=")
+	builder.WriteString(", Activity=")
 	builder.WriteString(s.Activity)
+	builder.WriteString(", Roomnumber=")
+	builder.WriteString(s.Roomnumber)
+	builder.WriteString(", Docterid=")
+	builder.WriteString(s.Docterid)
 	builder.WriteString(", added_time=")
 	builder.WriteString(s.AddedTime.Format(time.ANSIC))
 	builder.WriteByte(')')
