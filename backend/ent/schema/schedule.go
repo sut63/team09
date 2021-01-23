@@ -1,6 +1,9 @@
 package schema
 
 import (
+	"errors"
+	"regexp"
+
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -14,7 +17,21 @@ type Schedule struct {
 // Fields of the Schedule.
 func (Schedule) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("activity").NotEmpty(),
+		field.String("Activity").Validate(func(s string) error {
+			match, _ := regexp.MatchString("^[ก-๏]+$", s)
+			if !match {
+				return errors.New("กรุณากรอกกิจกรรมของแพทย์")
+			}
+			return nil
+		}),
+		field.String("Roomnumber").Validate(func(s string) error {
+			match, _ := regexp.MatchString("^[ABC]\\d{4}", s)
+			if !match {
+				return errors.New("กรุณากรอกหมายเลขห้องทำงาน")
+			}
+			return nil
+		}),
+		field.String("Docterid").MaxLen(10).MinLen(10),
 		field.Time("added_time"),
 	}
 }
