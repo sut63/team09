@@ -91,7 +91,7 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 		Create().
 		SetDepartment(de).
 		SetOffice(of).
-		SetDocter(d).
+		SetDoctor(d).
 		SetActivity(obj.Activity).
 		SetRoomnumber(obj.Roomnumber).
 		SetDocterid(obj.Docterid).
@@ -181,7 +181,7 @@ func (ctl *ScheduleController) ListSchedule(c *gin.Context) {
 		Query().
 		WithDepartment().
 		WithOffice().
-		WithDocter().
+		WithDoctor().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
