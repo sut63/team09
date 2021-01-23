@@ -25,6 +25,8 @@ type Schedule struct {
 	Office     int
 	Doctor     int
 	Activity   string
+	Roomnumber string
+	Docterid   string
 	Added      string
 }
 
@@ -91,12 +93,16 @@ func (ctl *ScheduleController) CreateSchedule(c *gin.Context) {
 		SetOffice(of).
 		SetDocter(d).
 		SetActivity(obj.Activity).
+		SetRoomnumber(obj.Roomnumber).
+		SetDocterid(obj.Docterid).
 		SetAddedTime(time).
 		Save(context.Background())
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
