@@ -19,6 +19,7 @@ import { EntPosition } from '../../api/models/EntPosition';
 import { EntGender } from '../../api/models/EntGender';
 import Swal from 'sweetalert2';
 import { EntDisease } from '../../api/models/EntDisease';
+// import { EntDoctor } from '../../api/models/EntDoctor';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,8 +67,13 @@ const Doctor: FC<{}> = () => {
   const [positions, setPositions] = React.useState<EntPosition[]>([]);
   const [genders, setGenders] = React.useState<EntGender[]>([]);
   const [diseases, setDiseases] = React.useState<EntDisease[]>([]);
-
-
+  const [nameError, setnameError] = React.useState('');
+  const [passwordError, setpasswordError] = React.useState('');
+  const [phoneError, setphoneError] = React.useState('');
+  const [addressError, setaddressError] = React.useState('');
+  const [educationalError, seteducationalError] = React.useState('');
+  const [emailError, setemailError] = React.useState('');
+  const [ageError, setageError] = React.useState('');
   const Toast = Swal.mixin({
     position: 'center',
     showConfirmButton: true,
@@ -75,10 +81,13 @@ const Doctor: FC<{}> = () => {
   });
 
   const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,) => {
+    event: React.ChangeEvent<{ name?: string; value: any }>,) => {
     const name = event.target.name as keyof typeof Doctor;
     const { value } = event.target;
     setDoctor({ ...doctor, [name]: value });
+    const validateValue = value.toString()
+    checkPattern(name, validateValue)
+
     console.log(doctor);
   };
 
@@ -89,6 +98,8 @@ const Doctor: FC<{}> = () => {
     setDoctor({ ...doctor, [name]: +value });
     // console.log(Doctor);
   };
+  
+
 
   const getTitles = async () => {
     const res = await http.listTitle({ limit: 10, offset: 0 });
@@ -118,8 +129,97 @@ const Doctor: FC<{}> = () => {
   function clear() {
     setDoctor({});
   }
+  
+  const Validateemail = (email: string) => {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+  const Validatename = (val: string) => {
+    return val.match("^[ก-๏]+$");
+  }
+  const Validatephone = (val: string) => {
+    return val.match("^[0-9]{10}$");
+  }
+  const Validatepassword = (val: string) => {
+    return val.match("^[0-9]{8}$");
+  }
+  const Validateaddress = (val: string) => {
+    return val.match("");
+  }
+  const Validateeducational = (val: string) => {
+    return val.match("");
+  }
+  // const Validateage = (val: number) => {
+  //   return val.toString("^[0-9]{8}$");
+  // }
 
+
+  const checkPattern = (id: string, value: string) => {
+    switch(id) {
+      case 'phone' :
+        Validatephone(value) ? setphoneError('') : setphoneError("กรุณากรอกเบอร์โทรศัพท์10ตัวเท่านั้น");
+        return;  
+      case 'name' :    
+        Validatename(value) ? setnameError('') : setnameError("กรุณากรอกชื่อแพทย์เป็นภาษาไทยเท่านั้น");
+        return;
+      case 'password' :
+        Validatepassword(value) ? setpasswordError('') : setpasswordError("กรุณากรอกรหัสผ่านตัวเลข0-9จำนวน8ตัวเท่านั้น");
+        return;
+      case 'address' :
+          Validateaddress(value) ? setaddressError('') : setaddressError("กรุณากรอกที่อยู่");
+          return;
+      case 'educational' :
+            Validateeducational(value) ? seteducationalError('') : seteducationalError("กรุณากรอกประวัติการศึกษา");
+            return;
+      case 'email':
+            Validateemail(value) ? setemailError('') : setemailError("กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ xxx@x.xxx");
+            return;
+      // case 'age':
+      //       Validateage(value) ? setageError('') : setageError("กรุณาอายุเป็นจำนวนเต็มบวกเท่านั้น");
+      //       return;
+        default:
+          return;
+    }
+  }
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+        case 'phone':
+          alertMessage("error","กรุณากรอกเบอร์โทรศัพท์10ตัวเท่านั้น");
+          return;
+        case 'name':
+            alertMessage("error","กรุณากรอกชื่อแพทย์เป็นภาษาไทยเท่านั้น");
+            return;
+        case 'password':
+              alertMessage("error","กรุณากรอกรหัสผ่านตัวเลข0-9จำนวน8ตัวเท่านั้น");
+              return;
+        case 'address':
+              alertMessage("error","กรุณากรอกที่อยู่");
+              return;
+        case 'educational':
+              alertMessage("error","กรุณากรอกประวัติการศึกษา");
+              return;
+        case 'email':
+              alertMessage("error","กรุณากรอกอีเมลให้ถูกต้อง");
+              return;
+         case 'age':
+              alertMessage("error","กรุณากรอกอายุเป็นจำนวนเต็มบวกเท่านั้น");
+              return;
+    }
+  }
+
+  
   function save() {
+    if(doctor.age){
+      var age: number = +doctor.age;
+      doctor.age = age;
+    }
     const apiUrl = 'http://localhost:8080/api/v1/doctors';
     const requestOptions = {
       method: 'POST',
@@ -138,13 +238,12 @@ const Doctor: FC<{}> = () => {
             icon: 'success',
           });
         } else {
-          Toast.fire({
-            title: 'บันทึกข้อมูลไม่สำเร็จ',
-            icon: 'error',
-          });
+            checkCaseSaveError(data.error.Name)
         }
-      });
-  }
+          });
+        
+      };
+  
 
   return (
     <div className={classes.root}>
@@ -153,7 +252,7 @@ const Doctor: FC<{}> = () => {
           <Typography variant="h4" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-          <Button color="inherit" component={RouterLink} to="/"> Logout </Button>
+          <Button color="inherit" component={RouterLink} to="/"> Login </Button>
         </Toolbar>
       </AppBar>
 
@@ -189,11 +288,13 @@ const Doctor: FC<{}> = () => {
                   style={{ marginLeft: 100 }}
                   variant="outlined">
                   <TextField
+                    error = {nameError ? true : false}
                     name="name"
-                    label="ชื่อ-สกุล"
+                    label="ชื่อแพทย์"
                     variant="outlined"
                     size="medium"
                     value={doctor.name || ''}
+                    helperText = {nameError}
                     onChange={handleChange}
                   />
                 </FormControl>
@@ -245,11 +346,13 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                  error={ageError ? true : false}
                   name="age"
                   label="อายุ"
                   variant="outlined"
                   size="medium"
                   value={doctor.age || ''}
+                  helperText={ageError}
                   onChange={handleChangeNum}
                 />
               </FormControl>
@@ -281,11 +384,13 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                  error={emailError ? true : false}
                   name="email"
                   label="อีเมล"
                   variant="outlined"
                   size="medium"
                   value={doctor.email || ''}
+                  helperText={emailError}
                   onChange={handleChange}
                 />
               </FormControl>
@@ -297,12 +402,14 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                  error={passwordError ? true : false}
                   name="password"
                   label="รหัสผ่าน"
                   variant="outlined"
                   size="medium"
                   type={doctor.showPassword ? 'text' : 'password'}
                   value={doctor.password}
+                  helperText={passwordError}
                   onChange={handleChange} />
               </FormControl>
             </Grid>
@@ -315,11 +422,13 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                  error={phoneError ? true : false}
                   name="phone"
-                  label="เบอร์ติดต่อ"
+                  label="เบอร์ติดต่อ"                  
                   variant="outlined"
                   size="medium"
                   value={doctor.phone || ''}
+                  helperText={phoneError}
                   onChange={handleChange}
                 />
               </FormControl>
@@ -331,11 +440,13 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                  error={addressError ? true : false}
                   name="address"
                   label="ที่อยู่ปัจจุบัน"
                   variant="outlined"
                   size="medium"
                   value={doctor.address || ''}
+                  helperText={addressError}
                   onChange={handleChange}
                 />
               </FormControl>
@@ -349,11 +460,13 @@ const Doctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
                 variant="outlined">
                 <TextField
+                 error={educationalError ? true : false}
                   name="educational"
                   label="ประวัติการศึกษา"
                   variant="outlined"
                   size="medium"
                   value={doctor.educational || ''}
+                  helperText={educationalError}
                   onChange={handleChange}
                 />
               </FormControl>
