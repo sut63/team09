@@ -73,18 +73,24 @@ interface schedule {
     Doctor: number;
     Department: number;
     Office: number;
-    Activity: number;
+    Activity: string;
+    Roomnumber: string;
+    Docterid: string;
     Added: Date;
 }
 
 const Schedule: FC<{}> = () => {
     const classes = useStyles();
-    const api = new DefaultApi();
+    const http = new DefaultApi();
 
     const [schedule, setSchedule] = React.useState<Partial<schedule>>({});
     const [departments, setDepartments] = React.useState<EntDepartment[]>([]);
     const [offices, setOffices] = React.useState<EntOffice[]>([]);
     const [doctors, setDoctors] = React.useState<EntDoctor[]>([]);
+    const [activityError, setActivityError] = React.useState('');
+    const [roomnumberError, setRoomnumberError] = React.useState('');
+    const [docteridError, setDocteridError] = React.useState('');
+
     // const [alert, setAlert] = React.useState(true);
 
 
@@ -93,12 +99,8 @@ const Schedule: FC<{}> = () => {
         toast: true,
         position: 'center',
         showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: toast => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
+        timer: 3000,
+
     });
 
 
@@ -118,27 +120,29 @@ const Schedule: FC<{}> = () => {
     //     // console.log(schedule);
     // };
     const handleChange = (
-        event: React.ChangeEvent<{ name?: string; value: unknown }>,) => {
+        event: React.ChangeEvent<{ name?: string; value: any }>,) => {
         // console.log(schedule);
         const name = event.target.name as keyof typeof Schedule;
         const { value } = event.target;
+        const validateValue = value.toString()
+        checkPattern(name, validateValue)
         setSchedule({ ...schedule, [name]: value });
-        // console.log(schedule);
+        console.log(schedule);
     };
 
 
     const getDepartments = async () => {
-        const res = await api.listDepartment({ limit: 10, offset: 0 });
+        const res = await http.listDepartment({ limit: 10, offset: 0 });
         setDepartments(res);
     };
 
     const getOffices = async () => {
-        const res = await api.listOffice({ limit: 10, offset: 0 });
+        const res = await http.listOffice({ limit: 10, offset: 0 });
         setOffices(res);
     };
 
     const getDoctors = async () => {
-        const res = await api.listDoctor({ limit: 10, offset: 0 });
+        const res = await http.listDoctor({ limit: 10, offset: 0 });
         setDoctors(res);
     };
 
@@ -155,6 +159,68 @@ const Schedule: FC<{}> = () => {
         setSchedule({});
     }
 
+    const ValidateActivity = (val: string) => {
+        return val.match("^[ก-๏]+$");
+    }
+
+    const ValidateRoomnumber = (val: string) => {
+        return val.match("[ABC]\\d{4}");
+    }
+
+    const ValidateDocterid = (val: string) => {
+        return val.length == 10 ? true : false;
+    }
+
+
+
+
+
+    const checkPattern = (id: string, value: string) => {
+        switch (id) {
+            case 'Activity':
+                ValidateActivity(value) ? setActivityError('') : setActivityError("กรุณากรอกกิจกรรมของแพทย์ให้เป็นภาษาไทยเท่านั้น");
+                return;
+
+            case 'Roomnumber':
+                ValidateRoomnumber(value) ? setRoomnumberError('') : setRoomnumberError("กรุณากรอกหมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
+                return;
+
+            case 'Docterid':
+                ValidateDocterid(value) ? setDocteridError('') : setDocteridError("กรุณากรอกตัวเลขทั้งหมด 10 ตัว");
+                return;
+            default:
+                return;
+        }
+    }
+    const alertMessage = (icon: any, title: any) => {
+        Toast.fire({
+            icon: icon,
+            title: title,
+        });
+    }
+
+    const checkCaseSaveError = (field: string) => {
+        switch (field) {
+            case 'Activity':
+                alertMessage("error", "กรุณากรอกกิจกรรมของแพทย์ให้เป็นภาษาไทยเท่านั้น");
+                return;
+
+            case 'Roomnumber':
+                alertMessage("error", "กรุณากรอกหมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
+                return;
+            
+            case 'Docterid':
+                alertMessage("error", "กรุณากรอกตัวเลขทั้งหมด 10 ตัว");
+                return;
+                default:
+                    alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ");
+                return;
+
+
+        }
+    }
+
+
     function save() {
         schedule.Added + ":00+07:00";
         const apiUrl = 'http://localhost:8080/api/v1/schedules';
@@ -170,23 +236,20 @@ const Schedule: FC<{}> = () => {
         fetch(apiUrl, requestOptions)
             .then(response => response.json())
             .then(data => {
-                // setSchedule({ ...schedule, Added: schedule.Added });
-                // console.log(added_time)
                 console.log(data); // last data
                 // alert(JSON.stringify(schedule))
                 if (data.status === true) {
                     Toast.fire({
-                        icon: 'success',
                         title: 'บันทึกข้อมูลสำเร็จ',
+                        icon: 'success',
                     });
                 } else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'บันทึกข้อมูลไม่สำเร็จ',
-                    });
+                    checkCaseSaveError(data.error.Name)
                 }
             });
-    }
+
+    };
+
 
     function LogOut() {
         //redirec Page ... http://localhost:3000/
@@ -211,7 +274,7 @@ const Schedule: FC<{}> = () => {
             </AppBar>
 
             <Content>
-                <Typography variant="h3" className={classes.title}>
+                <Typography variant="h3" className={classes.title} style={{ marginLeft: 200 }}>
                     ระบบบันทึกเวลาของแพทย์
               </Typography>
 
@@ -234,16 +297,15 @@ const Schedule: FC<{}> = () => {
                                     })}
                                 </Select>
                             </FormControl>
-                        </Grid>
 
-                        {/* แผนก */}
-                        <Grid item xs>
+                            {/* แผนก */}
+
 
                             <FormControl variant="outlined" className={classes.formControl} >
                                 <InputLabel>แผนก</InputLabel>
                                 <Select
                                     name="Department"
-                                    label="คลังยา"
+                                    label="แผนก"
                                     value={schedule.Department || ''}
                                     onChange={handleChange}
                                 >
@@ -262,16 +324,70 @@ const Schedule: FC<{}> = () => {
                             <FormControl variant="outlined" className={classes.textField} >
                                 {/* <form className={classes.textField} noValidate autoComplete="off"> */}
                                 <TextField
+                                    error={activityError ? true : false}
                                     name="Activity"
                                     label="กิจกรรมของแพทย์"
-                                    id="Activity"
+
                                     type="string"
                                     value={schedule.Activity || ''}
-
+                                    helperText={activityError}
                                     onChange={handleChange}
 
                                 />
                                 {/* </form> */}
+                            </FormControl>
+
+                            <FormControl variant="outlined" className={classes.textField} >
+                                {/* <form className={classes.textField} noValidate autoComplete="off"> */}
+                                <TextField
+                                    error={roomnumberError ? true : false}
+                                    name="Roomnumber"
+                                    label="หมายเลขห้องทำงาน"
+
+                                    value={schedule.Roomnumber || ''}
+                                    helperText={roomnumberError}
+                                    onChange={handleChange}
+
+                                />
+                                {/* </form> */}
+                            </FormControl>
+
+                        </Grid>
+
+
+
+                        <Grid item xs>
+                            <FormControl variant="outlined" className={classes.textField} >
+                                {/* <form className={classes.textField} noValidate autoComplete="off"> */}
+                                <TextField
+                                    error={docteridError ? true : false}
+                                    name="Docterid"
+                                    label="เลขบัตรประจำตัวแพทย์"
+
+                                    value={schedule.Docterid || ''}
+                                    helperText={docteridError}
+                                    onChange={handleChange}
+
+                                />
+                                {/* </form> */}
+                            </FormControl>
+
+                            {/* สถานที่ทำงาน */}
+                            <FormControl variant="outlined" className={classes.formControl}>
+                                <InputLabel>สถานที่ทำงาน</InputLabel>
+                                <Select
+
+                                    name="Office"
+                                    label="สถานที่ทำงาน"
+                                    value={schedule.Office || ''}
+                                    onChange={handleChange}
+                                >
+                                    {offices.map(item => {
+                                        return (
+                                            <MenuItem key={item.id} value={item.id}>{item.officename}</MenuItem>
+                                        );
+                                    })}
+                                </Select>
                             </FormControl>
                         </Grid>
 
@@ -293,30 +409,12 @@ const Schedule: FC<{}> = () => {
                             {/* </form> */}
                         </Grid>
 
-                        <Grid item xs>
-                            {/* สถานที่ทำงาน */}
-                            <FormControl variant="outlined" className={classes.formControl}>
-                                <InputLabel>สถานที่ทำงาน</InputLabel>
-                                <Select
-                                    name="Office"
-                                    label="สถานที่ทำงาน"
-                                    value={schedule.Office}
-                                    onChange={handleChange}
-                                >
-                                    {offices.map(item => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>{item.officename}</MenuItem>
-                                        );
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
                         {/* ปุ่ม */}
 
-                        <Button variant="contained" color="primary" onClick={save} style={{ marginLeft: 100 }}>บันทึกข้อมูล</Button>
+                        <Button variant="contained" color="primary" onClick={save} style={{ marginLeft: 200 }}>บันทึกข้อมูล</Button>
                         <Button variant="contained" color="secondary" onClick={clear} style={{ marginLeft: 10 }}>ยกเลิก</Button>
-                        <Button variant="contained" color="secondary" onClick={Back} style={{ marginLeft: 10 }}>BACK</Button>          
+                        <Button variant="contained" color="secondary" onClick={Back} style={{ marginLeft: 10 }}>BACK</Button>
+
                     </form>
                 </div>
             </Content>
