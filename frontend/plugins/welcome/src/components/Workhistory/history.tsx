@@ -11,15 +11,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
-import { FormHelperText, InputLabel, MenuItem } from '@material-ui/core';
+import { InputLabel, MenuItem } from '@material-ui/core';
 import { EntDoctor } from '../../api/models/EntDoctor';
 import { EntDepartment } from '../../api/models/EntDepartment';
 import { EntExtradoctor } from '../../api/models/EntExtradoctor';
 import Swal from 'sweetalert2';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
-// import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-// import DateFnsUtils from '@date-io/date-fns';
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
   }),
 );
+
 interface office {
   roomnumber: string;
   doctoridcard: string;
@@ -66,17 +64,10 @@ const Office: FC<{}> = () => {
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
   const [extradoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
 
-
-  // const [workingtimes, setWorkingtime] = React.useState<EntWorkingtime[]>([]);
-  // const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date('2014-08-18T21:11:54'),);
-  // const [selectedDate1, setSelectedDate1] = React.useState<Date | null>(new Date('2014-08-18T21:11:54'),);
-  // const handleDateChange = (date: Date | null) => { setSelectedDate(date); };
-  // const handleDateChange1 = (date: Date | null) => { setSelectedDate1(date); };
-
   const Toast = Swal.mixin({
     position: 'center',
     showConfirmButton: true,
-    timer: 5000
+    timer: 9000
   });
 
   const handleChange = (
@@ -88,14 +79,6 @@ const Office: FC<{}> = () => {
     setOffice({ ...office, [name]: value });
     console.log(office);
   };
-
-  // const handleDateChange = (
-  //   event: React.ChangeEvent<{ name: string; value: Date }>,) => {
-  //   const name = event.target.name as keyof typeof Office;
-  //   const { value } = event.target;
-  //   console.log('date select: ', value, typeof value) // show date from event.target.value
-  //   setOffice({ ...office, [name]: value });
-  // };
 
   const getDoctors = async () => {
     const res = await http.listDoctor({ limit: 10, offset: 0 });
@@ -169,7 +152,6 @@ const Office: FC<{}> = () => {
     }
   }
   function save() {
-    if ((doctors != null) && (departments != null ) && (extradoctors != null)) {
     const apiUrl = 'http://localhost:8080/api/v1/offices';
     const requestOptions = {
       method: 'POST',
@@ -190,7 +172,6 @@ const Office: FC<{}> = () => {
          checkCaseSaveError(data.error.Name)
           }
       });
-    };
   }
   return (
     <div className={classes.root}>
@@ -225,7 +206,6 @@ const Office: FC<{}> = () => {
                     );
                   })}
                 </Select>
-               
               </FormControl>
             </Grid>
             <Grid item xs={6}>
@@ -254,8 +234,7 @@ const Office: FC<{}> = () => {
                   label="แพทย์เฉพาะทาง"
                   type="string"
                   value={office.extradoctor || ''}
-                  onChange={handleChange}
-                  
+                  onChange={handleChange}             
                 >
                   {extradoctors.map(item => {
                     return (
