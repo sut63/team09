@@ -64,7 +64,6 @@ const Office: FC<{}> = () => {
   const [roomnumberError, setRoomnumberError] = React.useState('');
   const [doctoridcardError, setDoctoridcardError] = React.useState('');
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
-  // const [specialdoctors, setSpecialdoctor] = React.useState<EntSpecialdoctor[]>([]);
   const [extradoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
 
 
@@ -106,10 +105,6 @@ const Office: FC<{}> = () => {
     const res = await http.listDepartment({ limit: 10, offset: 0 });
     setDepartment(res);
   };
-  // const getSpecialdoctors = async () => {
-  //   const res = await http.listSpecialdoctor({ limit: 10, offset: 0 });
-  //   setSpecialdoctor(res);
-  // };
   const getExtradoctors = async () => {
     const res = await http.listExtradoctor({ limit: 10, offset: 0 });
     setExtradoctor(res);
@@ -119,7 +114,6 @@ const Office: FC<{}> = () => {
   useEffect(() => {
     getDoctors();
     getDepartments();
-    // getSpecialdoctors();
     getExtradoctors();
   }, []);
 
@@ -175,6 +169,7 @@ const Office: FC<{}> = () => {
     }
   }
   function save() {
+    if ((doctors != null) && (departments != null ) && (extradoctors != null)) {
     const apiUrl = 'http://localhost:8080/api/v1/offices';
     const requestOptions = {
       method: 'POST',
@@ -195,8 +190,8 @@ const Office: FC<{}> = () => {
          checkCaseSaveError(data.error.Name)
           }
       });
-  };
-
+    };
+  }
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -260,6 +255,7 @@ const Office: FC<{}> = () => {
                   type="string"
                   value={office.extradoctor || ''}
                   onChange={handleChange}
+                  
                 >
                   {extradoctors.map(item => {
                     return (
@@ -358,7 +354,7 @@ const Office: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-            <div className={classes.formControl} style={{ marginLeft: 180 }}>
+            <div className={classes.formControl} style={{ marginLeft: 110 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -376,6 +372,12 @@ const Office: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
+             </Button>
+             <Button style={{ marginLeft: 10 }}
+                component={RouterLink} to="/tables"
+                variant="contained"
+                color="secondary">
+                SHOWTABLE
              </Button>
             </div>
           </form>
