@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,8 +13,10 @@ import { DefaultApi } from '../../api/apis';
 import { EntOffice } from '../../api/models/EntOffice';
 import { Content, ContentHeader, Header, Page } from '@backstage/core';
 import { pageTheme } from '@backstage/core';
-import { Link } from '@material-ui/core';
+import { InputBase, Link } from '@material-ui/core';
 import moment from 'moment';
+import SearchIcon from '@material-ui/icons/Search';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,18 +28,60 @@ const useStyles = makeStyles((theme: Theme) =>
     table: {
       minWidth: 650,
     },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.black, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.black, 0.25),
+      },
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(1),
+        width: 'auto',
+      },
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputRoot: {
+      color: 'inherit',
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: '12ch',
+        '&:focus': {
+          width: '20ch',
+        },
+      },
+    },
   }),
 );
+
+
 
 export default function ComponentsTableUser() {
   const classes = useStyles();
   const http = new DefaultApi();
   const [offices, setOffice] = React.useState<EntOffice[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const getOffice = async () => {
-      const res = await http.listOffice({ limit: 20, offset: 0 });
+      const res = await http.listOffice({ limit: 10, offset: 0 });
       setLoading(false);
       setOffice(res);
     };
@@ -49,21 +93,48 @@ export default function ComponentsTableUser() {
     setLoading(true);
   };
 
+  // useEffect(() => {
+  //   setfilterOffice (offices.filter( offices => {
+  //     return offices.edges?.doctor?.name?.includes(search)
+  //   })
+  //   )
+  // },[se])
+
+  const filterOffice = offices.filter( offices => {
+    return offices.edges?.doctor?.name?.includes(search)
+  })
+
   return (
     // <div className={classes.root}>
     <Page theme={pageTheme.website}>
       <Header
         title={`Doctor Information`}
-        subtitle="ประวัติการทำงานของแพทย์"
-      ></Header>
+        subtitle="ประวัติการทำงานของแพทย์">
+      </Header>
       <Content>
-      <ContentHeader title="ประวัติการทำงานของแพทย์">
-        <Link component={RouterLink} to="/history">
-           <Button variant="contained" color="primary">
-           บันทึกประวัติการทำงานของแพทย์
+        <ContentHeader title="ประวัติการทำงานของแพทย์">
+          <div className={classes.search} style={{ marginRight: 10 }}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              style={{ marginRight: 20 }}
+              placeholder="Search…"
+              value = {search} 
+              onChange = {(event) => {setSearch(event.target.value);}}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
+          <Link component={RouterLink} to="/history">
+            <Button variant="contained" color="primary">
+              บันทึกประวัติการทำงานของแพทย์
            </Button>
-         </Link>
-       </ContentHeader>
+          </Link>
+        </ContentHeader>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -75,12 +146,12 @@ export default function ComponentsTableUser() {
                 <TableCell align="center">Officename</TableCell>
                 <TableCell align="center">DoctorIDCard</TableCell>
                 <TableCell align="center">Roomname</TableCell>
-                <TableCell align="center">First</TableCell>
-                <TableCell align="center">Finally</TableCell>
+                <TableCell align="center">Firsttime</TableCell>
+                <TableCell align="center">Finallytime</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {offices.map(item => (
+              {filterOffice.map(item => (
                 <TableRow key={item.id}>
                   <TableCell align="center">{item.id}</TableCell>
                   <TableCell align="center">{item.edges?.doctor?.name}</TableCell>
@@ -94,7 +165,7 @@ export default function ComponentsTableUser() {
                   <TableCell align="center">
                     <Button
                       onClick={() => {
-                       if (item.id === undefined) {
+                        if (item.id === undefined) {
                           return;
                         }
                         deleteOffices(item.id);
