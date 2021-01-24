@@ -20,17 +20,17 @@ type DoctorController struct {
 	router gin.IRouter
 }
 type Doctor struct {
-	Name 		string
-	Age			int
-	Email		string
-	Password 	string
-	Address  	string
+	Name        string
+	Age         int
+	Email       string
+	Password    string
+	Address     string
 	Educational string
-	Phone 		string
-	Title   	int
-	Position 	int
-	Gender 		int 
-	Disease 	int
+	Phone       string
+	Title       int
+	Position    int
+	Gender      int
+	Disease     int
 }
 
 // CreateDoctor handles POST requests for adding doctor entities
@@ -115,13 +115,15 @@ func (ctl *DoctorController) CreateDoctor(c *gin.Context) {
 		SetGender(g).
 		SetDisease(di).
 		Save(context.Background())
+
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
-	
+
 	c.JSON(200, gin.H{
 		"status": true,
 		"data":   d,
