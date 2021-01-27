@@ -13,10 +13,10 @@ import { DefaultApi } from '../../api/apis';
 import { EntOffice } from '../../api/models/EntOffice';
 import { Content, ContentHeader, Header, Page } from '@backstage/core';
 import { pageTheme } from '@backstage/core';
-import { InputBase, Link } from '@material-ui/core';
+import { Link } from '@material-ui/core';
 import moment from 'moment';
 import SearchIcon from '@material-ui/icons/Search';
-
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: '12ch',
+        width: '30ch',
         '&:focus': {
           width: '20ch',
         },
@@ -70,14 +70,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-
 export default function ComponentsTableUser() {
   const classes = useStyles();
   const http = new DefaultApi();
   const [offices, setOffice] = React.useState<EntOffice[]>([]);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = React.useState('');
 
   useEffect(() => {
     const getOffice = async () => {
@@ -93,16 +91,17 @@ export default function ComponentsTableUser() {
     setLoading(true);
   };
 
-  // useEffect(() => {
-  //   setfilterOffice (offices.filter( offices => {
-  //     return offices.edges?.doctor?.name?.includes(search)
-  //   })
-  //   )
-  // },[se])
-
-  const filterOffice = offices.filter( offices => {
+  const filterOffice = offices.filter(offices => {
     return offices.edges?.doctor?.name?.includes(search)
   })
+
+
+  function emptyOffice () : any { 
+    if(filterOffice.length == 0){
+      const officed = <TableRow> <TableCell align="center" colSpan={9}><p>ไม่มีข้อมูลในระบบ</p></TableCell></TableRow>;
+      return officed;
+    }
+  }
 
   return (
     // <div className={classes.root}>
@@ -117,15 +116,13 @@ export default function ComponentsTableUser() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              style={{ marginRight: 20 }}
-              placeholder="Search…"
-              value = {search} 
-              onChange = {(event) => {setSearch(event.target.value);}}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
+            <TextField
+              name="search"
+              className={classes.inputInput}
+              style={{ marginRight: 100 }}
+              placeholder="Search"
+              value={search}
+              onChange={(event) => { setSearch(event.target.value); }}
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
@@ -151,6 +148,9 @@ export default function ComponentsTableUser() {
               </TableRow>
             </TableHead>
             <TableBody>
+
+              {/* ต้องใช้เงื่อนไข check ว่า filterOffice.length == 0 */}
+              {emptyOffice()}
               {filterOffice.map(item => (
                 <TableRow key={item.id}>
                   <TableCell align="center">{item.id}</TableCell>
@@ -175,7 +175,7 @@ export default function ComponentsTableUser() {
                       color="secondary"
                     >
                       Delete
-               </Button>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
