@@ -21,6 +21,8 @@ import { EntDoctor } from '../../api/models/EntDoctor';
 import { DefaultApi } from '../../api/apis';
 import Swal from 'sweetalert2';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
+import { Link as RouterLink } from 'react-router-dom';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -208,12 +210,12 @@ const Schedule: FC<{}> = () => {
             case 'Roomnumber':
                 alertMessage("error", "กรุณากรอกหมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
                 return;
-            
+
             case 'Docterid':
                 alertMessage("error", "กรุณากรอกตัวเลขทั้งหมด 10 ตัว");
                 return;
-                default:
-                    alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ");
+            default:
+                alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ");
                 return;
 
 
@@ -413,6 +415,12 @@ const Schedule: FC<{}> = () => {
 
                         <Button variant="contained" color="primary" onClick={save} style={{ marginLeft: 200 }}>บันทึกข้อมูล</Button>
                         <Button variant="contained" color="secondary" onClick={clear} style={{ marginLeft: 10 }}>ยกเลิก</Button>
+                        <Button style={{ marginLeft: 10 }}
+                            component={RouterLink} to="/scheduletable"
+                            variant="contained"
+                            color="secondary">
+                            SHOWTABLE
+             </Button>
                         <Button variant="contained" color="secondary" onClick={Back} style={{ marginLeft: 10 }}>BACK</Button>
 
                     </form>
