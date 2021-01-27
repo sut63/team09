@@ -85,11 +85,11 @@ const Office: FC<{}> = () => {
     setDoctor(res);
   };
   const getDepartments = async () => {
-    const res = await http.listDepartment({ limit: 10, offset: 0 });
+    const res = await http.listDepartment({ limit: 11, offset: 0 });
     setDepartment(res);
   };
   const getExtradoctors = async () => {
-    const res = await http.listExtradoctor({ limit: 10, offset: 0 });
+    const res = await http.listExtradoctor({ limit: 31, offset: 0 });
     setExtradoctor(res);
   };
   
@@ -107,7 +107,8 @@ const Office: FC<{}> = () => {
     return val.match("^[ก-๏\s]+$");
   }
   const ValidateRoomnumber = (val: string) => {
-    return val.match("[ABC]\\d{4}");
+    const room = /^[ABC]\d{4}/g
+    return room.test(val);
   }
   const ValidateDoctoridcard = (val: string) => {
     return val.length == 10 ? true : false;
