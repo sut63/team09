@@ -39,7 +39,7 @@ func (Schedule) Fields() []ent.Field {
 // Edges of the Schedule.
 func (Schedule) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("docter", Doctor.Type).Ref("schedules").Unique(),
+		edge.From("doctor", Doctor.Type).Ref("schedules").Unique(),
 		edge.From("department", Department.Type).Ref("schedules").Unique(),
 		edge.From("office", Office.Type).Ref("schedules").Unique(),
 	}
