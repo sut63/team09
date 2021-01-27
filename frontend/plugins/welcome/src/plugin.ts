@@ -8,6 +8,9 @@ import Training from './components/Training';
 import Specialdoctor from './components/Specialdoctor';
 import Schedule from './components/Schedule';
 import Detail from './components/Detail';
+import ScheduleTable from './components/ScheduleTable';
+
+
 
 export const plugin = createPlugin({
   id: 'welcome',
@@ -21,6 +24,8 @@ export const plugin = createPlugin({
     router.registerRoute('/specialdoctor', Specialdoctor);
     router.registerRoute('/schedule', Schedule);
     router.registerRoute('/detail', Detail);
+    router.registerRoute('/scheduletable', ScheduleTable);
+
 
   },
 });
