@@ -17,7 +17,7 @@ type Doctor struct {
 func (Doctor) Fields() []ent.Field {
     return []ent.Field{
         field.String("name").Validate(func(s string) error {
-            match, _ := regexp.MatchString("^[ก-๏]+$",s)
+            match, _ := regexp.MatchString("^[ก-๏\\s]+$",s)
                 if !match {
                     return errors.New("กรุณากรอกชื่อเป็นภาษาไทยเท่านั้น")
                 }
