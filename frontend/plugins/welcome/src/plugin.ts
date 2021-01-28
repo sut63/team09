@@ -9,6 +9,7 @@ import Specialdoctor from './components/Specialdoctor';
 import Schedule from './components/Schedule';
 import Detail from './components/Detail';
 import ScheduleTable from './components/ScheduleTable';
+import WorkhistoryTable from './components/WorkhistoryTable';
 
 
 
@@ -25,7 +26,8 @@ export const plugin = createPlugin({
     router.registerRoute('/schedule', Schedule);
     router.registerRoute('/detail', Detail);
     router.registerRoute('/scheduletable', ScheduleTable);
-
+    router.registerRoute('/workhistorytables', WorkhistoryTable);
+    
 
   },
 });
