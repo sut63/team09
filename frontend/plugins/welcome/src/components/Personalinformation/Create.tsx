@@ -484,7 +484,13 @@ const Doctor: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 CLEAR
-             </Button>              
+             </Button>        
+             <Button style={{ marginLeft: 10 }}
+                component={RouterLink} to="/personalinformationtables"
+                variant="contained"
+                color="secondary">
+                SHOWTABLE
+             </Button>      
             </div>
           </form>
         </div>
