@@ -11,6 +11,7 @@ import Detail from './components/Detail';
 import ScheduleTable from './components/ScheduleTable';
 import WorkhistoryTable from './components/WorkhistoryTable';
 import PersonalinformationTable from './components/PersonalinformationTable';
+import TrainingTables from './components/TrainingTables';
 
 
 export const plugin = createPlugin({
@@ -28,6 +29,7 @@ export const plugin = createPlugin({
     router.registerRoute('/scheduletable', ScheduleTable);
     router.registerRoute('/workhistorytables', WorkhistoryTable);
     router.registerRoute('/personalinformationtables', PersonalinformationTable);
+    router.registerRoute('/trainingTables', TrainingTables);
 
   },
 });
