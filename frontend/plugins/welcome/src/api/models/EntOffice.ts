@@ -39,6 +39,12 @@ export interface EntOffice {
      */
     addedTime2?: string;
     /**
+     * Doctoridcard holds the value of the "doctoridcard" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    doctoridcard?: string;
+    /**
      * 
      * @type {EntOfficeEdges}
      * @memberof EntOffice
@@ -56,6 +62,12 @@ export interface EntOffice {
      * @memberof EntOffice
      */
     officename?: string;
+    /**
+     * Roomnumber holds the value of the "roomnumber" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    roomnumber?: string;
     /**
      * 
      * @type {number}
@@ -76,9 +88,11 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         
         'addedTime1': !exists(json, 'added_time1') ? undefined : json['added_time1'],
         'addedTime2': !exists(json, 'added_time2') ? undefined : json['added_time2'],
+        'doctoridcard': !exists(json, 'doctoridcard') ? undefined : json['doctoridcard'],
         'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
+        'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'specialdoctorId': !exists(json, 'specialdoctor_id') ? undefined : json['specialdoctor_id'],
     };
 }
@@ -94,9 +108,11 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
         
         'added_time1': value.addedTime1,
         'added_time2': value.addedTime2,
+        'doctoridcard': value.doctoridcard,
         'edges': EntOfficeEdgesToJSON(value.edges),
         'id': value.id,
         'officename': value.officename,
+        'roomnumber': value.roomnumber,
         'specialdoctor_id': value.specialdoctorId,
     };
 }
