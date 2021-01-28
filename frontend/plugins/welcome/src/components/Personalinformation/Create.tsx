@@ -135,7 +135,7 @@ const Doctor: FC<{}> = () => {
     return re.test(email);
   }
   const Validatename = (val: string) => {
-    return val.match("^[ก-๏]+$");
+    return val.match("^[ก-๏\\s]+$");
   }
   const Validatephone = (val: string) => {
     return val.match("^[0-9]{10}$");
