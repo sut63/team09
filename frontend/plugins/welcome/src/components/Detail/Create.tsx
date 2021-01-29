@@ -120,7 +120,7 @@ const Detail: FC<{}> = () => {
   }
 
   const Validateexplain = (val: string) => {
-    return val.match("^[ก-๏\s]+$");
+    return val.match("^[ก-๏\\s]+$");
   }
   const Validatephone = (val: string) => {
     return val.match("^[0-9]{10}$");
@@ -328,7 +328,7 @@ const Detail: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-            <div className={classes.formControl} style={{ marginLeft: 180 }}>
+            <div className={classes.formControl} style={{ marginLeft: 120 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -346,6 +346,12 @@ const Detail: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
+             </Button>
+             <Button style={{ marginLeft: 10 }}
+                component={RouterLink} to="/detailtable"
+                variant="contained"
+                color="secondary">
+                SHOWTABLE
              </Button>
             </div>
           </form>
