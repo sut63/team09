@@ -18,7 +18,7 @@ type Detail struct {
 func (Detail) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("explain").Validate(func(s string) error {
-			match, _ := regexp.MatchString("^[ก-๏]+$", s)
+			match, _ := regexp.MatchString("^[ก-๏\\s]+$", s)
 			if !match {
 				return errors.New("กรอกรายละเอียดเป็นภาษาไทยเท่านั้น")
 			}
