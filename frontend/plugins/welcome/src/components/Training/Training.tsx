@@ -368,7 +368,8 @@ const Training: FC<{}> = () => {
             </Grid>
 
 
-            <div className={classes.formControl} style={{ marginLeft: 200 }}>
+            <Grid item xs={6}>
+            <div className={classes.formControl} style={{ marginLeft: 110 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -386,9 +387,19 @@ const Training: FC<{}> = () => {
                 variant="contained">
                 BACK
              </Button>
+             <Button style={{ marginLeft: 10 }}
+                component={RouterLink} to="/trainingTables"
+                variant="contained">
+                แสดงบันทึกข้อมูล
+             </Button>
+             
             </div>
+            </Grid>
+            
           </form>
         </div>
+
+
       </Content>
 
     </div>
