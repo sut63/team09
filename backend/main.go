@@ -70,6 +70,16 @@ type Department struct {
 	Name string
 }
 
+type Specialdoctor struct {
+	Specialdoctor []Specialdoctor
+}
+
+type Specialdoctors struct {
+	Other string
+	Roomnumber string
+	Doctorid string
+}
+
 type Missions struct {
 	Mission []Mission
 }
@@ -95,7 +105,7 @@ type Extradoctor struct {
 }
 
 
-// @title SUT SA Example API
+// @title SUT SA Example API Playlist Vidoe
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
 // @termsOfService http://swagger.io/terms/
@@ -103,6 +113,7 @@ type Extradoctor struct {
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
+
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -136,18 +147,18 @@ type Extradoctor struct {
 // @authorizationUrl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
 func main() {
-	router := gin.Default()
-	router.Use(cors.Default())
+    router := gin.Default()
+    router.Use(cors.Default())
 
-	client, err := ent.Open("sqlite3", "file:ent.db?cache=shared&_fk=1")
-	if err != nil {
-		log.Fatalf("fail to open sqlite3: %v", err)
-	}
-	defer client.Close()
+    client, err := ent.Open("sqlite3", "file:user.db?cache=shared&_fk=1")
+    if err != nil {
+        log.Fatalf("fail to open sqlite3: %v", err)
+    }
+    defer client.Close()
 
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
+    if err := client.Schema.Create(context.Background()); err != nil {
+        log.Fatalf("failed creating schema resources: %v", err)
+    }
 
 	v1 := router.Group("/api/v1")
 	controllers.NewOfficeController(v1, client)
@@ -163,7 +174,7 @@ func main() {
 	controllers.NewMissionController(v1, client)
 	controllers.NewExtradoctorController(v1, client)
 	controllers.NewDetailController(v1, client)
-	
+	controllers.NewSpecialdoctorController(v1, client)
 
 	//setcourse
 	courses := Courses{
