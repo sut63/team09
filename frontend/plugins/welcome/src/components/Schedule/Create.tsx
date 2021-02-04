@@ -162,7 +162,7 @@ const Schedule: FC<{}> = () => {
     }
 
     const ValidateActivity = (val: string) => {
-        return val.match("^[ก-๏]+$");
+        return val.match("^[ก-๏\\s]+$");
     }
 
     const ValidateRoomnumber = (val: string) => {
