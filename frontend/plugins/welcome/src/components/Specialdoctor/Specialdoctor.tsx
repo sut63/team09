@@ -41,10 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 interface specialdoctor {
-  extradoctor: number;
-  doctor: number;
-  other: string;
-  department: number;
+  Extradoctor: number;
+  Doctor: number;
+  Department: number;
+  Doctorid: string;
+  Roomnumber: string;
+  Other: string;
 }
 
 const Specialdoctor: FC<{}> = () => {
@@ -53,6 +55,9 @@ const Specialdoctor: FC<{}> = () => {
   const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
   const [extradoctors, setExtradoctor] = React.useState<EntExtradoctor[]>([]);
+  const [DoctoridError, setDoctoridError] = React.useState('');
+  const [RoomnumberError, setRoomnumberError] = React.useState('');
+  const [otherError, setOtherError] = React.useState('');
 
   const [specialdoctor, setSpecialdoctor] = React.useState<
     Partial<specialdoctor>>({});
@@ -60,22 +65,28 @@ const Specialdoctor: FC<{}> = () => {
   const Toast = Swal.mixin({
     position: 'center',
     showConfirmButton: true,
-    timer: 1500
+    timer: 8000
   });
   //set data object path
   const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,) => {
+    event: React.ChangeEvent<{ name?: string; value: any }>,) => {
     const name = event.target.name as keyof typeof Specialdoctor;
     const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(name, validateValue)
     setSpecialdoctor({ ...specialdoctor, [name]: value });
+    console.log(specialdoctor);
   };
-  const handleChange2 = (
+
+
+  /*const handleChange2 = (
     event: React.ChangeEvent<{ name: string; value: number }>,
   ) => {
     const name = event.target.name as keyof typeof Specialdoctor;
     const { value } = event.target;
     setSpecialdoctor({ ...specialdoctor, [name]: +value });
-  };
+  };*/
+
   console.log(specialdoctor);
   const getDoctors = async () => {
     const res = await http.listDoctor({ limit: 10, offset: 0 });
@@ -100,8 +111,6 @@ const Specialdoctor: FC<{}> = () => {
     getDoctors();
     getDepartments();
     getExtradoctors();
-    getDoctors();
-    getDepartments();
 
   }, []);
 
@@ -109,18 +118,59 @@ const Specialdoctor: FC<{}> = () => {
     setSpecialdoctor({});
   }
 
-  function save() {
-    if (specialdoctor.department == null || specialdoctor.doctor == null || specialdoctor.other == null || specialdoctor.extradoctor == null) {
-      Toast.fire({
-        title: 'บันทึกข้อมูลไม่สำเร็จ',
-        icon: 'error',
-      });
-    } else {
-      Toast.fire({
-        title: 'บันทึกข้อมูลสำเร็จ',
-        icon: 'success',
-      });
+  const ValidateOther = (val: string) => {
+    return val.match("^[ก-๏\s]+$");
+  }
+  const ValidateRoomnumber= (val: string) => {
+    return val.match("[A-Z\s]\\d{4}");
+  }
+  const ValidateDoctorid = (val: string) => {
+    return val.length == 10 ? true : false;
+  }
+
+  const checkPattern = (id: string, value: string) => {
+    switch(id) {
+      case 'Other' :
+        ValidateOther(value) ? setOtherError('') : setOtherError("กรุณากรอกข้อมูลเฉพาะภาษาไทย");
+        return;
+        case 'Roomnumber' :
+          ValidateRoomnumber(value) ? setRoomnumberError('') : setRoomnumberError("หมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
+        return;
+        case 'Doctorid' :
+          ValidateDoctorid(value) ? setDoctoridError('') : setDoctoridError("กรอกตัวเลขทั้งหมด 10 ตัวห้ามกรอกตัวอักษร");
+        return;
+        default:
+          return;
     }
+  }
+
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+        case 'Other':
+          alertMessage("error","กรุณากรอกข้อมูลเฉพาะภาษาไทย");
+          return;
+        case 'Roomnumber':
+          alertMessage("error","หมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
+          return;
+        case 'Doctorid':
+          alertMessage("error","กรอกตัวเลขทั้งหมด 10 ตัวห้ามกรอกตัวอักษร ");
+          return;
+        default:
+          alertMessage("error","บันทึกข้อมูลไม่สำเร็จ")
+          return;
+        
+    }
+  }
+
+  function save() {
+    console.log(specialdoctor);
     const apiUrl = 'http://localhost:8080/api/v1/specialdoctors';
     const requestOptions = {
       method: 'POST',
@@ -139,26 +189,24 @@ const Specialdoctor: FC<{}> = () => {
             icon: 'success',
           });
         } else {
-          Toast.fire({
-            title: 'บันทึกข้อมูลไม่สำเร็จ',
-            icon: 'error',
-          });
-        }
+         checkCaseSaveError(data.error.Name)
+          }
       });
-  }
+  };
+
   return (
-    <div className={classes.root}>
+     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             ระบบข้อมูลแพทย์
             </Typography>
-            <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
+            <Button color="inherit" href="/" startIcon={<ExitToAppRoundedIcon />}>Logout</Button>
         </Toolbar>
       </AppBar>
       <Content className={classes.withoutLabel}>
         <Typography variant="h5"
-          className={classes.formControl} style={{ marginLeft: 100 }}>
+          className={classes.formControl} style={{ marginLeft: 15https://github.com/sut63/team09.git0 }}>
           บันทึกข้อมูลแพทย์เฉพาะทาง
         </Typography>
         <div className={classes.root}>
@@ -167,11 +215,11 @@ const Specialdoctor: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>ชื่อ-นามสกุล</InputLabel>
                 <Select
-                  name="doctor"
+                  name="Doctor"
                   label="ชื่อ-นามสกุล"
                   type="string"
 
-                  value={specialdoctor.doctor || ''}
+                  value={specialdoctor.Doctor || ''}
                   onChange={handleChange}
                 >
                   {doctors.map(item => {
@@ -186,10 +234,10 @@ const Specialdoctor: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>แผนก</InputLabel>
                 <Select
-                  name="department"
+                  name="Department"
                   type="string"
                   label="แผนก"
-                  value={specialdoctor.department || ''}
+                  value={specialdoctor.Department || ''}
                   onChange={handleChange}
                 >
                   {departments.map(item => {
@@ -204,10 +252,10 @@ const Specialdoctor: FC<{}> = () => {
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>สาขาเฉพาะทาง</InputLabel>
                 <Select
-                  name="extradoctor"
+                  name="Extradoctor"
                   label="สาขาเฉพาะทาง"
                   type="string"
-                  value={specialdoctor.extradoctor || ''}
+                  value={specialdoctor.Extradoctor || ''}
                   onChange={handleChange}
                 >
                   {extradoctors.map(item => {
@@ -225,16 +273,51 @@ const Specialdoctor: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
               >
                 <TextField
-                  name="other"
-                  label="หมายเหตุ"
-                  type="string"
+                  error = {DoctoridError ? true : false}
+                  name="Doctorid"
+                  label="เลขบัตรประจำตัวแพทย์"
                   variant="outlined"
-                  value={specialdoctor.other || ''}
+                  value={specialdoctor.Doctorid || ''}
+                  helperText = {DoctoridError}
                   onChange={handleChange}
                 />
               </FormControl>
             </Grid>
-            <div className={classes.formControl} style={{ marginLeft: 180 }}>
+            <Grid item xs={6}>
+              <FormControl
+                fullWidth
+                className={classes.formControl}
+                style={{ marginLeft: 100 }}
+              >
+                <TextField
+                  error = {RoomnumberError ? true : false}
+                  name="Roomnumber"
+                  label="หมายเลขห้องทำงาน"
+                  variant="outlined"
+                  value={specialdoctor.Roomnumber || ''}
+                  helperText = {RoomnumberError}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl
+                fullWidth
+                className={classes.formControl}
+                style={{ marginLeft: 100 }}
+              >
+                <TextField
+                  error = {otherError ? true : false}
+                  name="Other"
+                  label="หมายเหตุ"
+                  variant="outlined"
+                  value={specialdoctor.Other || ''}
+                  helperText = {otherError}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            </Grid><br></br><br></br>
+            <div className={classes.formControl} style={{ marginLeft: 120 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -252,6 +335,12 @@ const Specialdoctor: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
+             </Button>
+             <Button style={{ marginLeft: 10 }}
+                component={RouterLink} to="/specialdoctortable"
+                variant="contained"
+                color="secondary">
+                ดูข้อมูลที่บันทึก
              </Button>
             </div>
           </form>
