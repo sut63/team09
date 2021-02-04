@@ -111,7 +111,9 @@ export default function ComponentsTableUser() {
       <Header
         title={`Doctor Information`}
         subtitle="ข้อมูลส่วนตัวแพทย์"
-      ></Header>
+        >
+        <Button color="secondary" variant="contained" href="/home">BACK</Button>
+        </Header>
       <Content>
       <ContentHeader title="ข้อมูลส่วนตัวแพทย์">
       <div className={classes.search} style={{ marginRight: 10 }}>

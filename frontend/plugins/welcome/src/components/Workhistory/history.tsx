@@ -334,7 +334,7 @@ const Office: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-            <div className={classes.formControl} style={{ marginLeft: 110 }}>
+            <div className={classes.formControl} style={{ marginLeft: 180 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -352,12 +352,6 @@ const Office: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
-             </Button>
-             <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/tables"
-                variant="contained"
-                color="secondary">
-                SHOWTABLE
              </Button>
             </div>
           </form>

@@ -64,9 +64,9 @@ export function EntTrainingEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'course': !exists(json, 'course') ? undefined : EntCourseFromJSON(json['course']),
-        'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
-        'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
+        'course': !exists(json, 'Course') ? undefined : EntCourseFromJSON(json['Course']),
+        'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
+        'doctor': !exists(json, 'Doctor') ? undefined : EntDoctorFromJSON(json['Doctor']),
     };
 }
 

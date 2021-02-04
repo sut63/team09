@@ -1596,15 +1596,15 @@ func (c *ScheduleClient) GetX(ctx context.Context, id int) *Schedule {
 	return s
 }
 
-// QueryDocter queries the docter edge of a Schedule.
-func (c *ScheduleClient) QueryDocter(s *Schedule) *DoctorQuery {
+// QueryDoctor queries the doctor edge of a Schedule.
+func (c *ScheduleClient) QueryDoctor(s *Schedule) *DoctorQuery {
 	query := &DoctorQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(schedule.Table, schedule.FieldID, id),
 			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DocterTable, schedule.DocterColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DoctorTable, schedule.DoctorColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil

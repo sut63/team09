@@ -100,6 +100,20 @@ func Officename(v string) predicate.Office {
 	})
 }
 
+// Roomnumber applies equality check predicate on the "roomnumber" field. It's identical to RoomnumberEQ.
+func Roomnumber(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// Doctoridcard applies equality check predicate on the "doctoridcard" field. It's identical to DoctoridcardEQ.
+func Doctoridcard(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
 // AddedTime1 applies equality check predicate on the "added_time1" field. It's identical to AddedTime1EQ.
 func AddedTime1(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
@@ -222,6 +236,228 @@ func OfficenameEqualFold(v string) predicate.Office {
 func OfficenameContainsFold(v string) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldOfficename), v))
+	})
+}
+
+// RoomnumberEQ applies the EQ predicate on the "roomnumber" field.
+func RoomnumberEQ(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberNEQ applies the NEQ predicate on the "roomnumber" field.
+func RoomnumberNEQ(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberIn applies the In predicate on the "roomnumber" field.
+func RoomnumberIn(vs ...string) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberNotIn applies the NotIn predicate on the "roomnumber" field.
+func RoomnumberNotIn(vs ...string) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberGT applies the GT predicate on the "roomnumber" field.
+func RoomnumberGT(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberGTE applies the GTE predicate on the "roomnumber" field.
+func RoomnumberGTE(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLT applies the LT predicate on the "roomnumber" field.
+func RoomnumberLT(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLTE applies the LTE predicate on the "roomnumber" field.
+func RoomnumberLTE(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContains applies the Contains predicate on the "roomnumber" field.
+func RoomnumberContains(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasPrefix applies the HasPrefix predicate on the "roomnumber" field.
+func RoomnumberHasPrefix(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasSuffix applies the HasSuffix predicate on the "roomnumber" field.
+func RoomnumberHasSuffix(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberEqualFold applies the EqualFold predicate on the "roomnumber" field.
+func RoomnumberEqualFold(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContainsFold applies the ContainsFold predicate on the "roomnumber" field.
+func RoomnumberContainsFold(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// DoctoridcardEQ applies the EQ predicate on the "doctoridcard" field.
+func DoctoridcardEQ(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardNEQ applies the NEQ predicate on the "doctoridcard" field.
+func DoctoridcardNEQ(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardIn applies the In predicate on the "doctoridcard" field.
+func DoctoridcardIn(vs ...string) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDoctoridcard), v...))
+	})
+}
+
+// DoctoridcardNotIn applies the NotIn predicate on the "doctoridcard" field.
+func DoctoridcardNotIn(vs ...string) predicate.Office {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Office(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDoctoridcard), v...))
+	})
+}
+
+// DoctoridcardGT applies the GT predicate on the "doctoridcard" field.
+func DoctoridcardGT(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardGTE applies the GTE predicate on the "doctoridcard" field.
+func DoctoridcardGTE(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardLT applies the LT predicate on the "doctoridcard" field.
+func DoctoridcardLT(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardLTE applies the LTE predicate on the "doctoridcard" field.
+func DoctoridcardLTE(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardContains applies the Contains predicate on the "doctoridcard" field.
+func DoctoridcardContains(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardHasPrefix applies the HasPrefix predicate on the "doctoridcard" field.
+func DoctoridcardHasPrefix(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardHasSuffix applies the HasSuffix predicate on the "doctoridcard" field.
+func DoctoridcardHasSuffix(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardEqualFold applies the EqualFold predicate on the "doctoridcard" field.
+func DoctoridcardEqualFold(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardContainsFold applies the ContainsFold predicate on the "doctoridcard" field.
+func DoctoridcardContainsFold(v string) predicate.Office {
+	return predicate.Office(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDoctoridcard), v))
 	})
 }
 

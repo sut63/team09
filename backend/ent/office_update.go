@@ -38,6 +38,18 @@ func (ou *OfficeUpdate) SetOfficename(s string) *OfficeUpdate {
 	return ou
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (ou *OfficeUpdate) SetRoomnumber(s string) *OfficeUpdate {
+	ou.mutation.SetRoomnumber(s)
+	return ou
+}
+
+// SetDoctoridcard sets the doctoridcard field.
+func (ou *OfficeUpdate) SetDoctoridcard(s string) *OfficeUpdate {
+	ou.mutation.SetDoctoridcard(s)
+	return ou
+}
+
 // SetAddedTime1 sets the added_time1 field.
 func (ou *OfficeUpdate) SetAddedTime1(t time.Time) *OfficeUpdate {
 	ou.mutation.SetAddedTime1(t)
@@ -167,6 +179,16 @@ func (ou *OfficeUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "officename", err: fmt.Errorf("ent: validator failed for field \"officename\": %w", err)}
 		}
 	}
+	if v, ok := ou.mutation.Roomnumber(); ok {
+		if err := office.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ou.mutation.Doctoridcard(); ok {
+		if err := office.DoctoridcardValidator(v); err != nil {
+			return 0, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -240,6 +262,20 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: office.FieldOfficename,
+		})
+	}
+	if value, ok := ou.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldRoomnumber,
+		})
+	}
+	if value, ok := ou.mutation.Doctoridcard(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldDoctoridcard,
 		})
 	}
 	if value, ok := ou.mutation.AddedTime1(); ok {
@@ -423,6 +459,18 @@ func (ouo *OfficeUpdateOne) SetOfficename(s string) *OfficeUpdateOne {
 	return ouo
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (ouo *OfficeUpdateOne) SetRoomnumber(s string) *OfficeUpdateOne {
+	ouo.mutation.SetRoomnumber(s)
+	return ouo
+}
+
+// SetDoctoridcard sets the doctoridcard field.
+func (ouo *OfficeUpdateOne) SetDoctoridcard(s string) *OfficeUpdateOne {
+	ouo.mutation.SetDoctoridcard(s)
+	return ouo
+}
+
 // SetAddedTime1 sets the added_time1 field.
 func (ouo *OfficeUpdateOne) SetAddedTime1(t time.Time) *OfficeUpdateOne {
 	ouo.mutation.SetAddedTime1(t)
@@ -552,6 +600,16 @@ func (ouo *OfficeUpdateOne) Save(ctx context.Context) (*Office, error) {
 			return nil, &ValidationError{Name: "officename", err: fmt.Errorf("ent: validator failed for field \"officename\": %w", err)}
 		}
 	}
+	if v, ok := ouo.mutation.Roomnumber(); ok {
+		if err := office.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ouo.mutation.Doctoridcard(); ok {
+		if err := office.DoctoridcardValidator(v); err != nil {
+			return nil, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -623,6 +681,20 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: office.FieldOfficename,
+		})
+	}
+	if value, ok := ouo.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldRoomnumber,
+		})
+	}
+	if value, ok := ouo.mutation.Doctoridcard(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldDoctoridcard,
 		})
 	}
 	if value, ok := ouo.mutation.AddedTime1(); ok {

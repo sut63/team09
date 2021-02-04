@@ -31,9 +31,21 @@ func (su *ScheduleUpdate) Where(ps ...predicate.Schedule) *ScheduleUpdate {
 	return su
 }
 
-// SetActivity sets the activity field.
+// SetActivity sets the Activity field.
 func (su *ScheduleUpdate) SetActivity(s string) *ScheduleUpdate {
 	su.mutation.SetActivity(s)
+	return su
+}
+
+// SetRoomnumber sets the Roomnumber field.
+func (su *ScheduleUpdate) SetRoomnumber(s string) *ScheduleUpdate {
+	su.mutation.SetRoomnumber(s)
+	return su
+}
+
+// SetDocterid sets the Docterid field.
+func (su *ScheduleUpdate) SetDocterid(s string) *ScheduleUpdate {
+	su.mutation.SetDocterid(s)
 	return su
 }
 
@@ -43,23 +55,23 @@ func (su *ScheduleUpdate) SetAddedTime(t time.Time) *ScheduleUpdate {
 	return su
 }
 
-// SetDocterID sets the docter edge to Doctor by id.
-func (su *ScheduleUpdate) SetDocterID(id int) *ScheduleUpdate {
-	su.mutation.SetDocterID(id)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (su *ScheduleUpdate) SetDoctorID(id int) *ScheduleUpdate {
+	su.mutation.SetDoctorID(id)
 	return su
 }
 
-// SetNillableDocterID sets the docter edge to Doctor by id if the given value is not nil.
-func (su *ScheduleUpdate) SetNillableDocterID(id *int) *ScheduleUpdate {
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (su *ScheduleUpdate) SetNillableDoctorID(id *int) *ScheduleUpdate {
 	if id != nil {
-		su = su.SetDocterID(*id)
+		su = su.SetDoctorID(*id)
 	}
 	return su
 }
 
-// SetDocter sets the docter edge to Doctor.
-func (su *ScheduleUpdate) SetDocter(d *Doctor) *ScheduleUpdate {
-	return su.SetDocterID(d.ID)
+// SetDoctor sets the doctor edge to Doctor.
+func (su *ScheduleUpdate) SetDoctor(d *Doctor) *ScheduleUpdate {
+	return su.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -105,9 +117,9 @@ func (su *ScheduleUpdate) Mutation() *ScheduleMutation {
 	return su.mutation
 }
 
-// ClearDocter clears the docter edge to Doctor.
-func (su *ScheduleUpdate) ClearDocter() *ScheduleUpdate {
-	su.mutation.ClearDocter()
+// ClearDoctor clears the doctor edge to Doctor.
+func (su *ScheduleUpdate) ClearDoctor() *ScheduleUpdate {
+	su.mutation.ClearDoctor()
 	return su
 }
 
@@ -127,7 +139,17 @@ func (su *ScheduleUpdate) ClearOffice() *ScheduleUpdate {
 func (su *ScheduleUpdate) Save(ctx context.Context) (int, error) {
 	if v, ok := su.mutation.Activity(); ok {
 		if err := schedule.ActivityValidator(v); err != nil {
-			return 0, &ValidationError{Name: "activity", err: fmt.Errorf("ent: validator failed for field \"activity\": %w", err)}
+			return 0, &ValidationError{Name: "Activity", err: fmt.Errorf("ent: validator failed for field \"Activity\": %w", err)}
+		}
+	}
+	if v, ok := su.mutation.Roomnumber(); ok {
+		if err := schedule.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := su.mutation.Docterid(); ok {
+		if err := schedule.DocteridValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Docterid", err: fmt.Errorf("ent: validator failed for field \"Docterid\": %w", err)}
 		}
 	}
 
@@ -205,6 +227,20 @@ func (su *ScheduleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: schedule.FieldActivity,
 		})
 	}
+	if value, ok := su.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldRoomnumber,
+		})
+	}
+	if value, ok := su.mutation.Docterid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldDocterid,
+		})
+	}
 	if value, ok := su.mutation.AddedTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -212,12 +248,12 @@ func (su *ScheduleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: schedule.FieldAddedTime,
 		})
 	}
-	if su.mutation.DocterCleared() {
+	if su.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   schedule.DocterTable,
-			Columns: []string{schedule.DocterColumn},
+			Table:   schedule.DoctorTable,
+			Columns: []string{schedule.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -228,12 +264,12 @@ func (su *ScheduleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := su.mutation.DocterIDs(); len(nodes) > 0 {
+	if nodes := su.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   schedule.DocterTable,
-			Columns: []string{schedule.DocterColumn},
+			Table:   schedule.DoctorTable,
+			Columns: []string{schedule.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -335,9 +371,21 @@ type ScheduleUpdateOne struct {
 	mutation *ScheduleMutation
 }
 
-// SetActivity sets the activity field.
+// SetActivity sets the Activity field.
 func (suo *ScheduleUpdateOne) SetActivity(s string) *ScheduleUpdateOne {
 	suo.mutation.SetActivity(s)
+	return suo
+}
+
+// SetRoomnumber sets the Roomnumber field.
+func (suo *ScheduleUpdateOne) SetRoomnumber(s string) *ScheduleUpdateOne {
+	suo.mutation.SetRoomnumber(s)
+	return suo
+}
+
+// SetDocterid sets the Docterid field.
+func (suo *ScheduleUpdateOne) SetDocterid(s string) *ScheduleUpdateOne {
+	suo.mutation.SetDocterid(s)
 	return suo
 }
 
@@ -347,23 +395,23 @@ func (suo *ScheduleUpdateOne) SetAddedTime(t time.Time) *ScheduleUpdateOne {
 	return suo
 }
 
-// SetDocterID sets the docter edge to Doctor by id.
-func (suo *ScheduleUpdateOne) SetDocterID(id int) *ScheduleUpdateOne {
-	suo.mutation.SetDocterID(id)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (suo *ScheduleUpdateOne) SetDoctorID(id int) *ScheduleUpdateOne {
+	suo.mutation.SetDoctorID(id)
 	return suo
 }
 
-// SetNillableDocterID sets the docter edge to Doctor by id if the given value is not nil.
-func (suo *ScheduleUpdateOne) SetNillableDocterID(id *int) *ScheduleUpdateOne {
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (suo *ScheduleUpdateOne) SetNillableDoctorID(id *int) *ScheduleUpdateOne {
 	if id != nil {
-		suo = suo.SetDocterID(*id)
+		suo = suo.SetDoctorID(*id)
 	}
 	return suo
 }
 
-// SetDocter sets the docter edge to Doctor.
-func (suo *ScheduleUpdateOne) SetDocter(d *Doctor) *ScheduleUpdateOne {
-	return suo.SetDocterID(d.ID)
+// SetDoctor sets the doctor edge to Doctor.
+func (suo *ScheduleUpdateOne) SetDoctor(d *Doctor) *ScheduleUpdateOne {
+	return suo.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -409,9 +457,9 @@ func (suo *ScheduleUpdateOne) Mutation() *ScheduleMutation {
 	return suo.mutation
 }
 
-// ClearDocter clears the docter edge to Doctor.
-func (suo *ScheduleUpdateOne) ClearDocter() *ScheduleUpdateOne {
-	suo.mutation.ClearDocter()
+// ClearDoctor clears the doctor edge to Doctor.
+func (suo *ScheduleUpdateOne) ClearDoctor() *ScheduleUpdateOne {
+	suo.mutation.ClearDoctor()
 	return suo
 }
 
@@ -431,7 +479,17 @@ func (suo *ScheduleUpdateOne) ClearOffice() *ScheduleUpdateOne {
 func (suo *ScheduleUpdateOne) Save(ctx context.Context) (*Schedule, error) {
 	if v, ok := suo.mutation.Activity(); ok {
 		if err := schedule.ActivityValidator(v); err != nil {
-			return nil, &ValidationError{Name: "activity", err: fmt.Errorf("ent: validator failed for field \"activity\": %w", err)}
+			return nil, &ValidationError{Name: "Activity", err: fmt.Errorf("ent: validator failed for field \"Activity\": %w", err)}
+		}
+	}
+	if v, ok := suo.mutation.Roomnumber(); ok {
+		if err := schedule.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := suo.mutation.Docterid(); ok {
+		if err := schedule.DocteridValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Docterid", err: fmt.Errorf("ent: validator failed for field \"Docterid\": %w", err)}
 		}
 	}
 
@@ -507,6 +565,20 @@ func (suo *ScheduleUpdateOne) sqlSave(ctx context.Context) (s *Schedule, err err
 			Column: schedule.FieldActivity,
 		})
 	}
+	if value, ok := suo.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldRoomnumber,
+		})
+	}
+	if value, ok := suo.mutation.Docterid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldDocterid,
+		})
+	}
 	if value, ok := suo.mutation.AddedTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -514,12 +586,12 @@ func (suo *ScheduleUpdateOne) sqlSave(ctx context.Context) (s *Schedule, err err
 			Column: schedule.FieldAddedTime,
 		})
 	}
-	if suo.mutation.DocterCleared() {
+	if suo.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   schedule.DocterTable,
-			Columns: []string{schedule.DocterColumn},
+			Table:   schedule.DoctorTable,
+			Columns: []string{schedule.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -530,12 +602,12 @@ func (suo *ScheduleUpdateOne) sqlSave(ctx context.Context) (s *Schedule, err err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := suo.mutation.DocterIDs(); len(nodes) > 0 {
+	if nodes := suo.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   schedule.DocterTable,
-			Columns: []string{schedule.DocterColumn},
+			Table:   schedule.DoctorTable,
+			Columns: []string{schedule.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

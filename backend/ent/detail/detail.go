@@ -9,6 +9,10 @@ const (
 	FieldID = "id"
 	// FieldExplain holds the string denoting the explain field in the database.
 	FieldExplain = "explain"
+	// FieldPhone holds the string denoting the phone field in the database.
+	FieldPhone = "phone"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 
 	// EdgeCourse holds the string denoting the course edge name in mutations.
 	EdgeCourse = "course"
@@ -46,6 +50,8 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldExplain,
+	FieldPhone,
+	FieldEmail,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Detail type.
@@ -58,4 +64,8 @@ var ForeignKeys = []string{
 var (
 	// ExplainValidator is a validator for the "explain" field. It is called by the builders before save.
 	ExplainValidator func(string) error
+	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	PhoneValidator func(string) error
+	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	EmailValidator func(string) error
 )

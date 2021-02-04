@@ -794,13 +794,13 @@ func (dq *DoctorQuery) sqlAll(ctx context.Context) ([]*Doctor, error) {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.schedule_id
+			fk := n.doctor_id
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "schedule_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "doctor_id" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Schedules = append(node.Edges.Schedules, n)
 		}

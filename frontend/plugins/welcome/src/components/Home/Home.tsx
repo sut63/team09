@@ -29,83 +29,116 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
- 
+
 })
 );
 
 const Homepage: FC<{}> = () => {
   const classes = useStyles();
 
-  
+
   return (
     <div className={classes.root}>
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          ระบบข้อมูลแพทย์
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            ระบบข้อมูลแพทย์
           </Typography>
-        <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
-      </Toolbar>
-    </AppBar>
+          <Button color="inherit" component={RouterLink} to="/" startIcon={<ExitToAppRoundedIcon />}> Logout </Button>
+        </Toolbar>
+      </AppBar>
 
-    <Content>
-        <ContentHeader title="ระบบข้อมูลของแพทย์"> </ContentHeader>
+      <Content>
+        <ContentHeader title="ระบบข้อมูลแพทย์"> </ContentHeader>
         <Breadcrumbs aria-label="breadcrumb" >
-            <Link 
-            color="textPrimary"  
+          <Link
+            color="textPrimary"
             href="/history" >
-                บันทึกประวัติการทำงานของแพทย์
+            บันทึกประวัติการทำงานของแพทย์
             </Link>
-           
-            <Link 
-            color="textPrimary" 
+
+          <Link
+            color="textPrimary"
             href="/training" >
-                บันทึกข้อมูลการฝึกอบรม
+            บันทึกข้อมูลการฝึกอบรม
             </Link>
 
-            <Link 
-            color="textPrimary" 
+          <Link
+            color="textPrimary"
             href="/detail" >
-                บันทึกข้อมูลแผนกแพทย์
+            บันทึกข้อมูลแผนกแพทย์
             </Link>
 
-            <Link 
-            color="textPrimary" 
-            href="/user" >
-                บันทึกข้อมูลส่วนตัวแพทย์
-            </Link>
-
-            <Link 
-            color="textPrimary" 
+          <Link
+            color="textPrimary"
             href="/schedule" >
-                บันทึกเวลาของแพทย์
+            บันทึกเวลาของแพทย์
             </Link>
 
-            <Link 
-            color="textPrimary" 
+          <Link
+            color="textPrimary"
             href="/specialdoctor" >
-                บันทึกข้อมูลแพทย์เฉพาะทาง
+            บันทึกข้อมูลแพทย์เฉพาะทาง
             </Link>
+        </Breadcrumbs>
+        <br></br>
+        <h1>ค้นหา</h1>
+        <Breadcrumbs>
+          <Link
+            color="textPrimary"
+            href="/workhistorytables" >
+            ค้นหาประวัติการทำงานของแพทย์
+            </Link>
+
+          <Link
+            color="textPrimary"
+            href="/trainingTables" >
+            ค้นหาข้อมูลการฝึกอบรม
+            </Link>
+
+          <Link
+            color="textPrimary"
+            href="/detailtable" >
+            ค้นหาข้อมูลแผนกแพทย์
+            </Link>
+
+          <Link
+            color="textPrimary"
+            href="/personalinformationtables" >
+            ค้นหาข้อมูลส่วนตัวแพทย์
+            </Link>
+
+          <Link
+            color="textPrimary"
+            href="/scheduletable" >
+            ค้นหาเวลาของแพทย์
+            </Link>
+
+          <Link
+            color="textPrimary"
+            href="/specialdoctor" >
+            ค้นหาข้อมูลแพทย์เฉพาะทาง
+          </Link>
 
         </Breadcrumbs>
         <br></br>
         <Grid container className={classes.root} spacing={2}>
-      <Grid item xs={12}>
-        <Grid container justify="center" >
-          {[0].map((value) => (
-            <Grid key={value} item>
-              <Paper className={classes.paper} />
+          <Grid item xs={12}>
+            <Grid container justify="center" >
+              {[0].map((value) => (
+                <Grid key={value} item>
+                  <Paper className={classes.paper} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Grid>
+          <Grid item xs={12}>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-      </Grid>
-    </Grid>
       </Content>
-    
 
-  </div>
+
+    </div>
   );
 };
 export default Homepage;

@@ -41,6 +41,18 @@ func (tc *TrainingCreate) SetDatetwo(t time.Time) *TrainingCreate {
 	return tc
 }
 
+// SetDoctoridcard sets the doctoridcard field.
+func (tc *TrainingCreate) SetDoctoridcard(s string) *TrainingCreate {
+	tc.mutation.SetDoctoridcard(s)
+	return tc
+}
+
+// SetHour sets the hour field.
+func (tc *TrainingCreate) SetHour(s string) *TrainingCreate {
+	tc.mutation.SetHour(s)
+	return tc
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (tc *TrainingCreate) SetCourseID(id int) *TrainingCreate {
 	tc.mutation.SetCourseID(id)
@@ -118,6 +130,22 @@ func (tc *TrainingCreate) Save(ctx context.Context) (*Training, error) {
 	}
 	if _, ok := tc.mutation.Datetwo(); !ok {
 		return nil, &ValidationError{Name: "datetwo", err: errors.New("ent: missing required field \"datetwo\"")}
+	}
+	if _, ok := tc.mutation.Doctoridcard(); !ok {
+		return nil, &ValidationError{Name: "doctoridcard", err: errors.New("ent: missing required field \"doctoridcard\"")}
+	}
+	if v, ok := tc.mutation.Doctoridcard(); ok {
+		if err := training.DoctoridcardValidator(v); err != nil {
+			return nil, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
+	if _, ok := tc.mutation.Hour(); !ok {
+		return nil, &ValidationError{Name: "hour", err: errors.New("ent: missing required field \"hour\"")}
+	}
+	if v, ok := tc.mutation.Hour(); ok {
+		if err := training.HourValidator(v); err != nil {
+			return nil, &ValidationError{Name: "hour", err: fmt.Errorf("ent: validator failed for field \"hour\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -202,6 +230,22 @@ func (tc *TrainingCreate) createSpec() (*Training, *sqlgraph.CreateSpec) {
 			Column: training.FieldDatetwo,
 		})
 		t.Datetwo = value
+	}
+	if value, ok := tc.mutation.Doctoridcard(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldDoctoridcard,
+		})
+		t.Doctoridcard = value
+	}
+	if value, ok := tc.mutation.Hour(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldHour,
+		})
+		t.Hour = value
 	}
 	if nodes := tc.mutation.CourseIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -13,6 +13,10 @@ const (
 	FieldDateone = "dateone"
 	// FieldDatetwo holds the string denoting the datetwo field in the database.
 	FieldDatetwo = "datetwo"
+	// FieldDoctoridcard holds the string denoting the doctoridcard field in the database.
+	FieldDoctoridcard = "doctoridcard"
+	// FieldHour holds the string denoting the hour field in the database.
+	FieldHour = "hour"
 
 	// EdgeCourse holds the string denoting the course edge name in mutations.
 	EdgeCourse = "course"
@@ -52,6 +56,8 @@ var Columns = []string{
 	FieldBranch,
 	FieldDateone,
 	FieldDatetwo,
+	FieldDoctoridcard,
+	FieldHour,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Training type.
@@ -64,4 +70,8 @@ var ForeignKeys = []string{
 var (
 	// BranchValidator is a validator for the "branch" field. It is called by the builders before save.
 	BranchValidator func(string) error
+	// DoctoridcardValidator is a validator for the "doctoridcard" field. It is called by the builders before save.
+	DoctoridcardValidator func(string) error
+	// HourValidator is a validator for the "hour" field. It is called by the builders before save.
+	HourValidator func(string) error
 )

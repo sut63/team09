@@ -21,6 +21,10 @@ type Office struct {
 	ID int `json:"id,omitempty"`
 	// Officename holds the value of the "officename" field.
 	Officename string `json:"officename,omitempty"`
+	// Roomnumber holds the value of the "roomnumber" field.
+	Roomnumber string `json:"roomnumber,omitempty"`
+	// Doctoridcard holds the value of the "doctoridcard" field.
+	Doctoridcard string `json:"doctoridcard,omitempty"`
 	// AddedTime1 holds the value of the "added_time1" field.
 	AddedTime1 time.Time `json:"added_time1,omitempty"`
 	// AddedTime2 holds the value of the "added_time2" field.
@@ -105,6 +109,8 @@ func (*Office) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // officename
+		&sql.NullString{}, // roomnumber
+		&sql.NullString{}, // doctoridcard
 		&sql.NullTime{},   // added_time1
 		&sql.NullTime{},   // added_time2
 	}
@@ -137,17 +143,27 @@ func (o *Office) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		o.Officename = value.String
 	}
-	if value, ok := values[1].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time1", values[1])
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field roomnumber", values[1])
+	} else if value.Valid {
+		o.Roomnumber = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field doctoridcard", values[2])
+	} else if value.Valid {
+		o.Doctoridcard = value.String
+	}
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time1", values[3])
 	} else if value.Valid {
 		o.AddedTime1 = value.Time
 	}
-	if value, ok := values[2].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time2", values[2])
+	if value, ok := values[4].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time2", values[4])
 	} else if value.Valid {
 		o.AddedTime2 = value.Time
 	}
-	values = values[3:]
+	values = values[5:]
 	if len(values) == len(office.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
@@ -222,6 +238,10 @@ func (o *Office) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", o.ID))
 	builder.WriteString(", officename=")
 	builder.WriteString(o.Officename)
+	builder.WriteString(", roomnumber=")
+	builder.WriteString(o.Roomnumber)
+	builder.WriteString(", doctoridcard=")
+	builder.WriteString(o.Doctoridcard)
 	builder.WriteString(", added_time1=")
 	builder.WriteString(o.AddedTime1.Format(time.ANSIC))
 	builder.WriteString(", added_time2=")

@@ -28,6 +28,18 @@ func (dc *DetailCreate) SetExplain(s string) *DetailCreate {
 	return dc
 }
 
+// SetPhone sets the phone field.
+func (dc *DetailCreate) SetPhone(s string) *DetailCreate {
+	dc.mutation.SetPhone(s)
+	return dc
+}
+
+// SetEmail sets the email field.
+func (dc *DetailCreate) SetEmail(s string) *DetailCreate {
+	dc.mutation.SetEmail(s)
+	return dc
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (dc *DetailCreate) SetCourseID(id int) *DetailCreate {
 	dc.mutation.SetCourseID(id)
@@ -100,6 +112,22 @@ func (dc *DetailCreate) Save(ctx context.Context) (*Detail, error) {
 			return nil, &ValidationError{Name: "explain", err: fmt.Errorf("ent: validator failed for field \"explain\": %w", err)}
 		}
 	}
+	if _, ok := dc.mutation.Phone(); !ok {
+		return nil, &ValidationError{Name: "phone", err: errors.New("ent: missing required field \"phone\"")}
+	}
+	if v, ok := dc.mutation.Phone(); ok {
+		if err := detail.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Email(); !ok {
+		return nil, &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
+	}
+	if v, ok := dc.mutation.Email(); ok {
+		if err := detail.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Detail
@@ -167,6 +195,22 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 			Column: detail.FieldExplain,
 		})
 		d.Explain = value
+	}
+	if value, ok := dc.mutation.Phone(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldPhone,
+		})
+		d.Phone = value
+	}
+	if value, ok := dc.mutation.Email(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldEmail,
+		})
+		d.Email = value
 	}
 	if nodes := dc.mutation.CourseIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

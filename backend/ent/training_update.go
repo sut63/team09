@@ -49,6 +49,18 @@ func (tu *TrainingUpdate) SetDatetwo(t time.Time) *TrainingUpdate {
 	return tu
 }
 
+// SetDoctoridcard sets the doctoridcard field.
+func (tu *TrainingUpdate) SetDoctoridcard(s string) *TrainingUpdate {
+	tu.mutation.SetDoctoridcard(s)
+	return tu
+}
+
+// SetHour sets the hour field.
+func (tu *TrainingUpdate) SetHour(s string) *TrainingUpdate {
+	tu.mutation.SetHour(s)
+	return tu
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (tu *TrainingUpdate) SetCourseID(id int) *TrainingUpdate {
 	tu.mutation.SetCourseID(id)
@@ -134,6 +146,16 @@ func (tu *TrainingUpdate) Save(ctx context.Context) (int, error) {
 	if v, ok := tu.mutation.Branch(); ok {
 		if err := training.BranchValidator(v); err != nil {
 			return 0, &ValidationError{Name: "branch", err: fmt.Errorf("ent: validator failed for field \"branch\": %w", err)}
+		}
+	}
+	if v, ok := tu.mutation.Doctoridcard(); ok {
+		if err := training.DoctoridcardValidator(v); err != nil {
+			return 0, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
+	if v, ok := tu.mutation.Hour(); ok {
+		if err := training.HourValidator(v); err != nil {
+			return 0, &ValidationError{Name: "hour", err: fmt.Errorf("ent: validator failed for field \"hour\": %w", err)}
 		}
 	}
 
@@ -223,6 +245,20 @@ func (tu *TrainingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: training.FieldDatetwo,
+		})
+	}
+	if value, ok := tu.mutation.Doctoridcard(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldDoctoridcard,
+		})
+	}
+	if value, ok := tu.mutation.Hour(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldHour,
 		})
 	}
 	if tu.mutation.CourseCleared() {
@@ -366,6 +402,18 @@ func (tuo *TrainingUpdateOne) SetDatetwo(t time.Time) *TrainingUpdateOne {
 	return tuo
 }
 
+// SetDoctoridcard sets the doctoridcard field.
+func (tuo *TrainingUpdateOne) SetDoctoridcard(s string) *TrainingUpdateOne {
+	tuo.mutation.SetDoctoridcard(s)
+	return tuo
+}
+
+// SetHour sets the hour field.
+func (tuo *TrainingUpdateOne) SetHour(s string) *TrainingUpdateOne {
+	tuo.mutation.SetHour(s)
+	return tuo
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (tuo *TrainingUpdateOne) SetCourseID(id int) *TrainingUpdateOne {
 	tuo.mutation.SetCourseID(id)
@@ -453,6 +501,16 @@ func (tuo *TrainingUpdateOne) Save(ctx context.Context) (*Training, error) {
 			return nil, &ValidationError{Name: "branch", err: fmt.Errorf("ent: validator failed for field \"branch\": %w", err)}
 		}
 	}
+	if v, ok := tuo.mutation.Doctoridcard(); ok {
+		if err := training.DoctoridcardValidator(v); err != nil {
+			return nil, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
+	if v, ok := tuo.mutation.Hour(); ok {
+		if err := training.HourValidator(v); err != nil {
+			return nil, &ValidationError{Name: "hour", err: fmt.Errorf("ent: validator failed for field \"hour\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -538,6 +596,20 @@ func (tuo *TrainingUpdateOne) sqlSave(ctx context.Context) (t *Training, err err
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: training.FieldDatetwo,
+		})
+	}
+	if value, ok := tuo.mutation.Doctoridcard(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldDoctoridcard,
+		})
+	}
+	if value, ok := tuo.mutation.Hour(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: training.FieldHour,
 		})
 	}
 	if tuo.mutation.CourseCleared() {

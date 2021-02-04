@@ -30,6 +30,18 @@ func (oc *OfficeCreate) SetOfficename(s string) *OfficeCreate {
 	return oc
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (oc *OfficeCreate) SetRoomnumber(s string) *OfficeCreate {
+	oc.mutation.SetRoomnumber(s)
+	return oc
+}
+
+// SetDoctoridcard sets the doctoridcard field.
+func (oc *OfficeCreate) SetDoctoridcard(s string) *OfficeCreate {
+	oc.mutation.SetDoctoridcard(s)
+	return oc
+}
+
 // SetAddedTime1 sets the added_time1 field.
 func (oc *OfficeCreate) SetAddedTime1(t time.Time) *OfficeCreate {
 	oc.mutation.SetAddedTime1(t)
@@ -129,6 +141,22 @@ func (oc *OfficeCreate) Save(ctx context.Context) (*Office, error) {
 			return nil, &ValidationError{Name: "officename", err: fmt.Errorf("ent: validator failed for field \"officename\": %w", err)}
 		}
 	}
+	if _, ok := oc.mutation.Roomnumber(); !ok {
+		return nil, &ValidationError{Name: "roomnumber", err: errors.New("ent: missing required field \"roomnumber\"")}
+	}
+	if v, ok := oc.mutation.Roomnumber(); ok {
+		if err := office.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if _, ok := oc.mutation.Doctoridcard(); !ok {
+		return nil, &ValidationError{Name: "doctoridcard", err: errors.New("ent: missing required field \"doctoridcard\"")}
+	}
+	if v, ok := oc.mutation.Doctoridcard(); ok {
+		if err := office.DoctoridcardValidator(v); err != nil {
+			return nil, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
+		}
+	}
 	if _, ok := oc.mutation.AddedTime1(); !ok {
 		return nil, &ValidationError{Name: "added_time1", err: errors.New("ent: missing required field \"added_time1\"")}
 	}
@@ -202,6 +230,22 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 			Column: office.FieldOfficename,
 		})
 		o.Officename = value
+	}
+	if value, ok := oc.mutation.Roomnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldRoomnumber,
+		})
+		o.Roomnumber = value
+	}
+	if value, ok := oc.mutation.Doctoridcard(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: office.FieldDoctoridcard,
+		})
+		o.Doctoridcard = value
 	}
 	if value, ok := oc.mutation.AddedTime1(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
