@@ -116,7 +116,7 @@ const Homepage: FC<{}> = () => {
 
           <Link
             color="textPrimary"
-            href="/specialdoctor" >
+            href="/specialdoctortable" >
             ค้นหาข้อมูลแพทย์เฉพาะทาง
           </Link>
 

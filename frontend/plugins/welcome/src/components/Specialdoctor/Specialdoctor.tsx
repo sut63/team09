@@ -206,7 +206,7 @@ const Specialdoctor: FC<{}> = () => {
       </AppBar>
       <Content className={classes.withoutLabel}>
         <Typography variant="h5"
-          className={classes.formControl} style={{ marginLeft: 15https://github.com/sut63/team09.git0 }}>
+          className={classes.formControl} style={{ marginLeft: 150 }}>
           บันทึกข้อมูลแพทย์เฉพาะทาง
         </Typography>
         <div className={classes.root}>
