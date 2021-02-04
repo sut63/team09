@@ -33,6 +33,12 @@ export interface EntDetail {
      */
     edges?: EntDetailEdges;
     /**
+     * Email holds the value of the "email" field.
+     * @type {string}
+     * @memberof EntDetail
+     */
+    email?: string;
+    /**
      * Explain holds the value of the "explain" field.
      * @type {string}
      * @memberof EntDetail
@@ -44,6 +50,12 @@ export interface EntDetail {
      * @memberof EntDetail
      */
     id?: number;
+    /**
+     * Phone holds the value of the "phone" field.
+     * @type {string}
+     * @memberof EntDetail
+     */
+    phone?: string;
 }
 
 export function EntDetailFromJSON(json: any): EntDetail {
@@ -57,8 +69,10 @@ export function EntDetailFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     return {
         
         'edges': !exists(json, 'edges') ? undefined : EntDetailEdgesFromJSON(json['edges']),
+        'email': !exists(json, 'email') ? undefined : json['email'],
         'explain': !exists(json, 'explain') ? undefined : json['explain'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'phone': !exists(json, 'phone') ? undefined : json['phone'],
     };
 }
 
@@ -72,8 +86,10 @@ export function EntDetailToJSON(value?: EntDetail | null): any {
     return {
         
         'edges': EntDetailEdgesToJSON(value.edges),
+        'email': value.email,
         'explain': value.explain,
         'id': value.id,
+        'phone': value.phone,
     };
 }
 
