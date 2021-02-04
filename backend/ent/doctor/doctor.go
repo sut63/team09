@@ -91,7 +91,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "schedule" package.
 	SchedulesInverseTable = "schedules"
 	// SchedulesColumn is the table column denoting the schedules relation/edge.
-	SchedulesColumn = "schedule_id"
+	SchedulesColumn = "doctor_id"
 	// TrainingsTable is the table the holds the trainings relation/edge.
 	TrainingsTable = "trainings"
 	// TrainingsInverseTable is the table name for the Training entity.

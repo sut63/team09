@@ -328,7 +328,7 @@ const Detail: FC<{}> = () => {
                 />
               </FormControl>
             </Grid>
-            <div className={classes.formControl} style={{ marginLeft: 120 }}>
+            <div className={classes.formControl} style={{ marginLeft: 180 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -346,12 +346,6 @@ const Detail: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
-             </Button>
-             <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/detailtable"
-                variant="contained"
-                color="secondary">
-                SHOWTABLE
              </Button>
             </div>
           </form>

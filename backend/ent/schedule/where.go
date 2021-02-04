@@ -93,10 +93,24 @@ func IDLTE(id int) predicate.Schedule {
 	})
 }
 
-// Activity applies equality check predicate on the "activity" field. It's identical to ActivityEQ.
+// Activity applies equality check predicate on the "Activity" field. It's identical to ActivityEQ.
 func Activity(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldActivity), v))
+	})
+}
+
+// Roomnumber applies equality check predicate on the "Roomnumber" field. It's identical to RoomnumberEQ.
+func Roomnumber(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// Docterid applies equality check predicate on the "Docterid" field. It's identical to DocteridEQ.
+func Docterid(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDocterid), v))
 	})
 }
 
@@ -107,21 +121,21 @@ func AddedTime(v time.Time) predicate.Schedule {
 	})
 }
 
-// ActivityEQ applies the EQ predicate on the "activity" field.
+// ActivityEQ applies the EQ predicate on the "Activity" field.
 func ActivityEQ(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityNEQ applies the NEQ predicate on the "activity" field.
+// ActivityNEQ applies the NEQ predicate on the "Activity" field.
 func ActivityNEQ(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityIn applies the In predicate on the "activity" field.
+// ActivityIn applies the In predicate on the "Activity" field.
 func ActivityIn(vs ...string) predicate.Schedule {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -138,7 +152,7 @@ func ActivityIn(vs ...string) predicate.Schedule {
 	})
 }
 
-// ActivityNotIn applies the NotIn predicate on the "activity" field.
+// ActivityNotIn applies the NotIn predicate on the "Activity" field.
 func ActivityNotIn(vs ...string) predicate.Schedule {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -155,66 +169,288 @@ func ActivityNotIn(vs ...string) predicate.Schedule {
 	})
 }
 
-// ActivityGT applies the GT predicate on the "activity" field.
+// ActivityGT applies the GT predicate on the "Activity" field.
 func ActivityGT(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityGTE applies the GTE predicate on the "activity" field.
+// ActivityGTE applies the GTE predicate on the "Activity" field.
 func ActivityGTE(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityLT applies the LT predicate on the "activity" field.
+// ActivityLT applies the LT predicate on the "Activity" field.
 func ActivityLT(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityLTE applies the LTE predicate on the "activity" field.
+// ActivityLTE applies the LTE predicate on the "Activity" field.
 func ActivityLTE(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityContains applies the Contains predicate on the "activity" field.
+// ActivityContains applies the Contains predicate on the "Activity" field.
 func ActivityContains(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityHasPrefix applies the HasPrefix predicate on the "activity" field.
+// ActivityHasPrefix applies the HasPrefix predicate on the "Activity" field.
 func ActivityHasPrefix(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityHasSuffix applies the HasSuffix predicate on the "activity" field.
+// ActivityHasSuffix applies the HasSuffix predicate on the "Activity" field.
 func ActivityHasSuffix(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityEqualFold applies the EqualFold predicate on the "activity" field.
+// ActivityEqualFold applies the EqualFold predicate on the "Activity" field.
 func ActivityEqualFold(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldActivity), v))
 	})
 }
 
-// ActivityContainsFold applies the ContainsFold predicate on the "activity" field.
+// ActivityContainsFold applies the ContainsFold predicate on the "Activity" field.
 func ActivityContainsFold(v string) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldActivity), v))
+	})
+}
+
+// RoomnumberEQ applies the EQ predicate on the "Roomnumber" field.
+func RoomnumberEQ(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberNEQ applies the NEQ predicate on the "Roomnumber" field.
+func RoomnumberNEQ(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberIn applies the In predicate on the "Roomnumber" field.
+func RoomnumberIn(vs ...string) predicate.Schedule {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Schedule(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberNotIn applies the NotIn predicate on the "Roomnumber" field.
+func RoomnumberNotIn(vs ...string) predicate.Schedule {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Schedule(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberGT applies the GT predicate on the "Roomnumber" field.
+func RoomnumberGT(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberGTE applies the GTE predicate on the "Roomnumber" field.
+func RoomnumberGTE(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLT applies the LT predicate on the "Roomnumber" field.
+func RoomnumberLT(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLTE applies the LTE predicate on the "Roomnumber" field.
+func RoomnumberLTE(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContains applies the Contains predicate on the "Roomnumber" field.
+func RoomnumberContains(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasPrefix applies the HasPrefix predicate on the "Roomnumber" field.
+func RoomnumberHasPrefix(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasSuffix applies the HasSuffix predicate on the "Roomnumber" field.
+func RoomnumberHasSuffix(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberEqualFold applies the EqualFold predicate on the "Roomnumber" field.
+func RoomnumberEqualFold(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContainsFold applies the ContainsFold predicate on the "Roomnumber" field.
+func RoomnumberContainsFold(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// DocteridEQ applies the EQ predicate on the "Docterid" field.
+func DocteridEQ(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridNEQ applies the NEQ predicate on the "Docterid" field.
+func DocteridNEQ(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridIn applies the In predicate on the "Docterid" field.
+func DocteridIn(vs ...string) predicate.Schedule {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Schedule(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDocterid), v...))
+	})
+}
+
+// DocteridNotIn applies the NotIn predicate on the "Docterid" field.
+func DocteridNotIn(vs ...string) predicate.Schedule {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Schedule(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDocterid), v...))
+	})
+}
+
+// DocteridGT applies the GT predicate on the "Docterid" field.
+func DocteridGT(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridGTE applies the GTE predicate on the "Docterid" field.
+func DocteridGTE(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridLT applies the LT predicate on the "Docterid" field.
+func DocteridLT(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridLTE applies the LTE predicate on the "Docterid" field.
+func DocteridLTE(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridContains applies the Contains predicate on the "Docterid" field.
+func DocteridContains(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridHasPrefix applies the HasPrefix predicate on the "Docterid" field.
+func DocteridHasPrefix(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridHasSuffix applies the HasSuffix predicate on the "Docterid" field.
+func DocteridHasSuffix(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridEqualFold applies the EqualFold predicate on the "Docterid" field.
+func DocteridEqualFold(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDocterid), v))
+	})
+}
+
+// DocteridContainsFold applies the ContainsFold predicate on the "Docterid" field.
+func DocteridContainsFold(v string) predicate.Schedule {
+	return predicate.Schedule(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDocterid), v))
 	})
 }
 
@@ -294,25 +530,25 @@ func AddedTimeLTE(v time.Time) predicate.Schedule {
 	})
 }
 
-// HasDocter applies the HasEdge predicate on the "docter" edge.
-func HasDocter() predicate.Schedule {
+// HasDoctor applies the HasEdge predicate on the "doctor" edge.
+func HasDoctor() predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DocterTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, DocterTable, DocterColumn),
+			sqlgraph.To(DoctorTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasDocterWith applies the HasEdge predicate on the "docter" edge with a given conditions (other predicates).
-func HasDocterWith(preds ...predicate.Doctor) predicate.Schedule {
+// HasDoctorWith applies the HasEdge predicate on the "doctor" edge with a given conditions (other predicates).
+func HasDoctorWith(preds ...predicate.Doctor) predicate.Schedule {
 	return predicate.Schedule(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DocterInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, DocterTable, DocterColumn),
+			sqlgraph.To(DoctorInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DoctorTable, DoctorColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -162,7 +162,7 @@ const Schedule: FC<{}> = () => {
     }
 
     const ValidateActivity = (val: string) => {
-        return val.match("^[ก-๏]+$");
+        return val.match("^[ก-๏\\s]+$");
     }
 
     const ValidateRoomnumber = (val: string) => {
@@ -415,12 +415,6 @@ const Schedule: FC<{}> = () => {
 
                         <Button variant="contained" color="primary" onClick={save} style={{ marginLeft: 200 }}>บันทึกข้อมูล</Button>
                         <Button variant="contained" color="secondary" onClick={clear} style={{ marginLeft: 10 }}>ยกเลิก</Button>
-                        <Button style={{ marginLeft: 10 }}
-                            component={RouterLink} to="/scheduletable"
-                            variant="contained"
-                            color="secondary">
-                            SHOWTABLE
-             </Button>
                         <Button variant="contained" color="secondary" onClick={Back} style={{ marginLeft: 10 }}>BACK</Button>
 
                     </form>

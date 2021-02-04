@@ -23,9 +23,21 @@ type ScheduleCreate struct {
 	hooks    []Hook
 }
 
-// SetActivity sets the activity field.
+// SetActivity sets the Activity field.
 func (sc *ScheduleCreate) SetActivity(s string) *ScheduleCreate {
 	sc.mutation.SetActivity(s)
+	return sc
+}
+
+// SetRoomnumber sets the Roomnumber field.
+func (sc *ScheduleCreate) SetRoomnumber(s string) *ScheduleCreate {
+	sc.mutation.SetRoomnumber(s)
+	return sc
+}
+
+// SetDocterid sets the Docterid field.
+func (sc *ScheduleCreate) SetDocterid(s string) *ScheduleCreate {
+	sc.mutation.SetDocterid(s)
 	return sc
 }
 
@@ -35,23 +47,23 @@ func (sc *ScheduleCreate) SetAddedTime(t time.Time) *ScheduleCreate {
 	return sc
 }
 
-// SetDocterID sets the docter edge to Doctor by id.
-func (sc *ScheduleCreate) SetDocterID(id int) *ScheduleCreate {
-	sc.mutation.SetDocterID(id)
+// SetDoctorID sets the doctor edge to Doctor by id.
+func (sc *ScheduleCreate) SetDoctorID(id int) *ScheduleCreate {
+	sc.mutation.SetDoctorID(id)
 	return sc
 }
 
-// SetNillableDocterID sets the docter edge to Doctor by id if the given value is not nil.
-func (sc *ScheduleCreate) SetNillableDocterID(id *int) *ScheduleCreate {
+// SetNillableDoctorID sets the doctor edge to Doctor by id if the given value is not nil.
+func (sc *ScheduleCreate) SetNillableDoctorID(id *int) *ScheduleCreate {
 	if id != nil {
-		sc = sc.SetDocterID(*id)
+		sc = sc.SetDoctorID(*id)
 	}
 	return sc
 }
 
-// SetDocter sets the docter edge to Doctor.
-func (sc *ScheduleCreate) SetDocter(d *Doctor) *ScheduleCreate {
-	return sc.SetDocterID(d.ID)
+// SetDoctor sets the doctor edge to Doctor.
+func (sc *ScheduleCreate) SetDoctor(d *Doctor) *ScheduleCreate {
+	return sc.SetDoctorID(d.ID)
 }
 
 // SetDepartmentID sets the department edge to Department by id.
@@ -100,11 +112,27 @@ func (sc *ScheduleCreate) Mutation() *ScheduleMutation {
 // Save creates the Schedule in the database.
 func (sc *ScheduleCreate) Save(ctx context.Context) (*Schedule, error) {
 	if _, ok := sc.mutation.Activity(); !ok {
-		return nil, &ValidationError{Name: "activity", err: errors.New("ent: missing required field \"activity\"")}
+		return nil, &ValidationError{Name: "Activity", err: errors.New("ent: missing required field \"Activity\"")}
 	}
 	if v, ok := sc.mutation.Activity(); ok {
 		if err := schedule.ActivityValidator(v); err != nil {
-			return nil, &ValidationError{Name: "activity", err: fmt.Errorf("ent: validator failed for field \"activity\": %w", err)}
+			return nil, &ValidationError{Name: "Activity", err: fmt.Errorf("ent: validator failed for field \"Activity\": %w", err)}
+		}
+	}
+	if _, ok := sc.mutation.Roomnumber(); !ok {
+		return nil, &ValidationError{Name: "Roomnumber", err: errors.New("ent: missing required field \"Roomnumber\"")}
+	}
+	if v, ok := sc.mutation.Roomnumber(); ok {
+		if err := schedule.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if _, ok := sc.mutation.Docterid(); !ok {
+		return nil, &ValidationError{Name: "Docterid", err: errors.New("ent: missing required field \"Docterid\"")}
+	}
+	if v, ok := sc.mutation.Docterid(); ok {
+		if err := schedule.DocteridValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Docterid", err: fmt.Errorf("ent: validator failed for field \"Docterid\": %w", err)}
 		}
 	}
 	if _, ok := sc.mutation.AddedTime(); !ok {
@@ -178,6 +206,22 @@ func (sc *ScheduleCreate) createSpec() (*Schedule, *sqlgraph.CreateSpec) {
 		})
 		s.Activity = value
 	}
+	if value, ok := sc.mutation.Roomnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldRoomnumber,
+		})
+		s.Roomnumber = value
+	}
+	if value, ok := sc.mutation.Docterid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: schedule.FieldDocterid,
+		})
+		s.Docterid = value
+	}
 	if value, ok := sc.mutation.AddedTime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -186,12 +230,12 @@ func (sc *ScheduleCreate) createSpec() (*Schedule, *sqlgraph.CreateSpec) {
 		})
 		s.AddedTime = value
 	}
-	if nodes := sc.mutation.DocterIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   schedule.DocterTable,
-			Columns: []string{schedule.DocterColumn},
+			Table:   schedule.DoctorTable,
+			Columns: []string{schedule.DoctorColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

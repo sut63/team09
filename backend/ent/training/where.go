@@ -114,6 +114,20 @@ func Datetwo(v time.Time) predicate.Training {
 	})
 }
 
+// Doctoridcard applies equality check predicate on the "doctoridcard" field. It's identical to DoctoridcardEQ.
+func Doctoridcard(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// Hour applies equality check predicate on the "hour" field. It's identical to HourEQ.
+func Hour(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHour), v))
+	})
+}
+
 // BranchEQ applies the EQ predicate on the "branch" field.
 func BranchEQ(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
@@ -374,6 +388,228 @@ func DatetwoLT(v time.Time) predicate.Training {
 func DatetwoLTE(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDatetwo), v))
+	})
+}
+
+// DoctoridcardEQ applies the EQ predicate on the "doctoridcard" field.
+func DoctoridcardEQ(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardNEQ applies the NEQ predicate on the "doctoridcard" field.
+func DoctoridcardNEQ(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardIn applies the In predicate on the "doctoridcard" field.
+func DoctoridcardIn(vs ...string) predicate.Training {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Training(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDoctoridcard), v...))
+	})
+}
+
+// DoctoridcardNotIn applies the NotIn predicate on the "doctoridcard" field.
+func DoctoridcardNotIn(vs ...string) predicate.Training {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Training(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDoctoridcard), v...))
+	})
+}
+
+// DoctoridcardGT applies the GT predicate on the "doctoridcard" field.
+func DoctoridcardGT(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardGTE applies the GTE predicate on the "doctoridcard" field.
+func DoctoridcardGTE(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardLT applies the LT predicate on the "doctoridcard" field.
+func DoctoridcardLT(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardLTE applies the LTE predicate on the "doctoridcard" field.
+func DoctoridcardLTE(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardContains applies the Contains predicate on the "doctoridcard" field.
+func DoctoridcardContains(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardHasPrefix applies the HasPrefix predicate on the "doctoridcard" field.
+func DoctoridcardHasPrefix(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardHasSuffix applies the HasSuffix predicate on the "doctoridcard" field.
+func DoctoridcardHasSuffix(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardEqualFold applies the EqualFold predicate on the "doctoridcard" field.
+func DoctoridcardEqualFold(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// DoctoridcardContainsFold applies the ContainsFold predicate on the "doctoridcard" field.
+func DoctoridcardContainsFold(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDoctoridcard), v))
+	})
+}
+
+// HourEQ applies the EQ predicate on the "hour" field.
+func HourEQ(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHour), v))
+	})
+}
+
+// HourNEQ applies the NEQ predicate on the "hour" field.
+func HourNEQ(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHour), v))
+	})
+}
+
+// HourIn applies the In predicate on the "hour" field.
+func HourIn(vs ...string) predicate.Training {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Training(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldHour), v...))
+	})
+}
+
+// HourNotIn applies the NotIn predicate on the "hour" field.
+func HourNotIn(vs ...string) predicate.Training {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Training(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldHour), v...))
+	})
+}
+
+// HourGT applies the GT predicate on the "hour" field.
+func HourGT(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldHour), v))
+	})
+}
+
+// HourGTE applies the GTE predicate on the "hour" field.
+func HourGTE(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldHour), v))
+	})
+}
+
+// HourLT applies the LT predicate on the "hour" field.
+func HourLT(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldHour), v))
+	})
+}
+
+// HourLTE applies the LTE predicate on the "hour" field.
+func HourLTE(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldHour), v))
+	})
+}
+
+// HourContains applies the Contains predicate on the "hour" field.
+func HourContains(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldHour), v))
+	})
+}
+
+// HourHasPrefix applies the HasPrefix predicate on the "hour" field.
+func HourHasPrefix(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldHour), v))
+	})
+}
+
+// HourHasSuffix applies the HasSuffix predicate on the "hour" field.
+func HourHasSuffix(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHour), v))
+	})
+}
+
+// HourEqualFold applies the EqualFold predicate on the "hour" field.
+func HourEqualFold(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHour), v))
+	})
+}
+
+// HourContainsFold applies the ContainsFold predicate on the "hour" field.
+func HourContainsFold(v string) predicate.Training {
+	return predicate.Training(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHour), v))
 	})
 }
 

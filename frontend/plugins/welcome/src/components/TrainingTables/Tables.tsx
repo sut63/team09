@@ -108,6 +108,7 @@ export default function ComponentsTableUser() {
       <Header
         title={`Doctor Information`}
         subtitle="ข้อมูลการฝึกอบรม">
+        <Button color="secondary" variant="contained" href="/home">BACK</Button>
       </Header>
 
       <Content>

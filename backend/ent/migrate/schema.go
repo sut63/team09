@@ -53,6 +53,8 @@ var (
 	DetailsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "explain", Type: field.TypeString},
+		{Name: "phone", Type: field.TypeString, Size: 10},
+		{Name: "email", Type: field.TypeString},
 		{Name: "course_id", Type: field.TypeInt, Nullable: true},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "mission_id", Type: field.TypeInt, Nullable: true},
@@ -65,21 +67,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "details_courses_details",
-				Columns: []*schema.Column{DetailsColumns[2]},
+				Columns: []*schema.Column{DetailsColumns[4]},
 
 				RefColumns: []*schema.Column{CoursesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "details_departments_details",
-				Columns: []*schema.Column{DetailsColumns[3]},
+				Columns: []*schema.Column{DetailsColumns[5]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "details_missions_details",
-				Columns: []*schema.Column{DetailsColumns[4]},
+				Columns: []*schema.Column{DetailsColumns[6]},
 
 				RefColumns: []*schema.Column{MissionsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -104,10 +106,10 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "age", Type: field.TypeInt},
 		{Name: "email", Type: field.TypeString},
-		{Name: "password", Type: field.TypeString},
+		{Name: "password", Type: field.TypeString, Size: 8},
 		{Name: "address", Type: field.TypeString},
 		{Name: "educational", Type: field.TypeString},
-		{Name: "phone", Type: field.TypeString},
+		{Name: "phone", Type: field.TypeString, Size: 10},
 		{Name: "disease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "position_id", Type: field.TypeInt, Nullable: true},
@@ -189,6 +191,8 @@ var (
 	OfficesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "officename", Type: field.TypeString},
+		{Name: "roomnumber", Type: field.TypeString},
+		{Name: "doctoridcard", Type: field.TypeString, Size: 10},
 		{Name: "added_time1", Type: field.TypeTime},
 		{Name: "added_time2", Type: field.TypeTime},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
@@ -204,28 +208,28 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "offices_departments_offices",
-				Columns: []*schema.Column{OfficesColumns[4]},
+				Columns: []*schema.Column{OfficesColumns[6]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "offices_doctors_offices",
-				Columns: []*schema.Column{OfficesColumns[5]},
+				Columns: []*schema.Column{OfficesColumns[7]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "offices_extradoctors_offices",
-				Columns: []*schema.Column{OfficesColumns[6]},
+				Columns: []*schema.Column{OfficesColumns[8]},
 
 				RefColumns: []*schema.Column{ExtradoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "offices_specialdoctors_offices",
-				Columns: []*schema.Column{OfficesColumns[7]},
+				Columns: []*schema.Column{OfficesColumns[9]},
 
 				RefColumns: []*schema.Column{SpecialdoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -248,9 +252,11 @@ var (
 	SchedulesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "activity", Type: field.TypeString},
+		{Name: "roomnumber", Type: field.TypeString},
+		{Name: "docterid", Type: field.TypeString, Size: 10},
 		{Name: "added_time", Type: field.TypeTime},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
-		{Name: "schedule_id", Type: field.TypeInt, Nullable: true},
+		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "office_id", Type: field.TypeInt, Nullable: true},
 	}
 	// SchedulesTable holds the schema information for the "schedules" table.
@@ -261,21 +267,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "schedules_departments_schedules",
-				Columns: []*schema.Column{SchedulesColumns[3]},
+				Columns: []*schema.Column{SchedulesColumns[5]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "schedules_doctors_schedules",
-				Columns: []*schema.Column{SchedulesColumns[4]},
+				Columns: []*schema.Column{SchedulesColumns[6]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "schedules_offices_schedules",
-				Columns: []*schema.Column{SchedulesColumns[5]},
+				Columns: []*schema.Column{SchedulesColumns[7]},
 
 				RefColumns: []*schema.Column{OfficesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -337,6 +343,8 @@ var (
 		{Name: "branch", Type: field.TypeString},
 		{Name: "dateone", Type: field.TypeTime},
 		{Name: "datetwo", Type: field.TypeTime},
+		{Name: "doctoridcard", Type: field.TypeString, Size: 10},
+		{Name: "hour", Type: field.TypeString},
 		{Name: "course_id", Type: field.TypeInt, Nullable: true},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
@@ -349,21 +357,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "trainings_courses_trainings",
-				Columns: []*schema.Column{TrainingsColumns[4]},
+				Columns: []*schema.Column{TrainingsColumns[6]},
 
 				RefColumns: []*schema.Column{CoursesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "trainings_departments_trainings",
-				Columns: []*schema.Column{TrainingsColumns[5]},
+				Columns: []*schema.Column{TrainingsColumns[7]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "trainings_doctors_trainings",
-				Columns: []*schema.Column{TrainingsColumns[6]},
+				Columns: []*schema.Column{TrainingsColumns[8]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,

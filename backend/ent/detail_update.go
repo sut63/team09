@@ -36,6 +36,18 @@ func (du *DetailUpdate) SetExplain(s string) *DetailUpdate {
 	return du
 }
 
+// SetPhone sets the phone field.
+func (du *DetailUpdate) SetPhone(s string) *DetailUpdate {
+	du.mutation.SetPhone(s)
+	return du
+}
+
+// SetEmail sets the email field.
+func (du *DetailUpdate) SetEmail(s string) *DetailUpdate {
+	du.mutation.SetEmail(s)
+	return du
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (du *DetailUpdate) SetCourseID(id int) *DetailUpdate {
 	du.mutation.SetCourseID(id)
@@ -123,6 +135,16 @@ func (du *DetailUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "explain", err: fmt.Errorf("ent: validator failed for field \"explain\": %w", err)}
 		}
 	}
+	if v, ok := du.mutation.Phone(); ok {
+		if err := detail.PhoneValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Email(); ok {
+		if err := detail.EmailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -196,6 +218,20 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: detail.FieldExplain,
+		})
+	}
+	if value, ok := du.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldPhone,
+		})
+	}
+	if value, ok := du.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldEmail,
 		})
 	}
 	if du.mutation.CourseCleared() {
@@ -327,6 +363,18 @@ func (duo *DetailUpdateOne) SetExplain(s string) *DetailUpdateOne {
 	return duo
 }
 
+// SetPhone sets the phone field.
+func (duo *DetailUpdateOne) SetPhone(s string) *DetailUpdateOne {
+	duo.mutation.SetPhone(s)
+	return duo
+}
+
+// SetEmail sets the email field.
+func (duo *DetailUpdateOne) SetEmail(s string) *DetailUpdateOne {
+	duo.mutation.SetEmail(s)
+	return duo
+}
+
 // SetCourseID sets the course edge to Course by id.
 func (duo *DetailUpdateOne) SetCourseID(id int) *DetailUpdateOne {
 	duo.mutation.SetCourseID(id)
@@ -414,6 +462,16 @@ func (duo *DetailUpdateOne) Save(ctx context.Context) (*Detail, error) {
 			return nil, &ValidationError{Name: "explain", err: fmt.Errorf("ent: validator failed for field \"explain\": %w", err)}
 		}
 	}
+	if v, ok := duo.mutation.Phone(); ok {
+		if err := detail.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Email(); ok {
+		if err := detail.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -485,6 +543,20 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (d *Detail, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: detail.FieldExplain,
+		})
+	}
+	if value, ok := duo.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldPhone,
+		})
+	}
+	if value, ok := duo.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: detail.FieldEmail,
 		})
 	}
 	if duo.mutation.CourseCleared() {

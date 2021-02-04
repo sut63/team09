@@ -45,11 +45,23 @@ export interface EntTraining {
      */
     datetwo?: string;
     /**
+     * Doctoridcard holds the value of the "doctoridcard" field.
+     * @type {string}
+     * @memberof EntTraining
+     */
+    doctoridcard?: string;
+    /**
      * 
      * @type {EntTrainingEdges}
      * @memberof EntTraining
      */
     edges?: EntTrainingEdges;
+    /**
+     * Hour holds the value of the "hour" field.
+     * @type {string}
+     * @memberof EntTraining
+     */
+    hour?: string;
     /**
      * ID of the ent.
      * @type {number}
@@ -71,7 +83,9 @@ export function EntTrainingFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'branch': !exists(json, 'branch') ? undefined : json['branch'],
         'dateone': !exists(json, 'dateone') ? undefined : json['dateone'],
         'datetwo': !exists(json, 'datetwo') ? undefined : json['datetwo'],
+        'doctoridcard': !exists(json, 'doctoridcard') ? undefined : json['doctoridcard'],
         'edges': !exists(json, 'edges') ? undefined : EntTrainingEdgesFromJSON(json['edges']),
+        'hour': !exists(json, 'hour') ? undefined : json['hour'],
         'id': !exists(json, 'id') ? undefined : json['id'],
     };
 }
@@ -88,7 +102,9 @@ export function EntTrainingToJSON(value?: EntTraining | null): any {
         'branch': value.branch,
         'dateone': value.dateone,
         'datetwo': value.datetwo,
+        'doctoridcard': value.doctoridcard,
         'edges': EntTrainingEdgesToJSON(value.edges),
+        'hour': value.hour,
         'id': value.id,
     };
 }

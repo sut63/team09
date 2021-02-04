@@ -27,7 +27,7 @@ type ScheduleQuery struct {
 	unique     []string
 	predicates []predicate.Schedule
 	// eager-loading edges.
-	withDocter     *DoctorQuery
+	withDoctor     *DoctorQuery
 	withDepartment *DepartmentQuery
 	withOffice     *OfficeQuery
 	withFKs        bool
@@ -60,8 +60,8 @@ func (sq *ScheduleQuery) Order(o ...OrderFunc) *ScheduleQuery {
 	return sq
 }
 
-// QueryDocter chains the current query on the docter edge.
-func (sq *ScheduleQuery) QueryDocter() *DoctorQuery {
+// QueryDoctor chains the current query on the doctor edge.
+func (sq *ScheduleQuery) QueryDoctor() *DoctorQuery {
 	query := &DoctorQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
@@ -70,7 +70,7 @@ func (sq *ScheduleQuery) QueryDocter() *DoctorQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(schedule.Table, schedule.FieldID, sq.sqlQuery()),
 			sqlgraph.To(doctor.Table, doctor.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DocterTable, schedule.DocterColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, schedule.DoctorTable, schedule.DoctorColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -293,14 +293,14 @@ func (sq *ScheduleQuery) Clone() *ScheduleQuery {
 	}
 }
 
-//  WithDocter tells the query-builder to eager-loads the nodes that are connected to
-// the "docter" edge. The optional arguments used to configure the query builder of the edge.
-func (sq *ScheduleQuery) WithDocter(opts ...func(*DoctorQuery)) *ScheduleQuery {
+//  WithDoctor tells the query-builder to eager-loads the nodes that are connected to
+// the "doctor" edge. The optional arguments used to configure the query builder of the edge.
+func (sq *ScheduleQuery) WithDoctor(opts ...func(*DoctorQuery)) *ScheduleQuery {
 	query := &DoctorQuery{config: sq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	sq.withDocter = query
+	sq.withDoctor = query
 	return sq
 }
 
@@ -332,7 +332,7 @@ func (sq *ScheduleQuery) WithOffice(opts ...func(*OfficeQuery)) *ScheduleQuery {
 // Example:
 //
 //	var v []struct {
-//		Activity string `json:"activity,omitempty"`
+//		Activity string `json:"Activity,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -358,7 +358,7 @@ func (sq *ScheduleQuery) GroupBy(field string, fields ...string) *ScheduleGroupB
 // Example:
 //
 //	var v []struct {
-//		Activity string `json:"activity,omitempty"`
+//		Activity string `json:"Activity,omitempty"`
 //	}
 //
 //	client.Schedule.Query().
@@ -394,12 +394,12 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		withFKs     = sq.withFKs
 		_spec       = sq.querySpec()
 		loadedTypes = [3]bool{
-			sq.withDocter != nil,
+			sq.withDoctor != nil,
 			sq.withDepartment != nil,
 			sq.withOffice != nil,
 		}
 	)
-	if sq.withDocter != nil || sq.withDepartment != nil || sq.withOffice != nil {
+	if sq.withDoctor != nil || sq.withDepartment != nil || sq.withOffice != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -429,11 +429,11 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		return nodes, nil
 	}
 
-	if query := sq.withDocter; query != nil {
+	if query := sq.withDoctor; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Schedule)
 		for i := range nodes {
-			if fk := nodes[i].schedule_id; fk != nil {
+			if fk := nodes[i].doctor_id; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -446,10 +446,10 @@ func (sq *ScheduleQuery) sqlAll(ctx context.Context) ([]*Schedule, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "schedule_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "doctor_id" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Docter = n
+				nodes[i].Edges.Doctor = n
 			}
 		}
 	}

@@ -25,6 +25,10 @@ type Training struct {
 	Dateone time.Time `json:"dateone,omitempty"`
 	// Datetwo holds the value of the "datetwo" field.
 	Datetwo time.Time `json:"datetwo,omitempty"`
+	// Doctoridcard holds the value of the "doctoridcard" field.
+	Doctoridcard string `json:"doctoridcard,omitempty"`
+	// Hour holds the value of the "hour" field.
+	Hour string `json:"hour,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TrainingQuery when eager-loading is set.
 	Edges         TrainingEdges `json:"edges"`
@@ -95,6 +99,8 @@ func (*Training) scanValues() []interface{} {
 		&sql.NullString{}, // branch
 		&sql.NullTime{},   // dateone
 		&sql.NullTime{},   // datetwo
+		&sql.NullString{}, // doctoridcard
+		&sql.NullString{}, // hour
 	}
 }
 
@@ -134,7 +140,17 @@ func (t *Training) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		t.Datetwo = value.Time
 	}
-	values = values[3:]
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field doctoridcard", values[3])
+	} else if value.Valid {
+		t.Doctoridcard = value.String
+	}
+	if value, ok := values[4].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field hour", values[4])
+	} else if value.Valid {
+		t.Hour = value.String
+	}
+	values = values[5:]
 	if len(values) == len(training.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field course_id", value)
@@ -202,6 +218,10 @@ func (t *Training) String() string {
 	builder.WriteString(t.Dateone.Format(time.ANSIC))
 	builder.WriteString(", datetwo=")
 	builder.WriteString(t.Datetwo.Format(time.ANSIC))
+	builder.WriteString(", doctoridcard=")
+	builder.WriteString(t.Doctoridcard)
+	builder.WriteString(", hour=")
+	builder.WriteString(t.Hour)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -408,7 +408,7 @@ const Doctor: FC<{}> = () => {
                   variant="outlined"
                   size="medium"
                   type={doctor.showPassword ? 'text' : 'password'}
-                  value={doctor.password}
+                  value={doctor.password || ''}
                   helperText={passwordError}
                   onChange={handleChange} />
               </FormControl>
@@ -484,13 +484,7 @@ const Doctor: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 CLEAR
-             </Button>        
-             <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/personalinformationtables"
-                variant="contained"
-                color="secondary">
-                SHOWTABLE
-             </Button>      
+             </Button>         
             </div>
           </form>
         </div>

@@ -9,6 +9,10 @@ const (
 	FieldID = "id"
 	// FieldOfficename holds the string denoting the officename field in the database.
 	FieldOfficename = "officename"
+	// FieldRoomnumber holds the string denoting the roomnumber field in the database.
+	FieldRoomnumber = "roomnumber"
+	// FieldDoctoridcard holds the string denoting the doctoridcard field in the database.
+	FieldDoctoridcard = "doctoridcard"
 	// FieldAddedTime1 holds the string denoting the added_time1 field in the database.
 	FieldAddedTime1 = "added_time1"
 	// FieldAddedTime2 holds the string denoting the added_time2 field in the database.
@@ -59,6 +63,8 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldOfficename,
+	FieldRoomnumber,
+	FieldDoctoridcard,
 	FieldAddedTime1,
 	FieldAddedTime2,
 }
@@ -74,4 +80,8 @@ var ForeignKeys = []string{
 var (
 	// OfficenameValidator is a validator for the "officename" field. It is called by the builders before save.
 	OfficenameValidator func(string) error
+	// RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
+	RoomnumberValidator func(string) error
+	// DoctoridcardValidator is a validator for the "doctoridcard" field. It is called by the builders before save.
+	DoctoridcardValidator func(string) error
 )
