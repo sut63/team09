@@ -19,10 +19,12 @@ type SpecialdoctorController struct {
 	router gin.IRouter
 }
 type Specialdoctor struct {
-	Extradoctor		int 
+	Doctorid			string
+	Roomnumber			string
+	Other				string 
+	Extradoctor			int 
 	Doctor 				int
 	Department 			int
-	other				string 
 }
 
 // CreateSpecialdoctor handles POST requests for adding specialdoctor entities
@@ -82,19 +84,27 @@ func (ctl *SpecialdoctorController) CreateSpecialdoctor(c *gin.Context) {
 
 	sl, err := ctl.client.Specialdoctor.
 		Create().
-		SetOther(obj.other).
-		SetDepartment(de).
-		SetDoctor(d).
 		SetExtradoctor(s).
+		SetDoctor(d).
+		SetDepartment(de).
+		SetDoctorid(obj.Doctorid).
+		SetRoomnumber(obj.Roomnumber).
+		SetOther(obj.Other).
 		Save(context.Background())
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "saving failed",
+		
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(400, gin.H{
+				"status": false,
+				"error":  err,
+			})
+			return
+		}
+	
+		c.JSON(200, gin.H{
+			"status": true,
+			"data":   sl,
 		})
-		return
-	}
-
-	c.JSON(200, sl)
 }
 
 // GetSpecialdoctor handles GET requests to retrieve a specialdoctor entity
@@ -168,10 +178,12 @@ func (ctl *SpecialdoctorController) ListSpecialdoctor(c *gin.Context) {
 		WithDepartment().
 		WithDoctor().
 		WithExtradoctor().
-
 		All(context.Background())
+
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
@@ -213,12 +225,12 @@ func (ctl *SpecialdoctorController) DeleteSpecialdoctor(c *gin.Context) {
 
 // NewSpecialdoctorController creates and registers handles for the specialdoctor controller
 func NewSpecialdoctorController(router gin.IRouter, client *ent.Client) *SpecialdoctorController {
-	sc := &SpecialdoctorController{
+	slc := &SpecialdoctorController{
 		client: client,
 		router: router,
 	}
-	sc.register()
-	return sc
+	slc.register()
+	return slc
 }
 
 // InitSpecialdoctorController registers routes to the main engine
