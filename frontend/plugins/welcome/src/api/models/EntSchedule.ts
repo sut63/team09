@@ -27,11 +27,23 @@ import {
  */
 export interface EntSchedule {
     /**
-     * Activity holds the value of the "activity" field.
+     * Activity holds the value of the "Activity" field.
      * @type {string}
      * @memberof EntSchedule
      */
     activity?: string;
+    /**
+     * Docterid holds the value of the "Docterid" field.
+     * @type {string}
+     * @memberof EntSchedule
+     */
+    docterid?: string;
+    /**
+     * Roomnumber holds the value of the "Roomnumber" field.
+     * @type {string}
+     * @memberof EntSchedule
+     */
+    roomnumber?: string;
     /**
      * AddedTime holds the value of the "added_time" field.
      * @type {string}
@@ -62,7 +74,9 @@ export function EntScheduleFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'activity': !exists(json, 'activity') ? undefined : json['activity'],
+        'activity': !exists(json, 'Activity') ? undefined : json['Activity'],
+        'docterid': !exists(json, 'Docterid') ? undefined : json['Docterid'],
+        'roomnumber': !exists(json, 'Roomnumber') ? undefined : json['Roomnumber'],
         'addedTime': !exists(json, 'added_time') ? undefined : json['added_time'],
         'edges': !exists(json, 'edges') ? undefined : EntScheduleEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
@@ -78,7 +92,9 @@ export function EntScheduleToJSON(value?: EntSchedule | null): any {
     }
     return {
         
-        'activity': value.activity,
+        'Activity': value.activity,
+        'Docterid': value.docterid,
+        'Roomnumber': value.roomnumber,
         'added_time': value.addedTime,
         'edges': EntScheduleEdgesToJSON(value.edges),
         'id': value.id,
