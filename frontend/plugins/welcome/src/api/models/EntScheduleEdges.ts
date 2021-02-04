@@ -45,7 +45,7 @@ export interface EntScheduleEdges {
      * @type {EntDoctor}
      * @memberof EntScheduleEdges
      */
-    docter?: EntDoctor;
+    doctor?: EntDoctor;
     /**
      * 
      * @type {EntOffice}
@@ -64,9 +64,9 @@ export function EntScheduleEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
-        'docter': !exists(json, 'docter') ? undefined : EntDoctorFromJSON(json['docter']),
-        'office': !exists(json, 'office') ? undefined : EntOfficeFromJSON(json['office']),
+        'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
+        'doctor': !exists(json, 'Doctor') ? undefined : EntDoctorFromJSON(json['Doctor']),
+        'office': !exists(json, 'Office') ? undefined : EntOfficeFromJSON(json['Office']),
     };
 }
 
@@ -80,7 +80,7 @@ export function EntScheduleEdgesToJSON(value?: EntScheduleEdges | null): any {
     return {
         
         'department': EntDepartmentToJSON(value.department),
-        'docter': EntDoctorToJSON(value.docter),
+        'doctor': EntDoctorToJSON(value.doctor),
         'office': EntOfficeToJSON(value.office),
     };
 }
