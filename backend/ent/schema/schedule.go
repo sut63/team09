@@ -18,7 +18,7 @@ type Schedule struct {
 func (Schedule) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("Activity").Validate(func(s string) error {
-			match, _ := regexp.MatchString("^[ก-๏]+$", s)
+			match, _ := regexp.MatchString("^[ก-๏\\s]+$", s)
 			if !match {
 				return errors.New("กรุณากรอกกิจกรรมของแพทย์")
 			}
