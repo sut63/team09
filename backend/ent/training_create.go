@@ -48,8 +48,8 @@ func (tc *TrainingCreate) SetDoctoridcard(s string) *TrainingCreate {
 }
 
 // SetHour sets the hour field.
-func (tc *TrainingCreate) SetHour(s string) *TrainingCreate {
-	tc.mutation.SetHour(s)
+func (tc *TrainingCreate) SetHour(i int) *TrainingCreate {
+	tc.mutation.SetHour(i)
 	return tc
 }
 
@@ -241,7 +241,7 @@ func (tc *TrainingCreate) createSpec() (*Training, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := tc.mutation.Hour(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: training.FieldHour,
 		})

@@ -269,5 +269,5 @@ func init() {
 	// trainingDescHour is the schema descriptor for hour field.
 	trainingDescHour := trainingFields[4].Descriptor()
 	// training.HourValidator is a validator for the "hour" field. It is called by the builders before save.
-	training.HourValidator = trainingDescHour.Validators[0].(func(string) error)
+	training.HourValidator = trainingDescHour.Validators[0].(func(int) error)
 }

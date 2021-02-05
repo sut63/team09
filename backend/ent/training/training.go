@@ -73,5 +73,5 @@ var (
 	// DoctoridcardValidator is a validator for the "doctoridcard" field. It is called by the builders before save.
 	DoctoridcardValidator func(string) error
 	// HourValidator is a validator for the "hour" field. It is called by the builders before save.
-	HourValidator func(string) error
+	HourValidator func(int) error
 )
