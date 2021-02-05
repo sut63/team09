@@ -6319,10 +6319,10 @@ type SpecialdoctorMutation struct {
 	op                 Op
 	typ                string
 	id                 *int
-	other              *string
+	_Roomnumber        *string
+	_Doctorid          *string
+	_Other             *string
 	clearedFields      map[string]struct{}
-	offices            map[int]struct{}
-	removedoffices     map[int]struct{}
 	doctor             *int
 	cleareddoctor      bool
 	department         *int
@@ -6412,21 +6412,95 @@ func (m *SpecialdoctorMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetOther sets the other field.
-func (m *SpecialdoctorMutation) SetOther(s string) {
-	m.other = &s
+// SetRoomnumber sets the Roomnumber field.
+func (m *SpecialdoctorMutation) SetRoomnumber(s string) {
+	m._Roomnumber = &s
 }
 
-// Other returns the other value in the mutation.
-func (m *SpecialdoctorMutation) Other() (r string, exists bool) {
-	v := m.other
+// Roomnumber returns the Roomnumber value in the mutation.
+func (m *SpecialdoctorMutation) Roomnumber() (r string, exists bool) {
+	v := m._Roomnumber
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldOther returns the old other value of the Specialdoctor.
+// OldRoomnumber returns the old Roomnumber value of the Specialdoctor.
+// If the Specialdoctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *SpecialdoctorMutation) OldRoomnumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRoomnumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRoomnumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRoomnumber: %w", err)
+	}
+	return oldValue.Roomnumber, nil
+}
+
+// ResetRoomnumber reset all changes of the "Roomnumber" field.
+func (m *SpecialdoctorMutation) ResetRoomnumber() {
+	m._Roomnumber = nil
+}
+
+// SetDoctorid sets the Doctorid field.
+func (m *SpecialdoctorMutation) SetDoctorid(s string) {
+	m._Doctorid = &s
+}
+
+// Doctorid returns the Doctorid value in the mutation.
+func (m *SpecialdoctorMutation) Doctorid() (r string, exists bool) {
+	v := m._Doctorid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDoctorid returns the old Doctorid value of the Specialdoctor.
+// If the Specialdoctor object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *SpecialdoctorMutation) OldDoctorid(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDoctorid is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDoctorid requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDoctorid: %w", err)
+	}
+	return oldValue.Doctorid, nil
+}
+
+// ResetDoctorid reset all changes of the "Doctorid" field.
+func (m *SpecialdoctorMutation) ResetDoctorid() {
+	m._Doctorid = nil
+}
+
+// SetOther sets the Other field.
+func (m *SpecialdoctorMutation) SetOther(s string) {
+	m._Other = &s
+}
+
+// Other returns the Other value in the mutation.
+func (m *SpecialdoctorMutation) Other() (r string, exists bool) {
+	v := m._Other
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOther returns the old Other value of the Specialdoctor.
 // If the Specialdoctor object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
@@ -6444,51 +6518,9 @@ func (m *SpecialdoctorMutation) OldOther(ctx context.Context) (v string, err err
 	return oldValue.Other, nil
 }
 
-// ResetOther reset all changes of the "other" field.
+// ResetOther reset all changes of the "Other" field.
 func (m *SpecialdoctorMutation) ResetOther() {
-	m.other = nil
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (m *SpecialdoctorMutation) AddOfficeIDs(ids ...int) {
-	if m.offices == nil {
-		m.offices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.offices[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveOfficeIDs removes the offices edge to Office by ids.
-func (m *SpecialdoctorMutation) RemoveOfficeIDs(ids ...int) {
-	if m.removedoffices == nil {
-		m.removedoffices = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedoffices[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedOffices returns the removed ids of offices.
-func (m *SpecialdoctorMutation) RemovedOfficesIDs() (ids []int) {
-	for id := range m.removedoffices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// OfficesIDs returns the offices ids in the mutation.
-func (m *SpecialdoctorMutation) OfficesIDs() (ids []int) {
-	for id := range m.offices {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetOffices reset all changes of the "offices" edge.
-func (m *SpecialdoctorMutation) ResetOffices() {
-	m.offices = nil
-	m.removedoffices = nil
+	m._Other = nil
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -6622,8 +6654,14 @@ func (m *SpecialdoctorMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *SpecialdoctorMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.other != nil {
+	fields := make([]string, 0, 3)
+	if m._Roomnumber != nil {
+		fields = append(fields, specialdoctor.FieldRoomnumber)
+	}
+	if m._Doctorid != nil {
+		fields = append(fields, specialdoctor.FieldDoctorid)
+	}
+	if m._Other != nil {
 		fields = append(fields, specialdoctor.FieldOther)
 	}
 	return fields
@@ -6634,6 +6672,10 @@ func (m *SpecialdoctorMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *SpecialdoctorMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case specialdoctor.FieldRoomnumber:
+		return m.Roomnumber()
+	case specialdoctor.FieldDoctorid:
+		return m.Doctorid()
 	case specialdoctor.FieldOther:
 		return m.Other()
 	}
@@ -6645,6 +6687,10 @@ func (m *SpecialdoctorMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *SpecialdoctorMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case specialdoctor.FieldRoomnumber:
+		return m.OldRoomnumber(ctx)
+	case specialdoctor.FieldDoctorid:
+		return m.OldDoctorid(ctx)
 	case specialdoctor.FieldOther:
 		return m.OldOther(ctx)
 	}
@@ -6656,6 +6702,20 @@ func (m *SpecialdoctorMutation) OldField(ctx context.Context, name string) (ent.
 // type mismatch the field type.
 func (m *SpecialdoctorMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case specialdoctor.FieldRoomnumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRoomnumber(v)
+		return nil
+	case specialdoctor.FieldDoctorid:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDoctorid(v)
+		return nil
 	case specialdoctor.FieldOther:
 		v, ok := value.(string)
 		if !ok {
@@ -6713,6 +6773,12 @@ func (m *SpecialdoctorMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *SpecialdoctorMutation) ResetField(name string) error {
 	switch name {
+	case specialdoctor.FieldRoomnumber:
+		m.ResetRoomnumber()
+		return nil
+	case specialdoctor.FieldDoctorid:
+		m.ResetDoctorid()
+		return nil
 	case specialdoctor.FieldOther:
 		m.ResetOther()
 		return nil
@@ -6723,10 +6789,7 @@ func (m *SpecialdoctorMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *SpecialdoctorMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.offices != nil {
-		edges = append(edges, specialdoctor.EdgeOffices)
-	}
+	edges := make([]string, 0, 3)
 	if m.doctor != nil {
 		edges = append(edges, specialdoctor.EdgeDoctor)
 	}
@@ -6743,12 +6806,6 @@ func (m *SpecialdoctorMutation) AddedEdges() []string {
 // the given edge name.
 func (m *SpecialdoctorMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case specialdoctor.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.offices))
-		for id := range m.offices {
-			ids = append(ids, id)
-		}
-		return ids
 	case specialdoctor.EdgeDoctor:
 		if id := m.doctor; id != nil {
 			return []ent.Value{*id}
@@ -6768,10 +6825,7 @@ func (m *SpecialdoctorMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *SpecialdoctorMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.removedoffices != nil {
-		edges = append(edges, specialdoctor.EdgeOffices)
-	}
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -6779,12 +6833,6 @@ func (m *SpecialdoctorMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *SpecialdoctorMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case specialdoctor.EdgeOffices:
-		ids := make([]ent.Value, 0, len(m.removedoffices))
-		for id := range m.removedoffices {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -6792,7 +6840,7 @@ func (m *SpecialdoctorMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *SpecialdoctorMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 3)
 	if m.cleareddoctor {
 		edges = append(edges, specialdoctor.EdgeDoctor)
 	}
@@ -6841,9 +6889,6 @@ func (m *SpecialdoctorMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *SpecialdoctorMutation) ResetEdge(name string) error {
 	switch name {
-	case specialdoctor.EdgeOffices:
-		m.ResetOffices()
-		return nil
 	case specialdoctor.EdgeDoctor:
 		m.ResetDoctor()
 		return nil

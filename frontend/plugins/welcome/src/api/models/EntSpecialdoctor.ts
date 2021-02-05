@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * SUT SA Example API
+ * SUT SA Example API Playlist Vidoe
  * This is a sample server for SUT SE 2563
  *
  * The version of the OpenAPI document: 1.0
@@ -27,6 +27,24 @@ import {
  */
 export interface EntSpecialdoctor {
     /**
+     * Doctorid holds the value of the "Doctorid" field.
+     * @type {string}
+     * @memberof EntSpecialdoctor
+     */
+    doctorid?: string;
+    /**
+     * Other holds the value of the "Other" field.
+     * @type {string}
+     * @memberof EntSpecialdoctor
+     */
+    other?: string;
+    /**
+     * Roomnumber holds the value of the "Roomnumber" field.
+     * @type {string}
+     * @memberof EntSpecialdoctor
+     */
+    roomnumber?: string;
+    /**
      * 
      * @type {EntSpecialdoctorEdges}
      * @memberof EntSpecialdoctor
@@ -38,12 +56,6 @@ export interface EntSpecialdoctor {
      * @memberof EntSpecialdoctor
      */
     id?: number;
-    /**
-     * Other holds the value of the "other" field.
-     * @type {string}
-     * @memberof EntSpecialdoctor
-     */
-    other?: string;
 }
 
 export function EntSpecialdoctorFromJSON(json: any): EntSpecialdoctor {
@@ -56,9 +68,11 @@ export function EntSpecialdoctorFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
+        'doctorid': !exists(json, 'Doctorid') ? undefined : json['Doctorid'],
+        'other': !exists(json, 'Other') ? undefined : json['Other'],
+        'roomnumber': !exists(json, 'Roomnumber') ? undefined : json['Roomnumber'],
         'edges': !exists(json, 'edges') ? undefined : EntSpecialdoctorEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'other': !exists(json, 'other') ? undefined : json['other'],
     };
 }
 
@@ -71,9 +85,11 @@ export function EntSpecialdoctorToJSON(value?: EntSpecialdoctor | null): any {
     }
     return {
         
+        'Doctorid': value.doctorid,
+        'Other': value.other,
+        'Roomnumber': value.roomnumber,
         'edges': EntSpecialdoctorEdgesToJSON(value.edges),
         'id': value.id,
-        'other': value.other,
     };
 }
 

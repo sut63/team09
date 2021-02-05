@@ -107,7 +107,7 @@ const Office: FC<{}> = () => {
     return val.match("^[ก-๏\s]+$");
   }
   const ValidateRoomnumber = (val: string) => {
-    const room = /^[ABC]\d{4}/g
+    const room = /^[ABC]\d{4}$/g
     return room.test(val);
   }
   const ValidateDoctoridcard = (val: string) => {
@@ -322,7 +322,7 @@ const Office: FC<{}> = () => {
                 className={classes.formControl}
               >
                 <TextField
-                  label="ระยะเวลาในการทำงาน - ปัจจุบัน"
+                  label="ระยะเวลาในการทำงาน - สิ้นสุด"
                   name="added2"
                   type="date"
                   value={office.added2 || ''} // (undefined || '') = ''

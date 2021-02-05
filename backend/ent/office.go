@@ -31,11 +31,10 @@ type Office struct {
 	AddedTime2 time.Time `json:"added_time2,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
-	Edges            OfficeEdges `json:"edges"`
-	department_id    *int
-	doctor_id        *int
-	extradoctor_id   *int
-	Specialdoctor_id *int
+	Edges          OfficeEdges `json:"edges"`
+	department_id  *int
+	doctor_id      *int
+	extradoctor_id *int
 }
 
 // OfficeEdges holds the relations/edges for other nodes in the graph.
@@ -122,7 +121,6 @@ func (*Office) fkValues() []interface{} {
 		&sql.NullInt64{}, // department_id
 		&sql.NullInt64{}, // doctor_id
 		&sql.NullInt64{}, // extradoctor_id
-		&sql.NullInt64{}, // Specialdoctor_id
 	}
 }
 
@@ -182,12 +180,6 @@ func (o *Office) assignValues(values ...interface{}) error {
 		} else if value.Valid {
 			o.extradoctor_id = new(int)
 			*o.extradoctor_id = int(value.Int64)
-		}
-		if value, ok := values[3].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field Specialdoctor_id", value)
-		} else if value.Valid {
-			o.Specialdoctor_id = new(int)
-			*o.Specialdoctor_id = int(value.Int64)
 		}
 	}
 	return nil

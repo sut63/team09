@@ -2449,6 +2449,10 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.DetailEdges"
                 },
+                "email": {
+                    "description": "Email holds the value of the \"email\" field.",
+                    "type": "string"
+                },
                 "explain": {
                     "description": "Explain holds the value of the \"explain\" field.",
                     "type": "string"
@@ -2456,6 +2460,10 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "phone": {
+                    "description": "Phone holds the value of the \"phone\" field.",
+                    "type": "string"
                 }
             }
         },
@@ -2726,6 +2734,10 @@ var doc = `{
                     "description": "AddedTime2 holds the value of the \"added_time2\" field.",
                     "type": "string"
                 },
+                "doctoridcard": {
+                    "description": "Doctoridcard holds the value of the \"doctoridcard\" field.",
+                    "type": "string"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the OfficeQuery when eager-loading is set.",
                     "type": "object",
@@ -2739,8 +2751,9 @@ var doc = `{
                     "description": "Officename holds the value of the \"officename\" field.",
                     "type": "string"
                 },
-                "specialdoctor_id": {
-                    "type": "integer"
+                "roomnumber": {
+                    "description": "Roomnumber holds the value of the \"roomnumber\" field.",
+                    "type": "string"
                 }
             }
         },
@@ -2804,8 +2817,16 @@ var doc = `{
         "ent.Schedule": {
             "type": "object",
             "properties": {
-                "activity": {
-                    "description": "Activity holds the value of the \"activity\" field.",
+                "Activity": {
+                    "description": "Activity holds the value of the \"Activity\" field.",
+                    "type": "string"
+                },
+                "Docterid": {
+                    "description": "Docterid holds the value of the \"Docterid\" field.",
+                    "type": "string"
+                },
+                "Roomnumber": {
+                    "description": "Roomnumber holds the value of the \"Roomnumber\" field.",
                     "type": "string"
                 },
                 "added_time": {
@@ -2831,8 +2852,8 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Department"
                 },
-                "docter": {
-                    "description": "Docter holds the value of the docter edge.",
+                "doctor": {
+                    "description": "Doctor holds the value of the doctor edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Doctor"
                 },
@@ -2846,6 +2867,18 @@ var doc = `{
         "ent.Specialdoctor": {
             "type": "object",
             "properties": {
+                "Doctorid": {
+                    "description": "Doctorid holds the value of the \"Doctorid\" field.",
+                    "type": "string"
+                },
+                "Other": {
+                    "description": "Other holds the value of the \"Other\" field.",
+                    "type": "string"
+                },
+                "Roomnumber": {
+                    "description": "Roomnumber holds the value of the \"Roomnumber\" field.",
+                    "type": "string"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the SpecialdoctorQuery when eager-loading is set.",
                     "type": "object",
@@ -2854,10 +2887,6 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
-                },
-                "other": {
-                    "description": "Other holds the value of the \"other\" field.",
-                    "type": "string"
                 }
             }
         },
@@ -2878,13 +2907,6 @@ var doc = `{
                     "description": "Extradoctor holds the value of the extradoctor edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Extradoctor"
-                },
-                "offices": {
-                    "description": "Offices holds the value of the offices edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Office"
-                    }
                 }
             }
         },
@@ -2933,10 +2955,18 @@ var doc = `{
                     "description": "Datetwo holds the value of the \"datetwo\" field.",
                     "type": "string"
                 },
+                "doctoridcard": {
+                    "description": "Doctoridcard holds the value of the \"doctoridcard\" field.",
+                    "type": "string"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the TrainingQuery when eager-loading is set.",
                     "type": "object",
                     "$ref": "#/definitions/ent.TrainingEdges"
+                },
+                "hour": {
+                    "description": "Hour holds the value of the \"hour\" field.",
+                    "type": "string"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -3035,7 +3065,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "localhost:8080",
 	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "SUT SA Example API",
+	Title:       "SUT SA Example API Playlist Vidoe",
 	Description: "This is a sample server for SUT SE 2563",
 }
 

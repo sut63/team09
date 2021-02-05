@@ -198,7 +198,6 @@ var (
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "extradoctor_id", Type: field.TypeInt, Nullable: true},
-		{Name: "Specialdoctor_id", Type: field.TypeInt, Nullable: true},
 	}
 	// OfficesTable holds the schema information for the "offices" table.
 	OfficesTable = &schema.Table{
@@ -225,13 +224,6 @@ var (
 				Columns: []*schema.Column{OfficesColumns[8]},
 
 				RefColumns: []*schema.Column{ExtradoctorsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "offices_specialdoctors_offices",
-				Columns: []*schema.Column{OfficesColumns[9]},
-
-				RefColumns: []*schema.Column{SpecialdoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -291,6 +283,8 @@ var (
 	// SpecialdoctorsColumns holds the columns for the "specialdoctors" table.
 	SpecialdoctorsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "roomnumber", Type: field.TypeString},
+		{Name: "doctorid", Type: field.TypeString, Size: 10},
 		{Name: "other", Type: field.TypeString},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
@@ -304,21 +298,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "specialdoctors_departments_specialdoctors",
-				Columns: []*schema.Column{SpecialdoctorsColumns[2]},
+				Columns: []*schema.Column{SpecialdoctorsColumns[4]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "specialdoctors_doctors_specialdoctors",
-				Columns: []*schema.Column{SpecialdoctorsColumns[3]},
+				Columns: []*schema.Column{SpecialdoctorsColumns[5]},
 
 				RefColumns: []*schema.Column{DoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "specialdoctors_extradoctors_specialdoctors",
-				Columns: []*schema.Column{SpecialdoctorsColumns[4]},
+				Columns: []*schema.Column{SpecialdoctorsColumns[6]},
 
 				RefColumns: []*schema.Column{ExtradoctorsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -410,7 +404,6 @@ func init() {
 	OfficesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	OfficesTable.ForeignKeys[1].RefTable = DoctorsTable
 	OfficesTable.ForeignKeys[2].RefTable = ExtradoctorsTable
-	OfficesTable.ForeignKeys[3].RefTable = SpecialdoctorsTable
 	SchedulesTable.ForeignKeys[0].RefTable = DepartmentsTable
 	SchedulesTable.ForeignKeys[1].RefTable = DoctorsTable
 	SchedulesTable.ForeignKeys[2].RefTable = OfficesTable

@@ -210,9 +210,31 @@ func init() {
 	}()
 	specialdoctorFields := schema.Specialdoctor{}.Fields()
 	_ = specialdoctorFields
-	// specialdoctorDescOther is the schema descriptor for other field.
-	specialdoctorDescOther := specialdoctorFields[0].Descriptor()
-	// specialdoctor.OtherValidator is a validator for the "other" field. It is called by the builders before save.
+	// specialdoctorDescRoomnumber is the schema descriptor for Roomnumber field.
+	specialdoctorDescRoomnumber := specialdoctorFields[0].Descriptor()
+	// specialdoctor.RoomnumberValidator is a validator for the "Roomnumber" field. It is called by the builders before save.
+	specialdoctor.RoomnumberValidator = specialdoctorDescRoomnumber.Validators[0].(func(string) error)
+	// specialdoctorDescDoctorid is the schema descriptor for Doctorid field.
+	specialdoctorDescDoctorid := specialdoctorFields[1].Descriptor()
+	// specialdoctor.DoctoridValidator is a validator for the "Doctorid" field. It is called by the builders before save.
+	specialdoctor.DoctoridValidator = func() func(string) error {
+		validators := specialdoctorDescDoctorid.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Doctorid string) error {
+			for _, fn := range fns {
+				if err := fn(_Doctorid); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// specialdoctorDescOther is the schema descriptor for Other field.
+	specialdoctorDescOther := specialdoctorFields[2].Descriptor()
+	// specialdoctor.OtherValidator is a validator for the "Other" field. It is called by the builders before save.
 	specialdoctor.OtherValidator = specialdoctorDescOther.Validators[0].(func(string) error)
 	titleFields := schema.Title{}.Fields()
 	_ = titleFields

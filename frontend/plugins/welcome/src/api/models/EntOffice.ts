@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * SUT SA Example API
+ * SUT SA Example API Playlist Vidoe
  * This is a sample server for SUT SE 2563
  *
  * The version of the OpenAPI document: 1.0
@@ -68,12 +68,6 @@ export interface EntOffice {
      * @memberof EntOffice
      */
     roomnumber?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof EntOffice
-     */
-    specialdoctorId?: number;
 }
 
 export function EntOfficeFromJSON(json: any): EntOffice {
@@ -93,7 +87,6 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'id': !exists(json, 'id') ? undefined : json['id'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
-        'specialdoctorId': !exists(json, 'specialdoctor_id') ? undefined : json['specialdoctor_id'],
     };
 }
 
@@ -113,7 +106,6 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
         'id': value.id,
         'officename': value.officename,
         'roomnumber': value.roomnumber,
-        'specialdoctor_id': value.specialdoctorId,
     };
 }
 

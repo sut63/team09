@@ -86,13 +86,13 @@ const Homepage: FC<{}> = () => {
         <Breadcrumbs>
           <Link
             color="textPrimary"
-            href="/workhistorytables" >
+            href="/workhistorytable" >
             ค้นหาประวัติการทำงานของแพทย์
             </Link>
 
           <Link
             color="textPrimary"
-            href="/trainingTables" >
+            href="/trainingTable" >
             ค้นหาข้อมูลการฝึกอบรม
             </Link>
 
@@ -104,7 +104,7 @@ const Homepage: FC<{}> = () => {
 
           <Link
             color="textPrimary"
-            href="/personalinformationtables" >
+            href="/personalinformationtable" >
             ค้นหาข้อมูลส่วนตัวแพทย์
             </Link>
 

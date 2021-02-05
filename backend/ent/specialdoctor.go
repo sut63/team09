@@ -18,8 +18,12 @@ type Specialdoctor struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Other holds the value of the "other" field.
-	Other string `json:"other,omitempty"`
+	// Roomnumber holds the value of the "Roomnumber" field.
+	Roomnumber string `json:"Roomnumber,omitempty"`
+	// Doctorid holds the value of the "Doctorid" field.
+	Doctorid string `json:"Doctorid,omitempty"`
+	// Other holds the value of the "Other" field.
+	Other string `json:"Other,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SpecialdoctorQuery when eager-loading is set.
 	Edges          SpecialdoctorEdges `json:"edges"`
@@ -30,8 +34,6 @@ type Specialdoctor struct {
 
 // SpecialdoctorEdges holds the relations/edges for other nodes in the graph.
 type SpecialdoctorEdges struct {
-	// Offices holds the value of the offices edge.
-	Offices []*Office
 	// Doctor holds the value of the doctor edge.
 	Doctor *Doctor
 	// Department holds the value of the department edge.
@@ -40,22 +42,13 @@ type SpecialdoctorEdges struct {
 	Extradoctor *Extradoctor
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
-}
-
-// OfficesOrErr returns the Offices value or an error if the edge
-// was not loaded in eager-loading.
-func (e SpecialdoctorEdges) OfficesOrErr() ([]*Office, error) {
-	if e.loadedTypes[0] {
-		return e.Offices, nil
-	}
-	return nil, &NotLoadedError{edge: "offices"}
+	loadedTypes [3]bool
 }
 
 // DoctorOrErr returns the Doctor value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e SpecialdoctorEdges) DoctorOrErr() (*Doctor, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[0] {
 		if e.Doctor == nil {
 			// The edge doctor was loaded in eager-loading,
 			// but was not found.
@@ -69,7 +62,7 @@ func (e SpecialdoctorEdges) DoctorOrErr() (*Doctor, error) {
 // DepartmentOrErr returns the Department value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e SpecialdoctorEdges) DepartmentOrErr() (*Department, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		if e.Department == nil {
 			// The edge department was loaded in eager-loading,
 			// but was not found.
@@ -83,7 +76,7 @@ func (e SpecialdoctorEdges) DepartmentOrErr() (*Department, error) {
 // ExtradoctorOrErr returns the Extradoctor value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e SpecialdoctorEdges) ExtradoctorOrErr() (*Extradoctor, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		if e.Extradoctor == nil {
 			// The edge extradoctor was loaded in eager-loading,
 			// but was not found.
@@ -98,7 +91,9 @@ func (e SpecialdoctorEdges) ExtradoctorOrErr() (*Extradoctor, error) {
 func (*Specialdoctor) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // other
+		&sql.NullString{}, // Roomnumber
+		&sql.NullString{}, // Doctorid
+		&sql.NullString{}, // Other
 	}
 }
 
@@ -124,11 +119,21 @@ func (s *Specialdoctor) assignValues(values ...interface{}) error {
 	s.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field other", values[0])
+		return fmt.Errorf("unexpected type %T for field Roomnumber", values[0])
+	} else if value.Valid {
+		s.Roomnumber = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Doctorid", values[1])
+	} else if value.Valid {
+		s.Doctorid = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Other", values[2])
 	} else if value.Valid {
 		s.Other = value.String
 	}
-	values = values[1:]
+	values = values[3:]
 	if len(values) == len(specialdoctor.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
@@ -150,11 +155,6 @@ func (s *Specialdoctor) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
-}
-
-// QueryOffices queries the offices edge of the Specialdoctor.
-func (s *Specialdoctor) QueryOffices() *OfficeQuery {
-	return (&SpecialdoctorClient{config: s.config}).QueryOffices(s)
 }
 
 // QueryDoctor queries the doctor edge of the Specialdoctor.
@@ -195,7 +195,11 @@ func (s *Specialdoctor) String() string {
 	var builder strings.Builder
 	builder.WriteString("Specialdoctor(")
 	builder.WriteString(fmt.Sprintf("id=%v", s.ID))
-	builder.WriteString(", other=")
+	builder.WriteString(", Roomnumber=")
+	builder.WriteString(s.Roomnumber)
+	builder.WriteString(", Doctorid=")
+	builder.WriteString(s.Doctorid)
+	builder.WriteString(", Other=")
 	builder.WriteString(s.Other)
 	builder.WriteByte(')')
 	return builder.String()

@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * SUT SA Example API
+ * SUT SA Example API Playlist Vidoe
  * This is a sample server for SUT SE 2563
  *
  * The version of the OpenAPI document: 1.0
@@ -26,10 +26,6 @@ import {
     EntExtradoctorFromJSON,
     EntExtradoctorFromJSONTyped,
     EntExtradoctorToJSON,
-    EntOffice,
-    EntOfficeFromJSON,
-    EntOfficeFromJSONTyped,
-    EntOfficeToJSON,
 } from './';
 
 /**
@@ -56,12 +52,6 @@ export interface EntSpecialdoctorEdges {
      * @memberof EntSpecialdoctorEdges
      */
     extradoctor?: EntExtradoctor;
-    /**
-     * Offices holds the value of the offices edge.
-     * @type {Array<EntOffice>}
-     * @memberof EntSpecialdoctorEdges
-     */
-    offices?: Array<EntOffice>;
 }
 
 export function EntSpecialdoctorEdgesFromJSON(json: any): EntSpecialdoctorEdges {
@@ -74,10 +64,9 @@ export function EntSpecialdoctorEdgesFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
-        'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
-        'extradoctor': !exists(json, 'extradoctor') ? undefined : EntExtradoctorFromJSON(json['extradoctor']),
-        'offices': !exists(json, 'offices') ? undefined : ((json['offices'] as Array<any>).map(EntOfficeFromJSON)),
+        'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
+        'doctor': !exists(json, 'Doctor') ? undefined : EntDoctorFromJSON(json['Doctor']),
+        'extradoctor': !exists(json, 'Extradoctor') ? undefined : EntExtradoctorFromJSON(json['Extradoctor']),
     };
 }
 
@@ -93,7 +82,6 @@ export function EntSpecialdoctorEdgesToJSON(value?: EntSpecialdoctorEdges | null
         'department': EntDepartmentToJSON(value.department),
         'doctor': EntDoctorToJSON(value.doctor),
         'extradoctor': EntExtradoctorToJSON(value.extradoctor),
-        'offices': value.offices === undefined ? undefined : ((value.offices as Array<any>).map(EntOfficeToJSON)),
     };
 }
 

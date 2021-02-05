@@ -1727,22 +1727,6 @@ func (c *SpecialdoctorClient) GetX(ctx context.Context, id int) *Specialdoctor {
 	return s
 }
 
-// QueryOffices queries the offices edge of a Specialdoctor.
-func (c *SpecialdoctorClient) QueryOffices(s *Specialdoctor) *OfficeQuery {
-	query := &OfficeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(specialdoctor.Table, specialdoctor.FieldID, id),
-			sqlgraph.To(office.Table, office.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, specialdoctor.OfficesTable, specialdoctor.OfficesColumn),
-		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryDoctor queries the doctor edge of a Specialdoctor.
 func (c *SpecialdoctorClient) QueryDoctor(s *Specialdoctor) *DoctorQuery {
 	query := &DoctorQuery{config: c.config}

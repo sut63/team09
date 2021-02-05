@@ -12,7 +12,6 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/extradoctor"
-	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/predicate"
 	"github.com/team09/app/ent/specialdoctor"
 )
@@ -31,25 +30,22 @@ func (su *SpecialdoctorUpdate) Where(ps ...predicate.Specialdoctor) *Specialdoct
 	return su
 }
 
-// SetOther sets the other field.
+// SetRoomnumber sets the Roomnumber field.
+func (su *SpecialdoctorUpdate) SetRoomnumber(s string) *SpecialdoctorUpdate {
+	su.mutation.SetRoomnumber(s)
+	return su
+}
+
+// SetDoctorid sets the Doctorid field.
+func (su *SpecialdoctorUpdate) SetDoctorid(s string) *SpecialdoctorUpdate {
+	su.mutation.SetDoctorid(s)
+	return su
+}
+
+// SetOther sets the Other field.
 func (su *SpecialdoctorUpdate) SetOther(s string) *SpecialdoctorUpdate {
 	su.mutation.SetOther(s)
 	return su
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (su *SpecialdoctorUpdate) AddOfficeIDs(ids ...int) *SpecialdoctorUpdate {
-	su.mutation.AddOfficeIDs(ids...)
-	return su
-}
-
-// AddOffices adds the offices edges to Office.
-func (su *SpecialdoctorUpdate) AddOffices(o ...*Office) *SpecialdoctorUpdate {
-	ids := make([]int, len(o))
-	for i := range o {
-		ids[i] = o[i].ID
-	}
-	return su.AddOfficeIDs(ids...)
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -114,21 +110,6 @@ func (su *SpecialdoctorUpdate) Mutation() *SpecialdoctorMutation {
 	return su.mutation
 }
 
-// RemoveOfficeIDs removes the offices edge to Office by ids.
-func (su *SpecialdoctorUpdate) RemoveOfficeIDs(ids ...int) *SpecialdoctorUpdate {
-	su.mutation.RemoveOfficeIDs(ids...)
-	return su
-}
-
-// RemoveOffices removes offices edges to Office.
-func (su *SpecialdoctorUpdate) RemoveOffices(o ...*Office) *SpecialdoctorUpdate {
-	ids := make([]int, len(o))
-	for i := range o {
-		ids[i] = o[i].ID
-	}
-	return su.RemoveOfficeIDs(ids...)
-}
-
 // ClearDoctor clears the doctor edge to Doctor.
 func (su *SpecialdoctorUpdate) ClearDoctor() *SpecialdoctorUpdate {
 	su.mutation.ClearDoctor()
@@ -149,9 +130,19 @@ func (su *SpecialdoctorUpdate) ClearExtradoctor() *SpecialdoctorUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (su *SpecialdoctorUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := su.mutation.Roomnumber(); ok {
+		if err := specialdoctor.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := su.mutation.Doctorid(); ok {
+		if err := specialdoctor.DoctoridValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Doctorid", err: fmt.Errorf("ent: validator failed for field \"Doctorid\": %w", err)}
+		}
+	}
 	if v, ok := su.mutation.Other(); ok {
 		if err := specialdoctor.OtherValidator(v); err != nil {
-			return 0, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
+			return 0, &ValidationError{Name: "Other", err: fmt.Errorf("ent: validator failed for field \"Other\": %w", err)}
 		}
 	}
 
@@ -222,50 +213,26 @@ func (su *SpecialdoctorUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := su.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldRoomnumber,
+		})
+	}
+	if value, ok := su.mutation.Doctorid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldDoctorid,
+		})
+	}
 	if value, ok := su.mutation.Other(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: specialdoctor.FieldOther,
 		})
-	}
-	if nodes := su.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialdoctor.OfficesTable,
-			Columns: []string{specialdoctor.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := su.mutation.OfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialdoctor.OfficesTable,
-			Columns: []string{specialdoctor.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if su.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -390,25 +357,22 @@ type SpecialdoctorUpdateOne struct {
 	mutation *SpecialdoctorMutation
 }
 
-// SetOther sets the other field.
+// SetRoomnumber sets the Roomnumber field.
+func (suo *SpecialdoctorUpdateOne) SetRoomnumber(s string) *SpecialdoctorUpdateOne {
+	suo.mutation.SetRoomnumber(s)
+	return suo
+}
+
+// SetDoctorid sets the Doctorid field.
+func (suo *SpecialdoctorUpdateOne) SetDoctorid(s string) *SpecialdoctorUpdateOne {
+	suo.mutation.SetDoctorid(s)
+	return suo
+}
+
+// SetOther sets the Other field.
 func (suo *SpecialdoctorUpdateOne) SetOther(s string) *SpecialdoctorUpdateOne {
 	suo.mutation.SetOther(s)
 	return suo
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (suo *SpecialdoctorUpdateOne) AddOfficeIDs(ids ...int) *SpecialdoctorUpdateOne {
-	suo.mutation.AddOfficeIDs(ids...)
-	return suo
-}
-
-// AddOffices adds the offices edges to Office.
-func (suo *SpecialdoctorUpdateOne) AddOffices(o ...*Office) *SpecialdoctorUpdateOne {
-	ids := make([]int, len(o))
-	for i := range o {
-		ids[i] = o[i].ID
-	}
-	return suo.AddOfficeIDs(ids...)
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -473,21 +437,6 @@ func (suo *SpecialdoctorUpdateOne) Mutation() *SpecialdoctorMutation {
 	return suo.mutation
 }
 
-// RemoveOfficeIDs removes the offices edge to Office by ids.
-func (suo *SpecialdoctorUpdateOne) RemoveOfficeIDs(ids ...int) *SpecialdoctorUpdateOne {
-	suo.mutation.RemoveOfficeIDs(ids...)
-	return suo
-}
-
-// RemoveOffices removes offices edges to Office.
-func (suo *SpecialdoctorUpdateOne) RemoveOffices(o ...*Office) *SpecialdoctorUpdateOne {
-	ids := make([]int, len(o))
-	for i := range o {
-		ids[i] = o[i].ID
-	}
-	return suo.RemoveOfficeIDs(ids...)
-}
-
 // ClearDoctor clears the doctor edge to Doctor.
 func (suo *SpecialdoctorUpdateOne) ClearDoctor() *SpecialdoctorUpdateOne {
 	suo.mutation.ClearDoctor()
@@ -508,9 +457,19 @@ func (suo *SpecialdoctorUpdateOne) ClearExtradoctor() *SpecialdoctorUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (suo *SpecialdoctorUpdateOne) Save(ctx context.Context) (*Specialdoctor, error) {
+	if v, ok := suo.mutation.Roomnumber(); ok {
+		if err := specialdoctor.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := suo.mutation.Doctorid(); ok {
+		if err := specialdoctor.DoctoridValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Doctorid", err: fmt.Errorf("ent: validator failed for field \"Doctorid\": %w", err)}
+		}
+	}
 	if v, ok := suo.mutation.Other(); ok {
 		if err := specialdoctor.OtherValidator(v); err != nil {
-			return nil, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
+			return nil, &ValidationError{Name: "Other", err: fmt.Errorf("ent: validator failed for field \"Other\": %w", err)}
 		}
 	}
 
@@ -579,50 +538,26 @@ func (suo *SpecialdoctorUpdateOne) sqlSave(ctx context.Context) (s *Specialdocto
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Specialdoctor.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := suo.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldRoomnumber,
+		})
+	}
+	if value, ok := suo.mutation.Doctorid(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldDoctorid,
+		})
+	}
 	if value, ok := suo.mutation.Other(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: specialdoctor.FieldOther,
 		})
-	}
-	if nodes := suo.mutation.RemovedOfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialdoctor.OfficesTable,
-			Columns: []string{specialdoctor.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := suo.mutation.OfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialdoctor.OfficesTable,
-			Columns: []string{specialdoctor.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if suo.mutation.DoctorCleared() {
 		edge := &sqlgraph.EdgeSpec{

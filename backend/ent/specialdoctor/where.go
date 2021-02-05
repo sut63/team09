@@ -91,28 +91,264 @@ func IDLTE(id int) predicate.Specialdoctor {
 	})
 }
 
-// Other applies equality check predicate on the "other" field. It's identical to OtherEQ.
+// Roomnumber applies equality check predicate on the "Roomnumber" field. It's identical to RoomnumberEQ.
+func Roomnumber(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// Doctorid applies equality check predicate on the "Doctorid" field. It's identical to DoctoridEQ.
+func Doctorid(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctorid), v))
+	})
+}
+
+// Other applies equality check predicate on the "Other" field. It's identical to OtherEQ.
 func Other(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOther), v))
 	})
 }
 
-// OtherEQ applies the EQ predicate on the "other" field.
+// RoomnumberEQ applies the EQ predicate on the "Roomnumber" field.
+func RoomnumberEQ(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberNEQ applies the NEQ predicate on the "Roomnumber" field.
+func RoomnumberNEQ(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberIn applies the In predicate on the "Roomnumber" field.
+func RoomnumberIn(vs ...string) predicate.Specialdoctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberNotIn applies the NotIn predicate on the "Roomnumber" field.
+func RoomnumberNotIn(vs ...string) predicate.Specialdoctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberGT applies the GT predicate on the "Roomnumber" field.
+func RoomnumberGT(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberGTE applies the GTE predicate on the "Roomnumber" field.
+func RoomnumberGTE(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLT applies the LT predicate on the "Roomnumber" field.
+func RoomnumberLT(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLTE applies the LTE predicate on the "Roomnumber" field.
+func RoomnumberLTE(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContains applies the Contains predicate on the "Roomnumber" field.
+func RoomnumberContains(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasPrefix applies the HasPrefix predicate on the "Roomnumber" field.
+func RoomnumberHasPrefix(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasSuffix applies the HasSuffix predicate on the "Roomnumber" field.
+func RoomnumberHasSuffix(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberEqualFold applies the EqualFold predicate on the "Roomnumber" field.
+func RoomnumberEqualFold(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContainsFold applies the ContainsFold predicate on the "Roomnumber" field.
+func RoomnumberContainsFold(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// DoctoridEQ applies the EQ predicate on the "Doctorid" field.
+func DoctoridEQ(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridNEQ applies the NEQ predicate on the "Doctorid" field.
+func DoctoridNEQ(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridIn applies the In predicate on the "Doctorid" field.
+func DoctoridIn(vs ...string) predicate.Specialdoctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDoctorid), v...))
+	})
+}
+
+// DoctoridNotIn applies the NotIn predicate on the "Doctorid" field.
+func DoctoridNotIn(vs ...string) predicate.Specialdoctor {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDoctorid), v...))
+	})
+}
+
+// DoctoridGT applies the GT predicate on the "Doctorid" field.
+func DoctoridGT(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridGTE applies the GTE predicate on the "Doctorid" field.
+func DoctoridGTE(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridLT applies the LT predicate on the "Doctorid" field.
+func DoctoridLT(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridLTE applies the LTE predicate on the "Doctorid" field.
+func DoctoridLTE(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridContains applies the Contains predicate on the "Doctorid" field.
+func DoctoridContains(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridHasPrefix applies the HasPrefix predicate on the "Doctorid" field.
+func DoctoridHasPrefix(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridHasSuffix applies the HasSuffix predicate on the "Doctorid" field.
+func DoctoridHasSuffix(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridEqualFold applies the EqualFold predicate on the "Doctorid" field.
+func DoctoridEqualFold(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDoctorid), v))
+	})
+}
+
+// DoctoridContainsFold applies the ContainsFold predicate on the "Doctorid" field.
+func DoctoridContainsFold(v string) predicate.Specialdoctor {
+	return predicate.Specialdoctor(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDoctorid), v))
+	})
+}
+
+// OtherEQ applies the EQ predicate on the "Other" field.
 func OtherEQ(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldOther), v))
 	})
 }
 
-// OtherNEQ applies the NEQ predicate on the "other" field.
+// OtherNEQ applies the NEQ predicate on the "Other" field.
 func OtherNEQ(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldOther), v))
 	})
 }
 
-// OtherIn applies the In predicate on the "other" field.
+// OtherIn applies the In predicate on the "Other" field.
 func OtherIn(vs ...string) predicate.Specialdoctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -129,7 +365,7 @@ func OtherIn(vs ...string) predicate.Specialdoctor {
 	})
 }
 
-// OtherNotIn applies the NotIn predicate on the "other" field.
+// OtherNotIn applies the NotIn predicate on the "Other" field.
 func OtherNotIn(vs ...string) predicate.Specialdoctor {
 	v := make([]interface{}, len(vs))
 	for i := range v {
@@ -146,94 +382,66 @@ func OtherNotIn(vs ...string) predicate.Specialdoctor {
 	})
 }
 
-// OtherGT applies the GT predicate on the "other" field.
+// OtherGT applies the GT predicate on the "Other" field.
 func OtherGT(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldOther), v))
 	})
 }
 
-// OtherGTE applies the GTE predicate on the "other" field.
+// OtherGTE applies the GTE predicate on the "Other" field.
 func OtherGTE(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldOther), v))
 	})
 }
 
-// OtherLT applies the LT predicate on the "other" field.
+// OtherLT applies the LT predicate on the "Other" field.
 func OtherLT(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldOther), v))
 	})
 }
 
-// OtherLTE applies the LTE predicate on the "other" field.
+// OtherLTE applies the LTE predicate on the "Other" field.
 func OtherLTE(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldOther), v))
 	})
 }
 
-// OtherContains applies the Contains predicate on the "other" field.
+// OtherContains applies the Contains predicate on the "Other" field.
 func OtherContains(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldOther), v))
 	})
 }
 
-// OtherHasPrefix applies the HasPrefix predicate on the "other" field.
+// OtherHasPrefix applies the HasPrefix predicate on the "Other" field.
 func OtherHasPrefix(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldOther), v))
 	})
 }
 
-// OtherHasSuffix applies the HasSuffix predicate on the "other" field.
+// OtherHasSuffix applies the HasSuffix predicate on the "Other" field.
 func OtherHasSuffix(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldOther), v))
 	})
 }
 
-// OtherEqualFold applies the EqualFold predicate on the "other" field.
+// OtherEqualFold applies the EqualFold predicate on the "Other" field.
 func OtherEqualFold(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldOther), v))
 	})
 }
 
-// OtherContainsFold applies the ContainsFold predicate on the "other" field.
+// OtherContainsFold applies the ContainsFold predicate on the "Other" field.
 func OtherContainsFold(v string) predicate.Specialdoctor {
 	return predicate.Specialdoctor(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldOther), v))
-	})
-}
-
-// HasOffices applies the HasEdge predicate on the "offices" edge.
-func HasOffices() predicate.Specialdoctor {
-	return predicate.Specialdoctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(OfficesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, OfficesTable, OfficesColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasOfficesWith applies the HasEdge predicate on the "offices" edge with a given conditions (other predicates).
-func HasOfficesWith(preds ...predicate.Office) predicate.Specialdoctor {
-	return predicate.Specialdoctor(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(OfficesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, OfficesTable, OfficesColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
 	})
 }
 
