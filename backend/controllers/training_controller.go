@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"strconv"
@@ -11,6 +12,7 @@ import (
 	"github.com/team09/app/ent/course"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
+	"github.com/team09/app/ent/training"
 )
 
 // TrainingController defines the struct for the training controller
@@ -159,6 +161,70 @@ func (ctl *TrainingController) ListTraining(c *gin.Context) {
 	c.JSON(200, trainings)
 }
 
+// GetTraining handles GET requests to retrieve a training entity
+// @Summary Get a training entity by ID
+// @Description get training by ID
+// @ID get-training
+// @Produce  json
+// @Param id path int true "Training ID"
+// @Success 200 {object} ent.Training
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /trainings/{id} [get]
+
+func (ctl *TrainingController) GetTraining(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	t, err := ctl.client.Training.
+		Query().
+		Where(training.IDEQ(int(id))).
+		Only(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, t)
+}
+
+// DeleteTraining handles DELETE requests to delete a training entity
+// @Summary Delete a training entity by ID
+// @Description get training by ID
+// @ID delete-training
+// @Produce  json
+// @Param id path int true "Training ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /trainings/{id} [delete]
+func (ctl *TrainingController) DeleteTraining(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	err = ctl.client.Training.
+		DeleteOneID(int(id)).
+		Exec(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
+}
+
 // NewTrainingController creates and registers handles for the training controller
 func NewTrainingController(router gin.IRouter, client *ent.Client) *TrainingController {
 	tr := &TrainingController{
@@ -175,5 +241,7 @@ func (ctl *TrainingController) register() {
 
 	trainings.GET("", ctl.ListTraining)
 	trainings.POST("", ctl.CreateTraining)
+	trainings.GET(":id", ctl.GetTraining)
+	trainings.DELETE(":id", ctl.DeleteTraining)
 
 }
