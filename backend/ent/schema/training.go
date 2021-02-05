@@ -27,15 +27,8 @@ func (Training) Fields() []ent.Field {
 		field.Time("dateone"),
 		field.Time("datetwo"),
 		field.String("doctoridcard").MaxLen(10).MinLen(10),
-		field.String("hour").Validate(func(s string) error {
-			match, _ := regexp.MatchString("^[0-9]+$", s)
-			if !match {
-				return errors.New("กรอกชั่วโมงเป็นตัวเลขเท่านั้น")
-			}
-			return nil
-		}),
+		field.Int("hour").Range(1,100),
 	}
-
 }
 
 // Edges of the Training.

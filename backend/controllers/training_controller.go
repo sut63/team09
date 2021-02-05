@@ -27,7 +27,7 @@ type Training struct {
 	Dateone      string
 	Datetwo      string
 	Doctoridcard string
-	Hour        string
+	Hour         int
 }
 
 // CreateTraining handles POST requests for adding training entities

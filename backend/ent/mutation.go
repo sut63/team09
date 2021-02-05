@@ -7281,7 +7281,8 @@ type TrainingMutation struct {
 	dateone           *time.Time
 	datetwo           *time.Time
 	doctoridcard      *string
-	hour              *string
+	hour              *int
+	addhour           *int
 	clearedFields     map[string]struct{}
 	course            *int
 	clearedcourse     bool
@@ -7521,12 +7522,13 @@ func (m *TrainingMutation) ResetDoctoridcard() {
 }
 
 // SetHour sets the hour field.
-func (m *TrainingMutation) SetHour(s string) {
-	m.hour = &s
+func (m *TrainingMutation) SetHour(i int) {
+	m.hour = &i
+	m.addhour = nil
 }
 
 // Hour returns the hour value in the mutation.
-func (m *TrainingMutation) Hour() (r string, exists bool) {
+func (m *TrainingMutation) Hour() (r int, exists bool) {
 	v := m.hour
 	if v == nil {
 		return
@@ -7538,7 +7540,7 @@ func (m *TrainingMutation) Hour() (r string, exists bool) {
 // If the Training object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *TrainingMutation) OldHour(ctx context.Context) (v string, err error) {
+func (m *TrainingMutation) OldHour(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldHour is allowed only on UpdateOne operations")
 	}
@@ -7552,9 +7554,28 @@ func (m *TrainingMutation) OldHour(ctx context.Context) (v string, err error) {
 	return oldValue.Hour, nil
 }
 
+// AddHour adds i to hour.
+func (m *TrainingMutation) AddHour(i int) {
+	if m.addhour != nil {
+		*m.addhour += i
+	} else {
+		m.addhour = &i
+	}
+}
+
+// AddedHour returns the value that was added to the hour field in this mutation.
+func (m *TrainingMutation) AddedHour() (r int, exists bool) {
+	v := m.addhour
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetHour reset all changes of the "hour" field.
 func (m *TrainingMutation) ResetHour() {
 	m.hour = nil
+	m.addhour = nil
 }
 
 // SetCourseID sets the course edge to Course by id.
@@ -7779,7 +7800,7 @@ func (m *TrainingMutation) SetField(name string, value ent.Value) error {
 		m.SetDoctoridcard(v)
 		return nil
 	case training.FieldHour:
-		v, ok := value.(string)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7792,13 +7813,21 @@ func (m *TrainingMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *TrainingMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addhour != nil {
+		fields = append(fields, training.FieldHour)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *TrainingMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case training.FieldHour:
+		return m.AddedHour()
+	}
 	return nil, false
 }
 
@@ -7807,6 +7836,13 @@ func (m *TrainingMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *TrainingMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case training.FieldHour:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHour(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Training numeric field %s", name)
 }

@@ -95,6 +95,8 @@ const Doctor: FC<{}> = () => {
     event: React.ChangeEvent<{ name: string; value: number }>,) => {
     const name = event.target.name as keyof typeof Doctor;
     const { value } = event.target;
+    const validateValue = value.valueOf()
+    checkPattern1(name, validateValue)
     setDoctor({ ...doctor, [name]: +value });
     // console.log(Doctor);
   };
@@ -149,9 +151,9 @@ const Doctor: FC<{}> = () => {
   const Validateeducational = (val: string) => {
     return val.match("");
   }
-  // const Validateage = (val: number) => {
-  //   return val.toString("^[0-9]{8}$");
-  // }
+  const Validateage = (val: number) => {
+    return val <= 55 && val >= 25 ? true : false;
+  }
 
 
   const checkPattern = (id: string, value: string) => {
@@ -181,6 +183,14 @@ const Doctor: FC<{}> = () => {
           return;
     }
   }
+  const checkPattern1 = (id: string, value: number) => {
+    switch (id) {
+      case 'age':
+        Validateage(Number(value)) ? setageError('') : setageError("กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
+        return;
+    }
+  }
+
   const alertMessage = (icon: any, title: any) => {
     Toast.fire({
       icon: icon,
@@ -209,8 +219,12 @@ const Doctor: FC<{}> = () => {
               alertMessage("error","กรุณากรอกอีเมลให้ถูกต้อง");
               return;
          case 'age':
-              alertMessage("error","กรุณากรอกอายุเป็นจำนวนเต็มบวกเท่านั้น");
+              alertMessage("error","กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
               return;
+         default:
+              alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ")
+              return;
+        
     }
   }
 

@@ -338,7 +338,7 @@ var (
 		{Name: "dateone", Type: field.TypeTime},
 		{Name: "datetwo", Type: field.TypeTime},
 		{Name: "doctoridcard", Type: field.TypeString, Size: 10},
-		{Name: "hour", Type: field.TypeString},
+		{Name: "hour", Type: field.TypeInt},
 		{Name: "course_id", Type: field.TypeInt, Nullable: true},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},

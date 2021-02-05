@@ -56,7 +56,7 @@ interface training {
   doctor: number;
   department: number;
   doctoridcard: string;
-  hour: string;
+  hour: number;
 
 }
 
@@ -80,7 +80,16 @@ const Training: FC<{}> = () => {
     checkPattern(name, validateValue)
     setTraining({ ...training, [name]: value });
     console.log(training);
+  };
 
+  const handleChange1 = (
+    event: React.ChangeEvent<{ name?: string; value: number }>,) => {
+    const name = event.target.name as keyof typeof Training;
+    const { value } = event.target;
+    const validateValue = value.valueOf()
+    checkPattern1(name, validateValue)
+    setTraining({ ...training, [name]: +value });
+    console.log(training);
   };
 
   const getCourses = async () => {   //ดึงข้อมูล
@@ -115,8 +124,8 @@ const Training: FC<{}> = () => {
     setTraining({});
   }
 
-  const ValidateHours = (val: string) => {
-    return val.match("^[0-9]+$")
+  const ValidateHours = (val: number) => {
+    return val <= 100 && val >= 1 ? true : false;
   }
 
   const ValidateBranch = (val: string) => {
@@ -137,10 +146,17 @@ const Training: FC<{}> = () => {
         ValidateDoctoridcard(value) ? setDoctoridcardError('') : setDoctoridcardError("กรอกตัวเลขทั้งหมด 10 ตัว");
         return;
 
-      case 'hour':
-        ValidateHours(value) ? setHoursError('') : setHoursError("กรอกชั่วโมงเป็นตัวเลขเท่านั้น");
-        return;
+      // case 'hour':
+      //   ValidateHours(Number(value)) ? setHoursError('') : setHoursError("กรอกชั่วโมง 1-100 เท่านั้น");
+      //   return;
       default:
+        return;
+    }
+  }
+  const checkPattern1 = (id: string, value: number) => {
+    switch (id) {
+      case 'hour':
+        ValidateHours(Number(value)) ? setHoursError('') : setHoursError("กรอกชั่วโมง 1-100 เท่านั้น");
         return;
     }
   }
@@ -161,7 +177,7 @@ const Training: FC<{}> = () => {
         alertMessage("error", "กรอกตัวเลขทั้งหมด 10 ตัว");
         return;
       case 'hour':
-        alertMessage("error", "กรอกชั่วโมงเป็นตัวเลขเท่านั้น");
+        alertMessage("error", "กรอกชั่วโมง 1-100 เท่านั้น");
         return;
       default:
         alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ")
@@ -304,7 +320,7 @@ const Training: FC<{}> = () => {
                   variant="outlined"
                   value={training.hour || ''}
                   helperText={hoursError}
-                  onChange={handleChange}
+                  onChange={handleChange1}
                 />
               </FormControl>
             </Grid>

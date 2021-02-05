@@ -56,8 +56,15 @@ func (tu *TrainingUpdate) SetDoctoridcard(s string) *TrainingUpdate {
 }
 
 // SetHour sets the hour field.
-func (tu *TrainingUpdate) SetHour(s string) *TrainingUpdate {
-	tu.mutation.SetHour(s)
+func (tu *TrainingUpdate) SetHour(i int) *TrainingUpdate {
+	tu.mutation.ResetHour()
+	tu.mutation.SetHour(i)
+	return tu
+}
+
+// AddHour adds i to hour.
+func (tu *TrainingUpdate) AddHour(i int) *TrainingUpdate {
+	tu.mutation.AddHour(i)
 	return tu
 }
 
@@ -256,7 +263,14 @@ func (tu *TrainingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.Hour(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: training.FieldHour,
+		})
+	}
+	if value, ok := tu.mutation.AddedHour(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: training.FieldHour,
 		})
@@ -409,8 +423,15 @@ func (tuo *TrainingUpdateOne) SetDoctoridcard(s string) *TrainingUpdateOne {
 }
 
 // SetHour sets the hour field.
-func (tuo *TrainingUpdateOne) SetHour(s string) *TrainingUpdateOne {
-	tuo.mutation.SetHour(s)
+func (tuo *TrainingUpdateOne) SetHour(i int) *TrainingUpdateOne {
+	tuo.mutation.ResetHour()
+	tuo.mutation.SetHour(i)
+	return tuo
+}
+
+// AddHour adds i to hour.
+func (tuo *TrainingUpdateOne) AddHour(i int) *TrainingUpdateOne {
+	tuo.mutation.AddHour(i)
 	return tuo
 }
 
@@ -607,7 +628,14 @@ func (tuo *TrainingUpdateOne) sqlSave(ctx context.Context) (t *Training, err err
 	}
 	if value, ok := tuo.mutation.Hour(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: training.FieldHour,
+		})
+	}
+	if value, ok := tuo.mutation.AddedHour(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: training.FieldHour,
 		})

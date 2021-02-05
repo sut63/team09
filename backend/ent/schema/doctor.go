@@ -24,7 +24,7 @@ func (Doctor) Fields() []ent.Field {
                 return nil
             }),
         // field.String("name").NotEmpty(),
-        field.Int("age").Min(0),
+        field.Int("age").Range(26,55),
         field.String("email").Match(regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")),
         field.String("password").MaxLen(8).MinLen(8),
         field.String("address").NotEmpty(),
