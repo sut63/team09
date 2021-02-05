@@ -216,7 +216,7 @@ const Doctor: FC<{}> = () => {
               alertMessage("error","กรุณากรอกประวัติการศึกษา");
               return;
         case 'email':
-              alertMessage("error","กรุณากรอกอีเมลให้ถูกต้อง");
+              alertMessage("error","กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ xxx@x.xxx");
               return;
          case 'age':
               alertMessage("error","กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
