@@ -79,12 +79,18 @@ definitions:
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the DetailQuery when eager-loading is set.
         type: object
+      email:
+        description: Email holds the value of the "email" field.
+        type: string
       explain:
         description: Explain holds the value of the "explain" field.
         type: string
       id:
         description: ID of the ent.
         type: integer
+      phone:
+        description: Phone holds the value of the "phone" field.
+        type: string
     type: object
   ent.DetailEdges:
     properties:
@@ -288,6 +294,9 @@ definitions:
       added_time2:
         description: AddedTime2 holds the value of the "added_time2" field.
         type: string
+      doctoridcard:
+        description: Doctoridcard holds the value of the "doctoridcard" field.
+        type: string
       edges:
         $ref: '#/definitions/ent.OfficeEdges'
         description: |-
@@ -300,8 +309,9 @@ definitions:
       officename:
         description: Officename holds the value of the "officename" field.
         type: string
-      specialdoctor_id:
-        type: integer
+      roomnumber:
+        description: Roomnumber holds the value of the "roomnumber" field.
+        type: string
     type: object
   ent.OfficeEdges:
     properties:
@@ -348,8 +358,14 @@ definitions:
     type: object
   ent.Schedule:
     properties:
-      activity:
-        description: Activity holds the value of the "activity" field.
+      Activity:
+        description: Activity holds the value of the "Activity" field.
+        type: string
+      Docterid:
+        description: Docterid holds the value of the "Docterid" field.
+        type: string
+      Roomnumber:
+        description: Roomnumber holds the value of the "Roomnumber" field.
         type: string
       added_time:
         description: AddedTime holds the value of the "added_time" field.
@@ -370,9 +386,9 @@ definitions:
         $ref: '#/definitions/ent.Department'
         description: Department holds the value of the department edge.
         type: object
-      docter:
+      doctor:
         $ref: '#/definitions/ent.Doctor'
-        description: Docter holds the value of the docter edge.
+        description: Doctor holds the value of the doctor edge.
         type: object
       office:
         $ref: '#/definitions/ent.Office'
@@ -381,6 +397,15 @@ definitions:
     type: object
   ent.Specialdoctor:
     properties:
+      Doctorid:
+        description: Doctorid holds the value of the "Doctorid" field.
+        type: string
+      Other:
+        description: Other holds the value of the "Other" field.
+        type: string
+      Roomnumber:
+        description: Roomnumber holds the value of the "Roomnumber" field.
+        type: string
       edges:
         $ref: '#/definitions/ent.SpecialdoctorEdges'
         description: |-
@@ -390,9 +415,6 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
-      other:
-        description: Other holds the value of the "other" field.
-        type: string
     type: object
   ent.SpecialdoctorEdges:
     properties:
@@ -408,11 +430,6 @@ definitions:
         $ref: '#/definitions/ent.Extradoctor'
         description: Extradoctor holds the value of the extradoctor edge.
         type: object
-      offices:
-        description: Offices holds the value of the offices edge.
-        items:
-          $ref: '#/definitions/ent.Office'
-        type: array
     type: object
   ent.Title:
     properties:
@@ -448,12 +465,18 @@ definitions:
       datetwo:
         description: Datetwo holds the value of the "datetwo" field.
         type: string
+      doctoridcard:
+        description: Doctoridcard holds the value of the "doctoridcard" field.
+        type: string
       edges:
         $ref: '#/definitions/ent.TrainingEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the TrainingQuery when eager-loading is set.
         type: object
+      hour:
+        description: Hour holds the value of the "hour" field.
+        type: string
       id:
         description: ID of the ent.
         type: integer
@@ -487,7 +510,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: SUT SA Example API
+  title: SUT SA Example API Playlist Vidoe
   version: "1.0"
 paths:
   /courses:

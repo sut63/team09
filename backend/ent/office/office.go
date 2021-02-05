@@ -74,7 +74,6 @@ var ForeignKeys = []string{
 	"department_id",
 	"doctor_id",
 	"extradoctor_id",
-	"Specialdoctor_id",
 }
 
 var (

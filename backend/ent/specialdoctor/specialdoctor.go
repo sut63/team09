@@ -7,11 +7,13 @@ const (
 	Label = "specialdoctor"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldRoomnumber holds the string denoting the roomnumber field in the database.
+	FieldRoomnumber = "roomnumber"
+	// FieldDoctorid holds the string denoting the doctorid field in the database.
+	FieldDoctorid = "doctorid"
 	// FieldOther holds the string denoting the other field in the database.
 	FieldOther = "other"
 
-	// EdgeOffices holds the string denoting the offices edge name in mutations.
-	EdgeOffices = "offices"
 	// EdgeDoctor holds the string denoting the doctor edge name in mutations.
 	EdgeDoctor = "doctor"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
@@ -21,13 +23,6 @@ const (
 
 	// Table holds the table name of the specialdoctor in the database.
 	Table = "specialdoctors"
-	// OfficesTable is the table the holds the offices relation/edge.
-	OfficesTable = "offices"
-	// OfficesInverseTable is the table name for the Office entity.
-	// It exists in this package in order to avoid circular dependency with the "office" package.
-	OfficesInverseTable = "offices"
-	// OfficesColumn is the table column denoting the offices relation/edge.
-	OfficesColumn = "Specialdoctor_id"
 	// DoctorTable is the table the holds the doctor relation/edge.
 	DoctorTable = "specialdoctors"
 	// DoctorInverseTable is the table name for the Doctor entity.
@@ -54,6 +49,8 @@ const (
 // Columns holds all SQL columns for specialdoctor fields.
 var Columns = []string{
 	FieldID,
+	FieldRoomnumber,
+	FieldDoctorid,
 	FieldOther,
 }
 
@@ -65,6 +62,10 @@ var ForeignKeys = []string{
 }
 
 var (
-	// OtherValidator is a validator for the "other" field. It is called by the builders before save.
+	// RoomnumberValidator is a validator for the "Roomnumber" field. It is called by the builders before save.
+	RoomnumberValidator func(string) error
+	// DoctoridValidator is a validator for the "Doctorid" field. It is called by the builders before save.
+	DoctoridValidator func(string) error
+	// OtherValidator is a validator for the "Other" field. It is called by the builders before save.
 	OtherValidator func(string) error
 )

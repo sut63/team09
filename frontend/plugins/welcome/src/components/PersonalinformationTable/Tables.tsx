@@ -100,7 +100,7 @@ export default function ComponentsTableUser() {
 
   function emptyDoctor () : any { 
     if(filterDoctor.length == 0){
-      const doctord = <TableRow> <TableCell align="center" colSpan={9}><p>ไม่มีข้อมูลในระบบ</p></TableCell></TableRow>;
+      const doctord = <TableRow> <TableCell align="center" colSpan={15}><p>ไม่มีข้อมูลในระบบ</p></TableCell></TableRow>;
       return doctord;
     }
   }

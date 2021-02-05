@@ -12,7 +12,6 @@ import (
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/doctor"
 	"github.com/team09/app/ent/extradoctor"
-	"github.com/team09/app/ent/office"
 	"github.com/team09/app/ent/specialdoctor"
 )
 
@@ -23,25 +22,22 @@ type SpecialdoctorCreate struct {
 	hooks    []Hook
 }
 
-// SetOther sets the other field.
+// SetRoomnumber sets the Roomnumber field.
+func (sc *SpecialdoctorCreate) SetRoomnumber(s string) *SpecialdoctorCreate {
+	sc.mutation.SetRoomnumber(s)
+	return sc
+}
+
+// SetDoctorid sets the Doctorid field.
+func (sc *SpecialdoctorCreate) SetDoctorid(s string) *SpecialdoctorCreate {
+	sc.mutation.SetDoctorid(s)
+	return sc
+}
+
+// SetOther sets the Other field.
 func (sc *SpecialdoctorCreate) SetOther(s string) *SpecialdoctorCreate {
 	sc.mutation.SetOther(s)
 	return sc
-}
-
-// AddOfficeIDs adds the offices edge to Office by ids.
-func (sc *SpecialdoctorCreate) AddOfficeIDs(ids ...int) *SpecialdoctorCreate {
-	sc.mutation.AddOfficeIDs(ids...)
-	return sc
-}
-
-// AddOffices adds the offices edges to Office.
-func (sc *SpecialdoctorCreate) AddOffices(o ...*Office) *SpecialdoctorCreate {
-	ids := make([]int, len(o))
-	for i := range o {
-		ids[i] = o[i].ID
-	}
-	return sc.AddOfficeIDs(ids...)
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -108,12 +104,28 @@ func (sc *SpecialdoctorCreate) Mutation() *SpecialdoctorMutation {
 
 // Save creates the Specialdoctor in the database.
 func (sc *SpecialdoctorCreate) Save(ctx context.Context) (*Specialdoctor, error) {
+	if _, ok := sc.mutation.Roomnumber(); !ok {
+		return nil, &ValidationError{Name: "Roomnumber", err: errors.New("ent: missing required field \"Roomnumber\"")}
+	}
+	if v, ok := sc.mutation.Roomnumber(); ok {
+		if err := specialdoctor.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Roomnumber", err: fmt.Errorf("ent: validator failed for field \"Roomnumber\": %w", err)}
+		}
+	}
+	if _, ok := sc.mutation.Doctorid(); !ok {
+		return nil, &ValidationError{Name: "Doctorid", err: errors.New("ent: missing required field \"Doctorid\"")}
+	}
+	if v, ok := sc.mutation.Doctorid(); ok {
+		if err := specialdoctor.DoctoridValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Doctorid", err: fmt.Errorf("ent: validator failed for field \"Doctorid\": %w", err)}
+		}
+	}
 	if _, ok := sc.mutation.Other(); !ok {
-		return nil, &ValidationError{Name: "other", err: errors.New("ent: missing required field \"other\"")}
+		return nil, &ValidationError{Name: "Other", err: errors.New("ent: missing required field \"Other\"")}
 	}
 	if v, ok := sc.mutation.Other(); ok {
 		if err := specialdoctor.OtherValidator(v); err != nil {
-			return nil, &ValidationError{Name: "other", err: fmt.Errorf("ent: validator failed for field \"other\": %w", err)}
+			return nil, &ValidationError{Name: "Other", err: fmt.Errorf("ent: validator failed for field \"Other\": %w", err)}
 		}
 	}
 	var (
@@ -176,6 +188,22 @@ func (sc *SpecialdoctorCreate) createSpec() (*Specialdoctor, *sqlgraph.CreateSpe
 			},
 		}
 	)
+	if value, ok := sc.mutation.Roomnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldRoomnumber,
+		})
+		s.Roomnumber = value
+	}
+	if value, ok := sc.mutation.Doctorid(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: specialdoctor.FieldDoctorid,
+		})
+		s.Doctorid = value
+	}
 	if value, ok := sc.mutation.Other(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -183,25 +211,6 @@ func (sc *SpecialdoctorCreate) createSpec() (*Specialdoctor, *sqlgraph.CreateSpe
 			Column: specialdoctor.FieldOther,
 		})
 		s.Other = value
-	}
-	if nodes := sc.mutation.OfficesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   specialdoctor.OfficesTable,
-			Columns: []string{specialdoctor.OfficesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: office.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := sc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

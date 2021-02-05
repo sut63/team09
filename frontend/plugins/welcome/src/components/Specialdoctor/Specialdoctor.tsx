@@ -122,7 +122,8 @@ const Specialdoctor: FC<{}> = () => {
     return val.match("^[ก-๏\s]+$");
   }
   const ValidateRoomnumber= (val: string) => {
-    return val.match("[A-Z\s]\\d{4}");
+    const room = /^[ABC]\d{4}$/g
+    return room.test(val);
   }
   const ValidateDoctorid = (val: string) => {
     return val.length == 10 ? true : false;
@@ -317,7 +318,7 @@ const Specialdoctor: FC<{}> = () => {
                 />
               </FormControl>
             </Grid><br></br><br></br>
-            <div className={classes.formControl} style={{ marginLeft: 120 }}>
+            <div className={classes.formControl} style={{ marginLeft: 180 }}>
               <Button
                 onClick={save}
                 variant="contained"
@@ -335,12 +336,6 @@ const Specialdoctor: FC<{}> = () => {
                 variant="contained"
                 color="secondary">
                 BACK
-             </Button>
-             <Button style={{ marginLeft: 10 }}
-                component={RouterLink} to="/specialdoctortable"
-                variant="contained"
-                color="secondary">
-                ดูข้อมูลที่บันทึก
              </Button>
             </div>
           </form>

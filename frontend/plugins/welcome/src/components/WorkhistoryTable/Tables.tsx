@@ -175,7 +175,7 @@ export default function ComponentsTableUser() {
                       variant="contained"
                       color="secondary"
                     >
-                      Delete
+                      ลบข้อมูล
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -166,7 +166,8 @@ const Schedule: FC<{}> = () => {
     }
 
     const ValidateRoomnumber = (val: string) => {
-        return val.match("[ABC]\\d{4}");
+        const room = /^[ABC]\d{4}$/g
+        return room.test(val);
     }
 
     const ValidateDocterid = (val: string) => {
