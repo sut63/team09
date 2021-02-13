@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Detail Test Case Sprint 2</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาเจอ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/detailtable<datalist><option>http://localhost:3000/detailtable</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>แผนกศัลยกรรม</td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td</option><option>//td</option><option>css=td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter</option></datalist></td><td>แผนกศัลยกรรม</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาไม่เจอ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/detailtable<datalist><option>http://localhost:3000/detailtable</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>แผนกหัวใจ</td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p</option><option>//p</option><option>css=p</option></datalist></td><td>ไม่มีข้อมูลในระบบ</td>
+</tr>
+</tbody></table>
+</body>
+</html>
