@@ -94,7 +94,7 @@ const Detail: FC<{}> = () => {
   };
 
   const getDepartment = async () => {
-    const res = await http.listDepartment({ limit: 10, offset: 0 });
+    const res = await http.listDepartment({ limit: 11, offset: 0 });
     setDepartment(res);
   };
   const getCourse = async () => {
@@ -102,7 +102,7 @@ const Detail: FC<{}> = () => {
     setCourse(res);
   };
   const getMission = async () => {
-    const res = await http.listMission({ limit: 10, offset: 0 });
+    const res = await http.listMission({ limit: 5, offset: 0 });
     setMission(res);
   };
 

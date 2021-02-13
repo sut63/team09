@@ -95,13 +95,13 @@ const Specialdoctor: FC<{}> = () => {
   };
 
   const getDepartments = async () => {
-    const res = await http.listDepartment({ limit: 10, offset: 0 });
+    const res = await http.listDepartment({ limit: 11, offset: 0 });
     setDepartment(res);
     console.log(res)
   };
 
   const getExtradoctors = async () => {
-    const res = await http.listExtradoctor({ limit: 11, offset: 0 });
+    const res = await http.listExtradoctor({ limit: 31, offset: 0 });
     setExtradoctor(res);
     console.log(res)
   };

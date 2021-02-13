@@ -134,7 +134,7 @@ const Schedule: FC<{}> = () => {
 
 
     const getDepartments = async () => {
-        const res = await http.listDepartment({ limit: 10, offset: 0 });
+        const res = await http.listDepartment({ limit: 11, offset: 0 });
         setDepartments(res);
     };
 
