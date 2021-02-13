@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: '12ch',
+        width: '30ch',
         '&:focus': {
           width: '20ch',
         },
@@ -120,15 +120,13 @@ export default function ComponentsTableUser() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              style={{ marginRight: 20 }}
-              placeholder="Search…"
-              value = {search} 
-              onChange = {(event) => {setSearch(event.target.value);}}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
+            <TextField
+              name="search"
+              className={classes.inputInput}
+              style={{ marginRight: 100 }}
+              placeholder="กรุณากรอกชื่อแพทย์"
+              value={search}
+              onChange={(event) => { setSearch(event.target.value); }}
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
@@ -142,7 +140,6 @@ export default function ComponentsTableUser() {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">No.</TableCell>
                 <TableCell align="center">Title</TableCell>
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Position</TableCell>
@@ -161,7 +158,6 @@ export default function ComponentsTableUser() {
               {emptyDoctor()}
               {filterDoctor.map(item => (
                 <TableRow key={item.id}>
-                  <TableCell align="center">{item.id}</TableCell>
                   <TableCell align="center">{item.edges?.title?.title}</TableCell>
                   <TableCell align="center">{item.name}</TableCell>
                   <TableCell align="center">{item.edges?.position?.position}</TableCell>

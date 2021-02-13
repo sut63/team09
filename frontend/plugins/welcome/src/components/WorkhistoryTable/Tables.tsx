@@ -121,7 +121,7 @@ export default function ComponentsTableUser() {
               name="search"
               className={classes.inputInput}
               style={{ marginRight: 100 }}
-              placeholder="Search"
+              placeholder="กรุณากรอกชื่อแพทย์"
               value={search}
               onChange={(event) => { setSearch(event.target.value); }}
               inputProps={{ 'aria-label': 'search' }}

@@ -155,6 +155,10 @@ export interface DeleteTitleRequest {
     id: number;
 }
 
+export interface DeleteTrainingRequest {
+    id: number;
+}
+
 export interface GetCourseRequest {
     id: number;
 }
@@ -1091,6 +1095,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteTitle(requestParameters: DeleteTitleRequest): Promise<object> {
         const response = await this.deleteTitleRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get training by ID
+     * Delete a training entity by ID
+     */
+    async deleteTrainingRaw(requestParameters: DeleteTrainingRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteTraining.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/trainings/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get training by ID
+     * Delete a training entity by ID
+     */
+    async deleteTraining(requestParameters: DeleteTrainingRequest): Promise<object> {
+        const response = await this.deleteTrainingRaw(requestParameters);
         return await response.value();
     }
 

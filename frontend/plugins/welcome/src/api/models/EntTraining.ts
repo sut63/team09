@@ -58,10 +58,10 @@ export interface EntTraining {
     edges?: EntTrainingEdges;
     /**
      * Hour holds the value of the "hour" field.
-     * @type {string}
+     * @type {number}
      * @memberof EntTraining
      */
-    hour?: string;
+    hour?: number;
     /**
      * ID of the ent.
      * @type {number}

@@ -91,17 +91,6 @@ const Doctor: FC<{}> = () => {
     console.log(doctor);
   };
 
-  const handleChangeNum = (
-    event: React.ChangeEvent<{ name: string; value: number }>,) => {
-    const name = event.target.name as keyof typeof Doctor;
-    const { value } = event.target;
-    const validateValue = value.valueOf()
-    checkPattern1(name, validateValue)
-    setDoctor({ ...doctor, [name]: +value });
-    // console.log(Doctor);
-  };
-  
-
 
   const getTitles = async () => {
     const res = await http.listTitle({ limit: 10, offset: 0 });
@@ -152,7 +141,7 @@ const Doctor: FC<{}> = () => {
     return val.match("");
   }
   const Validateage = (val: number) => {
-    return val <= 55 && val >= 25 ? true : false;
+    return val <= 55 && val >= 26 ? true : false;
   }
 
 
@@ -165,7 +154,7 @@ const Doctor: FC<{}> = () => {
         Validatename(value) ? setnameError('') : setnameError("กรุณากรอกชื่อแพทย์เป็นภาษาไทยเท่านั้น");
         return;
       case 'password' :
-        Validatepassword(value) ? setpasswordError('') : setpasswordError("กรุณากรอกรหัสผ่านตัวเลข0-9จำนวน8ตัวเท่านั้น");
+        Validatepassword(value) ? setpasswordError('') : setpasswordError("กรุณากรอกรหัสผ่านเป็นตัวเลข0-9จำนวน8ตัวเท่านั้น");
         return;
       case 'address' :
           Validateaddress(value) ? setaddressError('') : setaddressError("กรุณากรอกที่อยู่");
@@ -174,20 +163,13 @@ const Doctor: FC<{}> = () => {
             Validateeducational(value) ? seteducationalError('') : seteducationalError("กรุณากรอกประวัติการศึกษา");
             return;
       case 'email':
-            Validateemail(value) ? setemailError('') : setemailError("กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ xxx@x.xxx");
+            Validateemail(value) ? setemailError('') : setemailError("รูปแบบอีเมลไม่ถูกต้อง");
             return;
-      // case 'age':
-      //       Validateage(value) ? setageError('') : setageError("กรุณาอายุเป็นจำนวนเต็มบวกเท่านั้น");
-      //       return;
+      case 'age':
+            Validateage(Number(value)) ? setageError('') : setageError("กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
+            return;
         default:
           return;
-    }
-  }
-  const checkPattern1 = (id: string, value: number) => {
-    switch (id) {
-      case 'age':
-        Validateage(Number(value)) ? setageError('') : setageError("กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
-        return;
     }
   }
 
@@ -207,7 +189,7 @@ const Doctor: FC<{}> = () => {
             alertMessage("error","กรุณากรอกชื่อแพทย์เป็นภาษาไทยเท่านั้น");
             return;
         case 'password':
-              alertMessage("error","กรุณากรอกรหัสผ่านตัวเลข0-9จำนวน8ตัวเท่านั้น");
+              alertMessage("error","กรุณากรอกรหัสผ่านเป็นตัวเลข0-9จำนวน8ตัวเท่านั้น");
               return;
         case 'address':
               alertMessage("error","กรุณากรอกที่อยู่");
@@ -216,7 +198,7 @@ const Doctor: FC<{}> = () => {
               alertMessage("error","กรุณากรอกประวัติการศึกษา");
               return;
         case 'email':
-              alertMessage("error","กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ xxx@x.xxx");
+              alertMessage("error","รูปแบบอีเมลไม่ถูกต้อง");
               return;
          case 'age':
               alertMessage("error","กรอกอายุตั้งแต่ 26-55 ปีเท่านั้น");
@@ -367,7 +349,7 @@ const Doctor: FC<{}> = () => {
                   size="medium"
                   value={doctor.age || ''}
                   helperText={ageError}
-                  onChange={handleChangeNum}
+                  onChange={handleChange}
                 />
               </FormControl>
             </Grid>
