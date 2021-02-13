@@ -2343,6 +2343,51 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/trainings/{id}": {
+            "delete": {
+                "description": "get training by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a training entity by ID",
+                "operationId": "delete-training",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Training ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -2966,7 +3011,7 @@ var doc = `{
                 },
                 "hour": {
                     "description": "Hour holds the value of the \"hour\" field.",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "id": {
                     "description": "ID of the ent.",

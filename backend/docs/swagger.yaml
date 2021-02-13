@@ -476,7 +476,7 @@ definitions:
         type: object
       hour:
         description: Hour holds the value of the "hour" field.
-        type: string
+        type: integer
       id:
         description: ID of the ent.
         type: integer
@@ -2053,6 +2053,36 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Create training
+  /trainings/{id}:
+    delete:
+      description: get training by ID
+      operationId: delete-training
+      parameters:
+      - description: Training ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a training entity by ID
 securityDefinitions:
   ApiKeyAuth:
     in: header
