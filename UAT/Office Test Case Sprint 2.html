@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-	<title>Sprint 2</title>
+	<title>Office Test Case Sprint 2</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -11,6 +11,20 @@
 <tr><td rowspan="1" colspan="3">ค้นหาสำเร็จ</td></tr>
 </thead>
 <tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>yui@g.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
+</tr>
+<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
+</tr>
 <tr><td>open</td><td>http://localhost:3000/workhistorytable<datalist><option>http://localhost:3000/tables?</option><option>http://localhost:3000/workhistorytable?</option><option>http://localhost:3000/workhistorytable</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>//input[@value='']<datalist><option>//input[@value='']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input.MuiInputBase-input.MuiInput-input</option></datalist></td><td></td>
@@ -25,6 +39,20 @@
 <tr><td rowspan="1" colspan="3">ค้นหาไม่สำเร็จ</td></tr>
 </thead>
 <tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>yui@g.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
+</tr>
+<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
+</tr>
 <tr><td>open</td><td>http://localhost:3000/workhistorytable<datalist><option>http://localhost:3000/tables?</option><option>http://localhost:3000/workhistorytable</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>

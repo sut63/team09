@@ -150,7 +150,7 @@ func main() {
     router := gin.Default()
     router.Use(cors.Default())
 
-    client, err := ent.Open("sqlite3", "file:user.db?cache=shared&_fk=1")
+    client, err := ent.Open("sqlite3", "file:dinformation.db?cache=shared&_fk=1")
     if err != nil {
         log.Fatalf("fail to open sqlite3: %v", err)
     }
@@ -181,7 +181,7 @@ func main() {
 		Course: []Course{
 			Course{"หลักสูตรฝึกอบรมแพทย์ประจำบ้าน"},
 			Course{"หลักสูตรฝึกอบรมแพทย์ประจำบ้านต่อยอด"},
-			Course{"หลูกสูตร Ph.D. in Clinical Sciences"},
+			Course{"หลักสูตร Ph.D. in Clinical Sciences"},
 		},
 	}
 
