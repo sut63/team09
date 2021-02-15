@@ -123,7 +123,7 @@ const Office: FC<{}> = () => {
           ValidateRoomnumber(value) ? setRoomnumberError('') : setRoomnumberError("หมายเลขห้องขึ้นต้นด้วย A.B.C ตามด้วยตัวเลข 4 ตัว");
         return;
         case 'doctoridcard' :
-          ValidateDoctoridcard(value) ? setDoctoridcardError('') : setDoctoridcardError("กรอกตัวเลขทั้งหมด 10 ตัวห้ามกรอกตัวอักษร");
+          ValidateDoctoridcard(value) ? setDoctoridcardError('') : setDoctoridcardError("กรอกตัวเลขทั้งหมด 10 ตัว");
         return;
         default:
           return;
