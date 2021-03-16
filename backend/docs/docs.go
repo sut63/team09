@@ -1453,49 +1453,6 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "delete": {
-                "description": "get office by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a office entity by ID",
-                "operationId": "delete-office",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Office ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
             }
         },
         "/positions": {
@@ -1878,6 +1835,50 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/searchworkhistorys": {
+            "get": {
+                "description": "get Office by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a Office entity by Search",
+                "operationId": "get-Office-by-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search Office",
+                        "name": "Office",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Office"
                         }
                     },
                     "400": {
@@ -2771,14 +2772,6 @@ var doc = `{
         "ent.Office": {
             "type": "object",
             "properties": {
-                "added_time1": {
-                    "description": "AddedTime1 holds the value of the \"added_time1\" field.",
-                    "type": "string"
-                },
-                "added_time2": {
-                    "description": "AddedTime2 holds the value of the \"added_time2\" field.",
-                    "type": "string"
-                },
                 "doctoridcard": {
                     "description": "Doctoridcard holds the value of the \"doctoridcard\" field.",
                     "type": "string"
@@ -2787,6 +2780,14 @@ var doc = `{
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the OfficeQuery when eager-loading is set.",
                     "type": "object",
                     "$ref": "#/definitions/ent.OfficeEdges"
+                },
+                "finallytime": {
+                    "description": "Finallytime holds the value of the \"finallytime\" field.",
+                    "type": "string"
+                },
+                "firsttime": {
+                    "description": "Firsttime holds the value of the \"firsttime\" field.",
+                    "type": "string"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -3065,7 +3066,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3084,7 +3084,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",

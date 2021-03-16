@@ -155,7 +155,7 @@ export default function PersistentDrawerLeft() {
           <Button color="inherit" component={RouterLink} to="/scheduletable">ค้นหาตารางเวลาของแพทย์</Button>
           <Button color="inherit" component={RouterLink} to="/personalinformationtable">ค้นหาข้อมูลส่วนตัวแพทย์</Button>
           <Button color="inherit" component={RouterLink} to="/specialdoctortable">ค้นหาข้อมูลแพทย์เฉพาะทาง</Button>
-          <Button color="inherit" component={RouterLink} to="/workhistorytable">ค้นหาประวัติการทำงานของแพทย์</Button>
+          <Button color="inherit" component={RouterLink} to="/searchworkhistory">ค้นหาประวัติการทำงานของแพทย์</Button>
         </List>
         <Divider />
       </Drawer>

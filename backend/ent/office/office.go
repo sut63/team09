@@ -13,10 +13,10 @@ const (
 	FieldRoomnumber = "roomnumber"
 	// FieldDoctoridcard holds the string denoting the doctoridcard field in the database.
 	FieldDoctoridcard = "doctoridcard"
-	// FieldAddedTime1 holds the string denoting the added_time1 field in the database.
-	FieldAddedTime1 = "added_time1"
-	// FieldAddedTime2 holds the string denoting the added_time2 field in the database.
-	FieldAddedTime2 = "added_time2"
+	// FieldFirsttime holds the string denoting the firsttime field in the database.
+	FieldFirsttime = "firsttime"
+	// FieldFinallytime holds the string denoting the finallytime field in the database.
+	FieldFinallytime = "finallytime"
 
 	// EdgeDoctor holds the string denoting the doctor edge name in mutations.
 	EdgeDoctor = "doctor"
@@ -65,8 +65,8 @@ var Columns = []string{
 	FieldOfficename,
 	FieldRoomnumber,
 	FieldDoctoridcard,
-	FieldAddedTime1,
-	FieldAddedTime2,
+	FieldFirsttime,
+	FieldFinallytime,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Office type.

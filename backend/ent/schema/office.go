@@ -32,8 +32,8 @@ func (Office) Fields() []ent.Field {
 				return nil
 			}),
 		field.String("doctoridcard").MaxLen(10).MinLen(10),
-		field.Time("added_time1"),
-		field.Time("added_time2"),
+		field.Time("firsttime"),
+		field.Time("finallytime"),
 	}
 }
 

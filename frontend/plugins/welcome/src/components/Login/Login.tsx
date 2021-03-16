@@ -68,7 +68,7 @@ const Login: FC<{}> = () => {
         checkDoctor = true;
         localStorage.setItem('doctor-id', JSON.stringify(item.id));
         localStorage.setItem('doctor-name', JSON.stringify(item.name));
-        history.pushState('', '', '/home'); /////////มาแก้ที่หลังไปยังหน้ารวมเภสัชกร
+        history.pushState('', '', '/home');
         window.location.reload(false);
       }
     });

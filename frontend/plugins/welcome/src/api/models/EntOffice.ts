@@ -27,18 +27,6 @@ import {
  */
 export interface EntOffice {
     /**
-     * AddedTime1 holds the value of the "added_time1" field.
-     * @type {string}
-     * @memberof EntOffice
-     */
-    addedTime1?: string;
-    /**
-     * AddedTime2 holds the value of the "added_time2" field.
-     * @type {string}
-     * @memberof EntOffice
-     */
-    addedTime2?: string;
-    /**
      * Doctoridcard holds the value of the "doctoridcard" field.
      * @type {string}
      * @memberof EntOffice
@@ -50,6 +38,18 @@ export interface EntOffice {
      * @memberof EntOffice
      */
     edges?: EntOfficeEdges;
+    /**
+     * Finallytime holds the value of the "finallytime" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    finallytime?: string;
+    /**
+     * Firsttime holds the value of the "firsttime" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    firsttime?: string;
     /**
      * ID of the ent.
      * @type {number}
@@ -80,10 +80,10 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'addedTime1': !exists(json, 'added_time1') ? undefined : json['added_time1'],
-        'addedTime2': !exists(json, 'added_time2') ? undefined : json['added_time2'],
         'doctoridcard': !exists(json, 'doctoridcard') ? undefined : json['doctoridcard'],
         'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
+        'finallytime': !exists(json, 'finallytime') ? undefined : json['finallytime'],
+        'firsttime': !exists(json, 'firsttime') ? undefined : json['firsttime'],
         'id': !exists(json, 'id') ? undefined : json['id'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
@@ -99,10 +99,10 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
     }
     return {
         
-        'added_time1': value.addedTime1,
-        'added_time2': value.addedTime2,
         'doctoridcard': value.doctoridcard,
         'edges': EntOfficeEdgesToJSON(value.edges),
+        'finallytime': value.finallytime,
+        'firsttime': value.firsttime,
         'id': value.id,
         'officename': value.officename,
         'roomnumber': value.roomnumber,

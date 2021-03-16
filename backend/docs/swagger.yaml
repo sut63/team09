@@ -288,12 +288,6 @@ definitions:
     type: object
   ent.Office:
     properties:
-      added_time1:
-        description: AddedTime1 holds the value of the "added_time1" field.
-        type: string
-      added_time2:
-        description: AddedTime2 holds the value of the "added_time2" field.
-        type: string
       doctoridcard:
         description: Doctoridcard holds the value of the "doctoridcard" field.
         type: string
@@ -303,6 +297,12 @@ definitions:
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the OfficeQuery when eager-loading is set.
         type: object
+      finallytime:
+        description: Finallytime holds the value of the "finallytime" field.
+        type: string
+      firsttime:
+        description: Firsttime holds the value of the "firsttime" field.
+        type: string
       id:
         description: ID of the ent.
         type: integer
@@ -1431,35 +1431,6 @@ paths:
             $ref: '#/definitions/gin.H'
       summary: Create office
   /offices/{id}:
-    delete:
-      description: get office by ID
-      operationId: delete-office
-      parameters:
-      - description: Office ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/gin.H'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Delete a office entity by ID
     get:
       description: get office by ID
       operationId: get-office
@@ -1758,6 +1729,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a schedule entity by ID
+  /searchworkhistorys:
+    get:
+      description: get Office by Search
+      operationId: get-Office-by-search
+      parameters:
+      - description: Search Office
+        in: query
+        name: Office
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Office'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a Office entity by Search
   /specialdoctors:
     get:
       description: list specialdoctor entities
@@ -2098,7 +2098,6 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Application:
-    authorizationUrl: ""
     flow: application
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -2113,7 +2112,6 @@ securityDefinitions:
       write: ' Grants write access'
     type: oauth2
   OAuth2Password:
-    authorizationUrl: ""
     flow: password
     scopes:
       admin: ' Grants read and write access to administrative information'

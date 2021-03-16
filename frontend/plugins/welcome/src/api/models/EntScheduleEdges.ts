@@ -64,9 +64,9 @@ export function EntScheduleEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
-        'doctor': !exists(json, 'Doctor') ? undefined : EntDoctorFromJSON(json['Doctor']),
-        'office': !exists(json, 'Office') ? undefined : EntOfficeFromJSON(json['Office']),
+        'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
+        'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
+        'office': !exists(json, 'office') ? undefined : EntOfficeFromJSON(json['office']),
     };
 }
 
