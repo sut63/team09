@@ -4544,8 +4544,8 @@ type OfficeMutation struct {
 	officename         *string
 	roomnumber         *string
 	doctoridcard       *string
-	added_time1        *time.Time
-	added_time2        *time.Time
+	firsttime          *time.Time
+	finallytime        *time.Time
 	clearedFields      map[string]struct{}
 	doctor             *int
 	cleareddoctor      bool
@@ -4749,78 +4749,78 @@ func (m *OfficeMutation) ResetDoctoridcard() {
 	m.doctoridcard = nil
 }
 
-// SetAddedTime1 sets the added_time1 field.
-func (m *OfficeMutation) SetAddedTime1(t time.Time) {
-	m.added_time1 = &t
+// SetFirsttime sets the firsttime field.
+func (m *OfficeMutation) SetFirsttime(t time.Time) {
+	m.firsttime = &t
 }
 
-// AddedTime1 returns the added_time1 value in the mutation.
-func (m *OfficeMutation) AddedTime1() (r time.Time, exists bool) {
-	v := m.added_time1
+// Firsttime returns the firsttime value in the mutation.
+func (m *OfficeMutation) Firsttime() (r time.Time, exists bool) {
+	v := m.firsttime
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAddedTime1 returns the old added_time1 value of the Office.
+// OldFirsttime returns the old firsttime value of the Office.
 // If the Office object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *OfficeMutation) OldAddedTime1(ctx context.Context) (v time.Time, err error) {
+func (m *OfficeMutation) OldFirsttime(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime1 is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldFirsttime is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime1 requires an ID field in the mutation")
+		return v, fmt.Errorf("OldFirsttime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime1: %w", err)
+		return v, fmt.Errorf("querying old value for OldFirsttime: %w", err)
 	}
-	return oldValue.AddedTime1, nil
+	return oldValue.Firsttime, nil
 }
 
-// ResetAddedTime1 reset all changes of the "added_time1" field.
-func (m *OfficeMutation) ResetAddedTime1() {
-	m.added_time1 = nil
+// ResetFirsttime reset all changes of the "firsttime" field.
+func (m *OfficeMutation) ResetFirsttime() {
+	m.firsttime = nil
 }
 
-// SetAddedTime2 sets the added_time2 field.
-func (m *OfficeMutation) SetAddedTime2(t time.Time) {
-	m.added_time2 = &t
+// SetFinallytime sets the finallytime field.
+func (m *OfficeMutation) SetFinallytime(t time.Time) {
+	m.finallytime = &t
 }
 
-// AddedTime2 returns the added_time2 value in the mutation.
-func (m *OfficeMutation) AddedTime2() (r time.Time, exists bool) {
-	v := m.added_time2
+// Finallytime returns the finallytime value in the mutation.
+func (m *OfficeMutation) Finallytime() (r time.Time, exists bool) {
+	v := m.finallytime
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAddedTime2 returns the old added_time2 value of the Office.
+// OldFinallytime returns the old finallytime value of the Office.
 // If the Office object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *OfficeMutation) OldAddedTime2(ctx context.Context) (v time.Time, err error) {
+func (m *OfficeMutation) OldFinallytime(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime2 is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldFinallytime is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime2 requires an ID field in the mutation")
+		return v, fmt.Errorf("OldFinallytime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime2: %w", err)
+		return v, fmt.Errorf("querying old value for OldFinallytime: %w", err)
 	}
-	return oldValue.AddedTime2, nil
+	return oldValue.Finallytime, nil
 }
 
-// ResetAddedTime2 reset all changes of the "added_time2" field.
-func (m *OfficeMutation) ResetAddedTime2() {
-	m.added_time2 = nil
+// ResetFinallytime reset all changes of the "finallytime" field.
+func (m *OfficeMutation) ResetFinallytime() {
+	m.finallytime = nil
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -5006,11 +5006,11 @@ func (m *OfficeMutation) Fields() []string {
 	if m.doctoridcard != nil {
 		fields = append(fields, office.FieldDoctoridcard)
 	}
-	if m.added_time1 != nil {
-		fields = append(fields, office.FieldAddedTime1)
+	if m.firsttime != nil {
+		fields = append(fields, office.FieldFirsttime)
 	}
-	if m.added_time2 != nil {
-		fields = append(fields, office.FieldAddedTime2)
+	if m.finallytime != nil {
+		fields = append(fields, office.FieldFinallytime)
 	}
 	return fields
 }
@@ -5026,10 +5026,10 @@ func (m *OfficeMutation) Field(name string) (ent.Value, bool) {
 		return m.Roomnumber()
 	case office.FieldDoctoridcard:
 		return m.Doctoridcard()
-	case office.FieldAddedTime1:
-		return m.AddedTime1()
-	case office.FieldAddedTime2:
-		return m.AddedTime2()
+	case office.FieldFirsttime:
+		return m.Firsttime()
+	case office.FieldFinallytime:
+		return m.Finallytime()
 	}
 	return nil, false
 }
@@ -5045,10 +5045,10 @@ func (m *OfficeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldRoomnumber(ctx)
 	case office.FieldDoctoridcard:
 		return m.OldDoctoridcard(ctx)
-	case office.FieldAddedTime1:
-		return m.OldAddedTime1(ctx)
-	case office.FieldAddedTime2:
-		return m.OldAddedTime2(ctx)
+	case office.FieldFirsttime:
+		return m.OldFirsttime(ctx)
+	case office.FieldFinallytime:
+		return m.OldFinallytime(ctx)
 	}
 	return nil, fmt.Errorf("unknown Office field %s", name)
 }
@@ -5079,19 +5079,19 @@ func (m *OfficeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDoctoridcard(v)
 		return nil
-	case office.FieldAddedTime1:
+	case office.FieldFirsttime:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAddedTime1(v)
+		m.SetFirsttime(v)
 		return nil
-	case office.FieldAddedTime2:
+	case office.FieldFinallytime:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAddedTime2(v)
+		m.SetFinallytime(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)
@@ -5152,11 +5152,11 @@ func (m *OfficeMutation) ResetField(name string) error {
 	case office.FieldDoctoridcard:
 		m.ResetDoctoridcard()
 		return nil
-	case office.FieldAddedTime1:
-		m.ResetAddedTime1()
+	case office.FieldFirsttime:
+		m.ResetFirsttime()
 		return nil
-	case office.FieldAddedTime2:
-		m.ResetAddedTime2()
+	case office.FieldFinallytime:
+		m.ResetFinallytime()
 		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)

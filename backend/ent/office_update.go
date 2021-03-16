@@ -50,15 +50,15 @@ func (ou *OfficeUpdate) SetDoctoridcard(s string) *OfficeUpdate {
 	return ou
 }
 
-// SetAddedTime1 sets the added_time1 field.
-func (ou *OfficeUpdate) SetAddedTime1(t time.Time) *OfficeUpdate {
-	ou.mutation.SetAddedTime1(t)
+// SetFirsttime sets the firsttime field.
+func (ou *OfficeUpdate) SetFirsttime(t time.Time) *OfficeUpdate {
+	ou.mutation.SetFirsttime(t)
 	return ou
 }
 
-// SetAddedTime2 sets the added_time2 field.
-func (ou *OfficeUpdate) SetAddedTime2(t time.Time) *OfficeUpdate {
-	ou.mutation.SetAddedTime2(t)
+// SetFinallytime sets the finallytime field.
+func (ou *OfficeUpdate) SetFinallytime(t time.Time) *OfficeUpdate {
+	ou.mutation.SetFinallytime(t)
 	return ou
 }
 
@@ -278,18 +278,18 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: office.FieldDoctoridcard,
 		})
 	}
-	if value, ok := ou.mutation.AddedTime1(); ok {
+	if value, ok := ou.mutation.Firsttime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime1,
+			Column: office.FieldFirsttime,
 		})
 	}
-	if value, ok := ou.mutation.AddedTime2(); ok {
+	if value, ok := ou.mutation.Finallytime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime2,
+			Column: office.FieldFinallytime,
 		})
 	}
 	if ou.mutation.DoctorCleared() {
@@ -471,15 +471,15 @@ func (ouo *OfficeUpdateOne) SetDoctoridcard(s string) *OfficeUpdateOne {
 	return ouo
 }
 
-// SetAddedTime1 sets the added_time1 field.
-func (ouo *OfficeUpdateOne) SetAddedTime1(t time.Time) *OfficeUpdateOne {
-	ouo.mutation.SetAddedTime1(t)
+// SetFirsttime sets the firsttime field.
+func (ouo *OfficeUpdateOne) SetFirsttime(t time.Time) *OfficeUpdateOne {
+	ouo.mutation.SetFirsttime(t)
 	return ouo
 }
 
-// SetAddedTime2 sets the added_time2 field.
-func (ouo *OfficeUpdateOne) SetAddedTime2(t time.Time) *OfficeUpdateOne {
-	ouo.mutation.SetAddedTime2(t)
+// SetFinallytime sets the finallytime field.
+func (ouo *OfficeUpdateOne) SetFinallytime(t time.Time) *OfficeUpdateOne {
+	ouo.mutation.SetFinallytime(t)
 	return ouo
 }
 
@@ -697,18 +697,18 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Column: office.FieldDoctoridcard,
 		})
 	}
-	if value, ok := ouo.mutation.AddedTime1(); ok {
+	if value, ok := ouo.mutation.Firsttime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime1,
+			Column: office.FieldFirsttime,
 		})
 	}
-	if value, ok := ouo.mutation.AddedTime2(); ok {
+	if value, ok := ouo.mutation.Finallytime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime2,
+			Column: office.FieldFinallytime,
 		})
 	}
 	if ouo.mutation.DoctorCleared() {

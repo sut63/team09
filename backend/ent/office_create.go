@@ -42,15 +42,15 @@ func (oc *OfficeCreate) SetDoctoridcard(s string) *OfficeCreate {
 	return oc
 }
 
-// SetAddedTime1 sets the added_time1 field.
-func (oc *OfficeCreate) SetAddedTime1(t time.Time) *OfficeCreate {
-	oc.mutation.SetAddedTime1(t)
+// SetFirsttime sets the firsttime field.
+func (oc *OfficeCreate) SetFirsttime(t time.Time) *OfficeCreate {
+	oc.mutation.SetFirsttime(t)
 	return oc
 }
 
-// SetAddedTime2 sets the added_time2 field.
-func (oc *OfficeCreate) SetAddedTime2(t time.Time) *OfficeCreate {
-	oc.mutation.SetAddedTime2(t)
+// SetFinallytime sets the finallytime field.
+func (oc *OfficeCreate) SetFinallytime(t time.Time) *OfficeCreate {
+	oc.mutation.SetFinallytime(t)
 	return oc
 }
 
@@ -157,11 +157,11 @@ func (oc *OfficeCreate) Save(ctx context.Context) (*Office, error) {
 			return nil, &ValidationError{Name: "doctoridcard", err: fmt.Errorf("ent: validator failed for field \"doctoridcard\": %w", err)}
 		}
 	}
-	if _, ok := oc.mutation.AddedTime1(); !ok {
-		return nil, &ValidationError{Name: "added_time1", err: errors.New("ent: missing required field \"added_time1\"")}
+	if _, ok := oc.mutation.Firsttime(); !ok {
+		return nil, &ValidationError{Name: "firsttime", err: errors.New("ent: missing required field \"firsttime\"")}
 	}
-	if _, ok := oc.mutation.AddedTime2(); !ok {
-		return nil, &ValidationError{Name: "added_time2", err: errors.New("ent: missing required field \"added_time2\"")}
+	if _, ok := oc.mutation.Finallytime(); !ok {
+		return nil, &ValidationError{Name: "finallytime", err: errors.New("ent: missing required field \"finallytime\"")}
 	}
 	var (
 		err  error
@@ -247,21 +247,21 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		})
 		o.Doctoridcard = value
 	}
-	if value, ok := oc.mutation.AddedTime1(); ok {
+	if value, ok := oc.mutation.Firsttime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime1,
+			Column: office.FieldFirsttime,
 		})
-		o.AddedTime1 = value
+		o.Firsttime = value
 	}
-	if value, ok := oc.mutation.AddedTime2(); ok {
+	if value, ok := oc.mutation.Finallytime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldAddedTime2,
+			Column: office.FieldFinallytime,
 		})
-		o.AddedTime2 = value
+		o.Finallytime = value
 	}
 	if nodes := oc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

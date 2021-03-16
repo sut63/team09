@@ -114,17 +114,17 @@ func Doctoridcard(v string) predicate.Office {
 	})
 }
 
-// AddedTime1 applies equality check predicate on the "added_time1" field. It's identical to AddedTime1EQ.
-func AddedTime1(v time.Time) predicate.Office {
+// Firsttime applies equality check predicate on the "firsttime" field. It's identical to FirsttimeEQ.
+func Firsttime(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime1), v))
+		s.Where(sql.EQ(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime2 applies equality check predicate on the "added_time2" field. It's identical to AddedTime2EQ.
-func AddedTime2(v time.Time) predicate.Office {
+// Finallytime applies equality check predicate on the "finallytime" field. It's identical to FinallytimeEQ.
+func Finallytime(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime2), v))
+		s.Where(sql.EQ(s.C(FieldFinallytime), v))
 	})
 }
 
@@ -461,22 +461,22 @@ func DoctoridcardContainsFold(v string) predicate.Office {
 	})
 }
 
-// AddedTime1EQ applies the EQ predicate on the "added_time1" field.
-func AddedTime1EQ(v time.Time) predicate.Office {
+// FirsttimeEQ applies the EQ predicate on the "firsttime" field.
+func FirsttimeEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime1), v))
+		s.Where(sql.EQ(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime1NEQ applies the NEQ predicate on the "added_time1" field.
-func AddedTime1NEQ(v time.Time) predicate.Office {
+// FirsttimeNEQ applies the NEQ predicate on the "firsttime" field.
+func FirsttimeNEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAddedTime1), v))
+		s.Where(sql.NEQ(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime1In applies the In predicate on the "added_time1" field.
-func AddedTime1In(vs ...time.Time) predicate.Office {
+// FirsttimeIn applies the In predicate on the "firsttime" field.
+func FirsttimeIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -488,12 +488,12 @@ func AddedTime1In(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAddedTime1), v...))
+		s.Where(sql.In(s.C(FieldFirsttime), v...))
 	})
 }
 
-// AddedTime1NotIn applies the NotIn predicate on the "added_time1" field.
-func AddedTime1NotIn(vs ...time.Time) predicate.Office {
+// FirsttimeNotIn applies the NotIn predicate on the "firsttime" field.
+func FirsttimeNotIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -505,54 +505,54 @@ func AddedTime1NotIn(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAddedTime1), v...))
+		s.Where(sql.NotIn(s.C(FieldFirsttime), v...))
 	})
 }
 
-// AddedTime1GT applies the GT predicate on the "added_time1" field.
-func AddedTime1GT(v time.Time) predicate.Office {
+// FirsttimeGT applies the GT predicate on the "firsttime" field.
+func FirsttimeGT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAddedTime1), v))
+		s.Where(sql.GT(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime1GTE applies the GTE predicate on the "added_time1" field.
-func AddedTime1GTE(v time.Time) predicate.Office {
+// FirsttimeGTE applies the GTE predicate on the "firsttime" field.
+func FirsttimeGTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAddedTime1), v))
+		s.Where(sql.GTE(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime1LT applies the LT predicate on the "added_time1" field.
-func AddedTime1LT(v time.Time) predicate.Office {
+// FirsttimeLT applies the LT predicate on the "firsttime" field.
+func FirsttimeLT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAddedTime1), v))
+		s.Where(sql.LT(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime1LTE applies the LTE predicate on the "added_time1" field.
-func AddedTime1LTE(v time.Time) predicate.Office {
+// FirsttimeLTE applies the LTE predicate on the "firsttime" field.
+func FirsttimeLTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAddedTime1), v))
+		s.Where(sql.LTE(s.C(FieldFirsttime), v))
 	})
 }
 
-// AddedTime2EQ applies the EQ predicate on the "added_time2" field.
-func AddedTime2EQ(v time.Time) predicate.Office {
+// FinallytimeEQ applies the EQ predicate on the "finallytime" field.
+func FinallytimeEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime2), v))
+		s.Where(sql.EQ(s.C(FieldFinallytime), v))
 	})
 }
 
-// AddedTime2NEQ applies the NEQ predicate on the "added_time2" field.
-func AddedTime2NEQ(v time.Time) predicate.Office {
+// FinallytimeNEQ applies the NEQ predicate on the "finallytime" field.
+func FinallytimeNEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAddedTime2), v))
+		s.Where(sql.NEQ(s.C(FieldFinallytime), v))
 	})
 }
 
-// AddedTime2In applies the In predicate on the "added_time2" field.
-func AddedTime2In(vs ...time.Time) predicate.Office {
+// FinallytimeIn applies the In predicate on the "finallytime" field.
+func FinallytimeIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -564,12 +564,12 @@ func AddedTime2In(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAddedTime2), v...))
+		s.Where(sql.In(s.C(FieldFinallytime), v...))
 	})
 }
 
-// AddedTime2NotIn applies the NotIn predicate on the "added_time2" field.
-func AddedTime2NotIn(vs ...time.Time) predicate.Office {
+// FinallytimeNotIn applies the NotIn predicate on the "finallytime" field.
+func FinallytimeNotIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -581,35 +581,35 @@ func AddedTime2NotIn(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAddedTime2), v...))
+		s.Where(sql.NotIn(s.C(FieldFinallytime), v...))
 	})
 }
 
-// AddedTime2GT applies the GT predicate on the "added_time2" field.
-func AddedTime2GT(v time.Time) predicate.Office {
+// FinallytimeGT applies the GT predicate on the "finallytime" field.
+func FinallytimeGT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAddedTime2), v))
+		s.Where(sql.GT(s.C(FieldFinallytime), v))
 	})
 }
 
-// AddedTime2GTE applies the GTE predicate on the "added_time2" field.
-func AddedTime2GTE(v time.Time) predicate.Office {
+// FinallytimeGTE applies the GTE predicate on the "finallytime" field.
+func FinallytimeGTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAddedTime2), v))
+		s.Where(sql.GTE(s.C(FieldFinallytime), v))
 	})
 }
 
-// AddedTime2LT applies the LT predicate on the "added_time2" field.
-func AddedTime2LT(v time.Time) predicate.Office {
+// FinallytimeLT applies the LT predicate on the "finallytime" field.
+func FinallytimeLT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAddedTime2), v))
+		s.Where(sql.LT(s.C(FieldFinallytime), v))
 	})
 }
 
-// AddedTime2LTE applies the LTE predicate on the "added_time2" field.
-func AddedTime2LTE(v time.Time) predicate.Office {
+// FinallytimeLTE applies the LTE predicate on the "finallytime" field.
+func FinallytimeLTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAddedTime2), v))
+		s.Where(sql.LTE(s.C(FieldFinallytime), v))
 	})
 }
 

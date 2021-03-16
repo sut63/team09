@@ -124,15 +124,15 @@ export function EntDoctorEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'departments': !exists(json, 'Departments') ? undefined : ((json['Departments'] as Array<any>).map(EntDepartmentFromJSON)),
-        'disease': !exists(json, 'Disease') ? undefined : EntDiseaseFromJSON(json['Disease']),
-        'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
-        'offices': !exists(json, 'Offices') ? undefined : ((json['Offices'] as Array<any>).map(EntOfficeFromJSON)),
-        'position': !exists(json, 'Position') ? undefined : EntPositionFromJSON(json['Position']),
-        'schedules': !exists(json, 'Schedules') ? undefined : ((json['Schedules'] as Array<any>).map(EntScheduleFromJSON)),
-        'specialdoctors': !exists(json, 'Specialdoctors') ? undefined : ((json['Specialdoctors'] as Array<any>).map(EntSpecialdoctorFromJSON)),
-        'title': !exists(json, 'Title') ? undefined : EntTitleFromJSON(json['Title']),
-        'trainings': !exists(json, 'Trainings') ? undefined : ((json['Trainings'] as Array<any>).map(EntTrainingFromJSON)),
+        'departments': !exists(json, 'departments') ? undefined : ((json['departments'] as Array<any>).map(EntDepartmentFromJSON)),
+        'disease': !exists(json, 'disease') ? undefined : EntDiseaseFromJSON(json['disease']),
+        'gender': !exists(json, 'gender') ? undefined : EntGenderFromJSON(json['gender']),
+        'offices': !exists(json, 'offices') ? undefined : ((json['offices'] as Array<any>).map(EntOfficeFromJSON)),
+        'position': !exists(json, 'position') ? undefined : EntPositionFromJSON(json['position']),
+        'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
+        'specialdoctors': !exists(json, 'specialdoctors') ? undefined : ((json['specialdoctors'] as Array<any>).map(EntSpecialdoctorFromJSON)),
+        'title': !exists(json, 'title') ? undefined : EntTitleFromJSON(json['title']),
+        'trainings': !exists(json, 'trainings') ? undefined : ((json['trainings'] as Array<any>).map(EntTrainingFromJSON)),
     };
 }
 

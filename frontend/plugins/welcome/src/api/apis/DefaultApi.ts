@@ -135,10 +135,6 @@ export interface DeleteMissionRequest {
     id: number;
 }
 
-export interface DeleteOfficeRequest {
-    id: number;
-}
-
 export interface DeletePositionRequest {
     id: number;
 }
@@ -193,6 +189,10 @@ export interface GetMissionRequest {
 
 export interface GetOfficeRequest {
     id: number;
+}
+
+export interface GetOfficeBySearchRequest {
+    office?: string;
 }
 
 export interface GetPositionRequest {
@@ -939,38 +939,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get office by ID
-     * Delete a office entity by ID
-     */
-    async deleteOfficeRaw(requestParameters: DeleteOfficeRequest): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteOffice.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/offices/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * get office by ID
-     * Delete a office entity by ID
-     */
-    async deleteOffice(requestParameters: DeleteOfficeRequest): Promise<object> {
-        const response = await this.deleteOfficeRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
      * get position by ID
      * Delete a position entity by ID
      */
@@ -1415,6 +1383,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getOffice(requestParameters: GetOfficeRequest): Promise<EntOffice> {
         const response = await this.getOfficeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get Office by Search
+     * Get a Office entity by Search
+     */
+    async getOfficeBySearchRaw(requestParameters: GetOfficeBySearchRequest): Promise<runtime.ApiResponse<EntOffice>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.office !== undefined) {
+            queryParameters['Office'] = requestParameters.office;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchworkhistorys`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntOfficeFromJSON(jsonValue));
+    }
+
+    /**
+     * get Office by Search
+     * Get a Office entity by Search
+     */
+    async getOfficeBySearch(requestParameters: GetOfficeBySearchRequest): Promise<EntOffice> {
+        const response = await this.getOfficeBySearchRaw(requestParameters);
         return await response.value();
     }
 

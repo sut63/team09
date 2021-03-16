@@ -25,10 +25,10 @@ type Office struct {
 	Roomnumber string `json:"roomnumber,omitempty"`
 	// Doctoridcard holds the value of the "doctoridcard" field.
 	Doctoridcard string `json:"doctoridcard,omitempty"`
-	// AddedTime1 holds the value of the "added_time1" field.
-	AddedTime1 time.Time `json:"added_time1,omitempty"`
-	// AddedTime2 holds the value of the "added_time2" field.
-	AddedTime2 time.Time `json:"added_time2,omitempty"`
+	// Firsttime holds the value of the "firsttime" field.
+	Firsttime time.Time `json:"firsttime,omitempty"`
+	// Finallytime holds the value of the "finallytime" field.
+	Finallytime time.Time `json:"finallytime,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
 	Edges          OfficeEdges `json:"edges"`
@@ -110,8 +110,8 @@ func (*Office) scanValues() []interface{} {
 		&sql.NullString{}, // officename
 		&sql.NullString{}, // roomnumber
 		&sql.NullString{}, // doctoridcard
-		&sql.NullTime{},   // added_time1
-		&sql.NullTime{},   // added_time2
+		&sql.NullTime{},   // firsttime
+		&sql.NullTime{},   // finallytime
 	}
 }
 
@@ -152,14 +152,14 @@ func (o *Office) assignValues(values ...interface{}) error {
 		o.Doctoridcard = value.String
 	}
 	if value, ok := values[3].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time1", values[3])
+		return fmt.Errorf("unexpected type %T for field firsttime", values[3])
 	} else if value.Valid {
-		o.AddedTime1 = value.Time
+		o.Firsttime = value.Time
 	}
 	if value, ok := values[4].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time2", values[4])
+		return fmt.Errorf("unexpected type %T for field finallytime", values[4])
 	} else if value.Valid {
-		o.AddedTime2 = value.Time
+		o.Finallytime = value.Time
 	}
 	values = values[5:]
 	if len(values) == len(office.ForeignKeys) {
@@ -234,10 +234,10 @@ func (o *Office) String() string {
 	builder.WriteString(o.Roomnumber)
 	builder.WriteString(", doctoridcard=")
 	builder.WriteString(o.Doctoridcard)
-	builder.WriteString(", added_time1=")
-	builder.WriteString(o.AddedTime1.Format(time.ANSIC))
-	builder.WriteString(", added_time2=")
-	builder.WriteString(o.AddedTime2.Format(time.ANSIC))
+	builder.WriteString(", firsttime=")
+	builder.WriteString(o.Firsttime.Format(time.ANSIC))
+	builder.WriteString(", finallytime=")
+	builder.WriteString(o.Finallytime.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -74,9 +74,9 @@ export function EntOfficeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
-        'doctor': !exists(json, 'Doctor') ? undefined : EntDoctorFromJSON(json['Doctor']),
-        'extradoctor': !exists(json, 'Extradoctor') ? undefined : EntExtradoctorFromJSON(json['Extradoctor']),
+        'department': !exists(json, 'department') ? undefined : EntDepartmentFromJSON(json['department']),
+        'doctor': !exists(json, 'doctor') ? undefined : EntDoctorFromJSON(json['doctor']),
+        'extradoctor': !exists(json, 'extradoctor') ? undefined : EntExtradoctorFromJSON(json['extradoctor']),
         'schedules': !exists(json, 'schedules') ? undefined : ((json['schedules'] as Array<any>).map(EntScheduleFromJSON)),
     };
 }

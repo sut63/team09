@@ -7,7 +7,7 @@ import Training from './components/Training';
 import Specialdoctor from './components/Specialdoctor';
 import Schedule from './components/Schedule';
 import Detail from './components/Detail';
-import WorkhistoryTable from './components/WorkhistoryTable';
+import searchworkhistory from './components/SearchWorkhistory';
 import SpecialdoctorTable from './components/SpecialdoctorTable';
 import TrainingTables from './components/TrainingTables';
 import ScheduleTable from './components/ScheduleTable';
@@ -25,7 +25,7 @@ export const plugin = createPlugin({
     router.registerRoute('/specialdoctor', Specialdoctor);
     router.registerRoute('/schedule', Schedule);
     router.registerRoute('/detail', Detail);
-    router.registerRoute('/workhistorytable', WorkhistoryTable);
+    router.registerRoute('/searchworkhistory', searchworkhistory);
     router.registerRoute('/specialdoctortable', SpecialdoctorTable);
     router.registerRoute('/trainingtable', TrainingTables);
     router.registerRoute('/scheduletable', ScheduleTable);
