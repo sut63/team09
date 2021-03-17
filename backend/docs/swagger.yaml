@@ -1729,6 +1729,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a schedule entity by ID
+  /searchschedules:
+    get:
+      description: get Schedule by Search
+      operationId: get-Schedule-by-search
+      parameters:
+      - description: Search Schedule
+        in: query
+        name: Schedule
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a Schedule entity by Search
   /searchworkhistorys:
     get:
       description: get Office by Search
