@@ -7277,9 +7277,9 @@ type TrainingMutation struct {
 	op                Op
 	typ               string
 	id                *int
-	branch            *string
-	dateone           *time.Time
-	datetwo           *time.Time
+	trainingplace     *string
+	firstday          *time.Time
+	lastday           *time.Time
 	doctoridcard      *string
 	hour              *int
 	addhour           *int
@@ -7373,115 +7373,115 @@ func (m *TrainingMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetBranch sets the branch field.
-func (m *TrainingMutation) SetBranch(s string) {
-	m.branch = &s
+// SetTrainingplace sets the trainingplace field.
+func (m *TrainingMutation) SetTrainingplace(s string) {
+	m.trainingplace = &s
 }
 
-// Branch returns the branch value in the mutation.
-func (m *TrainingMutation) Branch() (r string, exists bool) {
-	v := m.branch
+// Trainingplace returns the trainingplace value in the mutation.
+func (m *TrainingMutation) Trainingplace() (r string, exists bool) {
+	v := m.trainingplace
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldBranch returns the old branch value of the Training.
+// OldTrainingplace returns the old trainingplace value of the Training.
 // If the Training object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *TrainingMutation) OldBranch(ctx context.Context) (v string, err error) {
+func (m *TrainingMutation) OldTrainingplace(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldBranch is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldTrainingplace is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldBranch requires an ID field in the mutation")
+		return v, fmt.Errorf("OldTrainingplace requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBranch: %w", err)
+		return v, fmt.Errorf("querying old value for OldTrainingplace: %w", err)
 	}
-	return oldValue.Branch, nil
+	return oldValue.Trainingplace, nil
 }
 
-// ResetBranch reset all changes of the "branch" field.
-func (m *TrainingMutation) ResetBranch() {
-	m.branch = nil
+// ResetTrainingplace reset all changes of the "trainingplace" field.
+func (m *TrainingMutation) ResetTrainingplace() {
+	m.trainingplace = nil
 }
 
-// SetDateone sets the dateone field.
-func (m *TrainingMutation) SetDateone(t time.Time) {
-	m.dateone = &t
+// SetFirstday sets the firstday field.
+func (m *TrainingMutation) SetFirstday(t time.Time) {
+	m.firstday = &t
 }
 
-// Dateone returns the dateone value in the mutation.
-func (m *TrainingMutation) Dateone() (r time.Time, exists bool) {
-	v := m.dateone
+// Firstday returns the firstday value in the mutation.
+func (m *TrainingMutation) Firstday() (r time.Time, exists bool) {
+	v := m.firstday
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDateone returns the old dateone value of the Training.
+// OldFirstday returns the old firstday value of the Training.
 // If the Training object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *TrainingMutation) OldDateone(ctx context.Context) (v time.Time, err error) {
+func (m *TrainingMutation) OldFirstday(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDateone is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldFirstday is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDateone requires an ID field in the mutation")
+		return v, fmt.Errorf("OldFirstday requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDateone: %w", err)
+		return v, fmt.Errorf("querying old value for OldFirstday: %w", err)
 	}
-	return oldValue.Dateone, nil
+	return oldValue.Firstday, nil
 }
 
-// ResetDateone reset all changes of the "dateone" field.
-func (m *TrainingMutation) ResetDateone() {
-	m.dateone = nil
+// ResetFirstday reset all changes of the "firstday" field.
+func (m *TrainingMutation) ResetFirstday() {
+	m.firstday = nil
 }
 
-// SetDatetwo sets the datetwo field.
-func (m *TrainingMutation) SetDatetwo(t time.Time) {
-	m.datetwo = &t
+// SetLastday sets the lastday field.
+func (m *TrainingMutation) SetLastday(t time.Time) {
+	m.lastday = &t
 }
 
-// Datetwo returns the datetwo value in the mutation.
-func (m *TrainingMutation) Datetwo() (r time.Time, exists bool) {
-	v := m.datetwo
+// Lastday returns the lastday value in the mutation.
+func (m *TrainingMutation) Lastday() (r time.Time, exists bool) {
+	v := m.lastday
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDatetwo returns the old datetwo value of the Training.
+// OldLastday returns the old lastday value of the Training.
 // If the Training object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *TrainingMutation) OldDatetwo(ctx context.Context) (v time.Time, err error) {
+func (m *TrainingMutation) OldLastday(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDatetwo is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldLastday is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDatetwo requires an ID field in the mutation")
+		return v, fmt.Errorf("OldLastday requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDatetwo: %w", err)
+		return v, fmt.Errorf("querying old value for OldLastday: %w", err)
 	}
-	return oldValue.Datetwo, nil
+	return oldValue.Lastday, nil
 }
 
-// ResetDatetwo reset all changes of the "datetwo" field.
-func (m *TrainingMutation) ResetDatetwo() {
-	m.datetwo = nil
+// ResetLastday reset all changes of the "lastday" field.
+func (m *TrainingMutation) ResetLastday() {
+	m.lastday = nil
 }
 
 // SetDoctoridcard sets the doctoridcard field.
@@ -7710,14 +7710,14 @@ func (m *TrainingMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *TrainingMutation) Fields() []string {
 	fields := make([]string, 0, 5)
-	if m.branch != nil {
-		fields = append(fields, training.FieldBranch)
+	if m.trainingplace != nil {
+		fields = append(fields, training.FieldTrainingplace)
 	}
-	if m.dateone != nil {
-		fields = append(fields, training.FieldDateone)
+	if m.firstday != nil {
+		fields = append(fields, training.FieldFirstday)
 	}
-	if m.datetwo != nil {
-		fields = append(fields, training.FieldDatetwo)
+	if m.lastday != nil {
+		fields = append(fields, training.FieldLastday)
 	}
 	if m.doctoridcard != nil {
 		fields = append(fields, training.FieldDoctoridcard)
@@ -7733,12 +7733,12 @@ func (m *TrainingMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *TrainingMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case training.FieldBranch:
-		return m.Branch()
-	case training.FieldDateone:
-		return m.Dateone()
-	case training.FieldDatetwo:
-		return m.Datetwo()
+	case training.FieldTrainingplace:
+		return m.Trainingplace()
+	case training.FieldFirstday:
+		return m.Firstday()
+	case training.FieldLastday:
+		return m.Lastday()
 	case training.FieldDoctoridcard:
 		return m.Doctoridcard()
 	case training.FieldHour:
@@ -7752,12 +7752,12 @@ func (m *TrainingMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *TrainingMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case training.FieldBranch:
-		return m.OldBranch(ctx)
-	case training.FieldDateone:
-		return m.OldDateone(ctx)
-	case training.FieldDatetwo:
-		return m.OldDatetwo(ctx)
+	case training.FieldTrainingplace:
+		return m.OldTrainingplace(ctx)
+	case training.FieldFirstday:
+		return m.OldFirstday(ctx)
+	case training.FieldLastday:
+		return m.OldLastday(ctx)
 	case training.FieldDoctoridcard:
 		return m.OldDoctoridcard(ctx)
 	case training.FieldHour:
@@ -7771,26 +7771,26 @@ func (m *TrainingMutation) OldField(ctx context.Context, name string) (ent.Value
 // type mismatch the field type.
 func (m *TrainingMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case training.FieldBranch:
+	case training.FieldTrainingplace:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetBranch(v)
+		m.SetTrainingplace(v)
 		return nil
-	case training.FieldDateone:
+	case training.FieldFirstday:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDateone(v)
+		m.SetFirstday(v)
 		return nil
-	case training.FieldDatetwo:
+	case training.FieldLastday:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDatetwo(v)
+		m.SetLastday(v)
 		return nil
 	case training.FieldDoctoridcard:
 		v, ok := value.(string)
@@ -7871,14 +7871,14 @@ func (m *TrainingMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *TrainingMutation) ResetField(name string) error {
 	switch name {
-	case training.FieldBranch:
-		m.ResetBranch()
+	case training.FieldTrainingplace:
+		m.ResetTrainingplace()
 		return nil
-	case training.FieldDateone:
-		m.ResetDateone()
+	case training.FieldFirstday:
+		m.ResetFirstday()
 		return nil
-	case training.FieldDatetwo:
-		m.ResetDatetwo()
+	case training.FieldLastday:
+		m.ResetLastday()
 		return nil
 	case training.FieldDoctoridcard:
 		m.ResetDoctoridcard()

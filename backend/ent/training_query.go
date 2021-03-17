@@ -332,12 +332,12 @@ func (tq *TrainingQuery) WithDepartment(opts ...func(*DepartmentQuery)) *Trainin
 // Example:
 //
 //	var v []struct {
-//		Branch string `json:"branch,omitempty"`
+//		Trainingplace string `json:"trainingplace,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Training.Query().
-//		GroupBy(training.FieldBranch).
+//		GroupBy(training.FieldTrainingplace).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +358,11 @@ func (tq *TrainingQuery) GroupBy(field string, fields ...string) *TrainingGroupB
 // Example:
 //
 //	var v []struct {
-//		Branch string `json:"branch,omitempty"`
+//		Trainingplace string `json:"trainingplace,omitempty"`
 //	}
 //
 //	client.Training.Query().
-//		Select(training.FieldBranch).
+//		Select(training.FieldTrainingplace).
 //		Scan(ctx, &v)
 //
 func (tq *TrainingQuery) Select(field string, fields ...string) *TrainingSelect {

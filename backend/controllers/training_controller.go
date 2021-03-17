@@ -25,9 +25,9 @@ type Training struct {
 	Course       int
 	Department   int
 	Doctor       int
-	Branch       string
-	Dateone      string
-	Datetwo      string
+	Trainingplace       string
+	Firstday      string
+	Lastday      string
 	Doctoridcard string
 	Hour         int
 }
@@ -88,16 +88,16 @@ func (ctl *TrainingController) CreateTraining(c *gin.Context) {
 		return
 	}
 
-	time1, err := time.Parse(time.RFC3339, obj.Dateone+"T00:00:00Z")
-	time2, err := time.Parse(time.RFC3339, obj.Datetwo+"T00:00:00Z")
+	time1, err := time.Parse(time.RFC3339, obj.Firstday+"T00:00:00Z")
+	time2, err := time.Parse(time.RFC3339, obj.Lastday+"T00:00:00Z")
 	t, err := ctl.client.Training.
 		Create().
 		SetCourse(co).
 		SetDepartment(de).
 		SetDoctor(d).
-		SetBranch(obj.Branch).
-		SetDateone(time1).
-		SetDatetwo(time2).
+		SetTrainingplace(obj.Trainingplace).
+		SetFirstday(time1).
+		SetLastday(time2).
 		SetDoctoridcard(obj.Doctoridcard).
 		SetHour(obj.Hour).
 		Save(context.Background())
@@ -194,6 +194,39 @@ func (ctl *TrainingController) GetTraining(c *gin.Context) {
 	c.JSON(200, t)
 }
 
+// GetSearchTrainingTable handles GET requests to retrieve a Training entity
+// @Summary Get a Training entity by Search
+// @Description get Training by Search
+// @ID get-Training-by-search
+// @Produce  json
+// @Param Training query string false "Search Training"
+// @Success 200 {object} ent.Training
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /trainingtables [get]
+func (ctl *TrainingController) GetSearchTrainingTable(c *gin.Context) {
+	trainingsearch := c.Query("training")
+
+	t, err := ctl.client.Training.
+		Query().
+		WithCourse().
+		WithDepartment().
+		WithDoctor().
+		Where(training.DoctoridcardContains(trainingsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"data": t,
+	})
+}
+
+
 // DeleteTraining handles DELETE requests to delete a training entity
 // @Summary Delete a training entity by ID
 // @Description get training by ID
@@ -238,6 +271,10 @@ func NewTrainingController(router gin.IRouter, client *ent.Client) *TrainingCont
 // InitTrainingController registers routes to the main engine
 func (ctl *TrainingController) register() {
 	trainings := ctl.router.Group("/trainings")
+
+	// Search
+	searchTrainingTables := ctl.router.Group("/trainingtable")
+	searchTrainingTables.GET("", ctl.GetSearchTrainingTable)
 
 	trainings.GET("", ctl.ListTraining)
 	trainings.POST("", ctl.CreateTraining)

@@ -219,6 +219,10 @@ export interface GetTitleRequest {
     id: number;
 }
 
+export interface GetTrainingBySearchRequest {
+    training?: string;
+}
+
 export interface ListCourseRequest {
     limit?: number;
     offset?: number;
@@ -1615,6 +1619,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getTitle(requestParameters: GetTitleRequest): Promise<EntTitle> {
         const response = await this.getTitleRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get Training by Search
+     * Get a Training entity by Search
+     */
+    async getTrainingBySearchRaw(requestParameters: GetTrainingBySearchRequest): Promise<runtime.ApiResponse<EntTraining>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.training !== undefined) {
+            queryParameters['Training'] = requestParameters.training;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/trainingtables`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntTrainingFromJSON(jsonValue));
+    }
+
+    /**
+     * get Training by Search
+     * Get a Training entity by Search
+     */
+    async getTrainingBySearch(requestParameters: GetTrainingBySearchRequest): Promise<EntTraining> {
+        const response = await this.getTrainingBySearchRaw(requestParameters);
         return await response.value();
     }
 

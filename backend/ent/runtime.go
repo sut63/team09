@@ -244,10 +244,10 @@ func init() {
 	title.TitleValidator = titleDescTitle.Validators[0].(func(string) error)
 	trainingFields := schema.Training{}.Fields()
 	_ = trainingFields
-	// trainingDescBranch is the schema descriptor for branch field.
-	trainingDescBranch := trainingFields[0].Descriptor()
-	// training.BranchValidator is a validator for the "branch" field. It is called by the builders before save.
-	training.BranchValidator = trainingDescBranch.Validators[0].(func(string) error)
+	// trainingDescTrainingplace is the schema descriptor for trainingplace field.
+	trainingDescTrainingplace := trainingFields[0].Descriptor()
+	// training.TrainingplaceValidator is a validator for the "trainingplace" field. It is called by the builders before save.
+	training.TrainingplaceValidator = trainingDescTrainingplace.Validators[0].(func(string) error)
 	// trainingDescDoctoridcard is the schema descriptor for doctoridcard field.
 	trainingDescDoctoridcard := trainingFields[3].Descriptor()
 	// training.DoctoridcardValidator is a validator for the "doctoridcard" field. It is called by the builders before save.

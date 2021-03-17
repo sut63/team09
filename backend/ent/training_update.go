@@ -31,21 +31,21 @@ func (tu *TrainingUpdate) Where(ps ...predicate.Training) *TrainingUpdate {
 	return tu
 }
 
-// SetBranch sets the branch field.
-func (tu *TrainingUpdate) SetBranch(s string) *TrainingUpdate {
-	tu.mutation.SetBranch(s)
+// SetTrainingplace sets the trainingplace field.
+func (tu *TrainingUpdate) SetTrainingplace(s string) *TrainingUpdate {
+	tu.mutation.SetTrainingplace(s)
 	return tu
 }
 
-// SetDateone sets the dateone field.
-func (tu *TrainingUpdate) SetDateone(t time.Time) *TrainingUpdate {
-	tu.mutation.SetDateone(t)
+// SetFirstday sets the firstday field.
+func (tu *TrainingUpdate) SetFirstday(t time.Time) *TrainingUpdate {
+	tu.mutation.SetFirstday(t)
 	return tu
 }
 
-// SetDatetwo sets the datetwo field.
-func (tu *TrainingUpdate) SetDatetwo(t time.Time) *TrainingUpdate {
-	tu.mutation.SetDatetwo(t)
+// SetLastday sets the lastday field.
+func (tu *TrainingUpdate) SetLastday(t time.Time) *TrainingUpdate {
+	tu.mutation.SetLastday(t)
 	return tu
 }
 
@@ -150,9 +150,9 @@ func (tu *TrainingUpdate) ClearDepartment() *TrainingUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (tu *TrainingUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := tu.mutation.Branch(); ok {
-		if err := training.BranchValidator(v); err != nil {
-			return 0, &ValidationError{Name: "branch", err: fmt.Errorf("ent: validator failed for field \"branch\": %w", err)}
+	if v, ok := tu.mutation.Trainingplace(); ok {
+		if err := training.TrainingplaceValidator(v); err != nil {
+			return 0, &ValidationError{Name: "trainingplace", err: fmt.Errorf("ent: validator failed for field \"trainingplace\": %w", err)}
 		}
 	}
 	if v, ok := tu.mutation.Doctoridcard(); ok {
@@ -233,25 +233,25 @@ func (tu *TrainingUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := tu.mutation.Branch(); ok {
+	if value, ok := tu.mutation.Trainingplace(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: training.FieldBranch,
+			Column: training.FieldTrainingplace,
 		})
 	}
-	if value, ok := tu.mutation.Dateone(); ok {
+	if value, ok := tu.mutation.Firstday(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDateone,
+			Column: training.FieldFirstday,
 		})
 	}
-	if value, ok := tu.mutation.Datetwo(); ok {
+	if value, ok := tu.mutation.Lastday(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDatetwo,
+			Column: training.FieldLastday,
 		})
 	}
 	if value, ok := tu.mutation.Doctoridcard(); ok {
@@ -398,21 +398,21 @@ type TrainingUpdateOne struct {
 	mutation *TrainingMutation
 }
 
-// SetBranch sets the branch field.
-func (tuo *TrainingUpdateOne) SetBranch(s string) *TrainingUpdateOne {
-	tuo.mutation.SetBranch(s)
+// SetTrainingplace sets the trainingplace field.
+func (tuo *TrainingUpdateOne) SetTrainingplace(s string) *TrainingUpdateOne {
+	tuo.mutation.SetTrainingplace(s)
 	return tuo
 }
 
-// SetDateone sets the dateone field.
-func (tuo *TrainingUpdateOne) SetDateone(t time.Time) *TrainingUpdateOne {
-	tuo.mutation.SetDateone(t)
+// SetFirstday sets the firstday field.
+func (tuo *TrainingUpdateOne) SetFirstday(t time.Time) *TrainingUpdateOne {
+	tuo.mutation.SetFirstday(t)
 	return tuo
 }
 
-// SetDatetwo sets the datetwo field.
-func (tuo *TrainingUpdateOne) SetDatetwo(t time.Time) *TrainingUpdateOne {
-	tuo.mutation.SetDatetwo(t)
+// SetLastday sets the lastday field.
+func (tuo *TrainingUpdateOne) SetLastday(t time.Time) *TrainingUpdateOne {
+	tuo.mutation.SetLastday(t)
 	return tuo
 }
 
@@ -517,9 +517,9 @@ func (tuo *TrainingUpdateOne) ClearDepartment() *TrainingUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (tuo *TrainingUpdateOne) Save(ctx context.Context) (*Training, error) {
-	if v, ok := tuo.mutation.Branch(); ok {
-		if err := training.BranchValidator(v); err != nil {
-			return nil, &ValidationError{Name: "branch", err: fmt.Errorf("ent: validator failed for field \"branch\": %w", err)}
+	if v, ok := tuo.mutation.Trainingplace(); ok {
+		if err := training.TrainingplaceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "trainingplace", err: fmt.Errorf("ent: validator failed for field \"trainingplace\": %w", err)}
 		}
 	}
 	if v, ok := tuo.mutation.Doctoridcard(); ok {
@@ -598,25 +598,25 @@ func (tuo *TrainingUpdateOne) sqlSave(ctx context.Context) (t *Training, err err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Training.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := tuo.mutation.Branch(); ok {
+	if value, ok := tuo.mutation.Trainingplace(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: training.FieldBranch,
+			Column: training.FieldTrainingplace,
 		})
 	}
-	if value, ok := tuo.mutation.Dateone(); ok {
+	if value, ok := tuo.mutation.Firstday(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDateone,
+			Column: training.FieldFirstday,
 		})
 	}
-	if value, ok := tuo.mutation.Datetwo(); ok {
+	if value, ok := tuo.mutation.Lastday(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDatetwo,
+			Column: training.FieldLastday,
 		})
 	}
 	if value, ok := tuo.mutation.Doctoridcard(); ok {

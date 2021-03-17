@@ -2477,6 +2477,50 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/trainingtables": {
+            "get": {
+                "description": "get Training by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a Training entity by Search",
+                "operationId": "get-Training-by-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search Training",
+                        "name": "Training",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Training"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -3077,18 +3121,6 @@ var doc = `{
         "ent.Training": {
             "type": "object",
             "properties": {
-                "branch": {
-                    "description": "Branch holds the value of the \"branch\" field.",
-                    "type": "string"
-                },
-                "dateone": {
-                    "description": "Dateone holds the value of the \"dateone\" field.",
-                    "type": "string"
-                },
-                "datetwo": {
-                    "description": "Datetwo holds the value of the \"datetwo\" field.",
-                    "type": "string"
-                },
                 "doctoridcard": {
                     "description": "Doctoridcard holds the value of the \"doctoridcard\" field.",
                     "type": "string"
@@ -3098,6 +3130,10 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.TrainingEdges"
                 },
+                "firstday": {
+                    "description": "Firstday holds the value of the \"firstday\" field.",
+                    "type": "string"
+                },
                 "hour": {
                     "description": "Hour holds the value of the \"hour\" field.",
                     "type": "integer"
@@ -3105,6 +3141,14 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "lastday": {
+                    "description": "Lastday holds the value of the \"lastday\" field.",
+                    "type": "string"
+                },
+                "trainingplace": {
+                    "description": "Trainingplace holds the value of the \"trainingplace\" field.",
+                    "type": "string"
                 }
             }
         },
