@@ -175,6 +175,10 @@ export interface GetDoctorRequest {
     id: number;
 }
 
+export interface GetDoctorBySearchRequest {
+    doctor?: string;
+}
+
 export interface GetExtradoctorRequest {
     id: number;
 }
@@ -1259,6 +1263,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getDoctor(requestParameters: GetDoctorRequest): Promise<EntDoctor> {
         const response = await this.getDoctorRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get Doctor by Search
+     * Get a Doctor entity by Search
+     */
+    async getDoctorBySearchRaw(requestParameters: GetDoctorBySearchRequest): Promise<runtime.ApiResponse<EntDoctor>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.doctor !== undefined) {
+            queryParameters['Doctor'] = requestParameters.doctor;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchpersonalinformations`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDoctorFromJSON(jsonValue));
+    }
+
+    /**
+     * get Doctor by Search
+     * Get a Doctor entity by Search
+     */
+    async getDoctorBySearch(requestParameters: GetDoctorBySearchRequest): Promise<EntDoctor> {
+        const response = await this.getDoctorBySearchRaw(requestParameters);
         return await response.value();
     }
 

@@ -11,7 +11,7 @@ import searchworkhistory from './components/SearchWorkhistory';
 import SpecialdoctorTable from './components/SpecialdoctorTable';
 import TrainingTables from './components/TrainingTables';
 import ScheduleTable from './components/ScheduleTable';
-import PersonalinformationTable from './components/PersonalinformationTable';
+import PersonalinformationTable from './components/SearchPersonalinformation';
 import DetailTable from './components/DetailTable';
 
 export const plugin = createPlugin({
