@@ -191,12 +191,12 @@ export default function ComponentsTableUser() {
               <div>
                 {alert ? (
                   <Alert severity="success">
-                    แสดงข้อมูลประวัติการทำงานของแพทย์ {docterid}
+                    แสดงข้อมูลตารางเวลาของแพทย์ {docterid}
                   </Alert>
                 )
                   : (
                     <Alert severity="warning" style={{ marginTop: 20 }}>
-                      ไม่พบข้อมูลข้อมูลประวัติการทำงานของแพทย์
+                      ไม่พบข้อมูลข้อมูลตารางเวลาของแพทย์
                     </Alert>
                   )}
               </div>

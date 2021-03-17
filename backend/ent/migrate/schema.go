@@ -334,9 +334,9 @@ var (
 	// TrainingsColumns holds the columns for the "trainings" table.
 	TrainingsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "branch", Type: field.TypeString},
-		{Name: "dateone", Type: field.TypeTime},
-		{Name: "datetwo", Type: field.TypeTime},
+		{Name: "trainingplace", Type: field.TypeString},
+		{Name: "firstday", Type: field.TypeTime},
+		{Name: "lastday", Type: field.TypeTime},
 		{Name: "doctoridcard", Type: field.TypeString, Size: 10},
 		{Name: "hour", Type: field.TypeInt},
 		{Name: "course_id", Type: field.TypeInt, Nullable: true},

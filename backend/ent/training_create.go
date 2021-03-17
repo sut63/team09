@@ -23,21 +23,21 @@ type TrainingCreate struct {
 	hooks    []Hook
 }
 
-// SetBranch sets the branch field.
-func (tc *TrainingCreate) SetBranch(s string) *TrainingCreate {
-	tc.mutation.SetBranch(s)
+// SetTrainingplace sets the trainingplace field.
+func (tc *TrainingCreate) SetTrainingplace(s string) *TrainingCreate {
+	tc.mutation.SetTrainingplace(s)
 	return tc
 }
 
-// SetDateone sets the dateone field.
-func (tc *TrainingCreate) SetDateone(t time.Time) *TrainingCreate {
-	tc.mutation.SetDateone(t)
+// SetFirstday sets the firstday field.
+func (tc *TrainingCreate) SetFirstday(t time.Time) *TrainingCreate {
+	tc.mutation.SetFirstday(t)
 	return tc
 }
 
-// SetDatetwo sets the datetwo field.
-func (tc *TrainingCreate) SetDatetwo(t time.Time) *TrainingCreate {
-	tc.mutation.SetDatetwo(t)
+// SetLastday sets the lastday field.
+func (tc *TrainingCreate) SetLastday(t time.Time) *TrainingCreate {
+	tc.mutation.SetLastday(t)
 	return tc
 }
 
@@ -117,19 +117,19 @@ func (tc *TrainingCreate) Mutation() *TrainingMutation {
 
 // Save creates the Training in the database.
 func (tc *TrainingCreate) Save(ctx context.Context) (*Training, error) {
-	if _, ok := tc.mutation.Branch(); !ok {
-		return nil, &ValidationError{Name: "branch", err: errors.New("ent: missing required field \"branch\"")}
+	if _, ok := tc.mutation.Trainingplace(); !ok {
+		return nil, &ValidationError{Name: "trainingplace", err: errors.New("ent: missing required field \"trainingplace\"")}
 	}
-	if v, ok := tc.mutation.Branch(); ok {
-		if err := training.BranchValidator(v); err != nil {
-			return nil, &ValidationError{Name: "branch", err: fmt.Errorf("ent: validator failed for field \"branch\": %w", err)}
+	if v, ok := tc.mutation.Trainingplace(); ok {
+		if err := training.TrainingplaceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "trainingplace", err: fmt.Errorf("ent: validator failed for field \"trainingplace\": %w", err)}
 		}
 	}
-	if _, ok := tc.mutation.Dateone(); !ok {
-		return nil, &ValidationError{Name: "dateone", err: errors.New("ent: missing required field \"dateone\"")}
+	if _, ok := tc.mutation.Firstday(); !ok {
+		return nil, &ValidationError{Name: "firstday", err: errors.New("ent: missing required field \"firstday\"")}
 	}
-	if _, ok := tc.mutation.Datetwo(); !ok {
-		return nil, &ValidationError{Name: "datetwo", err: errors.New("ent: missing required field \"datetwo\"")}
+	if _, ok := tc.mutation.Lastday(); !ok {
+		return nil, &ValidationError{Name: "lastday", err: errors.New("ent: missing required field \"lastday\"")}
 	}
 	if _, ok := tc.mutation.Doctoridcard(); !ok {
 		return nil, &ValidationError{Name: "doctoridcard", err: errors.New("ent: missing required field \"doctoridcard\"")}
@@ -207,29 +207,29 @@ func (tc *TrainingCreate) createSpec() (*Training, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := tc.mutation.Branch(); ok {
+	if value, ok := tc.mutation.Trainingplace(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: training.FieldBranch,
+			Column: training.FieldTrainingplace,
 		})
-		t.Branch = value
+		t.Trainingplace = value
 	}
-	if value, ok := tc.mutation.Dateone(); ok {
+	if value, ok := tc.mutation.Firstday(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDateone,
+			Column: training.FieldFirstday,
 		})
-		t.Dateone = value
+		t.Firstday = value
 	}
-	if value, ok := tc.mutation.Datetwo(); ok {
+	if value, ok := tc.mutation.Lastday(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: training.FieldDatetwo,
+			Column: training.FieldLastday,
 		})
-		t.Datetwo = value
+		t.Lastday = value
 	}
 	if value, ok := tc.mutation.Doctoridcard(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

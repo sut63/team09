@@ -7,12 +7,12 @@ const (
 	Label = "training"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldBranch holds the string denoting the branch field in the database.
-	FieldBranch = "branch"
-	// FieldDateone holds the string denoting the dateone field in the database.
-	FieldDateone = "dateone"
-	// FieldDatetwo holds the string denoting the datetwo field in the database.
-	FieldDatetwo = "datetwo"
+	// FieldTrainingplace holds the string denoting the trainingplace field in the database.
+	FieldTrainingplace = "trainingplace"
+	// FieldFirstday holds the string denoting the firstday field in the database.
+	FieldFirstday = "firstday"
+	// FieldLastday holds the string denoting the lastday field in the database.
+	FieldLastday = "lastday"
 	// FieldDoctoridcard holds the string denoting the doctoridcard field in the database.
 	FieldDoctoridcard = "doctoridcard"
 	// FieldHour holds the string denoting the hour field in the database.
@@ -53,9 +53,9 @@ const (
 // Columns holds all SQL columns for training fields.
 var Columns = []string{
 	FieldID,
-	FieldBranch,
-	FieldDateone,
-	FieldDatetwo,
+	FieldTrainingplace,
+	FieldFirstday,
+	FieldLastday,
 	FieldDoctoridcard,
 	FieldHour,
 }
@@ -68,8 +68,8 @@ var ForeignKeys = []string{
 }
 
 var (
-	// BranchValidator is a validator for the "branch" field. It is called by the builders before save.
-	BranchValidator func(string) error
+	// TrainingplaceValidator is a validator for the "trainingplace" field. It is called by the builders before save.
+	TrainingplaceValidator func(string) error
 	// DoctoridcardValidator is a validator for the "doctoridcard" field. It is called by the builders before save.
 	DoctoridcardValidator func(string) error
 	// HourValidator is a validator for the "hour" field. It is called by the builders before save.

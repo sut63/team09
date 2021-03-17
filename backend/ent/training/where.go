@@ -93,24 +93,24 @@ func IDLTE(id int) predicate.Training {
 	})
 }
 
-// Branch applies equality check predicate on the "branch" field. It's identical to BranchEQ.
-func Branch(v string) predicate.Training {
+// Trainingplace applies equality check predicate on the "trainingplace" field. It's identical to TrainingplaceEQ.
+func Trainingplace(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldBranch), v))
+		s.Where(sql.EQ(s.C(FieldTrainingplace), v))
 	})
 }
 
-// Dateone applies equality check predicate on the "dateone" field. It's identical to DateoneEQ.
-func Dateone(v time.Time) predicate.Training {
+// Firstday applies equality check predicate on the "firstday" field. It's identical to FirstdayEQ.
+func Firstday(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDateone), v))
+		s.Where(sql.EQ(s.C(FieldFirstday), v))
 	})
 }
 
-// Datetwo applies equality check predicate on the "datetwo" field. It's identical to DatetwoEQ.
-func Datetwo(v time.Time) predicate.Training {
+// Lastday applies equality check predicate on the "lastday" field. It's identical to LastdayEQ.
+func Lastday(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDatetwo), v))
+		s.Where(sql.EQ(s.C(FieldLastday), v))
 	})
 }
 
@@ -128,22 +128,22 @@ func Hour(v int) predicate.Training {
 	})
 }
 
-// BranchEQ applies the EQ predicate on the "branch" field.
-func BranchEQ(v string) predicate.Training {
+// TrainingplaceEQ applies the EQ predicate on the "trainingplace" field.
+func TrainingplaceEQ(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldBranch), v))
+		s.Where(sql.EQ(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchNEQ applies the NEQ predicate on the "branch" field.
-func BranchNEQ(v string) predicate.Training {
+// TrainingplaceNEQ applies the NEQ predicate on the "trainingplace" field.
+func TrainingplaceNEQ(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldBranch), v))
+		s.Where(sql.NEQ(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchIn applies the In predicate on the "branch" field.
-func BranchIn(vs ...string) predicate.Training {
+// TrainingplaceIn applies the In predicate on the "trainingplace" field.
+func TrainingplaceIn(vs ...string) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -155,12 +155,12 @@ func BranchIn(vs ...string) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldBranch), v...))
+		s.Where(sql.In(s.C(FieldTrainingplace), v...))
 	})
 }
 
-// BranchNotIn applies the NotIn predicate on the "branch" field.
-func BranchNotIn(vs ...string) predicate.Training {
+// TrainingplaceNotIn applies the NotIn predicate on the "trainingplace" field.
+func TrainingplaceNotIn(vs ...string) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -172,89 +172,89 @@ func BranchNotIn(vs ...string) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldBranch), v...))
+		s.Where(sql.NotIn(s.C(FieldTrainingplace), v...))
 	})
 }
 
-// BranchGT applies the GT predicate on the "branch" field.
-func BranchGT(v string) predicate.Training {
+// TrainingplaceGT applies the GT predicate on the "trainingplace" field.
+func TrainingplaceGT(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldBranch), v))
+		s.Where(sql.GT(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchGTE applies the GTE predicate on the "branch" field.
-func BranchGTE(v string) predicate.Training {
+// TrainingplaceGTE applies the GTE predicate on the "trainingplace" field.
+func TrainingplaceGTE(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldBranch), v))
+		s.Where(sql.GTE(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchLT applies the LT predicate on the "branch" field.
-func BranchLT(v string) predicate.Training {
+// TrainingplaceLT applies the LT predicate on the "trainingplace" field.
+func TrainingplaceLT(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldBranch), v))
+		s.Where(sql.LT(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchLTE applies the LTE predicate on the "branch" field.
-func BranchLTE(v string) predicate.Training {
+// TrainingplaceLTE applies the LTE predicate on the "trainingplace" field.
+func TrainingplaceLTE(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldBranch), v))
+		s.Where(sql.LTE(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchContains applies the Contains predicate on the "branch" field.
-func BranchContains(v string) predicate.Training {
+// TrainingplaceContains applies the Contains predicate on the "trainingplace" field.
+func TrainingplaceContains(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldBranch), v))
+		s.Where(sql.Contains(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchHasPrefix applies the HasPrefix predicate on the "branch" field.
-func BranchHasPrefix(v string) predicate.Training {
+// TrainingplaceHasPrefix applies the HasPrefix predicate on the "trainingplace" field.
+func TrainingplaceHasPrefix(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldBranch), v))
+		s.Where(sql.HasPrefix(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchHasSuffix applies the HasSuffix predicate on the "branch" field.
-func BranchHasSuffix(v string) predicate.Training {
+// TrainingplaceHasSuffix applies the HasSuffix predicate on the "trainingplace" field.
+func TrainingplaceHasSuffix(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldBranch), v))
+		s.Where(sql.HasSuffix(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchEqualFold applies the EqualFold predicate on the "branch" field.
-func BranchEqualFold(v string) predicate.Training {
+// TrainingplaceEqualFold applies the EqualFold predicate on the "trainingplace" field.
+func TrainingplaceEqualFold(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldBranch), v))
+		s.Where(sql.EqualFold(s.C(FieldTrainingplace), v))
 	})
 }
 
-// BranchContainsFold applies the ContainsFold predicate on the "branch" field.
-func BranchContainsFold(v string) predicate.Training {
+// TrainingplaceContainsFold applies the ContainsFold predicate on the "trainingplace" field.
+func TrainingplaceContainsFold(v string) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldBranch), v))
+		s.Where(sql.ContainsFold(s.C(FieldTrainingplace), v))
 	})
 }
 
-// DateoneEQ applies the EQ predicate on the "dateone" field.
-func DateoneEQ(v time.Time) predicate.Training {
+// FirstdayEQ applies the EQ predicate on the "firstday" field.
+func FirstdayEQ(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDateone), v))
+		s.Where(sql.EQ(s.C(FieldFirstday), v))
 	})
 }
 
-// DateoneNEQ applies the NEQ predicate on the "dateone" field.
-func DateoneNEQ(v time.Time) predicate.Training {
+// FirstdayNEQ applies the NEQ predicate on the "firstday" field.
+func FirstdayNEQ(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDateone), v))
+		s.Where(sql.NEQ(s.C(FieldFirstday), v))
 	})
 }
 
-// DateoneIn applies the In predicate on the "dateone" field.
-func DateoneIn(vs ...time.Time) predicate.Training {
+// FirstdayIn applies the In predicate on the "firstday" field.
+func FirstdayIn(vs ...time.Time) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -266,12 +266,12 @@ func DateoneIn(vs ...time.Time) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldDateone), v...))
+		s.Where(sql.In(s.C(FieldFirstday), v...))
 	})
 }
 
-// DateoneNotIn applies the NotIn predicate on the "dateone" field.
-func DateoneNotIn(vs ...time.Time) predicate.Training {
+// FirstdayNotIn applies the NotIn predicate on the "firstday" field.
+func FirstdayNotIn(vs ...time.Time) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -283,54 +283,54 @@ func DateoneNotIn(vs ...time.Time) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldDateone), v...))
+		s.Where(sql.NotIn(s.C(FieldFirstday), v...))
 	})
 }
 
-// DateoneGT applies the GT predicate on the "dateone" field.
-func DateoneGT(v time.Time) predicate.Training {
+// FirstdayGT applies the GT predicate on the "firstday" field.
+func FirstdayGT(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDateone), v))
+		s.Where(sql.GT(s.C(FieldFirstday), v))
 	})
 }
 
-// DateoneGTE applies the GTE predicate on the "dateone" field.
-func DateoneGTE(v time.Time) predicate.Training {
+// FirstdayGTE applies the GTE predicate on the "firstday" field.
+func FirstdayGTE(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDateone), v))
+		s.Where(sql.GTE(s.C(FieldFirstday), v))
 	})
 }
 
-// DateoneLT applies the LT predicate on the "dateone" field.
-func DateoneLT(v time.Time) predicate.Training {
+// FirstdayLT applies the LT predicate on the "firstday" field.
+func FirstdayLT(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDateone), v))
+		s.Where(sql.LT(s.C(FieldFirstday), v))
 	})
 }
 
-// DateoneLTE applies the LTE predicate on the "dateone" field.
-func DateoneLTE(v time.Time) predicate.Training {
+// FirstdayLTE applies the LTE predicate on the "firstday" field.
+func FirstdayLTE(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDateone), v))
+		s.Where(sql.LTE(s.C(FieldFirstday), v))
 	})
 }
 
-// DatetwoEQ applies the EQ predicate on the "datetwo" field.
-func DatetwoEQ(v time.Time) predicate.Training {
+// LastdayEQ applies the EQ predicate on the "lastday" field.
+func LastdayEQ(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDatetwo), v))
+		s.Where(sql.EQ(s.C(FieldLastday), v))
 	})
 }
 
-// DatetwoNEQ applies the NEQ predicate on the "datetwo" field.
-func DatetwoNEQ(v time.Time) predicate.Training {
+// LastdayNEQ applies the NEQ predicate on the "lastday" field.
+func LastdayNEQ(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDatetwo), v))
+		s.Where(sql.NEQ(s.C(FieldLastday), v))
 	})
 }
 
-// DatetwoIn applies the In predicate on the "datetwo" field.
-func DatetwoIn(vs ...time.Time) predicate.Training {
+// LastdayIn applies the In predicate on the "lastday" field.
+func LastdayIn(vs ...time.Time) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -342,12 +342,12 @@ func DatetwoIn(vs ...time.Time) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldDatetwo), v...))
+		s.Where(sql.In(s.C(FieldLastday), v...))
 	})
 }
 
-// DatetwoNotIn applies the NotIn predicate on the "datetwo" field.
-func DatetwoNotIn(vs ...time.Time) predicate.Training {
+// LastdayNotIn applies the NotIn predicate on the "lastday" field.
+func LastdayNotIn(vs ...time.Time) predicate.Training {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -359,35 +359,35 @@ func DatetwoNotIn(vs ...time.Time) predicate.Training {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldDatetwo), v...))
+		s.Where(sql.NotIn(s.C(FieldLastday), v...))
 	})
 }
 
-// DatetwoGT applies the GT predicate on the "datetwo" field.
-func DatetwoGT(v time.Time) predicate.Training {
+// LastdayGT applies the GT predicate on the "lastday" field.
+func LastdayGT(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDatetwo), v))
+		s.Where(sql.GT(s.C(FieldLastday), v))
 	})
 }
 
-// DatetwoGTE applies the GTE predicate on the "datetwo" field.
-func DatetwoGTE(v time.Time) predicate.Training {
+// LastdayGTE applies the GTE predicate on the "lastday" field.
+func LastdayGTE(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDatetwo), v))
+		s.Where(sql.GTE(s.C(FieldLastday), v))
 	})
 }
 
-// DatetwoLT applies the LT predicate on the "datetwo" field.
-func DatetwoLT(v time.Time) predicate.Training {
+// LastdayLT applies the LT predicate on the "lastday" field.
+func LastdayLT(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDatetwo), v))
+		s.Where(sql.LT(s.C(FieldLastday), v))
 	})
 }
 
-// DatetwoLTE applies the LTE predicate on the "datetwo" field.
-func DatetwoLTE(v time.Time) predicate.Training {
+// LastdayLTE applies the LTE predicate on the "lastday" field.
+func LastdayLTE(v time.Time) predicate.Training {
 	return predicate.Training(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDatetwo), v))
+		s.Where(sql.LTE(s.C(FieldLastday), v))
 	})
 }
 

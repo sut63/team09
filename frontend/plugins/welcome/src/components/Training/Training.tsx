@@ -50,9 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface training {
   course: number;
-  branch: string;
-  dateone: Date;
-  datetwo: Date;
+  trainingplace: string;
+  firstday: Date;
+  lastday: Date;
   doctor: number;
   department: number;
   doctoridcard: string;
@@ -67,7 +67,7 @@ const Training: FC<{}> = () => {
   const [courses, setCourses] = React.useState<EntCourse[]>([]); //setข้อมูล
   const [doctors, setDoctors] = React.useState<EntDoctor[]>([]);
   const [departments, setDepartments] = React.useState<EntDepartment[]>([]);
-  const [branchError, setBranchError] = React.useState('');
+  const [trainingplaceError, setTrainingplaceError] = React.useState('');
   const [doctoridcardError, setDoctoridcardError] = React.useState('');
   const [hoursError, setHoursError] = React.useState('');
 
@@ -128,7 +128,7 @@ const Training: FC<{}> = () => {
     return val <= 100 && val >= 1 ? true : false;
   }
 
-  const ValidateBranch = (val: string) => {
+  const ValidateTrainingplace = (val: string) => {
     return val.match("^[ก-๏]+$")
   }
   const ValidateDoctoridcard = (val: string) => {
@@ -138,17 +138,14 @@ const Training: FC<{}> = () => {
 
   const checkPattern = (id: string, value: string) => {
     switch (id) {
-      case 'branch':
-        ValidateBranch(value) ? setBranchError('') : setBranchError("กรอกสาขาให้เป็นภาษาไทย");
+      case 'trainingplace':
+        ValidateTrainingplace(value) ? setTrainingplaceError('') : setTrainingplaceError("กรอกสาขาให้เป็นภาษาไทย");
         return;
 
       case 'doctoridcard':
         ValidateDoctoridcard(value) ? setDoctoridcardError('') : setDoctoridcardError("กรอกตัวเลขทั้งหมด 10 ตัว");
         return;
 
-      // case 'hour':
-      //   ValidateHours(Number(value)) ? setHoursError('') : setHoursError("กรอกชั่วโมง 1-100 เท่านั้น");
-      //   return;
       default:
         return;
     }
@@ -170,8 +167,8 @@ const Training: FC<{}> = () => {
 
   const checkCaseSaveError = (field: string) => {
     switch (field) {
-      case 'branch':
-        alertMessage("error", "กรอกสาขาให้เป็นภาษาไทย");
+      case 'trainingplace':
+        alertMessage("error", "กรอกสถานที่เข้าร่วมอบรมให้เป็นภาษาไทย");
         return;
       case 'doctoridcard':
         alertMessage("error", "กรอกตัวเลขทั้งหมด 10 ตัว");
@@ -257,12 +254,12 @@ const Training: FC<{}> = () => {
                 style={{ marginLeft: 100 }}
               >
                 <TextField
-                  error={branchError ? true : false}
-                  name="branch"
-                  label="สาขา"
+                  error={trainingplaceError ? true : false}
+                  name="trainingplace"
+                  label="สถานที่เข้าร่วมอบรม"
                   variant="outlined"
-                  value={training.branch || ''}
-                  helperText={branchError}
+                  value={training.trainingplace || ''}
+                  helperText={trainingplaceError}
                   onChange={handleChange}
                 />
               </FormControl>
@@ -276,9 +273,9 @@ const Training: FC<{}> = () => {
               >
                 <TextField
                   label="วันแรกที่เข้าร่วมอบรม"
-                  name="dateone"
+                  name="firstday"
                   type="date"
-                  value={training.dateone || ''} // (undefined || '') = ''
+                  value={training.firstday || ''} // (undefined || '') = ''
                   className={classes.formControl}
                   InputLabelProps={{
                     shrink: true,
@@ -294,10 +291,10 @@ const Training: FC<{}> = () => {
                 className={classes.formControl}
               >
                 <TextField
-                  label="วันสุดท้ายที่เข้าร่วมอบรม"
-                  name="datetwo"
+                  label="วันแรกที่เข้าร่วมอบรม"
+                  name="lastday"
                   type="date"
-                  value={training.datetwo || ''} // (undefined || '') = ''
+                  value={training.lastday || ''} // (undefined || '') = ''
                   className={classes.formControl}
                   InputLabelProps={{
                     shrink: true,

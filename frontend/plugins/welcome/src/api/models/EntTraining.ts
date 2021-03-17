@@ -27,24 +27,6 @@ import {
  */
 export interface EntTraining {
     /**
-     * Branch holds the value of the "branch" field.
-     * @type {string}
-     * @memberof EntTraining
-     */
-    branch?: string;
-    /**
-     * Dateone holds the value of the "dateone" field.
-     * @type {string}
-     * @memberof EntTraining
-     */
-    dateone?: string;
-    /**
-     * Datetwo holds the value of the "datetwo" field.
-     * @type {string}
-     * @memberof EntTraining
-     */
-    datetwo?: string;
-    /**
      * Doctoridcard holds the value of the "doctoridcard" field.
      * @type {string}
      * @memberof EntTraining
@@ -57,6 +39,12 @@ export interface EntTraining {
      */
     edges?: EntTrainingEdges;
     /**
+     * Firstday holds the value of the "firstday" field.
+     * @type {string}
+     * @memberof EntTraining
+     */
+    firstday?: string;
+    /**
      * Hour holds the value of the "hour" field.
      * @type {number}
      * @memberof EntTraining
@@ -68,6 +56,18 @@ export interface EntTraining {
      * @memberof EntTraining
      */
     id?: number;
+    /**
+     * Lastday holds the value of the "lastday" field.
+     * @type {string}
+     * @memberof EntTraining
+     */
+    lastday?: string;
+    /**
+     * Trainingplace holds the value of the "trainingplace" field.
+     * @type {string}
+     * @memberof EntTraining
+     */
+    trainingplace?: string;
 }
 
 export function EntTrainingFromJSON(json: any): EntTraining {
@@ -80,13 +80,13 @@ export function EntTrainingFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'branch': !exists(json, 'branch') ? undefined : json['branch'],
-        'dateone': !exists(json, 'dateone') ? undefined : json['dateone'],
-        'datetwo': !exists(json, 'datetwo') ? undefined : json['datetwo'],
         'doctoridcard': !exists(json, 'doctoridcard') ? undefined : json['doctoridcard'],
         'edges': !exists(json, 'edges') ? undefined : EntTrainingEdgesFromJSON(json['edges']),
+        'firstday': !exists(json, 'firstday') ? undefined : json['firstday'],
         'hour': !exists(json, 'hour') ? undefined : json['hour'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'lastday': !exists(json, 'lastday') ? undefined : json['lastday'],
+        'trainingplace': !exists(json, 'trainingplace') ? undefined : json['trainingplace'],
     };
 }
 
@@ -99,13 +99,13 @@ export function EntTrainingToJSON(value?: EntTraining | null): any {
     }
     return {
         
-        'branch': value.branch,
-        'dateone': value.dateone,
-        'datetwo': value.datetwo,
         'doctoridcard': value.doctoridcard,
         'edges': EntTrainingEdgesToJSON(value.edges),
+        'firstday': value.firstday,
         'hour': value.hour,
         'id': value.id,
+        'lastday': value.lastday,
+        'trainingplace': value.trainingplace,
     };
 }
 

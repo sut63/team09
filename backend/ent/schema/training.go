@@ -17,15 +17,15 @@ type Training struct {
 // Fields of the Training.
 func (Training) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("branch").Validate(func(s string) error {
+		field.String("trainingplace").Validate(func(s string) error {
 			match, _ := regexp.MatchString("^[ก-๏]+$", s)
 			if !match {
-				return errors.New("กรอกสาขาให้เป็นภาษาไทยเท่านั้น")
+				return errors.New("กรอกสถานที่เข้าร่วมอบรมให้เป็นภาษาไทยเท่านั้น")
 			}
 			return nil
 		}),
-		field.Time("dateone"),
-		field.Time("datetwo"),
+		field.Time("firstday"),
+		field.Time("lastday"),
 		field.String("doctoridcard").MaxLen(10).MinLen(10),
 		field.Int("hour").Range(1,100),
 	}

@@ -19,12 +19,12 @@ type Training struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Branch holds the value of the "branch" field.
-	Branch string `json:"branch,omitempty"`
-	// Dateone holds the value of the "dateone" field.
-	Dateone time.Time `json:"dateone,omitempty"`
-	// Datetwo holds the value of the "datetwo" field.
-	Datetwo time.Time `json:"datetwo,omitempty"`
+	// Trainingplace holds the value of the "trainingplace" field.
+	Trainingplace string `json:"trainingplace,omitempty"`
+	// Firstday holds the value of the "firstday" field.
+	Firstday time.Time `json:"firstday,omitempty"`
+	// Lastday holds the value of the "lastday" field.
+	Lastday time.Time `json:"lastday,omitempty"`
 	// Doctoridcard holds the value of the "doctoridcard" field.
 	Doctoridcard string `json:"doctoridcard,omitempty"`
 	// Hour holds the value of the "hour" field.
@@ -96,9 +96,9 @@ func (e TrainingEdges) DepartmentOrErr() (*Department, error) {
 func (*Training) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // branch
-		&sql.NullTime{},   // dateone
-		&sql.NullTime{},   // datetwo
+		&sql.NullString{}, // trainingplace
+		&sql.NullTime{},   // firstday
+		&sql.NullTime{},   // lastday
 		&sql.NullString{}, // doctoridcard
 		&sql.NullInt64{},  // hour
 	}
@@ -126,19 +126,19 @@ func (t *Training) assignValues(values ...interface{}) error {
 	t.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field branch", values[0])
+		return fmt.Errorf("unexpected type %T for field trainingplace", values[0])
 	} else if value.Valid {
-		t.Branch = value.String
+		t.Trainingplace = value.String
 	}
 	if value, ok := values[1].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field dateone", values[1])
+		return fmt.Errorf("unexpected type %T for field firstday", values[1])
 	} else if value.Valid {
-		t.Dateone = value.Time
+		t.Firstday = value.Time
 	}
 	if value, ok := values[2].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field datetwo", values[2])
+		return fmt.Errorf("unexpected type %T for field lastday", values[2])
 	} else if value.Valid {
-		t.Datetwo = value.Time
+		t.Lastday = value.Time
 	}
 	if value, ok := values[3].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field doctoridcard", values[3])
@@ -212,12 +212,12 @@ func (t *Training) String() string {
 	var builder strings.Builder
 	builder.WriteString("Training(")
 	builder.WriteString(fmt.Sprintf("id=%v", t.ID))
-	builder.WriteString(", branch=")
-	builder.WriteString(t.Branch)
-	builder.WriteString(", dateone=")
-	builder.WriteString(t.Dateone.Format(time.ANSIC))
-	builder.WriteString(", datetwo=")
-	builder.WriteString(t.Datetwo.Format(time.ANSIC))
+	builder.WriteString(", trainingplace=")
+	builder.WriteString(t.Trainingplace)
+	builder.WriteString(", firstday=")
+	builder.WriteString(t.Firstday.Format(time.ANSIC))
+	builder.WriteString(", lastday=")
+	builder.WriteString(t.Lastday.Format(time.ANSIC))
 	builder.WriteString(", doctoridcard=")
 	builder.WriteString(t.Doctoridcard)
 	builder.WriteString(", hour=")
