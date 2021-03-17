@@ -1729,6 +1729,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a schedule entity by ID
+  /searchpersonalinformations:
+    get:
+      description: get Doctor by Search
+      operationId: get-Doctor-by-search
+      parameters:
+      - description: Search Doctor
+        in: query
+        name: Doctor
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Doctor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a Doctor entity by Search
   /searchschedules:
     get:
       description: get Schedule by Search

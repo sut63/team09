@@ -151,6 +151,10 @@ func (ctl *DoctorController) GetDoctor(c *gin.Context) {
 	}
 	d, err := ctl.client.Doctor.
 		Query().
+		WithTitle().
+		WithPosition().
+		WithDisease().
+		WithGender().
 		Where(doctor.IDEQ(int(id))).
 		Only(context.Background())
 	if err != nil {
@@ -161,6 +165,40 @@ func (ctl *DoctorController) GetDoctor(c *gin.Context) {
 	}
 	c.JSON(200, d)
 }
+
+// GetSearchPersonalinformation handles GET requests to retrieve a Doctor entity
+// @Summary Get a Doctor entity by Search
+// @Description get Doctor by Search
+// @ID get-Doctor-by-search
+// @Produce  json
+// @Param Doctor query string false "Search Doctor"
+// @Success 200 {object} ent.Doctor
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchpersonalinformations [get]
+func (ctl *DoctorController) GetSearchPersonalinformation(c *gin.Context) {
+	doctorsearch := c.Query("doctor")
+
+	d, err := ctl.client.Doctor.
+		Query().
+		WithTitle().
+		WithPosition().
+		WithDisease().
+		WithGender().
+		Where(doctor.Name(doctorsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"data": d,
+	})
+}
+
 
 // ListDoctor handles request to get a list of doctor entities
 // @Summary List doctor entities
@@ -256,6 +294,10 @@ func NewDoctorController(router gin.IRouter, client *ent.Client) *DoctorControll
 func (ctl *DoctorController) register() {
 	doctors := ctl.router.Group("/doctors")
 	doctors.GET("", ctl.ListDoctor)
+	// Search
+	searchpersonalinformation := ctl.router.Group("/searchpersonalinformations")
+	searchpersonalinformation.GET("", ctl.GetSearchPersonalinformation)
+	// CRUD
 	// CRUD
 	doctors.POST("", ctl.CreateDoctor)
 	doctors.GET(":id", ctl.GetDoctor)
