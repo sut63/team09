@@ -203,6 +203,10 @@ export interface GetScheduleRequest {
     id: number;
 }
 
+export interface GetScheduleBySearchRequest {
+    schedule?: string;
+}
+
 export interface GetSpecialdoctorRequest {
     id: number;
 }
@@ -1479,6 +1483,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getSchedule(requestParameters: GetScheduleRequest): Promise<EntSchedule> {
         const response = await this.getScheduleRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get Schedule by Search
+     * Get a Schedule entity by Search
+     */
+    async getScheduleBySearchRaw(requestParameters: GetScheduleBySearchRequest): Promise<runtime.ApiResponse<EntSchedule>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.schedule !== undefined) {
+            queryParameters['Schedule'] = requestParameters.schedule;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchschedules`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntScheduleFromJSON(jsonValue));
+    }
+
+    /**
+     * get Schedule by Search
+     * Get a Schedule entity by Search
+     */
+    async getScheduleBySearch(requestParameters: GetScheduleBySearchRequest): Promise<EntSchedule> {
+        const response = await this.getScheduleBySearchRaw(requestParameters);
         return await response.value();
     }
 

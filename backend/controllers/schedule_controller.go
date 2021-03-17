@@ -147,6 +147,38 @@ func (ctl *ScheduleController) GetSchedule(c *gin.Context) {
 	c.JSON(200, sh)
 }
 
+// GetSearchSchedule handles GET requests to retrieve a Schedule entity
+// @Summary Get a Schedule entity by Search
+// @Description get Schedule by Search
+// @ID get-Schedule-by-search
+// @Produce  json
+// @Param Schedule query string false "Search Schedule"
+// @Success 200 {object} ent.Schedule
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchschedules [get]
+func (ctl *ScheduleController) GetSearchSchedules(c *gin.Context) {
+	schedulesearch := c.Query("schedule")
+
+	sch, err := ctl.client.Schedule.
+		Query().
+		WithDepartment().
+		WithOffice().
+		WithDoctor().
+		Where(schedule.Docterid(schedulesearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"data": sch,
+	})
+}
+
 // ListSchedule handles request to get a list of Schedule entities
 // @Summary List schedule entities
 // @Description list schedule entities
@@ -281,6 +313,9 @@ func (ctl *ScheduleController) register() {
 	schedules := ctl.router.Group("/schedules")
 
 	schedules.GET("", ctl.ListSchedule)
+	// Search
+	searchschedule := ctl.router.Group("/searchschedules")
+	searchschedule.GET("", ctl.GetSearchSchedules)
 
 	// CRUD
 	schedules.POST("", ctl.CreateSchedule)
