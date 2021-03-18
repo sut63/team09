@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-	<title>Office Test Case Sprint 2</title>
+	<title>Test Case Office Sprint 2</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -15,23 +15,25 @@
 </tr>
 <tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>yui@g.com</td>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>test@test.com</td>
 </tr>
 <tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
 </tr>
 <tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
 </tr>
-<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div/form/button/span<datalist><option>//div[@id='root']/div/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
+<tr><td>click</td><td>css=svg.MuiSvgIcon-root<datalist><option>css=svg.MuiSvgIcon-root</option></datalist></td><td></td>
 </tr>
-<tr><td>open</td><td>http://localhost:3000/workhistorytable<datalist><option>http://localhost:3000/tables?</option><option>http://localhost:3000/workhistorytable?</option><option>http://localhost:3000/workhistorytable</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/ul[2]/a[6]/span<datalist><option>//div[@id='root']/div/div/div/ul[2]/a[6]/span</option><option>//a[6]/span</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//input[@value='']<datalist><option>//input[@value='']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input.MuiInputBase-input.MuiInput-input</option></datalist></td><td></td>
+<tr><td>click</td><td>id=Doctoridcard<datalist><option>id=Doctoridcard</option><option>//input[@id='Doctoridcard']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Doctoridcard</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>name=search<datalist><option>//input[@value='ไมเคิล']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input.MuiInputBase-input.MuiInput-input</option><option>name=search</option></datalist></td><td>สมหวัง ได้แต่หวัง</td>
+<tr><td>type</td><td>id=Doctoridcard<datalist><option>id=Doctoridcard</option><option>//input[@id='Doctoridcard']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Doctoridcard</option></datalist></td><td>6000100100</td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td[2]<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td[2]</option><option>//td[2]</option></datalist></td><td>สมหวัง ได้แต่หวัง</td>
+<tr><td>click</td><td>//div[@id='root']/div/article/div/div/div/p/button/span<datalist><option>//div[@id='root']/div/article/div/div/div/p/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-margins-16 &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div/div/div[2]/div/div[2]<datalist><option>//div[@id='root']/div/article/div/div/div[2]/div/div[2]</option><option>//div[2]/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>แสดงข้อมูลประวัติการทำงานของแพทย์ 6000100100</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -43,23 +45,25 @@
 </tr>
 <tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>yui@g.com</td>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>test@test.com</td>
 </tr>
 <tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
 </tr>
 <tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
 </tr>
-<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div/form/button/span<datalist><option>//div[@id='root']/div/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
+<tr><td>click</td><td>css=svg.MuiSvgIcon-root<datalist><option>css=svg.MuiSvgIcon-root</option></datalist></td><td></td>
 </tr>
-<tr><td>open</td><td>http://localhost:3000/workhistorytable<datalist><option>http://localhost:3000/tables?</option><option>http://localhost:3000/workhistorytable</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/ul[2]/a[6]/span<datalist><option>//div[@id='root']/div/div/div/ul[2]/a[6]/span</option><option>//a[6]/span</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+<tr><td>click</td><td>id=Doctoridcard<datalist><option>id=Doctoridcard</option><option>//input[@id='Doctoridcard']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Doctoridcard</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>สมหญิง</td>
+<tr><td>type</td><td>id=Doctoridcard<datalist><option>id=Doctoridcard</option><option>//input[@id='Doctoridcard']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Doctoridcard</option></datalist></td><td>1234566786756</td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p</option><option>//p</option><option>css=p</option></datalist></td><td>ไม่มีข้อมูลในระบบ</td>
+<tr><td>click</td><td>//div[@id='root']/div/article/div/div/div/p/button/span/h3<datalist><option>//div[@id='root']/div/article/div/div/div/p/button/span/h3</option><option>//h3</option><option>css=h3</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div/div/div[2]/div/div[2]<datalist><option>//div[@id='root']/div/article/div/div/div[2]/div/div[2]</option><option>//div[2]/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>ไม่พบข้อมูลข้อมูลประวัติการทำงานของแพทย์</td>
 </tr>
 </tbody></table>
 </body>
