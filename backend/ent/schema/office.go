@@ -33,7 +33,7 @@ func (Office) Fields() []ent.Field {
 			}),
 		field.String("doctoridcard").MaxLen(10).MinLen(10),
 		field.Time("firsttime"),
-		field.Time("finallytime"),
+		field.Time("lasttime"),
 	}
 }
 

@@ -297,15 +297,15 @@ definitions:
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the OfficeQuery when eager-loading is set.
         type: object
-      finallytime:
-        description: Finallytime holds the value of the "finallytime" field.
-        type: string
       firsttime:
         description: Firsttime holds the value of the "firsttime" field.
         type: string
       id:
         description: ID of the ent.
         type: integer
+      lasttime:
+        description: Lasttime holds the value of the "lasttime" field.
+        type: string
       officename:
         description: Officename holds the value of the "officename" field.
         type: string

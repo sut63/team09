@@ -49,8 +49,8 @@ interface office {
   department: number;
   specialdoctor: number;
   extradoctor: number;
-  added1: Date;
-  added2: Date;
+  firsttime: Date;
+  lasttime: Date;
 }
 
 const Office: FC<{}> = () => {
@@ -304,9 +304,9 @@ const Office: FC<{}> = () => {
               >
                 <TextField
                   label="ระยะเวลาในการทำงาน - วันแรก"
-                  name="added1"
+                  name="firsttime"
                   type="date"
-                  value={office.added1 || ''} // (undefined || '') = ''
+                  value={office.firsttime || ''} // (undefined || '') = ''
                   className={classes.formControl}
                   InputLabelProps={{
                     shrink: true,
@@ -323,9 +323,9 @@ const Office: FC<{}> = () => {
               >
                 <TextField
                   label="ระยะเวลาในการทำงาน - สิ้นสุด"
-                  name="added2"
+                  name="lasttime"
                   type="date"
-                  value={office.added2 || ''} // (undefined || '') = ''
+                  value={office.lasttime || ''} // (undefined || '') = ''
                   className={classes.formControl}
                   InputLabelProps={{
                     shrink: true,

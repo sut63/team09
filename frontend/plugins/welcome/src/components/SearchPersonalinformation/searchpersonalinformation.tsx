@@ -127,7 +127,7 @@ export default function ComponentsTable() {
                   >
                     <div className={classes.paper}>กรุณากรอกชื่อแพทย์</div>
                     <TextField
-                      id="Doctoridcard"
+                      id="Name"
                       value={name}
                       onChange={Namehandlehange || ''}
                       type="string"

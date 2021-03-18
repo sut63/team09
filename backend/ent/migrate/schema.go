@@ -194,7 +194,7 @@ var (
 		{Name: "roomnumber", Type: field.TypeString},
 		{Name: "doctoridcard", Type: field.TypeString, Size: 10},
 		{Name: "firsttime", Type: field.TypeTime},
-		{Name: "finallytime", Type: field.TypeTime},
+		{Name: "lasttime", Type: field.TypeTime},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "doctor_id", Type: field.TypeInt, Nullable: true},
 		{Name: "extradoctor_id", Type: field.TypeInt, Nullable: true},

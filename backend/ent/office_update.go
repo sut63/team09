@@ -56,9 +56,9 @@ func (ou *OfficeUpdate) SetFirsttime(t time.Time) *OfficeUpdate {
 	return ou
 }
 
-// SetFinallytime sets the finallytime field.
-func (ou *OfficeUpdate) SetFinallytime(t time.Time) *OfficeUpdate {
-	ou.mutation.SetFinallytime(t)
+// SetLasttime sets the lasttime field.
+func (ou *OfficeUpdate) SetLasttime(t time.Time) *OfficeUpdate {
+	ou.mutation.SetLasttime(t)
 	return ou
 }
 
@@ -285,11 +285,11 @@ func (ou *OfficeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: office.FieldFirsttime,
 		})
 	}
-	if value, ok := ou.mutation.Finallytime(); ok {
+	if value, ok := ou.mutation.Lasttime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldFinallytime,
+			Column: office.FieldLasttime,
 		})
 	}
 	if ou.mutation.DoctorCleared() {
@@ -477,9 +477,9 @@ func (ouo *OfficeUpdateOne) SetFirsttime(t time.Time) *OfficeUpdateOne {
 	return ouo
 }
 
-// SetFinallytime sets the finallytime field.
-func (ouo *OfficeUpdateOne) SetFinallytime(t time.Time) *OfficeUpdateOne {
-	ouo.mutation.SetFinallytime(t)
+// SetLasttime sets the lasttime field.
+func (ouo *OfficeUpdateOne) SetLasttime(t time.Time) *OfficeUpdateOne {
+	ouo.mutation.SetLasttime(t)
 	return ouo
 }
 
@@ -704,11 +704,11 @@ func (ouo *OfficeUpdateOne) sqlSave(ctx context.Context) (o *Office, err error) 
 			Column: office.FieldFirsttime,
 		})
 	}
-	if value, ok := ouo.mutation.Finallytime(); ok {
+	if value, ok := ouo.mutation.Lasttime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldFinallytime,
+			Column: office.FieldLasttime,
 		})
 	}
 	if ouo.mutation.DoctorCleared() {

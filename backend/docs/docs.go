@@ -2869,10 +2869,6 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.OfficeEdges"
                 },
-                "finallytime": {
-                    "description": "Finallytime holds the value of the \"finallytime\" field.",
-                    "type": "string"
-                },
                 "firsttime": {
                     "description": "Firsttime holds the value of the \"firsttime\" field.",
                     "type": "string"
@@ -2880,6 +2876,10 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "lasttime": {
+                    "description": "Lasttime holds the value of the \"lasttime\" field.",
+                    "type": "string"
                 },
                 "officename": {
                     "description": "Officename holds the value of the \"officename\" field.",

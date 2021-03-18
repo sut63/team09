@@ -121,10 +121,10 @@ func Firsttime(v time.Time) predicate.Office {
 	})
 }
 
-// Finallytime applies equality check predicate on the "finallytime" field. It's identical to FinallytimeEQ.
-func Finallytime(v time.Time) predicate.Office {
+// Lasttime applies equality check predicate on the "lasttime" field. It's identical to LasttimeEQ.
+func Lasttime(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFinallytime), v))
+		s.Where(sql.EQ(s.C(FieldLasttime), v))
 	})
 }
 
@@ -537,22 +537,22 @@ func FirsttimeLTE(v time.Time) predicate.Office {
 	})
 }
 
-// FinallytimeEQ applies the EQ predicate on the "finallytime" field.
-func FinallytimeEQ(v time.Time) predicate.Office {
+// LasttimeEQ applies the EQ predicate on the "lasttime" field.
+func LasttimeEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFinallytime), v))
+		s.Where(sql.EQ(s.C(FieldLasttime), v))
 	})
 }
 
-// FinallytimeNEQ applies the NEQ predicate on the "finallytime" field.
-func FinallytimeNEQ(v time.Time) predicate.Office {
+// LasttimeNEQ applies the NEQ predicate on the "lasttime" field.
+func LasttimeNEQ(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFinallytime), v))
+		s.Where(sql.NEQ(s.C(FieldLasttime), v))
 	})
 }
 
-// FinallytimeIn applies the In predicate on the "finallytime" field.
-func FinallytimeIn(vs ...time.Time) predicate.Office {
+// LasttimeIn applies the In predicate on the "lasttime" field.
+func LasttimeIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -564,12 +564,12 @@ func FinallytimeIn(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldFinallytime), v...))
+		s.Where(sql.In(s.C(FieldLasttime), v...))
 	})
 }
 
-// FinallytimeNotIn applies the NotIn predicate on the "finallytime" field.
-func FinallytimeNotIn(vs ...time.Time) predicate.Office {
+// LasttimeNotIn applies the NotIn predicate on the "lasttime" field.
+func LasttimeNotIn(vs ...time.Time) predicate.Office {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -581,35 +581,35 @@ func FinallytimeNotIn(vs ...time.Time) predicate.Office {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldFinallytime), v...))
+		s.Where(sql.NotIn(s.C(FieldLasttime), v...))
 	})
 }
 
-// FinallytimeGT applies the GT predicate on the "finallytime" field.
-func FinallytimeGT(v time.Time) predicate.Office {
+// LasttimeGT applies the GT predicate on the "lasttime" field.
+func LasttimeGT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFinallytime), v))
+		s.Where(sql.GT(s.C(FieldLasttime), v))
 	})
 }
 
-// FinallytimeGTE applies the GTE predicate on the "finallytime" field.
-func FinallytimeGTE(v time.Time) predicate.Office {
+// LasttimeGTE applies the GTE predicate on the "lasttime" field.
+func LasttimeGTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFinallytime), v))
+		s.Where(sql.GTE(s.C(FieldLasttime), v))
 	})
 }
 
-// FinallytimeLT applies the LT predicate on the "finallytime" field.
-func FinallytimeLT(v time.Time) predicate.Office {
+// LasttimeLT applies the LT predicate on the "lasttime" field.
+func LasttimeLT(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFinallytime), v))
+		s.Where(sql.LT(s.C(FieldLasttime), v))
 	})
 }
 
-// FinallytimeLTE applies the LTE predicate on the "finallytime" field.
-func FinallytimeLTE(v time.Time) predicate.Office {
+// LasttimeLTE applies the LTE predicate on the "lasttime" field.
+func LasttimeLTE(v time.Time) predicate.Office {
 	return predicate.Office(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFinallytime), v))
+		s.Where(sql.LTE(s.C(FieldLasttime), v))
 	})
 }
 

@@ -48,9 +48,9 @@ func (oc *OfficeCreate) SetFirsttime(t time.Time) *OfficeCreate {
 	return oc
 }
 
-// SetFinallytime sets the finallytime field.
-func (oc *OfficeCreate) SetFinallytime(t time.Time) *OfficeCreate {
-	oc.mutation.SetFinallytime(t)
+// SetLasttime sets the lasttime field.
+func (oc *OfficeCreate) SetLasttime(t time.Time) *OfficeCreate {
+	oc.mutation.SetLasttime(t)
 	return oc
 }
 
@@ -160,8 +160,8 @@ func (oc *OfficeCreate) Save(ctx context.Context) (*Office, error) {
 	if _, ok := oc.mutation.Firsttime(); !ok {
 		return nil, &ValidationError{Name: "firsttime", err: errors.New("ent: missing required field \"firsttime\"")}
 	}
-	if _, ok := oc.mutation.Finallytime(); !ok {
-		return nil, &ValidationError{Name: "finallytime", err: errors.New("ent: missing required field \"finallytime\"")}
+	if _, ok := oc.mutation.Lasttime(); !ok {
+		return nil, &ValidationError{Name: "lasttime", err: errors.New("ent: missing required field \"lasttime\"")}
 	}
 	var (
 		err  error
@@ -255,13 +255,13 @@ func (oc *OfficeCreate) createSpec() (*Office, *sqlgraph.CreateSpec) {
 		})
 		o.Firsttime = value
 	}
-	if value, ok := oc.mutation.Finallytime(); ok {
+	if value, ok := oc.mutation.Lasttime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: office.FieldFinallytime,
+			Column: office.FieldLasttime,
 		})
-		o.Finallytime = value
+		o.Lasttime = value
 	}
 	if nodes := oc.mutation.DoctorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

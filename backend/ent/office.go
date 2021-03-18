@@ -27,8 +27,8 @@ type Office struct {
 	Doctoridcard string `json:"doctoridcard,omitempty"`
 	// Firsttime holds the value of the "firsttime" field.
 	Firsttime time.Time `json:"firsttime,omitempty"`
-	// Finallytime holds the value of the "finallytime" field.
-	Finallytime time.Time `json:"finallytime,omitempty"`
+	// Lasttime holds the value of the "lasttime" field.
+	Lasttime time.Time `json:"lasttime,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the OfficeQuery when eager-loading is set.
 	Edges          OfficeEdges `json:"edges"`
@@ -111,7 +111,7 @@ func (*Office) scanValues() []interface{} {
 		&sql.NullString{}, // roomnumber
 		&sql.NullString{}, // doctoridcard
 		&sql.NullTime{},   // firsttime
-		&sql.NullTime{},   // finallytime
+		&sql.NullTime{},   // lasttime
 	}
 }
 
@@ -157,9 +157,9 @@ func (o *Office) assignValues(values ...interface{}) error {
 		o.Firsttime = value.Time
 	}
 	if value, ok := values[4].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field finallytime", values[4])
+		return fmt.Errorf("unexpected type %T for field lasttime", values[4])
 	} else if value.Valid {
-		o.Finallytime = value.Time
+		o.Lasttime = value.Time
 	}
 	values = values[5:]
 	if len(values) == len(office.ForeignKeys) {
@@ -236,8 +236,8 @@ func (o *Office) String() string {
 	builder.WriteString(o.Doctoridcard)
 	builder.WriteString(", firsttime=")
 	builder.WriteString(o.Firsttime.Format(time.ANSIC))
-	builder.WriteString(", finallytime=")
-	builder.WriteString(o.Finallytime.Format(time.ANSIC))
+	builder.WriteString(", lasttime=")
+	builder.WriteString(o.Lasttime.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

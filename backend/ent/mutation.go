@@ -4545,7 +4545,7 @@ type OfficeMutation struct {
 	roomnumber         *string
 	doctoridcard       *string
 	firsttime          *time.Time
-	finallytime        *time.Time
+	lasttime           *time.Time
 	clearedFields      map[string]struct{}
 	doctor             *int
 	cleareddoctor      bool
@@ -4786,41 +4786,41 @@ func (m *OfficeMutation) ResetFirsttime() {
 	m.firsttime = nil
 }
 
-// SetFinallytime sets the finallytime field.
-func (m *OfficeMutation) SetFinallytime(t time.Time) {
-	m.finallytime = &t
+// SetLasttime sets the lasttime field.
+func (m *OfficeMutation) SetLasttime(t time.Time) {
+	m.lasttime = &t
 }
 
-// Finallytime returns the finallytime value in the mutation.
-func (m *OfficeMutation) Finallytime() (r time.Time, exists bool) {
-	v := m.finallytime
+// Lasttime returns the lasttime value in the mutation.
+func (m *OfficeMutation) Lasttime() (r time.Time, exists bool) {
+	v := m.lasttime
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFinallytime returns the old finallytime value of the Office.
+// OldLasttime returns the old lasttime value of the Office.
 // If the Office object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *OfficeMutation) OldFinallytime(ctx context.Context) (v time.Time, err error) {
+func (m *OfficeMutation) OldLasttime(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldFinallytime is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldLasttime is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldFinallytime requires an ID field in the mutation")
+		return v, fmt.Errorf("OldLasttime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFinallytime: %w", err)
+		return v, fmt.Errorf("querying old value for OldLasttime: %w", err)
 	}
-	return oldValue.Finallytime, nil
+	return oldValue.Lasttime, nil
 }
 
-// ResetFinallytime reset all changes of the "finallytime" field.
-func (m *OfficeMutation) ResetFinallytime() {
-	m.finallytime = nil
+// ResetLasttime reset all changes of the "lasttime" field.
+func (m *OfficeMutation) ResetLasttime() {
+	m.lasttime = nil
 }
 
 // SetDoctorID sets the doctor edge to Doctor by id.
@@ -5009,8 +5009,8 @@ func (m *OfficeMutation) Fields() []string {
 	if m.firsttime != nil {
 		fields = append(fields, office.FieldFirsttime)
 	}
-	if m.finallytime != nil {
-		fields = append(fields, office.FieldFinallytime)
+	if m.lasttime != nil {
+		fields = append(fields, office.FieldLasttime)
 	}
 	return fields
 }
@@ -5028,8 +5028,8 @@ func (m *OfficeMutation) Field(name string) (ent.Value, bool) {
 		return m.Doctoridcard()
 	case office.FieldFirsttime:
 		return m.Firsttime()
-	case office.FieldFinallytime:
-		return m.Finallytime()
+	case office.FieldLasttime:
+		return m.Lasttime()
 	}
 	return nil, false
 }
@@ -5047,8 +5047,8 @@ func (m *OfficeMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldDoctoridcard(ctx)
 	case office.FieldFirsttime:
 		return m.OldFirsttime(ctx)
-	case office.FieldFinallytime:
-		return m.OldFinallytime(ctx)
+	case office.FieldLasttime:
+		return m.OldLasttime(ctx)
 	}
 	return nil, fmt.Errorf("unknown Office field %s", name)
 }
@@ -5086,12 +5086,12 @@ func (m *OfficeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFirsttime(v)
 		return nil
-	case office.FieldFinallytime:
+	case office.FieldLasttime:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFinallytime(v)
+		m.SetLasttime(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)
@@ -5155,8 +5155,8 @@ func (m *OfficeMutation) ResetField(name string) error {
 	case office.FieldFirsttime:
 		m.ResetFirsttime()
 		return nil
-	case office.FieldFinallytime:
-		m.ResetFinallytime()
+	case office.FieldLasttime:
+		m.ResetLasttime()
 		return nil
 	}
 	return fmt.Errorf("unknown Office field %s", name)

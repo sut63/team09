@@ -22,8 +22,8 @@ type OfficeController struct {
 
 type Office struct {
 	Officename   string
-	firsttime    string
-	finallytime  string
+	Firsttime    string
+	Lasttime     string
 	Doctor       int
 	Department   int
 	Extradoctor  int
@@ -87,8 +87,8 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		return
 	}
 
-	firsttime, err := time.Parse(time.RFC3339, obj.firsttime+"T00:00:00Z")
-	finallytime, err := time.Parse(time.RFC3339, obj.finallytime+"T00:00:00Z")
+	firsttime, err := time.Parse(time.RFC3339, obj.Firsttime+"T00:00:00Z")
+	lasttime, err := time.Parse(time.RFC3339, obj.Lasttime+"T00:00:00Z")
 	of, err := ctl.client.Office.
 		Create().
 		SetOfficename(obj.Officename).
@@ -98,7 +98,7 @@ func (ctl *OfficeController) CreateOffice(c *gin.Context) {
 		SetDepartment(de).
 		SetExtradoctor(et).
 		SetFirsttime(firsttime).
-		SetFinallytime(finallytime).
+		SetLasttime(lasttime).
 		Save(context.Background())
 
 	if err != nil {

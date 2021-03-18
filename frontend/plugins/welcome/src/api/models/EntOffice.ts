@@ -39,12 +39,6 @@ export interface EntOffice {
      */
     edges?: EntOfficeEdges;
     /**
-     * Finallytime holds the value of the "finallytime" field.
-     * @type {string}
-     * @memberof EntOffice
-     */
-    finallytime?: string;
-    /**
      * Firsttime holds the value of the "firsttime" field.
      * @type {string}
      * @memberof EntOffice
@@ -56,6 +50,12 @@ export interface EntOffice {
      * @memberof EntOffice
      */
     id?: number;
+    /**
+     * Lasttime holds the value of the "lasttime" field.
+     * @type {string}
+     * @memberof EntOffice
+     */
+    lasttime?: string;
     /**
      * Officename holds the value of the "officename" field.
      * @type {string}
@@ -82,9 +82,9 @@ export function EntOfficeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         
         'doctoridcard': !exists(json, 'doctoridcard') ? undefined : json['doctoridcard'],
         'edges': !exists(json, 'edges') ? undefined : EntOfficeEdgesFromJSON(json['edges']),
-        'finallytime': !exists(json, 'finallytime') ? undefined : json['finallytime'],
         'firsttime': !exists(json, 'firsttime') ? undefined : json['firsttime'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'lasttime': !exists(json, 'lasttime') ? undefined : json['lasttime'],
         'officename': !exists(json, 'officename') ? undefined : json['officename'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
     };
@@ -101,9 +101,9 @@ export function EntOfficeToJSON(value?: EntOffice | null): any {
         
         'doctoridcard': value.doctoridcard,
         'edges': EntOfficeEdgesToJSON(value.edges),
-        'finallytime': value.finallytime,
         'firsttime': value.firsttime,
         'id': value.id,
+        'lasttime': value.lasttime,
         'officename': value.officename,
         'roomnumber': value.roomnumber,
     };
