@@ -3,12 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-	<title>Schedule_Test_Case_Sprint_2</title>
+	<title>Schedule Test Case</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">ค้นหาสำเร็จ</td></tr>
+<tr><td rowspan="1" colspan="3">ค้นแล้วเจอ</td></tr>
 </thead>
 <tbody>
 <tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
@@ -19,24 +19,26 @@
 </tr>
 <tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>11111111</td>
 </tr>
 <tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
 </tr>
-<tr><td>open</td><td>http://localhost:3000/scheduletable<datalist><option>http://localhost:3000/scheduletable</option></datalist></td><td></td>
+<tr><td>open</td><td>http://localhost:3000/scheduletable<datalist><option>http://localhost:3000/personalinformationtable</option><option>http://localhost:3000/scheduletable</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+<tr><td>click</td><td>id=Docterid<datalist><option>id=Docterid</option><option>//input[@id='Docterid']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Docterid</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>สมชาย</td>
+<tr><td>type</td><td>id=Docterid<datalist><option>id=Docterid</option><option>//input[@id='Docterid']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Docterid</option></datalist></td><td>6019457889</td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td[2]<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td[2]</option><option>//td[2]</option></datalist></td><td>สมชาย ยังดาม</td>
+<tr><td>click</td><td>//div[@id='root']/div/article/div/div/div/p/button/span/h3<datalist><option>//div[@id='root']/div/article/div/div/div/p/button/span/h3</option><option>//h3</option><option>css=h3</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div/div/div[2]/div/div[2]<datalist><option>//div[@id='root']/div/article/div/div/div[2]/div/div[2]</option><option>//div[2]/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>แสดงข้อมูลตารางเวลาของแพทย์ 6019457889</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">ค้นหาไม่สำเร็จ</td></tr>
+<tr><td rowspan="1" colspan="3">ค้นแล้วไม่เจอ</td></tr>
 </thead>
 <tbody>
 <tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
@@ -47,19 +49,21 @@
 </tr>
 <tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12345678</td>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>11111111</td>
 </tr>
 <tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div/form/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-14.MuiButton-containedPrimary.MuiButton-fullWidth</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>css=path<datalist><option>css=path</option></datalist></td><td></td>
 </tr>
-<tr><td>open</td><td>http://localhost:3000/scheduletable<datalist><option>http://localhost:3000/scheduletable</option></datalist></td><td></td>
+<tr><td>open</td><td>http://localhost:3000/scheduletable<datalist><option>http://localhost:3000/scheduletable</option><option>http://localhost:3000/personalinformationtable</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+<tr><td>click</td><td>id=Docterid<datalist><option>id=Docterid</option><option>//input[@id='Docterid']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Docterid</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>ไมเคิล</td>
+<tr><td>type</td><td>id=Docterid<datalist><option>id=Docterid</option><option>//input[@id='Docterid']</option><option>//div[@id='root']/div/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#Docterid</option></datalist></td><td>1212312314</td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p<datalist><option>//div[@id='root']/div/article/div[2]/table/tbody/tr/td/p</option><option>//p</option><option>css=p</option></datalist></td><td>ไม่มีข้อมูลในระบบ</td>
+<tr><td>click</td><td>//div[@id='root']/div/article/div/div/div/p/button/span/h3<datalist><option>//div[@id='root']/div/article/div/div/div/p/button/span/h3</option><option>//h3</option><option>css=h3</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/article/div/div/div[2]/div/div[2]<datalist><option>//div[@id='root']/div/article/div/div/div[2]/div/div[2]</option><option>//div[2]/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>ไม่พบข้อมูลตารางเวลาของแพทย์</td>
 </tr>
 </tbody></table>
 </body>
