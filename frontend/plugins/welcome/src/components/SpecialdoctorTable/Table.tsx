@@ -59,7 +59,7 @@ export default function ComponentsTableUser() {
   
   //------------------------------------------------------------------------------
 
-  const Doctoridhandlehange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const Doctoridhandlechange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setStatus(false);
     setDoctorid(event.target.value as string);
   };
@@ -128,7 +128,7 @@ export default function ComponentsTableUser() {
                     <TextField
                       id="Doctorid"
                       value={doctorid}
-                      onChange={Doctoridhandlehange || ''}
+                      onChange={Doctoridhandlechange || ''}
                       type="string"
                       size="medium"
                       style={{ width: 300 }}
@@ -182,7 +182,7 @@ export default function ComponentsTableUser() {
                 )
                   : (
                     <Alert severity="warning" style={{ marginTop: 20 }}>
-                      ไม่พบข้อมูลข้อมูลประวัติการทำงานของแพทย์
+                      ไม่พบข้อมูลแพทย์เฉพาะทาง
                     </Alert>
                   )}
               </div>
