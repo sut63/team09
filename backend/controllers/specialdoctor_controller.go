@@ -129,6 +129,9 @@ func (ctl *SpecialdoctorController) GetSpecialdoctor(c *gin.Context) {
 
 	sl, err := ctl.client.Specialdoctor.
 		Query().
+		WithDepartment().
+		WithDoctor().
+		WithExtradoctor().
 		Where(specialdoctor.IDEQ(int(id))).
 		Only(context.Background())
 	if err != nil {
@@ -139,6 +142,38 @@ func (ctl *SpecialdoctorController) GetSpecialdoctor(c *gin.Context) {
 	}
 
 	c.JSON(200, sl)
+}
+
+// GetSearchSpecialdoctor handles GET requests to retrieve a Specialdoctor entity
+// @Summary Get a Specialdoctor entity by Search
+// @Description get Specialdoctor by Search
+// @ID get-Specialdoctor-by-search
+// @Produce  json
+// @Param Specialdoctor query string false "Search Specialdoctor"
+// @Success 200 {object} ent.Specialdoctor
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchspecialdoctors [get]
+func (ctl *SpecialdoctorController) GetSearchSpecialdoctor(c *gin.Context) {
+	specialdoctorsearch := c.Query("specialdoctor")
+
+	of, err := ctl.client.Specialdoctor.
+		Query().
+		WithDoctor().
+		WithDepartment().
+		WithExtradoctor().
+		Where(specialdoctor.DoctoridContains(specialdoctorsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"data": of,
+	})
 }
 
 // ListSpecialdoctor handles request to get a list of specialdoctorentities
@@ -238,6 +273,9 @@ func (ctl *SpecialdoctorController) register() {
 	specialdoctors := ctl.router.Group("/specialdoctors")
 
 	specialdoctors.GET("", ctl.ListSpecialdoctor)
+	// Search
+	searchspecialdoctor := ctl.router.Group("/searchspecialdoctors")
+	searchspecialdoctor.GET("", ctl.GetSearchSpecialdoctor)
 	// CRUD
 	specialdoctors.POST("", ctl.CreateSpecialdoctor)
 	specialdoctors.GET(":id", ctl.GetSpecialdoctor)
