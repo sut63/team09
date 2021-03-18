@@ -203,7 +203,7 @@ export default function ComponentsTable() {
                   <TableCell align="left">DoctorIDCard</TableCell>
                   <TableCell align="left">Roomname</TableCell>
                   <TableCell align="left">Firsttime</TableCell>
-                  <TableCell align="left">Finallytime</TableCell>
+                  <TableCell align="left">Lasttime</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -216,8 +216,8 @@ export default function ComponentsTable() {
                     <TableCell align="left">{item.officename}</TableCell>
                     <TableCell align="left">{item.doctoridcard}</TableCell>
                     <TableCell align="left">{item.roomnumber}</TableCell>
-                    <TableCell align="left">{moment(item.addedTime1).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell align="left">{moment(item.addedTime2).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align="left">{moment(item.firsttime).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align="left">{moment(item.lasttime).format('DD/MM/YYYY')}</TableCell>
                     <TableCell align="left">
                     </TableCell>
                   </TableRow>
