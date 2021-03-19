@@ -10,7 +10,7 @@ import (
 	"github.com/team09/app/ent/course"
 	"github.com/team09/app/ent/department"
 	"github.com/team09/app/ent/detail"
-	"github.com/team09/app/ent/mission"
+	"github.com/team09/app/ent/doctor"
 )
 
 // DetailController defines the struct for the detail controller
@@ -22,9 +22,10 @@ type Detail struct {
 	Explain    string
 	Course     int
 	Department int
-	Mission    int
 	Phone string
 	Email string
+	Doctor     int
+	Departmentid string
 }
 
 // CreateDetail handles POST requests for adding detail entities
@@ -71,14 +72,14 @@ func (ctl *DetailController) CreateDetail(c *gin.Context) {
 		return
 	}
 
-	m, err := ctl.client.Mission.
+	d, err := ctl.client.Doctor.
 		Query().
-		Where(mission.IDEQ(int(obj.Mission))).
+		Where(doctor.IDEQ(int(obj.Doctor))).
 		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Mission not found",
+			"error": "doctor not found",
 		})
 		return
 	}
@@ -87,15 +88,15 @@ func (ctl *DetailController) CreateDetail(c *gin.Context) {
 		Create().
 		SetCourse(co).
 		SetDepartment(de).
-		SetMission(m).
 		SetExplain(obj.Explain).
 		SetPhone(obj.Phone).
 		SetEmail(obj.Email).
+		SetDoctor(d).
+		SetDepartmentid(obj.Departmentid).
 		Save(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			// "error": "saving failed",
 			"status": false,
 			"error":  err,
 		})
@@ -142,7 +143,7 @@ func (ctl *DetailController) ListDetail(c *gin.Context) {
 		Query().
 		WithCourse().
 		WithDepartment().
-		WithMission().
+		WithDoctor().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
@@ -184,6 +185,38 @@ func (ctl *DetailController) GetDetail(c *gin.Context) {
 		return
 	}
 	c.JSON(200, dt)
+}
+
+// GetSearchDetailTable handles GET requests to retrieve a Detail entity
+// @Summary Get a Detail entity by Search
+// @Description get Detail by Search
+// @ID get-Detail-by-search
+// @Produce  json
+// @Param Detail query string false "Search Detail"
+// @Success 200 {object} ent.Detail
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /detailtables [get]
+func (ctl *DetailController) GetSearchDetailTable(c *gin.Context) {
+	detailsearch := c.Query("detail")
+
+	dt, err := ctl.client.Detail.
+		Query().
+		WithCourse().
+		WithDepartment().
+		WithDoctor().
+		Where(detail.DepartmentidContains(detailsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"data": dt,
+	})
 }
 
 // DeleteDetaile handles DELETE requests to delete a detail entity
@@ -231,6 +264,9 @@ func NewDetailController(router gin.IRouter, client *ent.Client) *DetailControll
 func (ctl *DetailController) register() {
 	details := ctl.router.Group("/details")
 	details.GET("", ctl.ListDetail)
+	// Search
+	searchdetail := ctl.router.Group("/detailtables")
+	searchdetail.GET("", ctl.GetSearchDetailTable)
 	// CRUD
 	details.POST("", ctl.CreateDetail)
 	details.GET(":id", ctl.GetDetail)
