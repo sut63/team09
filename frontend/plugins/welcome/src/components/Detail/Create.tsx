@@ -12,13 +12,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import { InputLabel, MenuItem } from '@material-ui/core';
-import { EntMission } from '../../api/models/EntMission';
 import { EntCourse } from '../../api/models/EntCourse';
 import { EntDepartment } from '../../api/models/EntDepartment';
+import { EntDoctor } from '../../api/models/EntDoctor';
 import Swal from 'sweetalert2';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
-// import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-// import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,11 +51,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface detail {
   Department: number;
-  Mission: number;
   Course: number;
   Explain: string;
   Phone: string;
   Email: string;
+  Departmentid: string;
+  Doctor: number;
 }
 
 const Detail: FC<{}> = () => {
@@ -65,11 +64,12 @@ const Detail: FC<{}> = () => {
   const http = new DefaultApi();
   const [detail, setDetail] = React.useState<Partial<detail>>({});
   const [departments, setDepartment] = React.useState<EntDepartment[]>([]);
-  const [missions, setMission] = React.useState<EntMission[]>([]);
+  const [doctors, setDoctor] = React.useState<EntDoctor[]>([]);
   const [courses, setCourse] = React.useState<EntCourse[]>([]);
   const [explainError, setexplainError] = React.useState('');
   const [emailError, setemailError] = React.useState('');
   const [phoneError, setphoneError] = React.useState('');
+  const [departmentidError, setdepartmentidError] = React.useState('');
 
   const Toast = Swal.mixin({
     toast: true,
@@ -90,10 +90,10 @@ const Detail: FC<{}> = () => {
     const validateValue = value.toString()
     checkPattern(name, validateValue)
     setDetail({ ...detail, [name]: value });
-    // console.log(department);
+    console.log(detail);
   };
 
-  const getDepartment = async () => {
+  const getDepartments = async () => {
     const res = await http.listDepartment({ limit: 11, offset: 0 });
     setDepartment(res);
   };
@@ -101,36 +101,33 @@ const Detail: FC<{}> = () => {
     const res = await http.listCourse({ limit: 10, offset: 0 });
     setCourse(res);
   };
-  const getMission = async () => {
-    const res = await http.listMission({ limit: 5, offset: 0 });
-    setMission(res);
+  const getDoctors = async () => {
+    const res = await http.listDoctor({ limit: 10, offset: 0 });
+    setDoctor(res);
   };
 
 
   // Lifecycle Hooks
   useEffect(() => {
     getCourse();
-    getMission();
-    getDepartment();
-    console.log(detail)
-  }, [detail]);
+    getDoctors();
+    getDepartments();
+  }, []);
 
   function clear() {
     setDetail({});
   }
 
-  const Validateexplain = (val: string) => {
+  const ValidateExplain = (val: string) => {
     return val.match("^[ก-๏\\s]+$");
   }
-  const Validatephone = (val: string) => {
+  const ValidatePhone = (val: string) => {
     return val.match("^[0-9]{10}$");
   }
-  // const Validateemail = (val: string) => {
-  //   return val.match("^[a-zA-Z_]+$");
-  // }
-
-  // ฟังก์ชั่นสำหรับ validate อีเมล
-  const Validateemail = (email: string) => {
+  const ValidateDepartmentid = (val: string) => {
+    return val.length == 3 ? true : false;
+  }
+  const ValidateEmail = (email: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
@@ -138,13 +135,16 @@ const Detail: FC<{}> = () => {
   const checkPattern = (id: string, value: string) => {
     switch (id) {
       case 'Phone':
-        Validatephone(value) ? setphoneError('') : setphoneError("กรุณากรอกเบอร์โทรศัพท์ 10 ตัวเท่านั้น");
+        ValidatePhone(value) ? setphoneError('') : setphoneError("กรุณากรอกเบอร์โทรศัพท์ 10 ตัวเท่านั้น");
         return;
       case 'Email':
-        Validateemail(value) ? setemailError('') : setemailError("กรุณากรอกอีเมลให้ถูกต้อง");
+        ValidateEmail(value) ? setemailError('') : setemailError("กรุณากรอกอีเมลให้ถูกต้อง");
         return;
       case 'Explain':
-        Validateexplain(value) ? setexplainError('') : setexplainError("กรุณากรอกรายละเอียดเป็นภาษาไทยเท่านั้น");
+        ValidateExplain(value) ? setexplainError('') : setexplainError("กรุณากรอกรายละเอียดเป็นภาษาไทยเท่านั้น");
+        return;
+      case 'departmentid':
+        ValidateDepartmentid(value) ? setdepartmentidError('') : setdepartmentidError("กรอกตัวเลขทั้งหมด 3 ตัว");
         return;
       default:
         return;
@@ -162,15 +162,19 @@ const Detail: FC<{}> = () => {
       case 'phone':
         alertMessage("error", "กรุณากรอกเบอร์โทรศัพท์10ตัวเท่านั้น");
         return;
-      
+
       case 'email':
         alertMessage("error", "กรุณากรอกอีเมลให้ถูกต้อง");
         return;
-      
+
       case 'explain':
         alertMessage("error", "กรุณากรอกรายละเอียดเป็นภาษาไทยตัวเท่านั้น");
         return;
-      
+
+      case 'departmentid':
+        alertMessage("error", "กรอกตัวเลขทั้งหมด 3 ตัว");
+        return;
+
       default:
         alertMessage("error", "บันทึกข้อมูลไม่สำเร็จ")
         return;
@@ -237,25 +241,45 @@ const Detail: FC<{}> = () => {
                 </Select>
               </FormControl>
             </Grid>
+
+            <Grid item xs={6}>
+              <FormControl
+                fullWidth
+                className={classes.formControl}
+                style={{ marginLeft: 100 }}
+                variant="outlined"
+              >
+                <TextField
+                  error={departmentidError ? true : false}
+                  name="Departmentid"
+                  label="รหัสประจำแผนก"
+                  variant="outlined"
+                  size="medium"
+                  value={detail.Departmentid || ''}
+                  helperText={departmentidError}
+                  onChange={handleChange}
+                />
+              </FormControl>
+            </Grid>
+
             <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
-                <InputLabel>ตำแหน่ง/หน้าที่</InputLabel>
+                <InputLabel>ชื่อแพทย์หัวหน้าแผนก</InputLabel>
                 <Select
-                  name="Mission"
-                  label="ตำแหน่ง/หน้าที่"
+                  name="Doctor"
+                  label="ชื่อแพทย์หัวหน้าแผนก"
                   type="string"
-                  value={detail.Mission || ''}
+                  value={detail.Doctor || ''}
                   onChange={handleChange}
                 >
-                  {missions.map(item => {
+                  {doctors.map(item => {
                     return (
-                      <MenuItem key={item.id} value={item.id}>{item.mission}</MenuItem>
+                      <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                     );
                   })}
                 </Select>
               </FormControl>
             </Grid>
-
             <Grid item xs={6}>
               <FormControl variant="outlined" className={classes.formControl} style={{ marginLeft: 100 }}>
                 <InputLabel>หลักสูตร</InputLabel>
@@ -280,7 +304,8 @@ const Detail: FC<{}> = () => {
                 fullWidth
                 className={classes.formControl}
                 style={{ marginLeft: 100 }}
-                variant="outlined">
+                variant="outlined"
+              >
                 <TextField
                   error={phoneError ? true : false}
                   name="Phone"
@@ -299,7 +324,8 @@ const Detail: FC<{}> = () => {
                 fullWidth
                 className={classes.formControl}
                 style={{ marginLeft: 100 }}
-                variant="outlined">
+                variant="outlined"
+              >
                 <TextField
                   error={emailError ? true : false}
                   name="Email"
