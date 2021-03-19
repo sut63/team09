@@ -183,7 +183,7 @@ export default function ComponentsTable() {
                 )
                   : (
                     <Alert severity="warning" style={{ marginTop: 20 }}>
-                      ไม่พบข้อมูลข้อมูลข้อมูลส่วนตัวแพทย์
+                      ไม่พบข้อมูลข้อมูลส่วนตัวแพทย์
                     </Alert>
                   )}
               </div>
