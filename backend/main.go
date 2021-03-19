@@ -80,14 +80,6 @@ type Specialdoctors struct {
 	Doctorid string
 }
 
-type Missions struct {
-	Mission []Mission
-}
-
-type Mission struct {
-	Mission string
-}
-
 type Offices struct {
 	Office []Office
 }
@@ -171,7 +163,6 @@ func main() {
 	controllers.NewGenderController(v1, client)
 	controllers.NewPositionController(v1, client)
 	controllers.NewDepartmentController(v1, client)
-	controllers.NewMissionController(v1, client)
 	controllers.NewExtradoctorController(v1, client)
 	controllers.NewDetailController(v1, client)
 	controllers.NewSpecialdoctorController(v1, client)
@@ -284,22 +275,6 @@ func main() {
 		client.Department.
 			Create().
 			SetName(de.Name).
-			Save(context.Background())
-	}
-
-	// Set Mission Data
-	missions := Missions{
-		Mission: []Mission{
-			Mission{"หัวหน้าแผนก,รองหัวหน้าแผนก,พยาบาลวิชาชีพ,ผู้ช่วยพยาบาล,เจ้าหน้าที่ธุรการ"},
-            Mission{"หัวหน้าแผนก,รองหัวหน้าแผนก,พยาบาลวิชาชีพ,ผู้ช่วยพยาบาล,เจ้าพนักงานงานการแพทย์"},
-            Mission{"หัวหน้าแผนก,รองหัวหน้าแผนก,พยาบาลชำนาญการพิเศษ,ผู้ช่วยพยาบาล,เจ้าพนักงานงานการแพทย์"},
-		},
-	}
-
-	for _, m := range missions.Mission {
-		client.Mission.
-			Create().
-			SetMission(m.Mission).
 			Save(context.Background())
 	}
 
