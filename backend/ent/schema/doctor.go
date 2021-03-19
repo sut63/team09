@@ -69,5 +69,6 @@ func (Doctor) Edges() []ent.Edge {
         edge.To("specialdoctors",Specialdoctor.Type).
             StorageKey(edge.Column("doctor_id")),
 
+        edge.To("details", Detail.Type).Unique(),
     }
 }

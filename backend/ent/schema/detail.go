@@ -26,6 +26,7 @@ func (Detail) Fields() []ent.Field {
 		}),
 		field.String("phone").MaxLen(10).MinLen(10),
 		field.String("email").Match(regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")),
+		field.String("departmentid").MaxLen(3).MinLen(3),
 	}
 }
 
@@ -33,7 +34,10 @@ func (Detail) Fields() []ent.Field {
 func (Detail) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("course", Course.Type).Ref("details").Unique(),
-		edge.From("mission", Mission.Type).Ref("details").Unique(),
 		edge.From("department", Department.Type).Ref("details").Unique(),
+		edge.From("doctor", Doctor.Type).
+            Ref("details").
+            Unique().
+            Required(),
 	}
 }
